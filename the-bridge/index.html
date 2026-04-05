@@ -244,10 +244,65 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .fin-del-btn{background:none;border:none;color:var(--ink-5);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:var(--r4);transition:all 0.12s;}
 .fin-del-btn:hover{color:var(--red);background:var(--red-light);}
 
+/* ── ACTIONS ── */
+.actions-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.actions-filter{padding:6px 12px;border-radius:100px;border:1.5px solid #E2E8F0;background:var(--white);font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--ink-3);cursor:pointer;transition:all 0.12s;}
+.actions-filter.af-active{background:var(--ink);color:white;border-color:var(--ink);}
+.actions-filter.af-todo{background:var(--blue-light);color:var(--blue);border-color:#BFDBFE;}
+.actions-filter.af-doing{background:var(--amber-light);color:var(--amber);border-color:#FDE68A;}
+.actions-filter.af-done{background:var(--green-light);color:var(--green);border-color:#BBF7D0;}
+
+.actions-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
+.action-card{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;}
+.action-card:hover{border-color:#CBD5E1;box-shadow:var(--shadow);transform:translateY(-1px);}
+.action-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;}
+.ac-todo::before{background:var(--blue);}
+.ac-doing::before{background:var(--amber);}
+.ac-done::before{background:var(--green);}
+.ac-blocked::before{background:var(--red);}
+.action-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.action-title{font-size:13px;font-weight:600;color:var(--ink);line-height:1.35;flex:1;}
+.action-status-chip{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.4px;flex-shrink:0;white-space:nowrap;}
+.ast-todo{background:var(--blue-light);color:var(--blue);}
+.ast-doing{background:var(--amber-light);color:var(--amber);}
+.ast-done{background:var(--green-light);color:var(--green);}
+.ast-blocked{background:var(--red-light);color:var(--red);}
+.action-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.action-tag{font-size:11px;color:var(--ink-4);background:var(--bg);padding:2px 8px;border-radius:100px;display:flex;align-items:center;gap:4px;}
+.action-notes-preview{font-size:12px;color:var(--ink-3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.action-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #F1F5F9;}
+.action-update-count{font-size:11px;color:var(--ink-4);}
+.action-due{font-size:11px;font-weight:500;}
+.action-due.overdue{color:var(--red);}
+.action-due.soon{color:var(--amber);}
+.action-due.ok{color:var(--ink-4);}
+
+/* Detail modal */
+.detail-modal{background:var(--white);border-radius:var(--r16);width:100%;max-width:580px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(15,23,42,0.2);}
+.detail-header{padding:24px 24px 0;position:sticky;top:0;background:var(--white);z-index:1;padding-bottom:16px;border-bottom:1px solid #F1F5F9;}
+.detail-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;}
+.detail-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);line-height:1.3;flex:1;}
+.detail-close{background:var(--bg);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--ink-3);flex-shrink:0;transition:background 0.12s;}
+.detail-close:hover{background:#E2E8F0;}
+.detail-meta-row{display:flex;gap:8px;flex-wrap:wrap;}
+.detail-body{padding:20px 24px;}
+.detail-section{margin-bottom:20px;}
+.detail-section-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;}
+.detail-notes-text{font-size:13px;color:var(--ink-2);line-height:1.7;white-space:pre-wrap;}
+.updates-list{display:flex;flex-direction:column;gap:10px;}
+.update-item{padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid #E2E8F0;}
+.update-text{font-size:13px;color:var(--ink-2);line-height:1.5;margin-bottom:4px;}
+.update-meta{font-size:11px;color:var(--ink-4);}
+.update-input-row{display:flex;gap:8px;margin-top:12px;}
+.update-input{flex:1;background:var(--bg);border:1.5px solid #E2E8F0;border-radius:var(--r8);padding:9px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color 0.12s;}
+.update-input:focus{border-color:var(--red);background:var(--white);}
+.btn-sm-red{background:var(--red);color:white;border:none;padding:9px 14px;border-radius:var(--r8);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background 0.12s;white-space:nowrap;}
+.btn-sm-red:hover{background:var(--red-dark);}
+
 @media(max-width:768px){
   .sidebar{display:none;} .main{margin-left:0;} .content{padding:20px 16px 40px;} .topbar{padding:0 16px;}
   .principles-grid{grid-template-columns:1fr;} .stat-strip{grid-template-columns:1fr 1fr;}
-  .fin-summary{grid-template-columns:1fr 1fr;}
+  .fin-summary{grid-template-columns:1fr 1fr;} .actions-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -282,6 +337,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         <div class="nav-item" onclick="showPage('priorities',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="3.5" x2="12" y2="3.5"/><line x1="2" y1="7" x2="9" y2="7"/><line x1="2" y1="10.5" x2="7" y2="10.5"/></svg>
           Priorities
+        </div>
+        <div class="nav-item" onclick="showPage('actions',this)">
+          <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><polyline points="4,7 6,9 10,5"/></svg>
+          Actions
         </div>
         <div class="nav-item" onclick="showPage('finance',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="3" width="11" height="8" rx="1"/><line x1="1.5" y1="6" x2="12.5" y2="6"/><line x1="4" y1="9" x2="6" y2="9"/></svg>
@@ -393,6 +452,31 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 
         <div class="ministry-grid" id="ministry-grid"></div>
         <p style="font-size:11px;color:var(--ink-4);text-align:center;margin-top:6px;">Tap any card to cycle its status · changes save automatically</p>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="page" id="page-actions">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Actions</div>
+            <div class="page-sub">Every live action, who owns it, and what's happening. Tap any card for the full detail.</div>
+          </div>
+          <button class="btn-red" onclick="openAddAction()">+ Add action</button>
+        </div>
+
+        <div class="actions-toolbar">
+          <button class="actions-filter af-active" id="af-all" onclick="setActionFilter('all',this)">All</button>
+          <button class="actions-filter" id="af-todo" onclick="setActionFilter('not_started',this)">Not started</button>
+          <button class="actions-filter" id="af-doing" onclick="setActionFilter('in_progress',this)">In progress</button>
+          <button class="actions-filter" id="af-done" onclick="setActionFilter('done',this)">Done</button>
+          <button class="actions-filter" id="af-blocked" onclick="setActionFilter('blocked',this)">Blocked</button>
+          <div style="flex:1;"></div>
+          <div style="font-size:12px;color:var(--ink-4);" id="actions-count"></div>
+        </div>
+
+        <div class="actions-grid" id="actions-grid">
+          <div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--ink-4);font-size:13px;">Loading actions…</div>
+        </div>
       </div>
 
       <!-- PRIORITIES -->
@@ -1303,6 +1387,99 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
   </div>
 </div>
 
+<!-- ACTION DETAIL MODAL -->
+<div class="modal-overlay" id="action-detail-modal">
+  <div class="detail-modal">
+    <div class="detail-header">
+      <div class="detail-title-row">
+        <div class="detail-title" id="detail-title">Action title</div>
+        <button class="detail-close" onclick="closeActionDetail()">×</button>
+      </div>
+      <div class="detail-meta-row" id="detail-meta-row"></div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section" id="detail-notes-section">
+        <div class="detail-section-label">Description & notes</div>
+        <div class="detail-notes-text" id="detail-notes"></div>
+      </div>
+      <div class="detail-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div class="detail-section-label" style="margin-bottom:0;">Updates</div>
+          <div style="font-size:11px;color:var(--ink-4);" id="detail-update-count"></div>
+        </div>
+        <div class="updates-list" id="detail-updates-list"></div>
+        <div class="update-input-row">
+          <input type="text" class="update-input" id="new-update-input" placeholder="Add an update — what's happened, what's next…">
+          <button class="btn-sm-red" onclick="addUpdate()">Post</button>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Change status</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button onclick="updateActionStatus('not_started')" class="actions-filter" style="font-size:11px;">Not started</button>
+          <button onclick="updateActionStatus('in_progress')" class="actions-filter af-doing" style="font-size:11px;">In progress</button>
+          <button onclick="updateActionStatus('done')" class="actions-filter af-done" style="font-size:11px;">Done</button>
+          <button onclick="updateActionStatus('blocked')" style="font-size:11px;padding:6px 12px;border-radius:100px;border:1.5px solid #FECACA;background:var(--red-light);font-family:'DM Sans',sans-serif;color:var(--red);cursor:pointer;font-weight:500;">Blocked</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD ACTION MODAL -->
+<div class="modal-overlay" id="action-add-modal">
+  <div class="modal">
+    <div class="modal-title">Add an action</div>
+    <div class="form-row">
+      <label class="form-label">Title</label>
+      <input type="text" class="form-input" id="a-title-input" placeholder="What needs to happen?">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Description / notes</label>
+      <textarea class="form-textarea" id="a-notes-input" placeholder="Context, background, what success looks like…"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="form-row">
+        <label class="form-label">Function / area</label>
+        <select class="form-select" id="a-function-input">
+          <option value="Leadership">Leadership</option>
+          <option value="Worship">Worship</option>
+          <option value="Media">Media</option>
+          <option value="Finance">Finance</option>
+          <option value="Governance">Governance</option>
+          <option value="Pastoral">Pastoral</option>
+          <option value="Outreach">Outreach</option>
+          <option value="Operations">Operations</option>
+          <option value="Prayer">Prayer</option>
+          <option value="Admin">Admin</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Owner</label>
+        <input type="text" class="form-input" id="a-owner-input" placeholder="Who owns this?">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Priority</label>
+        <select class="form-select" id="a-priority-input">
+          <option value="urgent">Urgent</option>
+          <option value="high">High</option>
+          <option value="medium" selected>Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Due date (optional)</label>
+        <input type="date" class="form-input" id="a-due-input">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeAddAction()">Cancel</button>
+      <button class="btn-red" onclick="saveAction()">Save action</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="priority-modal">
   <div class="modal">
     <div class="modal-title">Add a priority</div>
@@ -1799,7 +1976,191 @@ async function deleteTransaction(id){
   showToast('Transaction deleted');
 }
 
-const titles={overview:'Ministry overview',priorities:'Priorities',finance:'Finance',vision:'Vision & mission',media:'Media team',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
+// ── ACTIONS ──────────────────────────────────────────────────────────────────
+let actions = [];
+let actionFilter = 'all';
+let currentActionId = null;
+
+const statusMeta2 = {
+  not_started: { label:'Not started', chip:'ast-todo', card:'ac-todo' },
+  in_progress:  { label:'In progress', chip:'ast-doing', card:'ac-doing' },
+  done:         { label:'Done',         chip:'ast-done',  card:'ac-done' },
+  blocked:      { label:'Blocked',      chip:'ast-blocked',card:'ac-blocked' },
+};
+
+const defaultActions = [
+  { id:1,  title:'Call Pastor Kayode & Kemi — arrange McDonald\'s meeting', function:'Leadership', owner:'Pastor Shade', status:'in_progress', priority:'urgent', due_date:'2026-04-06', notes:'Meeting tomorrow after Easter Monday. Location: McDonald\'s. Sister Pauline to be informed. Do not let them leave without speaking their mind.', updates:[] },
+  { id:2,  title:'Confirm Caster for Sunday 20th April — rehearsal this week', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Tactical hold — no gap visible after Dr Ayo\'s last Sunday. Caster out front, keys player to support. 3-4 familiar songs. Rehearsal non-negotiable.', updates:[] },
+  { id:3,  title:'Approach Bolaji Adebanjo re MD role — private conversation', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Test the water privately. Come with the vision — Maverick City standard, full band. Is he willing and able? Access to players through his touring network is the key value.', updates:[] },
+  { id:4,  title:'Request historical statements from Ps Kayode — before meeting', function:'Finance', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-06', notes:'Last 3 years minimum. Frame as routine governance — not connected to tomorrow\'s meeting. Get in today if possible. Dynamic may shift after McDonald\'s.', updates:[] },
+  { id:5,  title:'Set up NatWest online banking for Pastor Shade', function:'Finance', owner:'Bolaji', status:'in_progress', priority:'high', due_date:null, notes:'Pastor Shade is charity chair — she should have direct sight of the account. Need: account number, sort code, her mobile for activation. Registration hub: natwest.com/business/ways-to-bank/online-banking/registration-hub.html', updates:[] },
+  { id:6,  title:'Dr Ayo Olatoye — formal trustee resignation + Charity Commission update', function:'Governance', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-19', notes:'Departing in ~2 weeks. Ministry handover and trustee exit are two separate processes. Trustee change requires formal notification to Charity Commission. Get proper advice on the process.', updates:[] },
+  { id:7,  title:'Regularise Dr Emmanuel Olatoye on Charity Commission register', function:'Governance', owner:'Bolaji', status:'not_started', priority:'medium', due_date:null, notes:'Still listed as trustee on the register. Needs to be removed via Charity Commission online service. Not urgent but should not be left indefinitely.', updates:[] },
+  { id:8,  title:'Have Chief of Staff conversation with Pastor Shade', function:'Leadership', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-12', notes:'After Easter Monday. One-to-one, intentional — not in passing. "I want to help carry this properly, not just in the background. Can we talk about what that looks like formally?"', updates:[] },
+  { id:9,  title:'Media team induction session — schedule date', function:'Media', owner:'Bolaji', status:'not_started', priority:'high', due_date:null, notes:'6 people: Scott (lead), Chinedu, Terrel, Tavoy, Noah, Tosin. 90 mins. Bolaji opens with vision, Scott covers operational picture. Assign tracks at induction.', updates:[] },
+  { id:10, title:'Draft 12-week preaching schedule', function:'Leadership', owner:'Bolaji', status:'not_started', priority:'high', due_date:null, notes:'Do the work, bring it to Pastor Shade ready for approval. Don\'t ask her to build it. Use available ministers: Ps Gbenga, Ps Kayode, Dr Ayo (while still present), Dr Caster, external guests.', updates:[] },
+];
+
+async function loadActions() {
+  if (!supabaseReady) { actions = [...defaultActions]; renderActions(); return; }
+  const { data, error } = await db.from('bridge_actions').select('*').order('created_at', { ascending: true });
+  actions = (!error && data && data.length) ? data : [...defaultActions];
+  renderActions();
+}
+
+function setActionFilter(f, btn) {
+  actionFilter = f;
+  document.querySelectorAll('.actions-filter').forEach(b => {
+    b.classList.remove('af-active','af-todo','af-doing','af-done');
+  });
+  const map = { all:'af-active', not_started:'af-todo', in_progress:'af-doing', done:'af-done', blocked:'' };
+  if (btn) { btn.classList.add(map[f] || 'af-active'); }
+  renderActions();
+}
+
+function renderActions() {
+  const grid = document.getElementById('actions-grid');
+  const priorityOrder = { urgent:0, high:1, medium:2, low:3 };
+  let filtered = actionFilter === 'all' ? [...actions] : actions.filter(a => a.status === actionFilter);
+  filtered.sort((a,b) => (priorityOrder[a.priority]||2) - (priorityOrder[b.priority]||2));
+  document.getElementById('actions-count').textContent = `${filtered.length} action${filtered.length!==1?'s':''}`;
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--ink-4);font-size:13px;">No actions in this view.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(a => {
+    const sm = statusMeta2[a.status] || statusMeta2.not_started;
+    const updates = Array.isArray(a.updates) ? a.updates : (typeof a.updates === 'string' ? JSON.parse(a.updates||'[]') : []);
+    const updateCount = updates.length;
+    let dueHtml = '';
+    if (a.due_date) {
+      const due = new Date(a.due_date);
+      const today = new Date(); today.setHours(0,0,0,0);
+      const diff = Math.ceil((due-today)/(1000*60*60*24));
+      const cls = diff < 0 ? 'overdue' : diff <= 3 ? 'soon' : 'ok';
+      const label = diff < 0 ? `${Math.abs(diff)}d overdue` : diff === 0 ? 'Due today' : `Due in ${diff}d`;
+      dueHtml = `<span class="action-due ${cls}">${label}</span>`;
+    }
+    const priorityColours = { urgent:'var(--red)', high:'var(--amber)', medium:'var(--green)', low:'var(--ink-5)' };
+    const pColour = priorityColours[a.priority] || 'var(--ink-4)';
+    const notesPreview = (a.notes||'').substring(0,100);
+    return `<div class="action-card ${sm.card}" onclick="openActionDetail(${a.id})">
+      <div class="action-card-top">
+        <div class="action-title">${a.title}</div>
+        <span class="action-status-chip ${sm.chip}">${sm.label}</span>
+      </div>
+      <div class="action-meta">
+        <span class="action-tag"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>${a.function}</span>
+        <span class="action-tag"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="3.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 9c0-2 1.5-3.5 3.5-3.5s3.5 1.5 3.5 3.5" stroke="currentColor" stroke-width="1.2"/></svg>${a.owner}</span>
+        <span class="action-tag" style="color:${pColour}">${a.priority}</span>
+      </div>
+      ${notesPreview ? `<div class="action-notes-preview">${notesPreview}${(a.notes||'').length>100?'…':''}</div>` : ''}
+      <div class="action-footer">
+        <span class="action-update-count">${updateCount ? `${updateCount} update${updateCount!==1?'s':''}` : 'No updates yet'}</span>
+        ${dueHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openActionDetail(id) {
+  const a = actions.find(x => x.id === id);
+  if (!a) return;
+  currentActionId = id;
+  const sm = statusMeta2[a.status] || statusMeta2.not_started;
+  const updates = Array.isArray(a.updates) ? a.updates : (typeof a.updates === 'string' ? JSON.parse(a.updates||'[]') : []);
+
+  document.getElementById('detail-title').textContent = a.title;
+
+  const priorityColours = { urgent:'var(--red)', high:'var(--amber)', medium:'var(--green)', low:'var(--ink-4)' };
+  document.getElementById('detail-meta-row').innerHTML = `
+    <span class="action-status-chip ${sm.chip}">${sm.label}</span>
+    <span class="action-tag" style="font-size:11px;color:${priorityColours[a.priority]}">${a.priority}</span>
+    <span class="action-tag" style="font-size:11px;">${a.function}</span>
+    <span class="action-tag" style="font-size:11px;">${a.owner}</span>
+    ${a.due_date ? `<span class="action-tag" style="font-size:11px;">Due ${new Date(a.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span>` : ''}
+  `;
+
+  document.getElementById('detail-notes').textContent = a.notes || 'No description added.';
+  document.getElementById('detail-update-count').textContent = updates.length ? `${updates.length} update${updates.length!==1?'s':''}` : '';
+  document.getElementById('new-update-input').value = '';
+
+  const ul = document.getElementById('detail-updates-list');
+  if (!updates.length) {
+    ul.innerHTML = '<div style="font-size:12px;color:var(--ink-4);padding:8px 0;">No updates yet — add the first one above.</div>';
+  } else {
+    ul.innerHTML = [...updates].reverse().map(u => `
+      <div class="update-item">
+        <div class="update-text">${u.text}</div>
+        <div class="update-meta">${u.author || 'You'} · ${u.timestamp}</div>
+      </div>`).join('');
+  }
+
+  document.getElementById('action-detail-modal').classList.add('open');
+}
+
+function closeActionDetail() {
+  document.getElementById('action-detail-modal').classList.remove('open');
+  currentActionId = null;
+}
+
+async function addUpdate() {
+  const input = document.getElementById('new-update-input');
+  const text = input.value.trim();
+  if (!text || !currentActionId) return;
+  const a = actions.find(x => x.id === currentActionId);
+  if (!a) return;
+  const updates = Array.isArray(a.updates) ? [...a.updates] : [];
+  const newUpdate = { text, author:'You', timestamp: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) };
+  updates.push(newUpdate);
+  a.updates = updates;
+  if (supabaseReady) await db.from('bridge_actions').update({ updates, updated_at: new Date().toISOString() }).eq('id', currentActionId);
+  input.value = '';
+  openActionDetail(currentActionId);
+  renderActions();
+  showToast('Update posted');
+}
+
+async function updateActionStatus(newStatus) {
+  if (!currentActionId) return;
+  const a = actions.find(x => x.id === currentActionId);
+  if (!a) return;
+  a.status = newStatus;
+  if (supabaseReady) await db.from('bridge_actions').update({ status: newStatus, updated_at: new Date().toISOString() }).eq('id', currentActionId);
+  openActionDetail(currentActionId);
+  renderActions();
+  showToast('Status updated');
+}
+
+function openAddAction() { document.getElementById('action-add-modal').classList.add('open'); }
+function closeAddAction() { document.getElementById('action-add-modal').classList.remove('open'); }
+
+async function saveAction() {
+  const title = document.getElementById('a-title-input').value.trim();
+  if (!title) { showToast('Please enter a title'); return; }
+  const newAction = {
+    title,
+    notes: document.getElementById('a-notes-input').value.trim(),
+    function: document.getElementById('a-function-input').value,
+    owner: document.getElementById('a-owner-input').value.trim() || 'Unassigned',
+    priority: document.getElementById('a-priority-input').value,
+    status: 'not_started',
+    due_date: document.getElementById('a-due-input').value || null,
+    updates: [],
+  };
+  if (supabaseReady) {
+    const { data, error } = await db.from('bridge_actions').insert([newAction]).select().single();
+    if (!error && data) actions.push(data);
+  } else { newAction.id = Date.now(); actions.push(newAction); }
+  renderActions();
+  closeAddAction();
+  ['a-title-input','a-notes-input','a-owner-input','a-due-input'].forEach(id => document.getElementById(id).value = '');
+  showToast('Action saved');
+}
+
+const titles={overview:'Ministry overview',actions:'Actions',priorities:'Priorities',finance:'Finance',vision:'Vision & mission',media:'Media team',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -1813,7 +2174,7 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 
-loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();
+loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();
 </script>
 </body>
 </html>
