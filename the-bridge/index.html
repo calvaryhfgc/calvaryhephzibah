@@ -212,9 +212,42 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .cos-insight-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:5px;}
 .cos-insight-body{font-size:13px;color:var(--ink-3);line-height:1.65;}
 
+/* ── FINANCE ── */
+.fin-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;}
+.fin-card{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.fin-card-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink-4);margin-bottom:6px;}
+.fin-card-amount{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);line-height:1;}
+.fin-card-amount.income{color:var(--green);}
+.fin-card-amount.expense{color:var(--red);}
+.fin-card-amount.balance-pos{color:var(--green);}
+.fin-card-amount.balance-neg{color:var(--red);}
+.fin-card-sub{font-size:11px;color:var(--ink-4);margin-top:4px;}
+
+.fin-controls{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.fin-month-select{background:var(--white);border:1.5px solid #E2E8F0;border-radius:var(--r8);padding:7px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;cursor:pointer;}
+.fin-month-select:focus{border-color:var(--red);}
+.fin-filter-btn{padding:6px 14px;border-radius:100px;border:1.5px solid #E2E8F0;background:var(--white);font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--ink-3);cursor:pointer;transition:all 0.12s;}
+.fin-filter-btn.active{background:var(--ink);color:white;border-color:var(--ink);}
+.fin-filter-btn.income-active{background:var(--green-light);color:var(--green);border-color:#BBF7D0;}
+.fin-filter-btn.expense-active{background:var(--red-light);color:var(--red);border-color:#FECACA;}
+
+.fin-table-wrap{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);overflow:hidden;box-shadow:var(--shadow-sm);}
+.fin-table{width:100%;border-collapse:collapse;}
+.fin-table th{padding:10px 16px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ink-4);background:var(--bg);border-bottom:1px solid #E2E8F0;}
+.fin-table td{padding:12px 16px;font-size:13px;color:var(--ink-2);border-bottom:1px solid #F8FAFC;vertical-align:middle;}
+.fin-table tr:last-child td{border-bottom:none;}
+.fin-table tr:hover td{background:#FAFAFA;}
+.fin-amount-income{font-weight:600;color:var(--green);}
+.fin-amount-expense{font-weight:600;color:var(--red);}
+.fin-cat-pill{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:var(--bg);color:var(--ink-3);border:1px solid #E2E8F0;}
+.fin-empty{text-align:center;padding:48px;color:var(--ink-4);font-size:13px;}
+.fin-del-btn{background:none;border:none;color:var(--ink-5);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:var(--r4);transition:all 0.12s;}
+.fin-del-btn:hover{color:var(--red);background:var(--red-light);}
+
 @media(max-width:768px){
   .sidebar{display:none;} .main{margin-left:0;} .content{padding:20px 16px 40px;} .topbar{padding:0 16px;}
   .principles-grid{grid-template-columns:1fr;} .stat-strip{grid-template-columns:1fr 1fr;}
+  .fin-summary{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -249,6 +282,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         <div class="nav-item" onclick="showPage('priorities',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="3.5" x2="12" y2="3.5"/><line x1="2" y1="7" x2="9" y2="7"/><line x1="2" y1="10.5" x2="7" y2="10.5"/></svg>
           Priorities
+        </div>
+        <div class="nav-item" onclick="showPage('finance',this)">
+          <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="3" width="11" height="8" rx="1"/><line x1="1.5" y1="6" x2="12.5" y2="6"/><line x1="4" y1="9" x2="6" y2="9"/></svg>
+          Finance
         </div>
       </div>
       <div class="nav-group">
@@ -537,6 +574,67 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         </div>
       </div>
 
+      <!-- FINANCE -->
+      <div class="page" id="page-finance">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Finance</div>
+            <div class="page-sub">Church account tracker. Manual entry — Open Banking coming later.</div>
+          </div>
+          <button class="btn-red" onclick="openAddTransaction()">+ Add transaction</button>
+        </div>
+
+        <div class="fin-summary">
+          <div class="fin-card">
+            <div class="fin-card-label">Current balance</div>
+            <div class="fin-card-amount" id="fin-balance">£0.00</div>
+            <div class="fin-card-sub">All time</div>
+          </div>
+          <div class="fin-card">
+            <div class="fin-card-label">Income this month</div>
+            <div class="fin-card-amount income" id="fin-month-income">£0.00</div>
+            <div class="fin-card-sub" id="fin-month-label">—</div>
+          </div>
+          <div class="fin-card">
+            <div class="fin-card-label">Expenses this month</div>
+            <div class="fin-card-amount expense" id="fin-month-expense">£0.00</div>
+            <div class="fin-card-sub" id="fin-month-label2">—</div>
+          </div>
+          <div class="fin-card">
+            <div class="fin-card-label">Net this month</div>
+            <div class="fin-card-amount" id="fin-month-net">£0.00</div>
+            <div class="fin-card-sub">Income minus expenses</div>
+          </div>
+        </div>
+
+        <div class="fin-controls">
+          <select class="fin-month-select" id="fin-month-filter" onchange="renderTransactions()">
+            <option value="all">All transactions</option>
+          </select>
+          <button class="fin-filter-btn active" id="filter-all" onclick="setFilter('all')">All</button>
+          <button class="fin-filter-btn" id="filter-income" onclick="setFilter('income')">Income only</button>
+          <button class="fin-filter-btn" id="filter-expense" onclick="setFilter('expense')">Expenses only</button>
+        </div>
+
+        <div class="fin-table-wrap">
+          <table class="fin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th style="text-align:right">Amount</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="fin-tbody">
+              <tr><td colspan="6" class="fin-empty">No transactions yet — add one above.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- NOTES -->
       <div class="page" id="page-notes">
         <div class="page-header">
@@ -554,6 +652,68 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 </div>
 
 <!-- MODAL -->
+<!-- ADD TRANSACTION MODAL -->
+<div class="modal-overlay" id="transaction-modal">
+  <div class="modal">
+    <div class="modal-title">Add transaction</div>
+    <div style="display:flex;gap:12px;">
+      <div class="form-row" style="flex:1;">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-input" id="t-date-input">
+      </div>
+      <div class="form-row" style="flex:1;">
+        <label class="form-label">Type</label>
+        <select class="form-select" id="t-type-input">
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Description</label>
+      <input type="text" class="form-input" id="t-desc-input" placeholder="e.g. Sunday offering, Rent payment…">
+    </div>
+    <div style="display:flex;gap:12px;">
+      <div class="form-row" style="flex:1;">
+        <label class="form-label">Amount (£)</label>
+        <input type="number" class="form-input" id="t-amount-input" placeholder="0.00" step="0.01" min="0">
+      </div>
+      <div class="form-row" style="flex:1;">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="t-cat-input">
+          <optgroup label="Income">
+            <option value="Tithes">Tithes</option>
+            <option value="Offering">Offering</option>
+            <option value="Donation">Donation</option>
+            <option value="Event income">Event income</option>
+            <option value="Other income">Other income</option>
+          </optgroup>
+          <optgroup label="Expenses">
+            <option value="Rent / Venue">Rent / Venue</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Staff / Wages">Staff / Wages</option>
+            <option value="Equipment">Equipment</option>
+            <option value="Ministry costs">Ministry costs</option>
+            <option value="Media & tech">Media & tech</option>
+            <option value="Events">Events</option>
+            <option value="Missions">Missions</option>
+            <option value="Admin">Admin</option>
+            <option value="Other expense">Other expense</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Notes (optional)</label>
+      <input type="text" class="form-input" id="t-notes-input" placeholder="Any additional context…">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeTransactionModal()">Cancel</button>
+      <button class="btn-red" onclick="saveTransaction()">Save transaction</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="priority-modal">
   <div class="modal">
     <div class="modal-title">Add a priority</div>
@@ -717,7 +877,137 @@ async function loadNotes(){
   if(data)document.getElementById('notes-area').value=data.content||'';
 }
 
-const titles={overview:'Ministry overview',priorities:'Priorities',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
+// ── FINANCE ──────────────────────────────────────────────────────────────────
+let transactions=[];
+let finFilter='all';
+
+function fmt(n){return'£'+Math.abs(n).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function updateFinanceSummary(){
+  const now=new Date();
+  const thisMonth=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const monthLabel=now.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+
+  const allIncome=transactions.filter(t=>t.type==='income').reduce((s,t)=>s+parseFloat(t.amount),0);
+  const allExpense=transactions.filter(t=>t.type==='expense').reduce((s,t)=>s+parseFloat(t.amount),0);
+  const balance=allIncome-allExpense;
+
+  const mIncome=transactions.filter(t=>t.type==='income'&&t.date.startsWith(thisMonth)).reduce((s,t)=>s+parseFloat(t.amount),0);
+  const mExpense=transactions.filter(t=>t.type==='expense'&&t.date.startsWith(thisMonth)).reduce((s,t)=>s+parseFloat(t.amount),0);
+  const mNet=mIncome-mExpense;
+
+  const balEl=document.getElementById('fin-balance');
+  balEl.textContent=fmt(balance);
+  balEl.className='fin-card-amount '+(balance>=0?'balance-pos':'balance-neg');
+
+  document.getElementById('fin-month-income').textContent=fmt(mIncome);
+  document.getElementById('fin-month-expense').textContent=fmt(mExpense);
+
+  const netEl=document.getElementById('fin-month-net');
+  netEl.textContent=(mNet>=0?'+':'-')+fmt(mNet);
+  netEl.className='fin-card-amount '+(mNet>=0?'balance-pos':'balance-neg');
+
+  [document.getElementById('fin-month-label'),document.getElementById('fin-month-label2')].forEach(el=>{if(el)el.textContent=monthLabel;});
+
+  // populate month filter dropdown
+  const sel=document.getElementById('fin-month-filter');
+  const months=[...new Set(transactions.map(t=>t.date.substring(0,7)))].sort().reverse();
+  const current=sel.value;
+  sel.innerHTML='<option value="all">All transactions</option>';
+  months.forEach(m=>{
+    const d=new Date(m+'-01');
+    const label=d.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
+    sel.innerHTML+=`<option value="${m}"${m===current?' selected':''}>${label}</option>`;
+  });
+}
+
+function setFilter(f){
+  finFilter=f;
+  document.querySelectorAll('.fin-filter-btn').forEach(b=>b.className='fin-filter-btn');
+  if(f==='all')document.getElementById('filter-all').className='fin-filter-btn active';
+  if(f==='income')document.getElementById('filter-income').className='fin-filter-btn income-active';
+  if(f==='expense')document.getElementById('filter-expense').className='fin-filter-btn expense-active';
+  renderTransactions();
+}
+
+function renderTransactions(){
+  const monthFilter=document.getElementById('fin-month-filter').value;
+  let filtered=transactions;
+  if(monthFilter!=='all')filtered=filtered.filter(t=>t.date.startsWith(monthFilter));
+  if(finFilter==='income')filtered=filtered.filter(t=>t.type==='income');
+  if(finFilter==='expense')filtered=filtered.filter(t=>t.type==='expense');
+  filtered=[...filtered].sort((a,b)=>new Date(b.date)-new Date(a.date));
+
+  const tbody=document.getElementById('fin-tbody');
+  if(!filtered.length){
+    tbody.innerHTML='<tr><td colspan="6" class="fin-empty">No transactions for this view.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=filtered.map(t=>{
+    const dateStr=new Date(t.date).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    const amtClass=t.type==='income'?'fin-amount-income':'fin-amount-expense';
+    const amtPrefix=t.type==='income'?'+':'-';
+    return`<tr>
+      <td style="color:var(--ink-4);font-size:12px;white-space:nowrap">${dateStr}</td>
+      <td><div style="font-weight:500">${t.description}</div>${t.notes?`<div style="font-size:11px;color:var(--ink-4);margin-top:1px">${t.notes}</div>`:''}</td>
+      <td><span class="fin-cat-pill">${t.category}</span></td>
+      <td><span class="fin-filter-btn ${t.type==='income'?'income-active':'expense-active'}" style="cursor:default;font-size:10px;padding:2px 8px">${t.type}</span></td>
+      <td style="text-align:right"><span class="${amtClass}">${amtPrefix}${fmt(t.amount)}</span></td>
+      <td><button class="fin-del-btn" onclick="deleteTransaction(${t.id})" title="Delete">×</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function loadTransactions(){
+  if(!supabaseReady){renderTransactions();return;}
+  const{data,error}=await db.from('bridge_finance').select('*').order('date',{ascending:false});
+  if(!error&&data)transactions=data;
+  updateFinanceSummary();
+  renderTransactions();
+}
+
+function openAddTransaction(){
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('t-date-input').value=today;
+  document.getElementById('transaction-modal').classList.add('open');
+}
+function closeTransactionModal(){document.getElementById('transaction-modal').classList.remove('open');}
+
+async function saveTransaction(){
+  const date=document.getElementById('t-date-input').value;
+  const description=document.getElementById('t-desc-input').value.trim();
+  const amount=parseFloat(document.getElementById('t-amount-input').value);
+  const type=document.getElementById('t-type-input').value;
+  const category=document.getElementById('t-cat-input').value;
+  const notes=document.getElementById('t-notes-input').value.trim();
+
+  if(!date||!description||!amount||amount<=0){showToast('Please fill in all required fields');return;}
+
+  const newItem={date,description,amount,type,category,notes:notes||null};
+
+  if(supabaseReady){
+    const{data,error}=await db.from('bridge_finance').insert([newItem]).select().single();
+    if(!error&&data)transactions.push(data);
+    else{showToast('Error saving — check console');return;}
+  } else {newItem.id=Date.now();transactions.push(newItem);}
+
+  updateFinanceSummary();
+  renderTransactions();
+  closeTransactionModal();
+  ['t-desc-input','t-amount-input','t-notes-input'].forEach(id=>document.getElementById(id).value='');
+  showToast('Transaction saved');
+}
+
+async function deleteTransaction(id){
+  if(!confirm('Delete this transaction?'))return;
+  transactions=transactions.filter(t=>t.id!==id);
+  if(supabaseReady)await db.from('bridge_finance').delete().eq('id',id);
+  updateFinanceSummary();
+  renderTransactions();
+  showToast('Transaction deleted');
+}
+
+const titles={overview:'Ministry overview',priorities:'Priorities',finance:'Finance',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -731,7 +1021,7 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 
-loadMinistryStatuses();loadPriorities();loadNotes();
+loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();
 </script>
 </body>
 </html>
