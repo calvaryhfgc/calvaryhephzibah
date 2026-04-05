@@ -89,10 +89,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 
 /* ── MINISTRY GRID ── */
 .ministry-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-bottom:8px;}
-.min-card{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px;cursor:pointer;transition:all 0.15s;user-select:none;box-shadow:var(--shadow-sm);}
-.min-card:hover{border-color:#CBD5E1;box-shadow:var(--shadow);transform:translateY(-1px);}
+.min-card{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px;transition:all 0.15s;box-shadow:var(--shadow-sm);}
+.min-card:hover{border-color:#CBD5E1;box-shadow:var(--shadow);}
 .min-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
-.min-name{font-size:13px;font-weight:600;color:var(--ink);line-height:1.3;}
+.min-name{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;}
 .status-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:3px 7px;border-radius:100px;flex-shrink:0;white-space:nowrap;}
 .sc-red{background:var(--red-light);color:var(--red);}
 .sc-amber{background:var(--amber-light);color:var(--amber);}
@@ -100,9 +100,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .sc-grey{background:var(--slate-light);color:var(--slate);}
 .sc-dot{width:5px;height:5px;border-radius:50%;}
 .scd-red{background:var(--red);} .scd-amber{background:var(--amber);} .scd-green{background:var(--green);} .scd-grey{background:var(--slate);}
-.min-note{font-size:12px;color:var(--ink-3);line-height:1.5;}
-.min-owner{font-size:11px;color:var(--ink-4);margin-top:8px;display:flex;align-items:center;gap:4px;}
-.min-owner::before{content:'';width:14px;height:14px;border-radius:50%;background:var(--bg);border:1px solid var(--ink-5);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.min-note{font-size:12px;color:var(--ink-3);line-height:1.5;margin-bottom:10px;}
+.min-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:10px;border-top:1px solid #F8FAFC;}
+.min-owner{font-size:11px;color:var(--ink-4);display:flex;align-items:center;gap:5px;}
+.min-edit-btn{font-size:11px;font-weight:500;color:var(--ink-4);background:transparent;border:1px solid #E2E8F0;border-radius:var(--r4);padding:3px 8px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.12s;}
+.min-edit-btn:hover{background:var(--bg);color:var(--ink);border-color:#CBD5E1;}
 
 /* ── PRIORITY LIST ── */
 .priority-list{display:flex;flex-direction:column;gap:8px;}
@@ -244,7 +246,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .fin-del-btn{background:none;border:none;color:var(--ink-5);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:var(--r4);transition:all 0.12s;}
 .fin-del-btn:hover{color:var(--red);background:var(--red-light);}
 
-/* ── ACTIONS ── */
+/* ── MINISTRY STATUS MODAL BUTTONS ── */
+.ministry-status-btn{padding:10px 12px;border-radius:var(--r8);border:1.5px solid #E2E8F0;background:var(--white);font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;text-align:left;transition:all 0.12s;display:flex;align-items:center;}
+.ministry-status-btn:hover{border-color:#CBD5E1;background:var(--bg);}
+.ministry-status-btn.selected{border-width:2px;}
+.msb-red.selected{border-color:var(--red);background:var(--red-light);color:var(--red);}
+.msb-amber.selected{border-color:var(--amber);background:var(--amber-light);color:var(--amber);}
+.msb-green.selected{border-color:var(--green);background:var(--green-light);color:var(--green);}
+.msb-grey.selected{border-color:var(--slate);background:var(--slate-light);color:var(--slate);}
 .actions-toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
 .actions-filter{padding:6px 12px;border-radius:100px;border:1.5px solid #E2E8F0;background:var(--white);font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--ink-3);cursor:pointer;transition:all 0.12s;}
 .actions-filter.af-active{background:var(--ink);color:white;border-color:var(--ink);}
@@ -451,7 +460,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         </div>
 
         <div class="ministry-grid" id="ministry-grid"></div>
-        <p style="font-size:11px;color:var(--ink-4);text-align:center;margin-top:6px;">Tap any card to cycle its status · changes save automatically</p>
+        <p style="font-size:11px;color:var(--ink-4);text-align:center;margin-top:6px;">Click "Update" on any card to change its status with a reason</p>
       </div>
 
       <!-- ACTIONS -->
@@ -1325,6 +1334,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 </div>
 
 <!-- MODAL -->
+<!-- MINISTRY STATUS UPDATE MODAL -->
+<div class="modal-overlay" id="ministry-modal">
+  <div class="modal">
+    <div class="modal-title" id="ministry-modal-title">Update ministry status</div>
+    <div class="form-row">
+      <label class="form-label">Status</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="ministry-status-buttons">
+        <button onclick="selectMinistryStatus('red',this)" class="ministry-status-btn msb-red">
+          <div class="sc-dot scd-red" style="width:8px;height:8px;display:inline-block;margin-right:6px;"></div>Urgent attention
+        </button>
+        <button onclick="selectMinistryStatus('amber',this)" class="ministry-status-btn msb-amber">
+          <div class="sc-dot scd-amber" style="width:8px;height:8px;display:inline-block;margin-right:6px;"></div>Stretched
+        </button>
+        <button onclick="selectMinistryStatus('green',this)" class="ministry-status-btn msb-green">
+          <div class="sc-dot scd-green" style="width:8px;height:8px;display:inline-block;margin-right:6px;"></div>Functioning well
+        </button>
+        <button onclick="selectMinistryStatus('grey',this)" class="ministry-status-btn msb-grey">
+          <div class="sc-dot scd-grey" style="width:8px;height:8px;display:inline-block;margin-right:6px;"></div>Unknown
+        </button>
+      </div>
+    </div>
+    <div class="form-row" style="margin-top:4px;">
+      <label class="form-label">Note (optional) — what's changed or why</label>
+      <textarea class="form-textarea" id="ministry-note-input" placeholder="e.g. New coordinator appointed, situation has improved…" style="min-height:60px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeMinistryModal()">Cancel</button>
+      <button class="btn-red" onclick="saveMinistryStatus()">Save status</button>
+    </div>
+  </div>
+</div>
+
 <!-- ADD TRANSACTION MODAL -->
 <div class="modal-overlay" id="transaction-modal">
   <div class="modal">
@@ -1537,36 +1578,82 @@ function renderMinistries(){
   document.getElementById('ministry-grid').innerHTML=ministries.map(m=>{
     const s=ministryStatuses[m.id]||m.status;
     const meta=statusMeta[s];
-    return `<div class="min-card" onclick="cycleStatus('${m.id}')">
-      <div class="min-top">
+    const noteText=ministryNotes[m.id]||m.note;
+    return `<div class="min-card">
+      <div class="min-top" style="margin-bottom:8px;">
         <div class="min-name">${m.name}</div>
         <div class="status-chip ${meta.chip}" id="chip-${m.id}">
           <div class="sc-dot ${meta.dot}"></div>${meta.label}
         </div>
       </div>
-      <div class="min-note">${m.note}</div>
-      <div class="min-owner">${m.owner}</div>
+      <div class="min-note">${noteText}</div>
+      <div class="min-footer">
+        <span class="min-owner">${m.owner}</span>
+        <button class="min-edit-btn" onclick="openMinistryModal('${m.id}')">Update status</button>
+      </div>
     </div>`;
   }).join('');
   updateStats();
 }
 
-async function cycleStatus(id){
-  const cycle={red:'amber',amber:'green',green:'grey',grey:'red'};
-  const next=cycle[ministryStatuses[id]||'grey'];
-  ministryStatuses[id]=next;
-  const chip=document.getElementById('chip-'+id);
-  const meta=statusMeta[next];
-  if(chip){chip.className=`status-chip ${meta.chip}`;chip.innerHTML=`<div class="sc-dot ${meta.dot}"></div>${meta.label}`;}
+let currentMinistryId = null;
+let selectedMinistryStatus = null;
+const ministryNotes = {};
+
+function openMinistryModal(id) {
+  currentMinistryId = id;
+  const m = ministries.find(x => x.id === id);
+  if (!m) return;
+  const currentStatus = ministryStatuses[id] || m.status;
+  selectedMinistryStatus = currentStatus;
+  document.getElementById('ministry-modal-title').textContent = `Update — ${m.name}`;
+  document.getElementById('ministry-note-input').value = '';
+  document.querySelectorAll('.ministry-status-btn').forEach(b => b.classList.remove('selected'));
+  const btnMap = { red:'msb-red', amber:'msb-amber', green:'msb-green', grey:'msb-grey' };
+  document.querySelectorAll('.ministry-status-btn').forEach(b => {
+    if (b.classList.contains(btnMap[currentStatus])) b.classList.add('selected');
+  });
+  document.getElementById('ministry-modal').classList.add('open');
+}
+
+function selectMinistryStatus(status, btn) {
+  selectedMinistryStatus = status;
+  document.querySelectorAll('.ministry-status-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function closeMinistryModal() {
+  document.getElementById('ministry-modal').classList.remove('open');
+  currentMinistryId = null;
+  selectedMinistryStatus = null;
+}
+
+async function saveMinistryStatus() {
+  if (!currentMinistryId || !selectedMinistryStatus) return;
+  const note = document.getElementById('ministry-note-input').value.trim();
+  ministryStatuses[currentMinistryId] = selectedMinistryStatus;
+  if (note) ministryNotes[currentMinistryId] = note;
+  const chip = document.getElementById('chip-' + currentMinistryId);
+  const meta = statusMeta[selectedMinistryStatus];
+  if (chip) { chip.className = `status-chip ${meta.chip}`; chip.innerHTML = `<div class="sc-dot ${meta.dot}"></div>${meta.label}`; }
   updateStats();
-  if(supabaseReady)await db.from('bridge_ministry_status').upsert({ministry_id:id,status:next,updated_at:new Date().toISOString()},{onConflict:'ministry_id'});
+  if (supabaseReady) {
+    const payload = { ministry_id: currentMinistryId, status: selectedMinistryStatus, updated_at: new Date().toISOString() };
+    if (note) payload.note = note;
+    await db.from('bridge_ministry_status').upsert(payload, { onConflict: 'ministry_id' });
+  }
+  renderMinistries();
+  closeMinistryModal();
   showToast('Status updated');
 }
 
 async function loadMinistryStatuses(){
   if(!supabaseReady){renderMinistries();return;}
   const{data}=await db.from('bridge_ministry_status').select('*');
-  if(data)data.forEach(r=>ministryStatuses[r.ministry_id]=r.status);
+  if(data)data.forEach(r=>{
+    ministryStatuses[r.ministry_id]=r.status;
+    if(r.note)ministryNotes[r.ministry_id]=r.note;
+  });
   renderMinistries();
 }
 
