@@ -308,10 +308,24 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .btn-sm-red{background:var(--red);color:white;border:none;padding:9px 14px;border-radius:var(--r8);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background 0.12s;white-space:nowrap;}
 .btn-sm-red:hover{background:var(--red-dark);}
 
+/* List view */
+.actions-list-wrap{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);overflow:hidden;box-shadow:var(--shadow-sm);}
+.actions-list-header{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 90px;padding:10px 16px;background:var(--bg);border-bottom:1px solid #E2E8F0;}
+.alh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ink-4);}
+.action-list-row{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 90px;padding:12px 16px;border-bottom:1px solid #F8FAFC;cursor:pointer;transition:background 0.1s;align-items:center;}
+.action-list-row:last-child{border-bottom:none;}
+.action-list-row:hover{background:#FAFAFA;}
+.alr-title{font-size:13px;font-weight:500;color:var(--ink);padding-right:12px;display:flex;align-items:center;gap:8px;overflow:hidden;}
+.alr-title-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.alr-bar{width:3px;height:14px;border-radius:2px;flex-shrink:0;}
+.alr-cell{font-size:12px;color:var(--ink-3);}
+.alr-due{font-size:12px;font-weight:500;}
+
 @media(max-width:768px){
   .sidebar{display:none;} .main{margin-left:0;} .content{padding:20px 16px 40px;} .topbar{padding:0 16px;}
   .principles-grid{grid-template-columns:1fr;} .stat-strip{grid-template-columns:1fr 1fr;}
   .fin-summary{grid-template-columns:1fr 1fr;} .actions-grid{grid-template-columns:1fr;}
+  .actions-list-header{display:none;} .action-list-row{grid-template-columns:1fr auto;gap:8px;}
 }
 </style>
 </head>
@@ -468,7 +482,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         <div class="page-header">
           <div>
             <div class="page-title">Actions</div>
-            <div class="page-sub">Every live action, who owns it, and what's happening. Tap any card for the full detail.</div>
+            <div class="page-sub">Every live action, who owns it, and what's happening. Tap any row for the full detail.</div>
           </div>
           <button class="btn-red" onclick="openAddAction()">+ Add action</button>
         </div>
@@ -480,11 +494,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
           <button class="actions-filter" id="af-done" onclick="setActionFilter('done',this)">Done</button>
           <button class="actions-filter" id="af-blocked" onclick="setActionFilter('blocked',this)">Blocked</button>
           <div style="flex:1;"></div>
-          <div style="font-size:12px;color:var(--ink-4);" id="actions-count"></div>
+          <div style="font-size:12px;color:var(--ink-4);margin-right:8px;" id="actions-count"></div>
+          <!-- View toggle -->
+          <div style="display:flex;background:var(--bg);border:1px solid #E2E8F0;border-radius:var(--r8);padding:3px;gap:2px;">
+            <button id="view-grid-btn" onclick="setActionsView('grid')" title="Card view"
+              style="width:28px;height:26px;border:none;border-radius:5px;background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;box-shadow:var(--shadow-sm);">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="0.5" y="0.5" width="5" height="5" rx="1" fill="#0F172A"/><rect x="7.5" y="0.5" width="5" height="5" rx="1" fill="#0F172A"/><rect x="0.5" y="7.5" width="5" height="5" rx="1" fill="#0F172A"/><rect x="7.5" y="7.5" width="5" height="5" rx="1" fill="#0F172A"/></svg>
+            </button>
+            <button id="view-list-btn" onclick="setActionsView('list')" title="List view"
+              style="width:28px;height:26px;border:none;border-radius:5px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"><line x1="1" y1="2.5" x2="12" y2="2.5"/><line x1="1" y1="6.5" x2="12" y2="6.5"/><line x1="1" y1="10.5" x2="12" y2="10.5"/></svg>
+            </button>
+          </div>
         </div>
 
-        <div class="actions-grid" id="actions-grid">
-          <div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--ink-4);font-size:13px;">Loading actions…</div>
+        <div id="actions-container">
+          <div style="text-align:center;padding:48px;color:var(--ink-4);font-size:13px;">Loading actions…</div>
         </div>
       </div>
 
@@ -2066,16 +2091,127 @@ async function deleteTransaction(id){
 // ── ACTIONS ──────────────────────────────────────────────────────────────────
 let actions = [];
 let actionFilter = 'all';
+let actionsView = 'grid'; // 'grid' | 'list'
 let currentActionId = null;
 
 const statusMeta2 = {
-  not_started: { label:'Not started', chip:'ast-todo', card:'ac-todo' },
-  in_progress:  { label:'In progress', chip:'ast-doing', card:'ac-doing' },
-  done:         { label:'Done',         chip:'ast-done',  card:'ac-done' },
-  blocked:      { label:'Blocked',      chip:'ast-blocked',card:'ac-blocked' },
+  not_started: { label:'Not started', chip:'ast-todo', card:'ac-todo', bar:'#3B82F6' },
+  in_progress:  { label:'In progress', chip:'ast-doing', card:'ac-doing', bar:'#D97706' },
+  done:         { label:'Done',         chip:'ast-done',  card:'ac-done',  bar:'#16A34A' },
+  blocked:      { label:'Blocked',      chip:'ast-blocked',card:'ac-blocked',bar:'#C41E2A' },
 };
 
-const defaultActions = [
+const priorityOrder = { urgent:0, high:1, medium:2, low:3 };
+const priorityColours = { urgent:'var(--red)', high:'var(--amber)', medium:'var(--green)', low:'var(--ink-4)' };
+
+function setActionsView(view) {
+  actionsView = view;
+  const gridBtn = document.getElementById('view-grid-btn');
+  const listBtn = document.getElementById('view-list-btn');
+  if (view === 'grid') {
+    gridBtn.style.background = 'var(--white)';
+    gridBtn.style.boxShadow = 'var(--shadow-sm)';
+    gridBtn.querySelector('svg').setAttribute('fill', '#0F172A');
+    listBtn.style.background = 'transparent';
+    listBtn.style.boxShadow = 'none';
+    listBtn.querySelector('svg').setAttribute('stroke', '#94A3B8');
+  } else {
+    listBtn.style.background = 'var(--white)';
+    listBtn.style.boxShadow = 'var(--shadow-sm)';
+    listBtn.querySelector('svg').setAttribute('stroke', '#0F172A');
+    gridBtn.style.background = 'transparent';
+    gridBtn.style.boxShadow = 'none';
+    gridBtn.querySelector('svg').setAttribute('fill', '#94A3B8');
+  }
+  renderActions();
+}
+
+function setActionFilter(f, btn) {
+  actionFilter = f;
+  document.querySelectorAll('.actions-filter').forEach(b => {
+    b.classList.remove('af-active','af-todo','af-doing','af-done');
+  });
+  const map = { all:'af-active', not_started:'af-todo', in_progress:'af-doing', done:'af-done', blocked:'' };
+  if (btn) btn.classList.add(map[f] || 'af-active');
+  renderActions();
+}
+
+function renderActions() {
+  const container = document.getElementById('actions-container');
+  let filtered = actionFilter === 'all' ? [...actions] : actions.filter(a => a.status === actionFilter);
+  filtered.sort((a,b) => (priorityOrder[a.priority]||2) - (priorityOrder[b.priority]||2));
+  document.getElementById('actions-count').textContent = `${filtered.length} action${filtered.length!==1?'s':''}`;
+
+  if (!filtered.length) {
+    container.innerHTML = `<div style="text-align:center;padding:48px;color:var(--ink-4);font-size:13px;">No actions in this view.</div>`;
+    return;
+  }
+
+  if (actionsView === 'list') {
+    renderListView(filtered, container);
+  } else {
+    renderGridView(filtered, container);
+  }
+}
+
+function getDueHtml(due_date, fontSize) {
+  if (!due_date) return '';
+  const due = new Date(due_date);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diff = Math.ceil((due-today)/(1000*60*60*24));
+  const cls = diff < 0 ? 'overdue' : diff <= 3 ? 'soon' : 'ok';
+  const label = diff < 0 ? `${Math.abs(diff)}d overdue` : diff === 0 ? 'Today' : `${diff}d`;
+  return `<span class="action-due ${cls}" style="font-size:${fontSize||11}px">${label}</span>`;
+}
+
+function renderGridView(items, container) {
+  container.innerHTML = `<div class="actions-grid">${items.map(a => {
+    const sm = statusMeta2[a.status] || statusMeta2.not_started;
+    const updates = Array.isArray(a.updates) ? a.updates : JSON.parse(a.updates||'[]');
+    const notesPreview = (a.notes||'').substring(0,100);
+    return `<div class="action-card ${sm.card}" onclick="openActionDetail(${a.id})">
+      <div class="action-card-top">
+        <div class="action-title">${a.title}</div>
+        <span class="action-status-chip ${sm.chip}">${sm.label}</span>
+      </div>
+      <div class="action-meta">
+        <span class="action-tag">${a.function}</span>
+        <span class="action-tag">${a.owner}</span>
+        <span class="action-tag" style="color:${priorityColours[a.priority]}">${a.priority}</span>
+      </div>
+      ${notesPreview ? `<div class="action-notes-preview">${notesPreview}${(a.notes||'').length>100?'…':''}</div>` : ''}
+      <div class="action-footer">
+        <span class="action-update-count">${updates.length ? `${updates.length} update${updates.length!==1?'s':''}` : 'No updates'}</span>
+        ${getDueHtml(a.due_date, 11)}
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderListView(items, container) {
+  container.innerHTML = `<div class="actions-list-wrap">
+    <div class="actions-list-header">
+      <div class="alh">Action</div>
+      <div class="alh">Function</div>
+      <div class="alh">Owner</div>
+      <div class="alh">Status</div>
+      <div class="alh">Due</div>
+    </div>
+    ${items.map(a => {
+      const sm = statusMeta2[a.status] || statusMeta2.not_started;
+      return `<div class="action-list-row" onclick="openActionDetail(${a.id})">
+        <div class="alr-title">
+          <div class="alr-bar" style="background:${sm.bar}"></div>
+          <span class="alr-title-text">${a.title}</span>
+        </div>
+        <div class="alr-cell">${a.function}</div>
+        <div class="alr-cell">${a.owner}</div>
+        <div class="alr-cell"><span class="action-status-chip ${sm.chip}">${sm.label}</span></div>
+        <div class="alr-due">${getDueHtml(a.due_date, 12) || '<span style="color:var(--ink-5);font-size:12px;">—</span>'}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
   { id:1,  title:'Call Pastor Kayode & Kemi — arrange McDonald\'s meeting', function:'Leadership', owner:'Pastor Shade', status:'in_progress', priority:'urgent', due_date:'2026-04-06', notes:'Meeting tomorrow after Easter Monday. Location: McDonald\'s. Sister Pauline to be informed. Do not let them leave without speaking their mind.', updates:[] },
   { id:2,  title:'Confirm Caster for Sunday 20th April — rehearsal this week', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Tactical hold — no gap visible after Dr Ayo\'s last Sunday. Caster out front, keys player to support. 3-4 familiar songs. Rehearsal non-negotiable.', updates:[] },
   { id:3,  title:'Approach Bolaji Adebanjo re MD role — private conversation', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Test the water privately. Come with the vision — Maverick City standard, full band. Is he willing and able? Access to players through his touring network is the key value.', updates:[] },
@@ -2095,69 +2231,12 @@ async function loadActions() {
   renderActions();
 }
 
-function setActionFilter(f, btn) {
-  actionFilter = f;
-  document.querySelectorAll('.actions-filter').forEach(b => {
-    b.classList.remove('af-active','af-todo','af-doing','af-done');
-  });
-  const map = { all:'af-active', not_started:'af-todo', in_progress:'af-doing', done:'af-done', blocked:'' };
-  if (btn) { btn.classList.add(map[f] || 'af-active'); }
-  renderActions();
-}
-
-function renderActions() {
-  const grid = document.getElementById('actions-grid');
-  const priorityOrder = { urgent:0, high:1, medium:2, low:3 };
-  let filtered = actionFilter === 'all' ? [...actions] : actions.filter(a => a.status === actionFilter);
-  filtered.sort((a,b) => (priorityOrder[a.priority]||2) - (priorityOrder[b.priority]||2));
-  document.getElementById('actions-count').textContent = `${filtered.length} action${filtered.length!==1?'s':''}`;
-
-  if (!filtered.length) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--ink-4);font-size:13px;">No actions in this view.</div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(a => {
-    const sm = statusMeta2[a.status] || statusMeta2.not_started;
-    const updates = Array.isArray(a.updates) ? a.updates : (typeof a.updates === 'string' ? JSON.parse(a.updates||'[]') : []);
-    const updateCount = updates.length;
-    let dueHtml = '';
-    if (a.due_date) {
-      const due = new Date(a.due_date);
-      const today = new Date(); today.setHours(0,0,0,0);
-      const diff = Math.ceil((due-today)/(1000*60*60*24));
-      const cls = diff < 0 ? 'overdue' : diff <= 3 ? 'soon' : 'ok';
-      const label = diff < 0 ? `${Math.abs(diff)}d overdue` : diff === 0 ? 'Due today' : `Due in ${diff}d`;
-      dueHtml = `<span class="action-due ${cls}">${label}</span>`;
-    }
-    const priorityColours = { urgent:'var(--red)', high:'var(--amber)', medium:'var(--green)', low:'var(--ink-5)' };
-    const pColour = priorityColours[a.priority] || 'var(--ink-4)';
-    const notesPreview = (a.notes||'').substring(0,100);
-    return `<div class="action-card ${sm.card}" onclick="openActionDetail(${a.id})">
-      <div class="action-card-top">
-        <div class="action-title">${a.title}</div>
-        <span class="action-status-chip ${sm.chip}">${sm.label}</span>
-      </div>
-      <div class="action-meta">
-        <span class="action-tag"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="1" y="1" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/></svg>${a.function}</span>
-        <span class="action-tag"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="3.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1.5 9c0-2 1.5-3.5 3.5-3.5s3.5 1.5 3.5 3.5" stroke="currentColor" stroke-width="1.2"/></svg>${a.owner}</span>
-        <span class="action-tag" style="color:${pColour}">${a.priority}</span>
-      </div>
-      ${notesPreview ? `<div class="action-notes-preview">${notesPreview}${(a.notes||'').length>100?'…':''}</div>` : ''}
-      <div class="action-footer">
-        <span class="action-update-count">${updateCount ? `${updateCount} update${updateCount!==1?'s':''}` : 'No updates yet'}</span>
-        ${dueHtml}
-      </div>
-    </div>`;
-  }).join('');
-}
-
 function openActionDetail(id) {
   const a = actions.find(x => x.id === id);
   if (!a) return;
   currentActionId = id;
   const sm = statusMeta2[a.status] || statusMeta2.not_started;
-  const updates = Array.isArray(a.updates) ? a.updates : (typeof a.updates === 'string' ? JSON.parse(a.updates||'[]') : []);
+  const updates = Array.isArray(a.updates) ? a.updates : JSON.parse(a.updates||'[]');
 
   document.getElementById('detail-title').textContent = a.title;
 
