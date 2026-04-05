@@ -579,9 +579,47 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         <div class="page-header">
           <div>
             <div class="page-title">Finance</div>
-            <div class="page-sub">Church account tracker. Manual entry — Open Banking coming later.</div>
+            <div class="page-sub">Church account tracker. Upload a NatWest CSV statement or add manually.</div>
           </div>
-          <button class="btn-red" onclick="openAddTransaction()">+ Add transaction</button>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <button class="btn-ghost" onclick="document.getElementById('csv-upload').click()">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="margin-right:4px;vertical-align:middle"><path d="M6.5 1v8M3.5 6l3-3 3 3"/><path d="M1.5 10.5v1h10v-1"/></svg>
+              Upload statement
+            </button>
+            <input type="file" id="csv-upload" accept=".csv" style="display:none" onchange="handleCSVUpload(event)">
+            <button class="btn-red" onclick="openAddTransaction()">+ Add transaction</button>
+          </div>
+        </div>
+
+        <!-- Upload status banner -->
+        <div id="upload-banner" style="display:none;background:var(--green-light);border:1px solid #BBF7D0;border-radius:var(--r12);padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--green);"></div>
+        <div id="upload-error" style="display:none;background:var(--red-light);border:1px solid #FECACA;border-radius:var(--r12);padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--red);"></div>
+
+        <!-- Upload preview -->
+        <div id="upload-preview" style="display:none;">
+          <div class="card" style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <div>
+                <div class="card-label">Statement preview</div>
+                <div style="font-size:13px;color:var(--ink-2);">Review before importing. Uncheck any rows you don't want.</div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <button class="btn-ghost" onclick="cancelUpload()">Cancel</button>
+                <button class="btn-red" onclick="confirmImport()" id="import-btn">Import all</button>
+              </div>
+            </div>
+            <div class="fin-table-wrap" style="max-height:340px;overflow-y:auto;">
+              <table class="fin-table">
+                <thead>
+                  <tr>
+                    <th style="width:32px;"><input type="checkbox" id="select-all-rows" onchange="toggleAllRows(this)" checked></th>
+                    <th>Date</th><th>Description</th><th>Type</th><th style="text-align:right">Amount</th><th>Category (auto)</th>
+                  </tr>
+                </thead>
+                <tbody id="preview-tbody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
 
         <div class="fin-summary">
@@ -877,7 +915,210 @@ async function loadNotes(){
   if(data)document.getElementById('notes-area').value=data.content||'';
 }
 
-// ── FINANCE ──────────────────────────────────────────────────────────────────
+// ── CSV STATEMENT UPLOAD ─────────────────────────────────────────────────────
+// NatWest CSV format: Date,Transaction Type,Sort Code,Account Number,Transaction Description,Debit Amount,Credit Amount,Balance
+// Also handles simpler: Date,Description,Type,Value,Balance
+
+let pendingImportRows = [];
+
+function autoCategory(desc) {
+  const d = desc.toLowerCase();
+  if (d.includes('tithe') || d.includes('offering') || d.includes('collection')) return 'Offering';
+  if (d.includes('donation') || d.includes('gift aid') || d.includes('giftaid')) return 'Donation';
+  if (d.includes('rent') || d.includes('hall') || d.includes('venue') || d.includes('church house')) return 'Rent / Venue';
+  if (d.includes('electric') || d.includes('gas') || d.includes('water') || d.includes('utility') || d.includes('british gas') || d.includes('edf') || d.includes('eon') || d.includes('npower')) return 'Utilities';
+  if (d.includes('salary') || d.includes('wages') || d.includes('payroll') || d.includes('pastor')) return 'Staff / Wages';
+  if (d.includes('amazon') || d.includes('equipment') || d.includes('hardware')) return 'Equipment';
+  if (d.includes('media') || d.includes('adobe') || d.includes('zoom') || d.includes('streaming') || d.includes('spotify') || d.includes('youtube')) return 'Media & tech';
+  if (d.includes('event') || d.includes('ticket') || d.includes('catering') || d.includes('conference')) return 'Events';
+  if (d.includes('mission') || d.includes('outreach') || d.includes('charity')) return 'Missions';
+  return 'Admin';
+}
+
+function parseNatWestCSV(text) {
+  const lines = text.trim().split('\n').filter(l => l.trim());
+  if (lines.length < 2) throw new Error('File appears to be empty or invalid.');
+
+  const header = lines[0].toLowerCase().replace(/"/g, '');
+  const rows = [];
+
+  // Detect NatWest format: Date,Transaction Type,Sort Code,Account Number,Transaction Description,Debit Amount,Credit Amount,Balance
+  const isNatWest = header.includes('transaction type') || header.includes('debit amount') || header.includes('credit amount');
+
+  for (let i = 1; i < lines.length; i++) {
+    const raw = lines[i];
+    if (!raw.trim()) continue;
+
+    // Parse CSV respecting quoted fields
+    const cols = raw.match(/(".*?"|[^",]+|(?<=,)(?=,)|(?<=,)$|^(?=,))/g) || raw.split(',');
+    const clean = cols.map(c => c.replace(/^"|"$/g, '').trim());
+
+    try {
+      let date, description, type, amount;
+
+      if (isNatWest) {
+        // NatWest: Date, Tx Type, Sort Code, Account No, Description, Debit, Credit, Balance
+        const rawDate = clean[0];
+        description = clean[4] || clean[1] || 'Unknown';
+        const debit = parseFloat(clean[5]) || 0;
+        const credit = parseFloat(clean[6]) || 0;
+
+        if (!rawDate || (!debit && !credit)) continue;
+
+        // NatWest date format: DD/MM/YYYY
+        const parts = rawDate.split('/');
+        if (parts.length === 3) {
+          date = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+        } else {
+          date = rawDate;
+        }
+
+        if (credit > 0) { type = 'income'; amount = credit; }
+        else { type = 'expense'; amount = debit; }
+
+      } else {
+        // Generic: Date, Description, Type, Value, Balance
+        const rawDate = clean[0];
+        description = clean[1] || 'Unknown';
+        const value = parseFloat(clean[3]) || 0;
+
+        if (!rawDate || !value) continue;
+
+        const parts = rawDate.split('/');
+        if (parts.length === 3) {
+          date = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
+        } else {
+          date = rawDate;
+        }
+
+        type = value >= 0 ? 'income' : 'expense';
+        amount = Math.abs(value);
+      }
+
+      if (amount <= 0 || !date || date === 'NaN-NaN-NaN') continue;
+
+      rows.push({
+        date,
+        description: description.substring(0, 120),
+        type,
+        amount: parseFloat(amount.toFixed(2)),
+        category: type === 'income' ? (autoCategory(description) === 'Admin' ? 'Offering' : autoCategory(description)) : autoCategory(description),
+        notes: null,
+        _selected: true
+      });
+    } catch(e) { continue; }
+  }
+
+  return rows;
+}
+
+function handleCSVUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  event.target.value = '';
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const rows = parseNatWestCSV(e.target.result);
+      if (!rows.length) {
+        showUploadError('No valid transactions found in this file. Make sure it\'s a NatWest CSV export.');
+        return;
+      }
+      pendingImportRows = rows;
+      showUploadPreview(rows);
+    } catch(err) {
+      showUploadError('Could not read this file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function showUploadPreview(rows) {
+  document.getElementById('upload-preview').style.display = 'block';
+  document.getElementById('upload-banner').style.display = 'none';
+  document.getElementById('upload-error').style.display = 'none';
+  document.getElementById('import-btn').textContent = `Import ${rows.length} transactions`;
+
+  const tbody = document.getElementById('preview-tbody');
+  tbody.innerHTML = rows.map((r, i) => {
+    const dateStr = new Date(r.date).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'});
+    const amtClass = r.type === 'income' ? 'fin-amount-income' : 'fin-amount-expense';
+    const amtPrefix = r.type === 'income' ? '+' : '-';
+    return `<tr id="preview-row-${i}" style="${!r._selected?'opacity:0.4':''}">
+      <td><input type="checkbox" ${r._selected?'checked':''} onchange="toggleRow(${i},this)"></td>
+      <td style="font-size:12px;color:var(--ink-4);white-space:nowrap">${dateStr}</td>
+      <td style="font-size:12px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.description}">${r.description}</td>
+      <td><span class="fin-filter-btn ${r.type==='income'?'income-active':'expense-active'}" style="cursor:default;font-size:10px;padding:2px 8px">${r.type}</span></td>
+      <td style="text-align:right"><span class="${amtClass}">${amtPrefix}${fmt(r.amount)}</span></td>
+      <td><span class="fin-cat-pill">${r.category}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleRow(i, cb) {
+  pendingImportRows[i]._selected = cb.checked;
+  const row = document.getElementById('preview-row-' + i);
+  if (row) row.style.opacity = cb.checked ? '1' : '0.4';
+  const selected = pendingImportRows.filter(r => r._selected).length;
+  document.getElementById('import-btn').textContent = `Import ${selected} transaction${selected !== 1 ? 's' : ''}`;
+}
+
+function toggleAllRows(masterCb) {
+  pendingImportRows.forEach((r, i) => {
+    r._selected = masterCb.checked;
+    const row = document.getElementById('preview-row-' + i);
+    const cb = row ? row.querySelector('input[type=checkbox]') : null;
+    if (cb) cb.checked = masterCb.checked;
+    if (row) row.style.opacity = masterCb.checked ? '1' : '0.4';
+  });
+  const selected = pendingImportRows.filter(r => r._selected).length;
+  document.getElementById('import-btn').textContent = `Import ${selected} transaction${selected !== 1 ? 's' : ''}`;
+}
+
+function cancelUpload() {
+  pendingImportRows = [];
+  document.getElementById('upload-preview').style.display = 'none';
+}
+
+async function confirmImport() {
+  const toImport = pendingImportRows.filter(r => r._selected).map(({_selected, ...r}) => r);
+  if (!toImport.length) { showToast('No rows selected'); return; }
+
+  const btn = document.getElementById('import-btn');
+  btn.textContent = 'Importing…';
+  btn.disabled = true;
+
+  let imported = 0;
+  if (supabaseReady) {
+    const { data, error } = await db.from('bridge_finance').insert(toImport).select();
+    if (!error && data) { transactions.push(...data); imported = data.length; }
+    else { showUploadError('Import failed — ' + (error?.message || 'unknown error')); btn.disabled = false; btn.textContent = 'Import'; return; }
+  } else {
+    toImport.forEach(r => { r.id = Date.now() + Math.random(); transactions.push(r); imported++; });
+  }
+
+  pendingImportRows = [];
+  document.getElementById('upload-preview').style.display = 'none';
+  updateFinanceSummary();
+  renderTransactions();
+
+  const banner = document.getElementById('upload-banner');
+  banner.textContent = `✓ ${imported} transaction${imported !== 1 ? 's' : ''} imported successfully.`;
+  banner.style.display = 'block';
+  setTimeout(() => { banner.style.display = 'none'; }, 5000);
+
+  btn.disabled = false;
+}
+
+function showUploadError(msg) {
+  const el = document.getElementById('upload-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 6000);
+}
+
+
 let transactions=[];
 let finFilter='all';
 
