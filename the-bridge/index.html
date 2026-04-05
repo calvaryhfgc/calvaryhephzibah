@@ -234,6 +234,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(
         Pastoral load
       </div>
       <div class="nav-label">Tools</div>
+      <div class="nav-item" onclick="showPage('cos',this)">
+        <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="4" x2="7" y2="7.5"/><line x1="7" y1="7.5" x2="9" y2="9"/></svg>
+        Chief of Staff
+      </div>
       <div class="nav-item" onclick="showPage('notes',this)">
         <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="11" height="11" rx="1"/><line x1="4" y1="5" x2="10" y2="5"/><line x1="4" y1="7.5" x2="8" y2="7.5"/></svg>
         Notes
@@ -353,6 +357,111 @@ body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(
         </div>
       </div>
 
+      <!-- CHIEF OF STAFF -->
+      <div class="page" id="page-cos">
+        <div class="page-header">
+          <div class="page-title">Chief of Staff</div>
+          <div class="page-sub">Your private working layer. Not for sharing — for thinking, tracking, and moving.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Your position — honest assessment</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div class="principle" style="border-left-color:rgba(201,168,76,0.4);">
+              <strong>What you actually are</strong>
+              <p>Unofficial Chief of Staff. Most trusted person to the General Overseer. Across media, operations, hiring, and strategy. Family founder's son. The only person currently positioned to hold the coordination layer the Resident Pastor role left vacant.</p>
+            </div>
+            <div class="principle" style="border-left-color:rgba(201,168,76,0.4);">
+              <strong>What's holding you back</strong>
+              <p>No formal title. Navigating carefully around a dysfunctional team. Reluctance to be seen as stepping on toes. But the window is now — the departures have created space, and the church needs someone to move decisively.</p>
+            </div>
+            <div class="principle" style="border-left-color:rgba(34,197,94,0.4);">
+              <strong>What you have that no one else does</strong>
+              <p>Pastor Shade's trust. Family mandate. Strategic clarity. The systems. And the willingness to build rather than just talk. That combination is rare and it matters.</p>
+            </div>
+            <div class="principle" style="border-left-color:rgba(196,30,42,0.4);">
+              <strong>The conversation that needs to happen</strong>
+              <p>"Mum, I want to help carry this properly — not just in the background. Can we talk about what that looks like formally?" The Bridge is the evidence. The timing is now.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Leadership team — private read</div>
+          <div class="del-list">
+            <div class="del-item">
+              <div><div class="del-task">Pastor Shade Olatoye</div><div class="del-to">General Overseer — carrying too much. Trusts you. Needs the conversation.</div></div>
+              <span class="del-status ds-active">Anchor</span>
+            </div>
+            <div class="del-item">
+              <div><div class="del-task">Ps Gbenga Adebanjo</div><div class="del-to">Across evangelism, prayer, pastoral care. Active but relationship with Pastor Shade needs assessment.</div></div>
+              <span class="del-status ds-proposed">Monitor</span>
+            </div>
+            <div class="del-item">
+              <div><div class="del-task">Ps Kayode Ogungbenro</div><div class="del-to">Finance + Family ministry. Finance reporting gap is a concern. Key relationship to cultivate.</div></div>
+              <span class="del-status ds-proposed">Engage</span>
+            </div>
+            <div class="del-item">
+              <div><div class="del-task">Dr Ayo Olatoye</div><div class="del-to">Worship coordinator — transitioning out with family. Manage the exit gracefully.</div></div>
+              <span class="del-status ds-needed">Transitioning</span>
+            </div>
+            <div class="del-item">
+              <div><div class="del-task">Mrs Pauline Tulloch</div><div class="del-to">Meeting operations. Reliable presence. Worth keeping close.</div></div>
+              <span class="del-status ds-active">Reliable</span>
+            </div>
+            <div class="del-item">
+              <div><div class="del-task">Deaconess Janet Oviri</div><div class="del-to">Hospitality — one of the strongest coordinators. Loyal and capable.</div></div>
+              <span class="del-status ds-active">Strong</span>
+            </div>
+            <div class="del-item">
+              <div><div class="del-task">Deacon Femi Osipitan</div><div class="del-to">Building & environment — functional and stable. Not a concern.</div></div>
+              <span class="del-status ds-active">Stable</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Next 30 days — your personal action list</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="p-item" style="border-left:2px solid var(--red);">
+              <div class="p-left">
+                <div class="p-title">Have the Chief of Staff conversation</div>
+                <div class="p-desc">Find the right moment — after a Sunday, one-to-one, not in passing. Come with clarity about what you're asking for and why it helps her, not you.</div>
+              </div>
+              <span class="badge b-urgent">Week 1</span>
+            </div>
+            <div class="p-item" style="border-left:2px solid var(--red);">
+              <div class="p-left">
+                <div class="p-title">Secure the worship transition quietly</div>
+                <div class="p-desc">Before Dr Ayo's departure is public, have someone ready. Don't let the Sunday after his last service be chaotic.</div>
+              </div>
+              <span class="badge b-urgent">Week 1–2</span>
+            </div>
+            <div class="p-item" style="border-left:2px solid rgba(245,158,11,0.6);">
+              <div class="p-left">
+                <div class="p-title">Private conversation with Ps Kayode on finances</div>
+                <div class="p-desc">Not confrontational — curious. "I want to make sure we're in a good place — can you walk me through where things stand?" Get the real picture.</div>
+              </div>
+              <span class="badge b-high">Week 2</span>
+            </div>
+            <div class="p-item" style="border-left:2px solid rgba(245,158,11,0.6);">
+              <div class="p-left">
+                <div class="p-title">Draft a 12-week preaching schedule</div>
+                <div class="p-desc">Do the work, bring it to Pastor Shade ready. Don't ask her to build it — present it for her approval. That's what Chief of Staff looks like.</div>
+              </div>
+              <span class="badge b-high">Week 2–3</span>
+            </div>
+            <div class="p-item" style="border-left:2px solid rgba(34,197,94,0.3);">
+              <div class="p-left">
+                <div class="p-title">Begin quiet talent audit for worship rebuild</div>
+                <div class="p-desc">In your head first — who in the congregation has musical gifts that haven't been activated? No announcements, just observation and note-taking.</div>
+              </div>
+              <span class="badge b-medium">Week 3–4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- NOTES -->
       <div class="page" id="page-notes">
         <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between;">
@@ -397,16 +506,16 @@ document.getElementById('topbar-date').textContent =
   new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 
 const ministries = [
-  {id:'worship',      name:'Worship & Music',      status:'red',   note:'Leadership transition underway. Team identity needs rebuilding.',          owner:'TBD'},
-  {id:'media',        name:'Media & Technology',    status:'amber', note:'Recruitment underway. Capacity building in progress.',                     owner:'Scott Shokoya'},
-  {id:'pastoral',     name:'Pastoral Care',         status:'red',   note:'Senior pastor stretched. Delegation and team support urgently needed.',    owner:'Pastor Shade'},
-  {id:'preaching',    name:'Preaching Rota',        status:'amber', note:'Needs forward planning and structured rotation.',                          owner:'TBD'},
-  {id:'prayer',       name:'Prayer Ministry',       status:'grey',  note:'Status unclear. Needs assessment before forward planning.',               owner:'Unknown'},
-  {id:'outreach',     name:'Outreach & Events',     status:'red',   note:'Dormant for years. High potential — church has done major city events.',   owner:'TBD'},
-  {id:'finance',      name:'Finance & Giving',      status:'grey',  note:'No visibility. Regular reporting cadence needed.',                        owner:'Unknown'},
-  {id:'congregation', name:'Congregation Health',   status:'amber', note:'Notable departures. Belonging and follow-up need attention.',             owner:'Pastoral team'},
-  {id:'children',     name:'Children & Youth',      status:'grey',  note:'Not yet assessed. Key for young families and long-term growth.',          owner:'Unknown'},
-  {id:'admin',        name:'Admin & Governance',    status:'red',   note:'Likely under-resourced. Structural clarity needed this season.',          owner:'TBD'},
+  {id:'worship',      name:'Worship Ministry',                  status:'red',   note:'Dr Ayo Olatoye coordinating but family departure imminent. Core team members will likely leave. Full rebuild needed.',  owner:'Dr Ayo Olatoye'},
+  {id:'evangelism',   name:'Evangelism',                        status:'amber', note:'Coordinator in place but outreach largely dormant. Last major effort some years ago. Needs reactivation.',              owner:'Ps Gbenga Adebanjo'},
+  {id:'discipleship', name:'Discipleship & Development',        status:'amber', note:'Led by Pastor Shade directly. No bandwidth to drive it given her current load. Needs a champion.',                     owner:'Pastor Shade'},
+  {id:'operations',   name:'Meeting Operations',                status:'amber', note:'Pauline Tulloch holding this. Functional but dependent on one person.',                                                 owner:'Mrs Pauline Tulloch'},
+  {id:'finance',      name:'Finance Ministry',                  status:'red',   note:'Coordinator named but no regular reporting visible to leadership. Financial governance needs urgent attention.',         owner:'Ps Kayode Ogungbenro'},
+  {id:'prayer',       name:'Intercessory Prayer',               status:'amber', note:'Team exists and pre-service prayer is active. Wider prayer culture and corporate intercession needs development.',      owner:'Ps Gbenga Adebanjo'},
+  {id:'media',        name:'Media Ministry',                    status:'amber', note:'Most functional department. Recruitment underway. Weekly briefings and streaming operational.',                         owner:'Bolaji Olatoye'},
+  {id:'building',     name:'Building & Environment',            status:'green', note:'Deacon Femi Osipitan leading. Facility upkeep generally maintained. One of the more stable areas.',                    owner:'Deacon Femi Osipitan'},
+  {id:'family',       name:'Family, Groups & Special Services', status:'amber', note:'Special services happen but LIFE Groups and homogenous ministry not yet fully active.',                                 owner:'Ps Kayode Ogungbenro'},
+  {id:'hospitality',  name:'Hospitality',                       status:'green', note:'Deaconess Janet Oviri leading a committed team. One of the stronger functioning ministries.',                          owner:'Deaconess Janet Oviri'},
 ];
 
 let ministryStatuses = {};
@@ -451,13 +560,15 @@ async function loadMinistryStatuses() {
 }
 
 const defaultPriorities = [
-  {id:1,title:'Appoint an interim worship coordinator',description:'Team needs a bridge leader while the longer-term rebuild is planned.',urgency:'urgent',owner:'TBD',status:'pending'},
-  {id:2,title:'Identify 2 tasks Pastor Shade can hand off now',description:'Specific and immediate — not vague. Pick two real things and assign owners.',urgency:'urgent',owner:'Leadership team',status:'active'},
-  {id:3,title:'Hold a quiet leadership conversation',description:'Acknowledge the season change with the core team. Set the tone before rumour does.',urgency:'urgent',owner:'Pastor Shade',status:'pending'},
-  {id:4,title:'Assess the unknown ministry areas',description:'Prayer, Finance, Children/Youth — someone needs to find out the real state.',urgency:'high',owner:'TBD',status:'pending'},
-  {id:5,title:'Build a 12-week preaching schedule',description:'Reduces weekly scramble and shows intentionality to the congregation.',urgency:'high',owner:'Ps Kayode',status:'pending'},
-  {id:6,title:'Define the worship rebuild plan',description:'Principles, structure, timeline. See Worship Rebuild for the framework.',urgency:'high',owner:'Pastor Shade',status:'active'},
-  {id:7,title:'Plan a major event for H2 2026',description:"A well-executed event shifts momentum. Calvary has done it before.",urgency:'medium',owner:'TBD',status:'pending'},
+  {id:1, title:'Stabilise worship — appoint interim coordinator this week',          description:'Dr Ayo departing means the team needs a bridge coordinator immediately. Identify someone trustworthy internally before the gap becomes visible to the congregation.',          urgency:'urgent', owner:'Bolaji',        status:'active'},
+  {id:2, title:'Have the Chief of Staff conversation with Pastor Shade',             description:'The Resident Pastor role is vacant. Someone needs to formally carry that coordination layer. Frame it as: "Mum, I want to help carry this properly — can we talk about how?" The Bridge is the evidence of readiness.',  urgency:'urgent', owner:'Bolaji',        status:'pending'},
+  {id:3, title:'Get sight of the church finances',                                   description:'No financial reporting is reaching leadership. Ps Kayode is coordinator — a direct, private conversation is needed to understand the real position before it becomes a crisis.',  urgency:'urgent', owner:'Bolaji',        status:'pending'},
+  {id:4, title:'Build a 12-week preaching schedule',                                 description:'Pastor Shade should not be deciding who preaches week by week. A forward schedule reduces her load and signals organisational maturity to the congregation.',                      urgency:'high',   owner:'Bolaji',        status:'pending'},
+  {id:5, title:'Privately assess each leadership team member',                       description:'Not a formal review — a quiet, honest read of who is actually functioning, who is coasting, who is loyal, and who may be a problem. Do this before any structural conversations.',  urgency:'high',   owner:'Bolaji',        status:'pending'},
+  {id:6, title:'Plan the worship rebuild — phases and timeline',                     description:'Once interim coordinator is in place, begin the quiet audit of who remains in the congregation with musical gifts. Do not rush the public rebuild.',                              urgency:'high',   owner:'Bolaji',        status:'pending'},
+  {id:7, title:'Identify the next major Calvary event — H2 2026',                   description:'Calvary has done Benny Hinn, sold-out music nights, major city events. One well-executed event can shift the spiritual atmosphere and congregational momentum.',                  urgency:'medium', owner:'Bolaji',        status:'pending'},
+  {id:8, title:'Reactivate LIFE Groups',                                             description:'Small groups are the connective tissue of the congregation. With people leaving, belonging matters more than ever. Even two or three active groups changes the culture.',           urgency:'medium', owner:'Ps Kayode',     status:'pending'},
+  {id:9, title:'Establish a simple monthly reporting rhythm',                        description:'Even informally — each coordinator sends a 5-line WhatsApp update at month end. Starts building the accountability culture the governance framework requires.',                    urgency:'medium', owner:'Bolaji',        status:'pending'},
 ];
 let priorities = [];
 
@@ -520,7 +631,7 @@ async function loadNotes(){
   if(data) document.getElementById('notes-area').value=data.content||'';
 }
 
-const titles={overview:'Ministry overview',priorities:'Priorities',worship:'Worship rebuild',pastoral:'Pastoral load',notes:'Notes'};
+const titles={overview:'Ministry overview',priorities:'Priorities',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
