@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bridge — Calvary Hephzibah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --ch-red: #C41E2A;
+  --ch-red-hover: #a3171f;
+  --bg: #F7F6F3;
+  --surface: #FFFFFF;
+  --surface2: #F2F0EC;
+  --border: rgba(0,0,0,0.08);
+  --border-med: rgba(0,0,0,0.14);
+  --text: #1A1A1A;
+  --text-2: #5A5A5A;
+  --text-3: #9A9A9A;
+  --red-bg: #FEF2F2;
+  --amber-bg: #FFFBEB;
+  --green-bg: #F0FDF4;
+  --red-text: #991B1B;
+  --amber-text: #92400E;
+  --green-text: #166534;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* LAYOUT */
+.app { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  display: flex; flex-direction: column;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  padding: 0 20px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.logo-mark {
+  width: 36px; height: 36px;
+  background: var(--ch-red);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+}
+
+.logo-mark svg { width: 20px; height: 20px; }
+
+.logo-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 17px;
+  color: var(--text);
+  letter-spacing: -0.3px;
+}
+
+.logo-sub {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 1px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-2);
+  transition: all 0.12s;
+  border-left: 2px solid transparent;
+  margin: 1px 0;
+}
+
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: #FEF2F2; color: var(--ch-red); font-weight: 500; border-left-color: var(--ch-red); }
+
+.nav-icon { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.sidebar-bottom {
+  margin-top: auto;
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.season-tag {
+  font-size: 11px;
+  background: #FEF2F2;
+  color: var(--ch-red);
+  padding: 4px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  font-weight: 500;
+}
+
+/* MAIN */
+.main {
+  margin-left: 240px;
+  flex: 1;
+  padding: 36px 40px;
+  max-width: 1000px;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* PAGE HEADERS */
+.page-header { margin-bottom: 28px; }
+.page-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+.page-sub { font-size: 14px; color: var(--text-2); }
+
+/* CARDS */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-3);
+  margin-bottom: 14px;
+}
+
+/* MINISTRY GRID */
+.ministry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.min-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: all 0.14s;
+  box-shadow: var(--shadow);
+}
+
+.min-card:hover { border-color: var(--border-med); transform: translateY(-1px); }
+
+.min-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.min-name { font-size: 14px; font-weight: 500; }
+.min-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.dot-red { background: #EF4444; }
+.dot-amber { background: #F59E0B; }
+.dot-green { background: #22C55E; }
+.dot-grey { background: #D1D5DB; }
+.min-note { font-size: 12px; color: var(--text-2); line-height: 1.45; }
+.min-owner { font-size: 11px; color: var(--text-3); margin-top: 8px; }
+
+/* LEGEND */
+.legend { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+.leg-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); }
+.leg-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* PRIORITIES */
+.priority-list { display: flex; flex-direction: column; gap: 10px; }
+
+.priority-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  box-shadow: var(--shadow);
+  transition: all 0.12s;
+}
+
+.priority-item:hover { border-color: var(--border-med); }
+
+.p-left { flex: 1; min-width: 0; }
+.p-title { font-size: 14px; font-weight: 500; margin-bottom: 4px; }
+.p-desc { font-size: 13px; color: var(--text-2); line-height: 1.45; }
+.p-meta { font-size: 12px; color: var(--text-3); margin-top: 6px; }
+
+.p-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+
+.badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+.b-urgent { background: #FEE2E2; color: #991B1B; }
+.b-high { background: #FEF3C7; color: #92400E; }
+.b-medium { background: #DCFCE7; color: #166534; }
+
+.status-dot { width: 6px; height: 6px; border-radius: 50%; }
+.sd-pending { background: #D1D5DB; }
+.sd-active { background: #F59E0B; }
+.sd-done { background: #22C55E; }
+
+.p-status-row { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-3); }
+
+/* BTN */
+.btn-outline {
+  width: 100%;
+  padding: 11px;
+  border: 1px dashed var(--border-med);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.12s;
+  margin-top: 10px;
+}
+.btn-outline:hover { background: var(--surface); border-style: solid; color: var(--text); }
+
+.btn-primary {
+  background: var(--ch-red);
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btn-primary:hover { background: var(--ch-red-hover); }
+
+/* FORM */
+.form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.form-label { font-size: 12px; font-weight: 500; color: var(--text-2); }
+.form-input, .form-select, .form-textarea {
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  background: var(--surface);
+  outline: none;
+  transition: border-color 0.12s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--ch-red);
+}
+.form-textarea { resize: vertical; min-height: 70px; }
+
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: none; align-items: center; justify-content: center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px;
+  width: 100%; max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+.btn-ghost {
+  background: transparent; border: 1px solid var(--border-med);
+  padding: 9px 18px; border-radius: var(--radius-sm);
+  font-size: 13px; font-family: 'DM Sans', sans-serif;
+  cursor: pointer; color: var(--text-2); transition: all 0.12s;
+}
+.btn-ghost:hover { background: var(--surface2); }
+
+/* WORSHIP PHASES */
+.phase-list { display: flex; flex-direction: column; gap: 16px; }
+.phase-item { display: flex; gap: 14px; align-items: flex-start; }
+.phase-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border-med);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; flex-shrink: 0;
+  color: var(--text-2);
+}
+.phase-num.now { background: var(--ch-red); border-color: var(--ch-red); color: white; }
+.phase-body { flex: 1; }
+.phase-title { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+.phase-desc { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+.phase-timing { font-size: 11px; color: var(--text-3); margin-top: 4px; }
+
+/* PRINCIPLES GRID */
+.principles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+.principle {
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.principle strong { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+.principle p { font-size: 12px; color: var(--text-2); line-height: 1.5; }
+
+/* PASTORAL */
+.load-bars { display: flex; flex-direction: column; gap: 12px; }
+.load-row { display: flex; align-items: center; gap: 12px; }
+.load-label { font-size: 13px; width: 180px; flex-shrink: 0; }
+.load-track { flex: 1; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+.load-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+.fill-red { background: #EF4444; }
+.fill-amber { background: #F59E0B; }
+.fill-green { background: #22C55E; }
+.load-label-right { font-size: 11px; color: var(--text-3); width: 56px; text-align: right; flex-shrink: 0; }
+
+.delegation-list { display: flex; flex-direction: column; gap: 8px; }
+.del-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  gap: 12px;
+}
+.del-left { flex: 1; }
+.del-task { font-size: 13px; font-weight: 500; }
+.del-to { font-size: 12px; color: var(--text-3); }
+.del-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; flex-shrink: 0; }
+.ds-needed { background: #FEE2E2; color: #991B1B; }
+.ds-proposed { background: #FEF3C7; color: #92400E; }
+.ds-active { background: #DCFCE7; color: #166534; }
+
+/* NOTES */
+.notes-area {
+  background: var(--surface);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius);
+  padding: 16px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  width: 100%;
+  min-height: 200px;
+  resize: vertical;
+  outline: none;
+  line-height: 1.7;
+}
+.notes-area:focus { border-color: var(--ch-red); }
+
+/* SETUP BANNER */
+.setup-banner {
+  background: #FFF7ED;
+  border: 1px solid #FED7AA;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: #92400E;
+  display: none;
+}
+.setup-banner strong { font-weight: 600; }
+.setup-banner a { color: var(--ch-red); }
+
+/* STATUS PILLS */
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: 20px;
+}
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #1A1A1A; color: white;
+  padding: 12px 18px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 500;
+  z-index: 200;
+  opacity: 0; transform: translateY(8px);
+  transition: all 0.2s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 20px 16px; }
+  .principles-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP BANNER - shown if Supabase not configured -->
+<div class="setup-banner" id="setup-banner">
+  <strong>One-time setup needed:</strong> Add your Supabase anon key to enable data persistence.
+  Go to <a href="https://supabase.com/dashboard/project/pfycvgbrsbecznkcikwt/settings/api" target="_blank">Supabase → Settings → API</a>,
+  copy the <strong>anon / public</strong> key, then replace <code>YOUR_ANON_KEY_HERE</code> in this file's script section.
+</div>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 20 20" fill="none">
+          <path d="M2 14 Q6 8 10 8 Q14 8 18 14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          <line x1="6" y1="8" x2="6" y2="14" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="10" y1="8" x2="10" y2="14" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="14" y1="8" x2="14" y2="14" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="2" y1="14" x2="18" y2="14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-name">The Bridge</div>
+      <div class="logo-sub">Calvary Hephzibah</div>
+    </div>
+
+    <nav>
+      <div class="nav-item active" onclick="showPage('overview')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Ministry overview
+      </div>
+      <div class="nav-item" onclick="showPage('priorities')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="4" x2="13" y2="4"/><line x1="3" y1="8" x2="10" y2="8"/><line x1="3" y1="12" x2="8" y2="12"/></svg>
+        Priorities
+      </div>
+      <div class="nav-item" onclick="showPage('worship')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M5 5l3-3 3 3M3 10a5 5 0 0010 0"/></svg>
+        Worship rebuild
+      </div>
+      <div class="nav-item" onclick="showPage('pastoral')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+        Pastoral load
+      </div>
+      <div class="nav-item" onclick="showPage('notes')">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1.5"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="9" y2="9"/></svg>
+        Notes
+      </div>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="season-tag">Season of Transition</div>
+      <div style="font-size: 11px; color: var(--text-3); margin-top: 8px;">April 2026</div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- OVERVIEW PAGE -->
+    <div class="page active" id="page-overview">
+      <div class="page-header">
+        <div class="page-title">Ministry overview</div>
+        <div class="page-sub">Current health of each ministry area. Tap any card for focused action.</div>
+      </div>
+
+      <div class="legend">
+        <div class="leg-item"><div class="leg-dot dot-red"></div>Urgent attention</div>
+        <div class="leg-item"><div class="leg-dot dot-amber"></div>Stretched / in progress</div>
+        <div class="leg-item"><div class="leg-dot dot-green"></div>Functioning well</div>
+        <div class="leg-item"><div class="leg-dot dot-grey"></div>Status unknown</div>
+      </div>
+
+      <div class="ministry-grid" id="ministry-grid">
+        <!-- populated by JS -->
+      </div>
+
+      <div style="font-size: 12px; color: var(--text-3); text-align: center; margin-top: 8px;">
+        Status updates save automatically to the database
+      </div>
+    </div>
+
+    <!-- PRIORITIES PAGE -->
+    <div class="page" id="page-priorities">
+      <div class="page-header" style="display:flex; align-items:flex-start; justify-content:space-between;">
+        <div>
+          <div class="page-title">Priorities</div>
+          <div class="page-sub">The things that can't wait. Owned, tracked, actioned.</div>
+        </div>
+        <button class="btn-primary" onclick="openAddPriority()">+ Add priority</button>
+      </div>
+
+      <div class="priority-list" id="priority-list">
+        <div style="text-align:center; padding: 40px; color: var(--text-3); font-size:13px;">Loading...</div>
+      </div>
+    </div>
+
+    <!-- WORSHIP REBUILD PAGE -->
+    <div class="page" id="page-worship">
+      <div class="page-header">
+        <div class="page-title">Worship rebuild</div>
+        <div class="page-sub">This is an opportunity, not a crisis. Build it right this time.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Foundation principles</div>
+        <div class="principles-grid">
+          <div class="principle">
+            <strong>Identity over personality</strong>
+            <p>The worship belongs to Calvary, not to any individual. Sound, values, culture — defined by the mission.</p>
+          </div>
+          <div class="principle">
+            <strong>Develop, don't just recruit</strong>
+            <p>Look inside first. Gifts in the congregation that haven't had room to grow. Create that room.</p>
+          </div>
+          <div class="principle">
+            <strong>Shared leadership</strong>
+            <p>No single point of failure. Rotate worship leaders. Build 3–4 people who can each lead confidently.</p>
+          </div>
+          <div class="principle">
+            <strong>Serve the sermon</strong>
+            <p>Worship and word in alignment. The team should know the theme before Sunday. Co-ordination, not performance.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">The five phases</div>
+        <div class="phase-list">
+          <div class="phase-item">
+            <div class="phase-num now">1</div>
+            <div class="phase-body">
+              <div class="phase-title">Stabilise — appoint an interim coordinator</div>
+              <div class="phase-desc">Someone trustworthy and present takes the week-to-week coordination. Not necessarily a worship leader — just someone who can hold things together. Likely an existing team member.</div>
+              <div class="phase-timing">Now — within 2 weeks</div>
+            </div>
+          </div>
+          <div class="phase-item">
+            <div class="phase-num">2</div>
+            <div class="phase-body">
+              <div class="phase-title">Audit — who do we actually have?</div>
+              <div class="phase-desc">Quietly identify every musician, vocalist, and gifted person in the congregation. Not an open call yet — just internal knowledge. Who stayed? Who has never been activated?</div>
+              <div class="phase-timing">Weeks 2–4</div>
+            </div>
+          </div>
+          <div class="phase-item">
+            <div class="phase-num">3</div>
+            <div class="phase-body">
+              <div class="phase-title">Define the vision — what does Calvary worship sound like?</div>
+              <div class="phase-desc">Pastor Shade leads a small, private conversation with 2–3 trusted people. What is the spiritual intention of worship at Calvary? This shapes everything that follows.</div>
+              <div class="phase-timing">Weeks 3–5</div>
+            </div>
+          </div>
+          <div class="phase-item">
+            <div class="phase-num">4</div>
+            <div class="phase-body">
+              <div class="phase-title">Invite and form the new team</div>
+              <div class="phase-desc">Personal invitations, not a general announcement. Start small — 4 to 6 people. The first gathering is spiritual, not logistical. Begin with prayer and vision before you talk about rotas.</div>
+              <div class="phase-timing">Weeks 5–8</div>
+            </div>
+          </div>
+          <div class="phase-item">
+            <div class="phase-num">5</div>
+            <div class="phase-body">
+              <div class="phase-title">Rehearse, develop, and commission</div>
+              <div class="phase-desc">Regular rehearsals with intentional development. Character, commitment, the theology of worship. Commission the team publicly when ready — make it a moment for the whole church.</div>
+              <div class="phase-timing">Weeks 8–16</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASTORAL PAGE -->
+    <div class="page" id="page-pastoral">
+      <div class="page-header">
+        <div class="page-title">Pastoral load</div>
+        <div class="page-sub">This section is for the leadership team — to carry weight, not to monitor.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Pastor Shade's current load</div>
+        <div class="load-bars">
+          <div class="load-row">
+            <div class="load-label">Sunday preaching</div>
+            <div class="load-track"><div class="load-fill fill-red" style="width:90%"></div></div>
+            <div class="load-label-right">Very high</div>
+          </div>
+          <div class="load-row">
+            <div class="load-label">Pastoral one-to-ones</div>
+            <div class="load-track"><div class="load-fill fill-red" style="width:85%"></div></div>
+            <div class="load-label-right">Very high</div>
+          </div>
+          <div class="load-row">
+            <div class="load-label">Admin & coordination</div>
+            <div class="load-track"><div class="load-fill fill-red" style="width:75%"></div></div>
+            <div class="load-label-right">High</div>
+          </div>
+          <div class="load-row">
+            <div class="load-label">Worship oversight</div>
+            <div class="load-track"><div class="load-fill fill-amber" style="width:65%"></div></div>
+            <div class="load-label-right">Medium</div>
+          </div>
+          <div class="load-row">
+            <div class="load-label">Vision & strategy</div>
+            <div class="load-track"><div class="load-fill fill-amber" style="width:35%"></div></div>
+            <div class="load-label-right">Too low</div>
+          </div>
+          <div class="load-row">
+            <div class="load-label">Rest & renewal</div>
+            <div class="load-track"><div class="load-fill fill-green" style="width:12%"></div></div>
+            <div class="load-label-right" style="color:#991B1B; font-weight:600;">Critical</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; color: var(--text-3); margin-top: 16px; font-style: italic;">
+          The goal: less time on things others can carry, more time on vision and rest.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Delegation tracker</div>
+        <div class="delegation-list">
+          <div class="del-item">
+            <div class="del-left">
+              <div class="del-task">Worship team coordination</div>
+              <div class="del-to">To: Interim coordinator (TBD)</div>
+            </div>
+            <span class="del-status ds-needed">Needs owner</span>
+          </div>
+          <div class="del-item">
+            <div class="del-left">
+              <div class="del-task">Sunday logistics & order of service</div>
+              <div class="del-to">To: Ps Kayode / Ps Gbenga</div>
+            </div>
+            <span class="del-status ds-proposed">Proposed</span>
+          </div>
+          <div class="del-item">
+            <div class="del-left">
+              <div class="del-task">Media team oversight</div>
+              <div class="del-to">To: Scott Shokoya</div>
+            </div>
+            <span class="del-status ds-active">Active</span>
+          </div>
+          <div class="del-item">
+            <div class="del-left">
+              <div class="del-task">Pastoral follow-up calls</div>
+              <div class="del-to">To: Designated care person (TBD)</div>
+            </div>
+            <span class="del-status ds-needed">Needs owner</span>
+          </div>
+          <div class="del-item">
+            <div class="del-left">
+              <div class="del-task">Children's ministry oversight</div>
+              <div class="del-to">To: TBD</div>
+            </div>
+            <span class="del-status ds-needed">Needs owner</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTES PAGE -->
+    <div class="page" id="page-notes">
+      <div class="page-header">
+        <div class="page-title">Notes</div>
+        <div class="page-sub">A private space for leadership thinking. Auto-saved.</div>
+      </div>
+      <div class="card" style="padding: 0; overflow: hidden;">
+        <textarea class="notes-area" id="notes-area" placeholder="Type anything here — thoughts, observations, sensitive context, next steps. This saves automatically."></textarea>
+      </div>
+      <div style="font-size: 12px; color: var(--text-3); margin-top: 8px; text-align:right;" id="notes-status">Auto-saved</div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ADD PRIORITY MODAL -->
+<div class="modal-overlay" id="priority-modal">
+  <div class="modal">
+    <div class="modal-title">Add a priority</div>
+    <div class="form-row">
+      <label class="form-label">Title</label>
+      <input type="text" class="form-input" id="p-title-input" placeholder="What needs to happen?">
+    </div>
+    <div class="form-row">
+      <label class="form-label">Description</label>
+      <textarea class="form-textarea" id="p-desc-input" placeholder="Brief context or next action..."></textarea>
+    </div>
+    <div style="display:flex; gap:12px;">
+      <div class="form-row" style="flex:1;">
+        <label class="form-label">Urgency</label>
+        <select class="form-select" id="p-urgency-input">
+          <option value="urgent">Urgent</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+        </select>
+      </div>
+      <div class="form-row" style="flex:1;">
+        <label class="form-label">Owner</label>
+        <input type="text" class="form-input" id="p-owner-input" placeholder="Who owns this?">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="savePriority()">Save priority</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── SUPABASE CONFIG ─────────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+
+let db = null;
+let supabaseReady = false;
+
+if (SUPABASE_ANON_KEY !== 'YOUR_ANON_KEY_HERE') {
+  db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  supabaseReady = true;
+} else {
+  document.getElementById('setup-banner').style.display = 'block';
+}
+
+// ─── MINISTRY DATA ────────────────────────────────────────────────────────────
+const ministries = [
+  { id: 'worship', name: 'Worship & Music', status: 'red', note: 'Leadership transition underway. Team identity needs rebuilding.', owner: 'TBD' },
+  { id: 'media', name: 'Media & Technology', status: 'amber', note: 'Recruitment underway. Capacity building in progress.', owner: 'Scott Shokoya' },
+  { id: 'pastoral', name: 'Pastoral Care', status: 'red', note: 'Senior pastor stretched. Delegation and team support urgently needed.', owner: 'Pastor Shade' },
+  { id: 'preaching', name: 'Preaching Rota', status: 'amber', note: 'Needs forward planning and structured rotation.', owner: 'TBD' },
+  { id: 'prayer', name: 'Prayer Ministry', status: 'grey', note: 'Status unclear. Needs assessment before forward planning.', owner: 'Unknown' },
+  { id: 'outreach', name: 'Outreach & Events', status: 'red', note: 'Dormant for years. High potential — church has done major city events.', owner: 'TBD' },
+  { id: 'finance', name: 'Finance & Giving', status: 'grey', note: 'No current visibility. Regular reporting cadence needed.', owner: 'Unknown' },
+  { id: 'congregation', name: 'Congregation Health', status: 'amber', note: 'Notable departures. Belonging and pastoral follow-up need attention.', owner: 'Pastoral team' },
+  { id: 'children', name: 'Children & Youth', status: 'grey', note: 'Not yet assessed. Key for young families and long-term growth.', owner: 'Unknown' },
+  { id: 'admin', name: 'Admin & Governance', status: 'red', note: 'Likely under-resourced. Structural clarity needed this season.', owner: 'TBD' },
+];
+
+let ministryStatuses = {};
+ministries.forEach(m => ministryStatuses[m.id] = m.status);
+
+// ─── DEFAULT PRIORITIES ───────────────────────────────────────────────────────
+const defaultPriorities = [
+  { id: 1, title: 'Appoint an interim worship coordinator', description: 'Worship team needs a bridge leader while longer-term rebuild is planned. Can be internal.', urgency: 'urgent', owner: 'TBD', status: 'pending' },
+  { id: 2, title: 'Identify 2 tasks Pastor Shade can hand off this week', description: 'Specific, immediate delegation — not vague. Pick two real things and assign owners.', urgency: 'urgent', owner: 'Leadership team', status: 'active' },
+  { id: 3, title: 'Hold a quiet leadership conversation about the season', description: 'Acknowledge the transition with the core team. Set the tone before rumour does.', urgency: 'urgent', owner: 'Pastor Shade', status: 'pending' },
+  { id: 4, title: 'Assess unknown ministry areas', description: 'Prayer, Finance, Children/Youth — someone needs to find out the real state of each.', urgency: 'high', owner: 'TBD', status: 'pending' },
+  { id: 5, title: 'Build forward preaching schedule — 12 weeks', description: 'Reduces weekly scramble and shows intentionality to the congregation.', urgency: 'high', owner: 'Ps Kayode', status: 'pending' },
+  { id: 6, title: 'Define the worship rebuild plan', description: 'Principles, structure, timeline. See Worship Rebuild section for the full framework.', urgency: 'high', owner: 'Pastor Shade', status: 'active' },
+  { id: 7, title: 'Plan a major event for second half of 2026', description: 'A single well-executed event can shift the church\'s momentum and congregation morale.', urgency: 'medium', owner: 'TBD', status: 'pending' },
+];
+
+let priorities = [];
+
+// ─── LOAD FROM SUPABASE OR DEFAULTS ──────────────────────────────────────────
+async function loadPriorities() {
+  if (!supabaseReady) {
+    priorities = [...defaultPriorities];
+    renderPriorities();
+    return;
+  }
+  const { data, error } = await db.from('bridge_priorities').select('*').order('created_at', { ascending: true });
+  if (error || !data || data.length === 0) {
+    priorities = [...defaultPriorities];
+  } else {
+    priorities = data;
+  }
+  renderPriorities();
+}
+
+async function loadMinistryStatuses() {
+  if (!supabaseReady) { renderMinistries(); return; }
+  const { data } = await db.from('bridge_ministry_status').select('*');
+  if (data) {
+    data.forEach(row => ministryStatuses[row.ministry_id] = row.status);
+  }
+  renderMinistries();
+}
+
+async function loadNotes() {
+  if (!supabaseReady) return;
+  const { data } = await db.from('bridge_notes').select('*').eq('id', 1).single();
+  if (data) document.getElementById('notes-area').value = data.content || '';
+}
+
+// ─── RENDER MINISTRIES ────────────────────────────────────────────────────────
+function renderMinistries() {
+  const grid = document.getElementById('ministry-grid');
+  grid.innerHTML = ministries.map(m => {
+    const status = ministryStatuses[m.id] || m.status;
+    return `
+      <div class="min-card" onclick="cycleStatus('${m.id}', this)">
+        <div class="min-top">
+          <div class="min-name">${m.name}</div>
+          <div class="min-dot dot-${status}" id="dot-${m.id}"></div>
+        </div>
+        <div class="min-note">${m.note}</div>
+        <div class="min-owner">${m.owner}</div>
+      </div>`;
+  }).join('');
+}
+
+async function cycleStatus(id, card) {
+  const cycle = { red: 'amber', amber: 'green', green: 'grey', grey: 'red' };
+  const current = ministryStatuses[id] || 'grey';
+  const next = cycle[current];
+  ministryStatuses[id] = next;
+  const dot = document.getElementById('dot-' + id);
+  if (dot) { dot.className = 'min-dot dot-' + next; }
+  if (supabaseReady) {
+    await db.from('bridge_ministry_status').upsert({ ministry_id: id, status: next, updated_at: new Date().toISOString() }, { onConflict: 'ministry_id' });
+  }
+  showToast('Status updated');
+}
+
+// ─── RENDER PRIORITIES ────────────────────────────────────────────────────────
+function renderPriorities() {
+  const list = document.getElementById('priority-list');
+  if (!priorities.length) {
+    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-3);font-size:13px;">No priorities yet — add one above.</div>';
+    return;
+  }
+  const order = { urgent: 0, high: 1, medium: 2 };
+  const sorted = [...priorities].sort((a, b) => (order[a.urgency] || 1) - (order[b.urgency] || 1));
+  list.innerHTML = sorted.map(p => `
+    <div class="priority-item">
+      <div class="p-left">
+        <div class="p-title">${p.title}</div>
+        <div class="p-desc">${p.description}</div>
+        <div class="p-meta">Owner: ${p.owner || 'Unassigned'}</div>
+      </div>
+      <div class="p-right">
+        <span class="badge b-${p.urgency}">${p.urgency.charAt(0).toUpperCase() + p.urgency.slice(1)}</span>
+        <div class="p-status-row">
+          <div class="status-dot sd-${p.status || 'pending'}"></div>
+          <span>${p.status || 'pending'}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── ADD PRIORITY ─────────────────────────────────────────────────────────────
+function openAddPriority() {
+  document.getElementById('priority-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('priority-modal').classList.remove('open');
+}
+
+async function savePriority() {
+  const title = document.getElementById('p-title-input').value.trim();
+  const description = document.getElementById('p-desc-input').value.trim();
+  const urgency = document.getElementById('p-urgency-input').value;
+  const owner = document.getElementById('p-owner-input').value.trim();
+  if (!title) { showToast('Please enter a title'); return; }
+
+  const newItem = { title, description, urgency, owner: owner || 'Unassigned', status: 'pending' };
+
+  if (supabaseReady) {
+    const { data, error } = await db.from('bridge_priorities').insert([newItem]).select().single();
+    if (!error && data) priorities.push(data);
+  } else {
+    newItem.id = Date.now();
+    priorities.push(newItem);
+  }
+
+  renderPriorities();
+  closeModal();
+  document.getElementById('p-title-input').value = '';
+  document.getElementById('p-desc-input').value = '';
+  document.getElementById('p-owner-input').value = '';
+  showToast('Priority saved');
+}
+
+// ─── NOTES AUTO-SAVE ──────────────────────────────────────────────────────────
+let notesTimer = null;
+document.getElementById('notes-area').addEventListener('input', () => {
+  document.getElementById('notes-status').textContent = 'Unsaved...';
+  clearTimeout(notesTimer);
+  notesTimer = setTimeout(saveNotes, 1500);
+});
+
+async function saveNotes() {
+  const content = document.getElementById('notes-area').value;
+  if (supabaseReady) {
+    await db.from('bridge_notes').upsert({ id: 1, content, updated_at: new Date().toISOString() });
+  }
+  document.getElementById('notes-status').textContent = 'Saved ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+}
+
+// ─── NAV ──────────────────────────────────────────────────────────────────────
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadMinistryStatuses();
+loadPriorities();
+loadNotes();
+</script>
+
+</body>
+</html>
