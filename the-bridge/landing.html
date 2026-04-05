@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bridge — Calvary Hephzibah Full Gospel Church</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --red: #C41E2A;
+  --red-dark: #8B1219;
+  --red-glow: rgba(196, 30, 42, 0.35);
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --cream: #F5F0E8;
+  --black: #0A0A0A;
+  --dark: #111111;
+  --dark2: #1A1A1A;
+  --text-dim: rgba(245,240,232,0.55);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--black);
+  color: var(--cream);
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 60px 24px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Radial glow behind content */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Thin cross lines */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(201,168,76,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.06) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+
+/* Cross icon */
+.cross-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 32px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.1s forwards;
+}
+
+/* Eyebrow */
+.eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.2s forwards;
+}
+
+/* Main headline */
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -2px;
+  color: var(--cream);
+  margin-bottom: 8px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.3s forwards;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.church-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.45s forwards;
+}
+
+/* Divider */
+.gold-line {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 40px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+}
+
+/* Description */
+.hero-desc {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: var(--text-dim);
+  max-width: 480px;
+  margin: 0 auto 52px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.6s forwards;
+}
+
+/* CTA */
+.cta-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.75s forwards;
+}
+
+.btn-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--red);
+  color: white;
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 32px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, transform 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+}
+
+.btn-main:hover { background: var(--red-dark); transform: translateY(-1px); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--cream);
+  text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 14px 32px;
+  border-radius: 2px;
+  border: 1px solid rgba(245,240,232,0.2);
+  letter-spacing: 0.5px;
+  transition: border-color 0.2s, color 0.2s, transform 0.15s;
+}
+
+.btn-outline:hover {
+  border-color: var(--gold);
+  color: var(--gold-light);
+  transform: translateY(-1px);
+}
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 1.2s forwards;
+  z-index: 2;
+}
+
+.scroll-hint span {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(var(--gold), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+/* ── ABOUT STRIP ── */
+.about {
+  background: var(--dark);
+  border-top: 1px solid rgba(201,168,76,0.12);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  padding: 80px 24px;
+}
+
+.about-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.about-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.about h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+
+.about p {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--text-dim);
+}
+
+.about-pillars {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pillar {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px;
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 2px;
+  background: rgba(201,168,76,0.03);
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.pillar:hover {
+  border-color: rgba(201,168,76,0.25);
+  background: rgba(201,168,76,0.06);
+}
+
+.pillar-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--red);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 32px;
+}
+
+.pillar-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cream);
+  margin-bottom: 4px;
+  letter-spacing: 0.3px;
+}
+
+.pillar-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+/* ── SEASON BANNER ── */
+.season {
+  padding: 100px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.season::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(196,30,42,0.15) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+.season-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.season-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--red);
+  border: 1px solid rgba(196,30,42,0.4);
+  padding: 6px 16px;
+  border-radius: 100px;
+  margin-bottom: 28px;
+}
+
+.season h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: var(--cream);
+  margin-bottom: 20px;
+}
+
+.season h2 em {
+  font-style: italic;
+  color: var(--gold-light);
+}
+
+.season p {
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--text-dim);
+  margin-bottom: 40px;
+}
+
+/* ── ENTER CTA ── */
+.enter-section {
+  background: var(--dark2);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.enter-section h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 600;
+  color: var(--cream);
+  margin-bottom: 12px;
+  letter-spacing: -0.3px;
+}
+
+.enter-section p {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 36px;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: var(--black);
+  border-top: 1px solid rgba(245,240,232,0.06);
+  padding: 32px 24px;
+  text-align: center;
+}
+
+footer p {
+  font-size: 12px;
+  color: rgba(245,240,232,0.25);
+  letter-spacing: 0.5px;
+}
+
+footer strong {
+  color: rgba(245,240,232,0.45);
+  font-weight: 500;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 680px) {
+  .about-inner { grid-template-columns: 1fr; gap: 48px; }
+  h1 { letter-spacing: -1px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+
+    <svg class="cross-icon" viewBox="0 0 48 48" fill="none">
+      <rect x="20" y="4" width="8" height="40" rx="1" fill="#C41E2A"/>
+      <rect x="4" y="16" width="40" height="8" rx="1" fill="#C41E2A"/>
+      <rect x="20" y="4" width="8" height="40" rx="1" fill="url(#cg)" opacity="0.4"/>
+      <defs>
+        <linearGradient id="cg" x1="24" y1="4" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#E8C97A"/>
+          <stop offset="1" stop-color="#C41E2A" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <div class="eyebrow">Calvary Hephzibah Full Gospel Church · Manchester</div>
+
+    <h1>The<br><em>Bridge</em></h1>
+
+    <div class="church-name">Leadership Operations Platform · 2026</div>
+
+    <div class="gold-line"></div>
+
+    <p class="hero-desc">
+      A private space for leadership to move with clarity, carry one another's weight, and build what God has called Calvary to become.
+    </p>
+
+    <div class="cta-row">
+      <a href="index.html" class="btn-main">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Enter The Bridge
+      </a>
+      <a href="#about" class="btn-outline">What is this?</a>
+    </div>
+
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-inner">
+    <div class="reveal">
+      <div class="about-label">Purpose</div>
+      <h2>Built for this season</h2>
+      <p>Calvary is at a pivot point. Key transitions are underway, and the weight of leadership has never been greater. The Bridge exists so that nothing falls through the cracks — and so that no one carries it alone.</p>
+    </div>
+    <div class="about-pillars reveal">
+      <div class="pillar">
+        <div class="pillar-num">01</div>
+        <div>
+          <div class="pillar-title">Ministry oversight</div>
+          <div class="pillar-desc">A clear, honest view of every ministry area — what's thriving, what needs attention, what's unknown.</div>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">02</div>
+        <div>
+          <div class="pillar-title">Priorities & action</div>
+          <div class="pillar-desc">The things that can't wait, tracked with owners and status. Nothing buried in emails or memory.</div>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-num">03</div>
+        <div>
+          <div class="pillar-title">Pastoral support</div>
+          <div class="pillar-desc">Delegation made visible. Carrying the load together, not leaving it all with one person.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEASON -->
+<section class="season">
+  <div class="season-inner reveal">
+    <div class="season-tag">April 2026</div>
+    <h2>A season of<br><em>transition & faith</em></h2>
+    <p>
+      The church has done great things — Benny Hinn conferences, sold-out music events, presence in the city. That capacity hasn't gone. This season, stewarded well, is the foundation for what comes next.
+    </p>
+    <a href="index.html" class="btn-main">Enter The Bridge →</a>
+  </div>
+</section>
+
+<!-- ENTER -->
+<section class="enter-section">
+  <h3 class="reveal">Ready to go in?</h3>
+  <p class="reveal">The Bridge is for the leadership team of Calvary Hephzibah.</p>
+  <a href="index.html" class="btn-main reveal">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Open The Bridge
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Calvary Hephzibah Full Gospel Church</strong> · Manchester, UK · calvaryhephzibah.co.uk</p>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
