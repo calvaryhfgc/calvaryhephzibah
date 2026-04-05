@@ -290,6 +290,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       </div>
       <div class="nav-group">
         <div class="nav-group-label">Strategy</div>
+        <div class="nav-item" onclick="showPage('vision',this)">
+          <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2C4 2 1.5 5 1.5 7S4 12 7 12s5.5-3 5.5-5S10 2 7 2z"/><circle cx="7" cy="7" r="1.5"/></svg>
+          Vision & mission
+        </div>
+        <div class="nav-item" onclick="showPage('media',this)">
+          <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v7l-3-2"/></svg>
+          Media team
+        </div>
         <div class="nav-item" onclick="showPage('worship',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1v12M4 3.5L7 1l3 2.5M1.5 9.5a5.5 5.5 0 0011 0"/></svg>
           Worship rebuild
@@ -398,6 +406,263 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         </div>
         <div class="priority-list" id="priority-list">
           <div style="text-align:center;padding:40px;color:var(--ink-4);font-size:13px;">Loading…</div>
+        </div>
+      </div>
+
+      <!-- VISION & MISSION -->
+      <div class="page" id="page-vision">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Vision & mission</div>
+            <div class="page-sub">The foundation everything else is built on.</div>
+          </div>
+        </div>
+
+        <!-- Core scripture -->
+        <div style="background:var(--red);border-radius:var(--r16);padding:28px 32px;margin-bottom:14px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:-20px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.06);"></div>
+          <div style="position:absolute;bottom:-30px;right:40px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.04);"></div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:12px;">Core Scripture</div>
+          <div style="font-family:'Instrument Serif',serif;font-size:clamp(1.2rem,3vw,1.6rem);color:white;line-height:1.5;margin-bottom:10px;font-style:italic;">"Their fish will be of many kinds — like the fish of the Great Sea."</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.7);font-weight:500;">Ezekiel 47:10</div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.8);margin-top:14px;line-height:1.65;">God is calling Calvary to be a place where there is room for many kinds — different people, different backgrounds, all finding life in His presence. Not uniformity, but unity in diversity.</div>
+        </div>
+
+        <!-- Three pillars -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+          <div class="card" style="border-top:3px solid var(--red);">
+            <div style="font-size:22px;font-family:'Instrument Serif',serif;color:var(--red);margin-bottom:8px;">Exalt</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">Dynamic worship & prayer</div>
+            <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">To exalt the Lord by dynamic, Holy Spirit-inspired worship, praise, and prayer. To give our time, talents, and gifts as an offering to the Lord.</div>
+          </div>
+          <div class="card" style="border-top:3px solid var(--red);">
+            <div style="font-size:22px;font-family:'Instrument Serif',serif;color:var(--red);margin-bottom:8px;">Equip</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">Biblical teaching & maturity</div>
+            <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">To equip the church to fulfil her destiny through godly vision, biblical teaching, and pastoral ministry — bringing believers to maturity and effective ministry in Christ.</div>
+          </div>
+          <div class="card" style="border-top:3px solid var(--red);">
+            <div style="font-size:22px;font-family:'Instrument Serif',serif;color:var(--red);margin-bottom:8px;">Extend</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">Kingdom outreach & missions</div>
+            <div style="font-size:12px;color:var(--ink-3);line-height:1.6;">To extend the Kingdom of God from the church to our cities, our nations, and the world through aggressive evangelism, training leaders, and planting churches.</div>
+          </div>
+        </div>
+
+        <!-- Core values -->
+        <div class="card">
+          <div class="card-label">Core values</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">God's Word</div>
+              <div style="font-size:11px;color:var(--ink-3);">The Bible as authoritative and trustworthy guide for faith and behaviour.</div>
+            </div>
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">God's manifested presence</div>
+              <div style="font-size:11px;color:var(--ink-3);">As we follow the pattern of worship in the Psalms, His presence is manifested.</div>
+            </div>
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">Holy Spirit activity</div>
+              <div style="font-size:11px;color:var(--ink-3);">We welcome the Spirit's movement — baptism and gifts are part of our core belief.</div>
+            </div>
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">Dynamic praise & worship</div>
+              <div style="font-size:11px;color:var(--ink-3);">Joyful, spontaneous response to God's presence — clapping, lifting hands, singing.</div>
+            </div>
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">Unity in diversity</div>
+              <div style="font-size:11px;color:var(--ink-3);">Not conformity — unity of spirit and principle flowing together for one vision.</div>
+            </div>
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">Fervent prayer</div>
+              <div style="font-size:11px;color:var(--ink-3);">Prayer is the motor of our church life. Pre-service prayer, fasting, corporate intercession.</div>
+            </div>
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">Excellence</div>
+              <div style="font-size:11px;color:var(--ink-3);">God deserves the best we have. Excellence in everything connected to His work.</div>
+            </div>
+            <div style="padding:12px 14px;background:var(--bg);border-radius:var(--r8);border-left:2px solid var(--red);">
+              <div style="font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;">Integrity</div>
+              <div style="font-size:11px;color:var(--ink-3);">Uprightness, trustworthiness, and transparency as our best foundation stones.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Season note -->
+        <div style="background:var(--amber-light);border:1px solid #FDE68A;border-radius:var(--r12);padding:16px 20px;margin-top:4px;">
+          <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:4px;">A word for this season</div>
+          <div style="font-size:13px;color:#92400E;line-height:1.65;">"Unless the LORD builds the house, the builders labour in vain." — Psalm 127:1. The transition Calvary is navigating is not a setback. It is God creating the conditions for something more solid to be built. The vision has not changed. The foundation has not shifted. We are building.</div>
+        </div>
+      </div>
+
+      <!-- MEDIA TEAM -->
+      <div class="page" id="page-media">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Media team</div>
+            <div class="page-sub">Roster, roles, and training tracker.</div>
+          </div>
+        </div>
+
+        <!-- Team stats -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">
+          <div class="stat-card">
+            <div class="stat-card-inner">
+              <div class="stat-icon si-green"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6" cy="5" r="2.5" stroke="#16A34A" stroke-width="1.5"/><path d="M1.5 14c0-2.5 2-4.5 4.5-4.5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="7" r="2" stroke="#16A34A" stroke-width="1.5"/><path d="M8.5 14c0-2 1.5-3.5 3.5-3.5" stroke="#16A34A" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="1.5 1"/></svg></div>
+              <div><div class="stat-num">6</div><div class="stat-label">Team members</div></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-inner">
+              <div class="stat-icon si-amber"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="4" width="12" height="8" rx="1" stroke="#D97706" stroke-width="1.5"/><path d="M5 4V3a1 1 0 011-1h4a1 1 0 011 1v1" stroke="#D97706" stroke-width="1.5"/></svg></div>
+              <div><div class="stat-num">5</div><div class="stat-label">Awaiting training</div></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-inner">
+              <div class="stat-icon si-red"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="1" stroke="#C41E2A" stroke-width="1.5"/><line x1="5" y1="8" x2="11" y2="8" stroke="#C41E2A" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="5" x2="8" y2="11" stroke="#C41E2A" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+              <div><div class="stat-num">1</div><div class="stat-label">Training session needed</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Roster -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-label">Team roster</div>
+          <div class="del-list">
+            <div class="del-item">
+              <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                <div style="width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">SS</div>
+                <div>
+                  <div class="del-task">Scott Shokoya</div>
+                  <div class="del-to">De facto team lead · Broadcast & streaming</div>
+                </div>
+              </div>
+              <span class="del-status ds-active">Lead</span>
+            </div>
+            <div class="del-item">
+              <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                <div style="width:34px;height:34px;border-radius:50%;background:#3B82F6;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">CN</div>
+                <div>
+                  <div class="del-task">Chinedu</div>
+                  <div class="del-to">New recruit · Role TBD</div>
+                </div>
+              </div>
+              <span class="del-status ds-proposed">Onboarding</span>
+            </div>
+            <div class="del-item">
+              <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                <div style="width:34px;height:34px;border-radius:50%;background:#8B5CF6;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">TR</div>
+                <div>
+                  <div class="del-task">Terrel</div>
+                  <div class="del-to">New recruit · Role TBD</div>
+                </div>
+              </div>
+              <span class="del-status ds-proposed">Onboarding</span>
+            </div>
+            <div class="del-item">
+              <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                <div style="width:34px;height:34px;border-radius:50%;background:#0891B2;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">TV</div>
+                <div>
+                  <div class="del-task">Tavoy</div>
+                  <div class="del-to">New recruit · Role TBD</div>
+                </div>
+              </div>
+              <span class="del-status ds-proposed">Onboarding</span>
+            </div>
+            <div class="del-item">
+              <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                <div style="width:34px;height:34px;border-radius:50%;background:#059669;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">NH</div>
+                <div>
+                  <div class="del-task">Noah</div>
+                  <div class="del-to">New recruit · Role TBD</div>
+                </div>
+              </div>
+              <span class="del-status ds-proposed">Onboarding</span>
+            </div>
+            <div class="del-item">
+              <div style="display:flex;align-items:center;gap:12px;flex:1;">
+                <div style="width:34px;height:34px;border-radius:50%;background:#D97706;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">TO</div>
+                <div>
+                  <div class="del-task">Tosin</div>
+                  <div class="del-to">New recruit · Role TBD</div>
+                </div>
+              </div>
+              <span class="del-status ds-proposed">Onboarding</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Training plan -->
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-label">Training plan</div>
+          <div class="phase-list">
+            <div class="phase-item">
+              <div class="phase-num now">1</div>
+              <div class="phase-body">
+                <div class="phase-title">Induction session — vision, values, expectations</div>
+                <div class="phase-desc">Before any technical training, ground the team in why media matters at Calvary. What are we trying to do? What does excellence look like here? Scott leads, Bolaji opens. Keep it short, spiritual, and motivating.</div>
+                <div class="phase-timing">Schedule ASAP — 60–90 mins</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num">2</div>
+              <div class="phase-body">
+                <div class="phase-title">Broadcast basics — camera, streaming, OBS</div>
+                <div class="phase-desc">Phone camera setup, framing, USB-C power. OBS scene management, going live to Facebook/YouTube, monitoring the stream. Every team member should be able to run a service independently.</div>
+                <div class="phase-timing">Session 2 — 2 hrs hands-on</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num">3</div>
+              <div class="phase-body">
+                <div class="phase-title">Lyric slides & screen management</div>
+                <div class="phase-desc">Using the Calvary Lyric Formatter, loading slides into OBS, switching between scenes (lyrics, sermon thumbnail, scripture, sermon slides). Live practice during a dry run.</div>
+                <div class="phase-timing">Session 3 — 90 mins</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num">4</div>
+              <div class="phase-body">
+                <div class="phase-title">Social media & weekly briefing workflow</div>
+                <div class="phase-desc">How to read and execute the weekly media briefing. Clipping sermon highlights for Instagram/Facebook. Basic graphic design for announcements. Sunday workflow from setup to archive.</div>
+                <div class="phase-timing">Session 4 — 2 hrs</div>
+              </div>
+            </div>
+            <div class="phase-item">
+              <div class="phase-num">5</div>
+              <div class="phase-body">
+                <div class="phase-title">Live Sunday shadowing & sign-off</div>
+                <div class="phase-desc">Each team member shadows Scott for one full Sunday, then runs one independently with Scott present. Sign-off when they can handle any role without prompting.</div>
+                <div class="phase-timing">Ongoing — one per recruit</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Track assignments -->
+        <div class="card">
+          <div class="card-label">Track assignments (to be confirmed at induction)</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="padding:14px;background:var(--bg);border-radius:var(--r8);">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Broadcast</div>
+              <div style="font-size:12px;color:var(--ink-3);">Camera operation, livestreaming, OBS. Ideal for technically minded members.</div>
+              <div style="margin-top:8px;font-size:12px;color:var(--ink-4);">Scott (lead) + 1–2 recruits</div>
+            </div>
+            <div style="padding:14px;background:var(--bg);border-radius:var(--r8);">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Screen & Lyrics</div>
+              <div style="font-size:12px;color:var(--ink-3);">Lyric slides, scripture displays, sermon thumbnails. High attention to detail required.</div>
+              <div style="margin-top:8px;font-size:12px;color:var(--ink-4);">1–2 recruits</div>
+            </div>
+            <div style="padding:14px;background:var(--bg);border-radius:var(--r8);">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Social Media</div>
+              <div style="font-size:12px;color:var(--ink-3);">Clipping, posting, stories, engagement. Creative, consistent presence online.</div>
+              <div style="margin-top:8px;font-size:12px;color:var(--ink-4);">1–2 recruits</div>
+            </div>
+            <div style="padding:14px;background:var(--bg);border-radius:var(--r8);">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Graphics & Design</div>
+              <div style="font-size:12px;color:var(--ink-3);">Flyers, sermon thumbnails, banners. Canva or similar. Eye for brand consistency.</div>
+              <div style="margin-top:8px;font-size:12px;color:var(--ink-4);">1 recruit</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1248,7 +1513,7 @@ async function deleteTransaction(id){
   showToast('Transaction deleted');
 }
 
-const titles={overview:'Ministry overview',priorities:'Priorities',finance:'Finance',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
+const titles={overview:'Ministry overview',priorities:'Priorities',finance:'Finance',vision:'Vision & mission',media:'Media team',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
 function showPage(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
