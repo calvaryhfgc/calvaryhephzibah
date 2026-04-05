@@ -498,12 +498,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
           <!-- View toggle -->
           <div style="display:flex;background:var(--bg);border:1px solid #E2E8F0;border-radius:var(--r8);padding:3px;gap:2px;">
             <button id="view-grid-btn" onclick="setActionsView('grid')" title="Card view"
-              style="width:28px;height:26px;border:none;border-radius:5px;background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;box-shadow:var(--shadow-sm);">
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="0.5" y="0.5" width="5" height="5" rx="1" fill="#0F172A"/><rect x="7.5" y="0.5" width="5" height="5" rx="1" fill="#0F172A"/><rect x="0.5" y="7.5" width="5" height="5" rx="1" fill="#0F172A"/><rect x="7.5" y="7.5" width="5" height="5" rx="1" fill="#0F172A"/></svg>
+              style="width:28px;height:26px;border:none;border-radius:5px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="0.5" y="0.5" width="5" height="5" rx="1" fill="#94A3B8"/><rect x="7.5" y="0.5" width="5" height="5" rx="1" fill="#94A3B8"/><rect x="0.5" y="7.5" width="5" height="5" rx="1" fill="#94A3B8"/><rect x="7.5" y="7.5" width="5" height="5" rx="1" fill="#94A3B8"/></svg>
             </button>
             <button id="view-list-btn" onclick="setActionsView('list')" title="List view"
-              style="width:28px;height:26px;border:none;border-radius:5px;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;">
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"><line x1="1" y1="2.5" x2="12" y2="2.5"/><line x1="1" y1="6.5" x2="12" y2="6.5"/><line x1="1" y1="10.5" x2="12" y2="10.5"/></svg>
+              style="width:28px;height:26px;border:none;border-radius:5px;background:var(--white);box-shadow:var(--shadow-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#0F172A" stroke-width="1.5" stroke-linecap="round"><line x1="1" y1="2.5" x2="12" y2="2.5"/><line x1="1" y1="6.5" x2="12" y2="6.5"/><line x1="1" y1="10.5" x2="12" y2="10.5"/></svg>
             </button>
           </div>
         </div>
@@ -1464,23 +1464,51 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="detail-meta-row" id="detail-meta-row"></div>
     </div>
     <div class="detail-body">
-      <div class="detail-section" id="detail-notes-section">
-        <div class="detail-section-label">Description & notes</div>
-        <div class="detail-notes-text" id="detail-notes"></div>
+
+      <!-- EDIT FIELDS -->
+      <div class="detail-section">
+        <div class="detail-section-label">Title</div>
+        <input type="text" class="update-input" id="edit-title-input" style="width:100%;margin-bottom:0;">
       </div>
       <div class="detail-section">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-          <div class="detail-section-label" style="margin-bottom:0;">Updates</div>
-          <div style="font-size:11px;color:var(--ink-4);" id="detail-update-count"></div>
+        <div class="detail-section-label">Description / notes</div>
+        <textarea class="update-input" id="edit-notes-input" style="width:100%;min-height:80px;resize:vertical;line-height:1.6;"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:20px;">
+        <div>
+          <div class="detail-section-label">Owner</div>
+          <input type="text" class="update-input" id="edit-owner-input" style="width:100%;">
         </div>
-        <div class="updates-list" id="detail-updates-list"></div>
-        <div class="update-input-row">
-          <input type="text" class="update-input" id="new-update-input" placeholder="Add an update — what's happened, what's next…">
-          <button class="btn-sm-red" onclick="addUpdate()">Post</button>
+        <div>
+          <div class="detail-section-label">Function</div>
+          <select class="update-input" id="edit-function-input" style="width:100%;cursor:pointer;">
+            <option value="Leadership">Leadership</option>
+            <option value="Worship">Worship</option>
+            <option value="Media">Media</option>
+            <option value="Finance">Finance</option>
+            <option value="Governance">Governance</option>
+            <option value="Pastoral">Pastoral</option>
+            <option value="Outreach">Outreach</option>
+            <option value="Operations">Operations</option>
+            <option value="Prayer">Prayer</option>
+            <option value="Admin">Admin</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div>
+          <div class="detail-section-label">Due date</div>
+          <input type="date" class="update-input" id="edit-due-input" style="width:100%;">
         </div>
       </div>
+      <div style="margin-bottom:20px;">
+        <button class="btn-red" onclick="saveActionEdits()" style="width:100%;">Save changes</button>
+      </div>
+
+      <div style="height:1px;background:#F1F5F9;margin-bottom:20px;"></div>
+
+      <!-- STATUS -->
       <div class="detail-section">
-        <div class="detail-section-label">Change status</div>
+        <div class="detail-section-label">Status</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button onclick="updateActionStatus('not_started')" class="actions-filter" style="font-size:11px;">Not started</button>
           <button onclick="updateActionStatus('in_progress')" class="actions-filter af-doing" style="font-size:11px;">In progress</button>
@@ -1488,6 +1516,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
           <button onclick="updateActionStatus('blocked')" style="font-size:11px;padding:6px 12px;border-radius:100px;border:1.5px solid #FECACA;background:var(--red-light);font-family:'DM Sans',sans-serif;color:var(--red);cursor:pointer;font-weight:500;">Blocked</button>
         </div>
       </div>
+
+      <div style="height:1px;background:#F1F5F9;margin-bottom:20px;"></div>
+
+      <!-- UPDATES LOG -->
+      <div class="detail-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div class="detail-section-label" style="margin-bottom:0;">Updates log</div>
+          <div style="font-size:11px;color:var(--ink-4);" id="detail-update-count"></div>
+        </div>
+        <div class="update-input-row" style="margin-bottom:12px;">
+          <input type="text" class="update-input" id="new-update-input" placeholder="Post an update — what's happened, what's next…">
+          <button class="btn-sm-red" onclick="addUpdate()">Post</button>
+        </div>
+        <div class="updates-list" id="detail-updates-list"></div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -2091,7 +2135,7 @@ async function deleteTransaction(id){
 // ── ACTIONS ──────────────────────────────────────────────────────────────────
 let actions = [];
 let actionFilter = 'all';
-let actionsView = 'grid'; // 'grid' | 'list'
+let actionsView = 'list'; // 'grid' | 'list'
 let currentActionId = null;
 
 const statusMeta2 = {
@@ -2240,9 +2284,8 @@ function openActionDetail(id) {
   const sm = statusMeta2[a.status] || statusMeta2.not_started;
   const updates = Array.isArray(a.updates) ? a.updates : JSON.parse(a.updates||'[]');
 
+  // Header
   document.getElementById('detail-title').textContent = a.title;
-
-  const priorityColours = { urgent:'var(--red)', high:'var(--amber)', medium:'var(--green)', low:'var(--ink-4)' };
   document.getElementById('detail-meta-row').innerHTML = `
     <span class="action-status-chip ${sm.chip}">${sm.label}</span>
     <span class="action-tag" style="font-size:11px;color:${priorityColours[a.priority]}">${a.priority}</span>
@@ -2251,22 +2294,51 @@ function openActionDetail(id) {
     ${a.due_date ? `<span class="action-tag" style="font-size:11px;">Due ${new Date(a.due_date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span>` : ''}
   `;
 
-  document.getElementById('detail-notes').textContent = a.notes || 'No description added.';
-  document.getElementById('detail-update-count').textContent = updates.length ? `${updates.length} update${updates.length!==1?'s':''}` : '';
-  document.getElementById('new-update-input').value = '';
+  // Edit fields
+  document.getElementById('edit-title-input').value = a.title || '';
+  document.getElementById('edit-notes-input').value = a.notes || '';
+  document.getElementById('edit-owner-input').value = a.owner || '';
+  document.getElementById('edit-due-input').value = a.due_date || '';
+  const fnSelect = document.getElementById('edit-function-input');
+  [...fnSelect.options].forEach(o => o.selected = o.value === a.function);
 
+  // Updates
+  document.getElementById('new-update-input').value = '';
+  document.getElementById('detail-update-count').textContent = updates.length ? `${updates.length} update${updates.length!==1?'s':''}` : '';
   const ul = document.getElementById('detail-updates-list');
-  if (!updates.length) {
-    ul.innerHTML = '<div style="font-size:12px;color:var(--ink-4);padding:8px 0;">No updates yet — add the first one above.</div>';
-  } else {
-    ul.innerHTML = [...updates].reverse().map(u => `
-      <div class="update-item">
-        <div class="update-text">${u.text}</div>
-        <div class="update-meta">${u.author || 'You'} · ${u.timestamp}</div>
-      </div>`).join('');
-  }
+  ul.innerHTML = !updates.length
+    ? '<div style="font-size:12px;color:var(--ink-4);padding:4px 0;">No updates yet.</div>'
+    : [...updates].reverse().map(u => `
+        <div class="update-item">
+          <div class="update-text">${u.text}</div>
+          <div class="update-meta">${u.author||'You'} · ${u.timestamp}</div>
+        </div>`).join('');
 
   document.getElementById('action-detail-modal').classList.add('open');
+}
+
+async function saveActionEdits() {
+  if (!currentActionId) return;
+  const a = actions.find(x => x.id === currentActionId);
+  if (!a) return;
+  const title = document.getElementById('edit-title-input').value.trim();
+  if (!title) { showToast('Title cannot be empty'); return; }
+  a.title    = title;
+  a.notes    = document.getElementById('edit-notes-input').value.trim();
+  a.owner    = document.getElementById('edit-owner-input').value.trim() || 'Unassigned';
+  a.function = document.getElementById('edit-function-input').value;
+  a.due_date = document.getElementById('edit-due-input').value || null;
+  // Refresh header
+  document.getElementById('detail-title').textContent = a.title;
+  if (supabaseReady) {
+    await db.from('bridge_actions').update({
+      title: a.title, notes: a.notes, owner: a.owner,
+      function: a.function, due_date: a.due_date,
+      updated_at: new Date().toISOString()
+    }).eq('id', currentActionId);
+  }
+  renderActions();
+  showToast('Action updated');
 }
 
 function closeActionDetail() {
