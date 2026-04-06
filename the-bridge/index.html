@@ -308,28 +308,143 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .btn-sm-red{background:var(--red);color:white;border:none;padding:9px 14px;border-radius:var(--r8);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background 0.12s;white-space:nowrap;}
 .btn-sm-red:hover{background:var(--red-dark);}
 
-/* List view */
-.actions-list-wrap{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);overflow:hidden;box-shadow:var(--shadow-sm);}
-.actions-list-header{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 90px;padding:10px 16px;background:var(--bg);border-bottom:1px solid #E2E8F0;}
-.alh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ink-4);}
-.action-list-row{display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 90px;padding:12px 16px;border-bottom:1px solid #F8FAFC;cursor:pointer;transition:background 0.1s;align-items:center;}
-.action-list-row:last-child{border-bottom:none;}
-.action-list-row:hover{background:#FAFAFA;}
-.alr-title{font-size:13px;font-weight:500;color:var(--ink);padding-right:12px;display:flex;align-items:center;gap:8px;overflow:hidden;}
-.alr-title-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.alr-bar{width:3px;height:14px;border-radius:2px;flex-shrink:0;}
-.alr-cell{font-size:12px;color:var(--ink-3);}
-.alr-due{font-size:12px;font-weight:500;}
+/* ── PIN GATE ── */
+.pin-gate{position:fixed;inset:0;background:var(--ink);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px;}
+.pin-gate.hidden{display:none;}
+.pin-box{background:var(--white);border-radius:var(--r16);padding:32px 28px;width:100%;max-width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.pin-logo{width:36px;height:36px;background:var(--red);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.pin-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:6px;}
+.pin-sub{font-size:12px;color:var(--ink-4);margin-bottom:24px;}
+.pin-dots{display:flex;gap:12px;justify-content:center;margin-bottom:24px;}
+.pin-dot{width:12px;height:12px;border-radius:50%;background:var(--ink-5);transition:background 0.15s;}
+.pin-dot.filled{background:var(--red);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.pin-btn{padding:14px;border:1.5px solid #E2E8F0;background:var(--white);border-radius:var(--r12);font-size:18px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--ink);cursor:pointer;transition:all 0.1s;}
+.pin-btn:active{background:var(--bg);border-color:#CBD5E1;transform:scale(0.96);}
+.pin-btn.pin-del{font-size:14px;color:var(--ink-3);}
+.pin-error{font-size:12px;color:var(--red);margin-top:12px;min-height:18px;}
+
+/* ── MOBILE NAV ── */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid #E2E8F0;z-index:30;padding:0 4px;padding-bottom:env(safe-area-inset-bottom);}
+.mobile-nav-inner{display:flex;align-items:stretch;}
+.mob-nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px;cursor:pointer;color:var(--ink-4);transition:color 0.1s;font-size:9px;font-weight:500;letter-spacing:0.2px;min-width:0;}
+.mob-nav-item svg{width:18px;height:18px;flex-shrink:0;}
+.mob-nav-item.active{color:var(--red);}
+.mob-nav-item span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.mob-more-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 2px;cursor:pointer;color:var(--ink-4);font-size:9px;font-weight:500;}
+.mob-more-btn svg{width:18px;height:18px;}
+
+/* Mobile drawer */
+.mob-drawer{display:none;position:fixed;inset:0;z-index:50;}
+.mob-drawer.open{display:block;}
+.mob-drawer-bg{position:absolute;inset:0;background:rgba(15,23,42,0.5);}
+.mob-drawer-panel{position:absolute;bottom:0;left:0;right:0;background:var(--white);border-radius:var(--r16) var(--r16) 0 0;padding:20px 16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));}
+.mob-drawer-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+.mob-drawer-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mob-drawer-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--bg);border-radius:var(--r12);cursor:pointer;font-size:13px;font-weight:500;color:var(--ink-2);}
+.mob-drawer-item svg{width:16px;height:16px;color:var(--ink-3);flex-shrink:0;}
+.mob-drawer-item.active{background:var(--red-light);color:var(--red);}
 
 @media(max-width:768px){
-  .sidebar{display:none;} .main{margin-left:0;} .content{padding:20px 16px 40px;} .topbar{padding:0 16px;}
-  .principles-grid{grid-template-columns:1fr;} .stat-strip{grid-template-columns:1fr 1fr;}
-  .fin-summary{grid-template-columns:1fr 1fr;} .actions-grid{grid-template-columns:1fr;}
-  .actions-list-header{display:none;} .action-list-row{grid-template-columns:1fr auto;gap:8px;}
+  .sidebar{display:none;}
+  .main{margin-left:0;}
+  .topbar{padding:0 16px;}
+  .content{padding:16px 14px 100px;}
+  .mobile-nav{display:block;}
+
+  /* Page header stacking */
+  .page-header{flex-direction:column;align-items:flex-start;gap:10px;}
+  .page-header .btn-red{align-self:flex-start;}
+
+  /* Cards */
+  .card{padding:16px;}
+
+  /* Stat strip */
+  .stat-strip{grid-template-columns:1fr 1fr;}
+
+  /* Finance */
+  .fin-summary{grid-template-columns:1fr 1fr;}
+  .fin-table th:nth-child(3),.fin-table td:nth-child(3),
+  .fin-table th:nth-child(4),.fin-table td:nth-child(4){display:none;}
+
+  /* Actions */
+  .actions-grid{grid-template-columns:1fr;}
+  .actions-toolbar{gap:6px;}
+  .actions-filter{padding:5px 10px;font-size:11px;}
+  .actions-list-header{display:none;}
+  .action-list-row{grid-template-columns:1fr auto;gap:8px;}
+  .action-list-row .alr-cell,.action-list-row .alr-due{display:none;}
+  .action-list-row .alr-cell:last-child,.action-list-row .alr-due{display:flex;}
+
+  /* Ministry grid */
+  .ministry-grid{grid-template-columns:1fr!important;}
+
+  /* Two-col grids */
+  .cos-grid-2{grid-template-columns:1fr!important;}
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;}
+  [style*="grid-template-columns:repeat(2"]{grid-template-columns:1fr!important;}
+  [style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr 1fr!important;}
+  [style*="grid-template-columns:repeat(4"]{grid-template-columns:1fr 1fr!important;}
+
+  /* Topbar */
+  .topbar-date{display:none;}
+
+  /* Detail modal */
+  .detail-modal{max-height:92vh;border-radius:var(--r16) var(--r16) 0 0;}
+  .modal-overlay{align-items:flex-end;padding:0;}
+  .modal{border-radius:var(--r16) var(--r16) 0 0;max-height:85vh;overflow-y:auto;}
+
+  /* Edit fields in detail */
+  [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr!important;}
+
+  /* Action detail 3-col */
+  #action-detail-modal .detail-body [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr 1fr!important;}
 }
 </style>
 </head>
 <body>
+
+<!-- PIN GATE -->
+<div class="pin-gate" id="pin-gate">
+  <div class="pin-box">
+    <div class="pin-logo">
+      <svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg>
+    </div>
+    <div class="pin-title">The Bridge</div>
+    <div class="pin-sub">Calvary Hephzibah · Enter PIN to continue</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-pad">
+      <button class="pin-btn" onclick="pinPress('1')">1</button>
+      <button class="pin-btn" onclick="pinPress('2')">2</button>
+      <button class="pin-btn" onclick="pinPress('3')">3</button>
+      <button class="pin-btn" onclick="pinPress('4')">4</button>
+      <button class="pin-btn" onclick="pinPress('5')">5</button>
+      <button class="pin-btn" onclick="pinPress('6')">6</button>
+      <button class="pin-btn" onclick="pinPress('7')">7</button>
+      <button class="pin-btn" onclick="pinPress('8')">8</button>
+      <button class="pin-btn" onclick="pinPress('9')">9</button>
+      <button class="pin-btn" style="visibility:hidden"></button>
+      <button class="pin-btn" onclick="pinPress('0')">0</button>
+      <button class="pin-btn pin-del" onclick="pinDel()">⌫</button>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
+
+<!-- MOBILE DRAWER -->
+<div class="mob-drawer" id="mob-drawer">
+  <div class="mob-drawer-bg" onclick="closeMobDrawer()"></div>
+  <div class="mob-drawer-panel">
+    <div class="mob-drawer-title">More</div>
+    <div class="mob-drawer-grid" id="mob-drawer-grid"></div>
+  </div>
+</div>
+
 <div class="app">
 
   <!-- SIDEBAR -->
@@ -871,7 +986,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
           <div class="card" style="border-top:3px solid var(--red);">
             <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:8px;">Tactical — Week of 20th April</div>
             <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;">No drop in service quality. Seamless, confident, uplift.</div>
-            <div style="font-size:12px;color:var(--ink-3);line-height:1.65;margin-bottom:12px;">Multiple people are leaving — Dr Ayo, Lena, Susanna, Michael Kamumvu. The congregation must not feel any of it. The goal is not just continuity — it's an actual uplift in what they see and hear.</div>
+            <div style="font-size:12px;color:var(--ink-3);line-height:1.65;margin-bottom:12px;">Multiple people are leaving — Dr Ayo, Lina, Suzana, Michael Kamumvu. The congregation must not feel any of it. The goal is not just continuity — it's an actual uplift in what they see and hear.</div>
             <div style="display:flex;flex-direction:column;gap:6px;">
               <div style="display:flex;gap:8px;align-items:flex-start;font-size:12px;color:var(--ink-2);">
                 <div style="width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:5px;"></div>
@@ -1181,11 +1296,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
             </div>
             <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--ink-2);">
               <div style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;"></div>
-              <strong>Lena Olatoye</strong> — Worship team. Leaving with family.
+              <strong>Lina Olatoye</strong> — Worship team. Leaving with family.
             </div>
             <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--ink-2);">
               <div style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;"></div>
-              <strong>Susanna</strong> — Departing. Role / operational impact TBC.
+              <strong>Suzana</strong> — Departing. Role / operational impact TBC.
             </div>
             <div style="display:flex;gap:10px;align-items:center;font-size:12px;color:var(--ink-2);">
               <div style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;"></div>
@@ -1674,9 +1789,104 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
     <div class="modal-footer"><button class="btn-ghost" onclick="closeModal()">Cancel</button><button class="btn-red" onclick="savePriority()">Save priority</button></div>
   </div>
 </div>
+<!-- MOBILE NAV -->
+<nav class="mobile-nav" id="mobile-nav">
+  <div class="mobile-nav-inner">
+    <div class="mob-nav-item active" id="mob-priorities" onclick="showPage('priorities',null,'mob-priorities')">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="3.5" x2="12" y2="3.5"/><line x1="2" y1="7" x2="9" y2="7"/><line x1="2" y1="10.5" x2="7" y2="10.5"/></svg>
+      <span>Priorities</span>
+    </div>
+    <div class="mob-nav-item" id="mob-actions" onclick="showPage('actions',null,'mob-actions')">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><polyline points="4,7 6,9 10,5"/></svg>
+      <span>Actions</span>
+    </div>
+    <div class="mob-nav-item" id="mob-overview" onclick="showPage('overview',null,'mob-overview')">
+      <svg viewBox="0 0 14 14" fill="currentColor"><rect x="1" y="1" width="5.5" height="5.5" rx="1"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1"/></svg>
+      <span>Ministries</span>
+    </div>
+    <div class="mob-nav-item" id="mob-cos" onclick="showPage('cos',null,'mob-cos')">
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><polyline points="7,4 7,7.5 9,9"/></svg>
+      <span>Chief of Staff</span>
+    </div>
+    <div class="mob-more-btn" onclick="openMobDrawer()">
+      <svg viewBox="0 0 14 14" fill="currentColor"><circle cx="2.5" cy="7" r="1.5"/><circle cx="7" cy="7" r="1.5"/><circle cx="11.5" cy="7" r="1.5"/></svg>
+      <span style="font-size:9px;font-weight:500;color:var(--ink-4);">More</span>
+    </div>
+  </div>
+</nav>
+
 <div class="toast" id="toast"></div>
 
 <script>
+// ── PIN GATE ─────────────────────────────────────────────────────────────────
+const PIN_CODE = '2610';
+let pinEntry = '';
+
+function pinPress(d) {
+  if (pinEntry.length >= 4) return;
+  pinEntry += d;
+  updatePinDots();
+  if (pinEntry.length === 4) {
+    setTimeout(() => {
+      if (pinEntry === PIN_CODE) {
+        document.getElementById('pin-gate').classList.add('hidden');
+        sessionStorage.setItem('bridge_auth','1');
+      } else {
+        document.getElementById('pin-error').textContent = 'Incorrect PIN — try again';
+        pinEntry = '';
+        updatePinDots();
+      }
+    }, 120);
+  }
+}
+
+function pinDel() {
+  pinEntry = pinEntry.slice(0,-1);
+  document.getElementById('pin-error').textContent = '';
+  updatePinDots();
+}
+
+function updatePinDots() {
+  for (let i=0;i<4;i++) {
+    document.getElementById('pd'+i).classList.toggle('filled', i < pinEntry.length);
+  }
+}
+
+// Check session
+if (sessionStorage.getItem('bridge_auth') === '1') {
+  document.getElementById('pin-gate').classList.add('hidden');
+}
+
+// Keyboard support for PIN
+document.addEventListener('keydown', e => {
+  if (document.getElementById('pin-gate').classList.contains('hidden')) return;
+  if (e.key >= '0' && e.key <= '9') pinPress(e.key);
+  if (e.key === 'Backspace') pinDel();
+});
+
+// ── MOBILE DRAWER ────────────────────────────────────────────────────────────
+const drawerPages = [
+  { id:'finance',  label:'Finance',       icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="3" width="11" height="8" rx="1"/><line x1="1.5" y1="6" x2="12.5" y2="6"/><line x1="4" y1="9" x2="6" y2="9"/></svg>' },
+  { id:'vision',   label:'Vision',        icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2C4 2 1.5 5 1.5 7S4 12 7 12s5.5-3 5.5-5S10 2 7 2z"/><circle cx="7" cy="7" r="1.5"/></svg>' },
+  { id:'media',    label:'Media team',    icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v7l-3-2"/></svg>' },
+  { id:'worship',  label:'Worship',       icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1v12M4 3.5L7 1l3 2.5M1.5 9.5a5.5 5.5 0 0011 0"/></svg>' },
+  { id:'pastoral', label:'Pastoral load', icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 13c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"/></svg>' },
+  { id:'notes',    label:'Notes',         icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7.5" x2="8" y2="7.5"/></svg>' },
+];
+
+function openMobDrawer() {
+  const grid = document.getElementById('mob-drawer-grid');
+  grid.innerHTML = drawerPages.map(p => `
+    <div class="mob-drawer-item" onclick="showPage('${p.id}',null,null);closeMobDrawer()">
+      ${p.icon}<span>${p.label}</span>
+    </div>`).join('');
+  document.getElementById('mob-drawer').classList.add('open');
+}
+function closeMobDrawer() {
+  document.getElementById('mob-drawer').classList.remove('open');
+}
+
+
 const SUPABASE_URL='https://pfycvgbrsbecznkcikwt.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
 let db=null,supabaseReady=false;
@@ -2476,12 +2686,22 @@ async function saveAction() {
 }
 
 const titles={overview:'Ministry overview',actions:'Actions',priorities:'Priorities',finance:'Finance',vision:'Vision & mission',media:'Media team',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
-function showPage(name,el){
+const mobNavIds = ['mob-priorities','mob-actions','mob-overview','mob-cos'];
+
+function showPage(name, el, mobId) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.mob-nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  if(el)el.classList.add('active');
-  document.getElementById('topbar-title').textContent=titles[name]||name;
+  if (el) el.classList.add('active');
+  if (mobId) document.getElementById(mobId)?.classList.add('active');
+  // Sync sidebar nav
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+name+"'")) {
+      n.classList.add('active');
+    }
+  });
+  document.getElementById('topbar-title').textContent = titles[name] || name;
 }
 
 function showToast(msg){
