@@ -9,6 +9,21 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
 :root{--red:#C41E2A;}
 html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',sans-serif;}
+
+/* PIN GATE */
+.pin-gate{position:fixed;inset:0;background:#0F172A;z-index:999;display:flex;align-items:center;justify-content:center;padding:24px;}
+.pin-gate.hidden{display:none;}
+.pin-box{width:100%;max-width:340px;text-align:center;}
+.pin-title{font-family:'Instrument Serif',serif;font-size:26px;color:white;margin-bottom:6px;}
+.pin-sub{font-size:16px;color:rgba(255,255,255,0.4);margin-bottom:32px;}
+.pin-dots{display:flex;gap:16px;justify-content:center;margin-bottom:32px;}
+.pin-dot{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.2);transition:all 0.15s;}
+.pin-dot.filled{background:var(--red);border-color:var(--red);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.pin-btn{padding:18px;border:1.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);border-radius:14px;font-size:24px;font-weight:400;font-family:'DM Sans',sans-serif;color:white;cursor:pointer;transition:all 0.1s;-webkit-tap-highlight-color:transparent;}
+.pin-btn:active{background:rgba(255,255,255,0.15);transform:scale(0.95);}
+.pin-btn.pin-del{font-size:20px;color:rgba(255,255,255,0.5);}
+.pin-error{font-size:15px;color:#FF6B6B;min-height:22px;}
 .deck{position:fixed;inset:0;touch-action:none;}
 .slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:max(52px,env(safe-area-inset-top)) 36px max(72px,env(safe-area-inset-bottom));opacity:0;pointer-events:none;transition:opacity 0.28s ease;}
 .slide.active{opacity:1;pointer-events:auto;}
@@ -73,6 +88,34 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
 </style>
 </head>
 <body>
+
+<div class="pin-gate" id="pin-gate">
+  <div class="pin-box">
+    <div class="pin-title">Meeting Brief</div>
+    <div class="pin-sub">Enter PIN to continue</div>
+    <div class="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-pad">
+      <button class="pin-btn" onclick="pinPress('1')">1</button>
+      <button class="pin-btn" onclick="pinPress('2')">2</button>
+      <button class="pin-btn" onclick="pinPress('3')">3</button>
+      <button class="pin-btn" onclick="pinPress('4')">4</button>
+      <button class="pin-btn" onclick="pinPress('5')">5</button>
+      <button class="pin-btn" onclick="pinPress('6')">6</button>
+      <button class="pin-btn" onclick="pinPress('7')">7</button>
+      <button class="pin-btn" onclick="pinPress('8')">8</button>
+      <button class="pin-btn" onclick="pinPress('9')">9</button>
+      <button class="pin-btn" style="visibility:hidden"></button>
+      <button class="pin-btn" onclick="pinPress('0')">0</button>
+      <button class="pin-btn pin-del" onclick="pinDel()">⌫</button>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
 <div class="progress"><div class="progress-fill" id="pf"></div></div>
 
 <div class="deck" id="deck">
@@ -176,6 +219,27 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
 </div>
 <div class="dots" id="dots"></div>
 
+<script>
+const PIN='2610';let pe='';
+function pinPress(d){
+  if(pe.length>=4)return;
+  pe+=d;upDots();
+  if(pe.length===4){
+    setTimeout(()=>{
+      if(pe===PIN){document.getElementById('pin-gate').classList.add('hidden');sessionStorage.setItem('brief_auth','1');}
+      else{document.getElementById('pin-error').textContent='Incorrect PIN — try again';pe='';upDots();}
+    },120);
+  }
+}
+function pinDel(){pe=pe.slice(0,-1);document.getElementById('pin-error').textContent='';upDots();}
+function upDots(){for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.toggle('filled',i<pe.length);}
+if(sessionStorage.getItem('brief_auth')==='1')document.getElementById('pin-gate').classList.add('hidden');
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('pin-gate').classList.contains('hidden'))return;
+  if(e.key>='0'&&e.key<='9')pinPress(e.key);
+  if(e.key==='Backspace')pinDel();
+});
+</script>
 <script>
 const N=7;let i=0;
 function render(){
