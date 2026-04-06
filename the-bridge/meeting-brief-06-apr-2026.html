@@ -10,60 +10,66 @@
 :root{--red:#C41E2A;}
 html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',sans-serif;}
 .deck{position:fixed;inset:0;touch-action:none;}
-.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:max(48px,env(safe-area-inset-top)) 44px max(60px,env(safe-area-inset-bottom));opacity:0;pointer-events:none;transition:opacity 0.28s ease;}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:max(52px,env(safe-area-inset-top)) 36px max(72px,env(safe-area-inset-bottom));opacity:0;pointer-events:none;transition:opacity 0.28s ease;}
 .slide.active{opacity:1;pointer-events:auto;}
-.progress{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,0.1);z-index:10;}
+
+/* PROGRESS */
+.progress{position:fixed;top:0;left:0;right:0;height:5px;background:rgba(255,255,255,0.1);z-index:10;}
 .progress-fill{height:100%;background:var(--red);transition:width 0.28s ease;}
-.dots{position:fixed;bottom:max(28px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:10;}
-.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.2s;}
-.dot.on{background:white;width:22px;border-radius:3px;}
-.nav{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:60px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:opacity 0.2s;}
+
+/* DOTS */
+.dots{position:fixed;bottom:max(32px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;gap:9px;z-index:10;}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.2s;}
+.dot.on{background:white;width:26px;border-radius:4px;}
+
+/* NAV ARROWS */
+.nav{position:fixed;top:50%;transform:translateY(-50%);width:52px;height:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:opacity 0.2s;}
 .nav:hover{opacity:0.9!important;}
-#np{left:8px;}#nn{right:8px;}
+#np{left:4px;}#nn{right:4px;}
 
 /* COVER */
 #s1{background:var(--red);}
 #s1::before{content:'';position:absolute;bottom:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(0,0,0,0.1);}
 #s1::after{content:'';position:absolute;top:-50px;left:-50px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.05);}
-.c-label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:14px;position:relative;z-index:1;}
-.c-title{font-family:'Instrument Serif',serif;font-size:clamp(30px,6.5vw,48px);color:white;line-height:1.1;margin-bottom:12px;position:relative;z-index:1;}
-.c-sub{font-size:15px;color:rgba(255,255,255,0.6);position:relative;z-index:1;}
-.c-hint{position:absolute;bottom:max(64px,env(safe-area-inset-bottom));left:44px;font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:5px;}
+.c-label{font-size:14px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:16px;position:relative;z-index:1;}
+.c-title{font-family:'Instrument Serif',serif;font-size:clamp(34px,7vw,52px);color:white;line-height:1.1;margin-bottom:14px;position:relative;z-index:1;}
+.c-sub{font-size:18px;color:rgba(255,255,255,0.6);position:relative;z-index:1;}
+.c-hint{position:absolute;bottom:max(72px,env(safe-area-inset-bottom));left:36px;font-size:15px;color:rgba(255,255,255,0.3);letter-spacing:0.5px;display:flex;align-items:center;gap:6px;}
 
-/* DARK SLIDES */
-.eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
-.heading{font-family:'Instrument Serif',serif;font-size:clamp(24px,5vw,36px);color:white;line-height:1.2;margin-bottom:20px;}
-.body-text{font-size:clamp(16px,2.8vw,20px);color:rgba(255,255,255,0.72);line-height:1.75;}
+/* COMMON */
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
+.heading{font-family:'Instrument Serif',serif;font-size:clamp(26px,5vw,38px);color:white;line-height:1.2;margin-bottom:18px;}
+.body-text{font-size:clamp(19px,3.2vw,23px);color:rgba(255,255,255,0.78);line-height:1.75;}
 
-/* DIRECTOR'S NOTE — clearly not to be read aloud */
-.note{display:inline-flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;margin-bottom:20px;}
-.note-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
-.note-text{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.5;font-style:normal;}
+/* DIRECTOR NOTE — clearly not to be read aloud */
+.note{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:13px 16px;margin-bottom:22px;}
+.note-icon{font-size:18px;flex-shrink:0;line-height:1;}
+.note-text{font-size:15px;color:rgba(255,255,255,0.45);line-height:1.55;}
 
 /* WORDS TO SAY */
-.say-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px;}
-.quote-block{border-left:3px solid var(--red);padding-left:20px;}
-.q-text{font-size:clamp(15px,2.6vw,19px);color:rgba(255,255,255,0.9);line-height:1.85;}
+.say-label{font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:12px;}
+.quote-block{border-left:4px solid var(--red);padding-left:22px;}
+.q-text{font-size:clamp(18px,3vw,22px);color:white;line-height:1.9;}
 
 /* AREAS */
 .area-list{display:flex;flex-direction:column;gap:10px;}
-.area-item{display:flex;align-items:center;gap:14px;padding:13px 18px;background:rgba(255,255,255,0.05);border-radius:12px;border:1px solid rgba(255,255,255,0.07);}
-.a-num{width:26px;height:26px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:white;flex-shrink:0;}
-.a-name{font-size:16px;color:rgba(255,255,255,0.88);font-weight:500;}
+.area-item{display:flex;align-items:center;gap:16px;padding:15px 20px;background:rgba(255,255,255,0.06);border-radius:14px;border:1px solid rgba(255,255,255,0.08);}
+.a-num{width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;color:white;flex-shrink:0;}
+.a-name{font-size:19px;color:rgba(255,255,255,0.9);font-weight:500;}
 
 /* LISTEN */
 .listen-list{display:flex;flex-direction:column;gap:10px;}
-.l-item{padding:14px 18px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.07);}
-.l-label{font-size:13px;font-weight:600;color:white;margin-bottom:5px;}
-.l-text{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.5;font-style:italic;}
+.l-item{padding:15px 20px;background:rgba(255,255,255,0.05);border-radius:14px;border:1px solid rgba(255,255,255,0.08);}
+.l-label{font-size:16px;font-weight:600;color:white;margin-bottom:6px;}
+.l-text{font-size:15px;color:rgba(255,255,255,0.55);line-height:1.5;font-style:italic;}
 
 /* TIMING */
 #s7{background:var(--red);}
 #s7::before{content:'';position:absolute;bottom:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(0,0,0,0.1);}
-.t-num{font-family:'Instrument Serif',serif;font-size:clamp(80px,20vw,130px);color:rgba(255,255,255,0.15);line-height:1;position:relative;z-index:1;}
-.t-unit{font-size:clamp(14px,2.5vw,18px);color:rgba(255,255,255,0.45);font-weight:500;margin-bottom:4px;position:relative;z-index:1;}
-.t-cap{font-family:'Instrument Serif',serif;font-size:clamp(22px,4.5vw,32px);color:white;line-height:1.3;margin-bottom:10px;position:relative;z-index:1;}
-.t-body{font-size:15px;color:rgba(255,255,255,0.62);line-height:1.65;max-width:420px;position:relative;z-index:1;}
+.t-num{font-family:'Instrument Serif',serif;font-size:clamp(90px,22vw,140px);color:rgba(255,255,255,0.15);line-height:1;position:relative;z-index:1;}
+.t-unit{font-size:clamp(16px,2.8vw,20px);color:rgba(255,255,255,0.45);font-weight:500;margin-bottom:6px;position:relative;z-index:1;}
+.t-cap{font-family:'Instrument Serif',serif;font-size:clamp(24px,4.5vw,34px);color:white;line-height:1.3;margin-bottom:12px;position:relative;z-index:1;}
+.t-body{font-size:17px;color:rgba(255,255,255,0.62);line-height:1.65;max-width:420px;position:relative;z-index:1;}
 </style>
 </head>
 <body>
@@ -77,7 +83,7 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
     <div class="c-title">Meeting with Pastor Kayode &amp; Pastor Kemi</div>
     <div class="c-sub">For Pastor Shade Olatoye · General Overseer</div>
     <div class="c-hint">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2.5l3.5 3.5L4 9.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M4 2.5l3.5 3.5L4 9.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.4" stroke-linecap="round"/></svg>
       Tap to continue
     </div>
   </div>
@@ -89,11 +95,11 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
     <p class="body-text">Let them know changes are coming — across the areas they are involved in. You are not asking their permission. You are giving them fair warning.</p>
   </div>
 
-  <!-- SLIDE 3: HOW TO OPEN -->
+  <!-- SLIDE 3: OPENING WORDS -->
   <div class="slide" id="s3">
     <div class="note">
       <span class="note-icon">👁</span>
-      <span class="note-text">Read the words below out loud — exactly as written, in your own pace.</span>
+      <span class="note-text">Read the words below out loud — in your own time, in your own way.</span>
     </div>
     <div class="say-label">Your opening words</div>
     <div class="quote-block">
@@ -105,7 +111,7 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
   <div class="slide" id="s4">
     <div class="note">
       <span class="note-icon">👁</span>
-      <span class="note-text">Read out each area below. Keep it short. Do not explain or give details — just name them.</span>
+      <span class="note-text">Read out each area below. Keep it short. Do not give details — just name them.</span>
     </div>
     <div class="say-label">Areas where changes are coming</div>
     <div class="area-list">
@@ -121,12 +127,12 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
   <div class="slide" id="s5">
     <div class="note">
       <span class="note-icon">👁</span>
-      <span class="note-text">Stop talking after slide 4. Let them speak first. This slide is for you — do not read it aloud.</span>
+      <span class="note-text">Stop talking after slide 4. Let them speak first. This slide is for you — do not read it out.</span>
     </div>
     <div class="say-label">What to watch for</div>
     <div class="listen-list">
       <div class="l-item">
-        <div class="l-label">They get upset or defensive</div>
+        <div class="l-label">They get upset or push back</div>
         <div class="l-text">Stay calm. Do not argue. Say: "I understand this is a lot."</div>
       </div>
       <div class="l-item">
@@ -140,11 +146,11 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
     </div>
   </div>
 
-  <!-- SLIDE 6: CLOSE -->
+  <!-- SLIDE 6: CLOSING WORDS -->
   <div class="slide" id="s6">
     <div class="note">
       <span class="note-icon">👁</span>
-      <span class="note-text">When the conversation is winding down, close with these words.</span>
+      <span class="note-text">When things are winding down, close with these words.</span>
     </div>
     <div class="say-label">Your closing words</div>
     <div class="quote-block">
@@ -155,18 +161,18 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
   <!-- SLIDE 7: TIMING -->
   <div class="slide" id="s7">
     <div class="t-num">20</div>
-    <div class="t-unit">minutes — then then leave</div>
+    <div class="t-unit">minutes — then leave</div>
     <div class="t-cap">You have said what needed to be said.</div>
-    <p class="t-body">Do not let it go longer than it needs to. You are in control of this conversation — not them.</p>
+    <p class="t-body">Do not let it go longer than it needs to. You are in control of this meeting — not them.</p>
   </div>
 
 </div>
 
 <div class="nav" id="np" onclick="prev()">
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M13 4l-6 6 6 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </div>
 <div class="nav" id="nn" onclick="next()">
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <svg width="24" height="24" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </div>
 <div class="dots" id="dots"></div>
 
@@ -176,8 +182,8 @@ function render(){
   document.querySelectorAll('.slide').forEach((s,j)=>s.classList.toggle('active',j===i));
   document.getElementById('pf').style.width=((i+1)/N*100)+'%';
   const np=document.getElementById('np'),nn=document.getElementById('nn');
-  np.style.opacity=i===0?'0':'0.25';np.style.pointerEvents=i===0?'none':'auto';
-  nn.style.opacity=i===N-1?'0':'0.25';nn.style.pointerEvents=i===N-1?'none':'auto';
+  np.style.opacity=i===0?'0':'0.3';np.style.pointerEvents=i===0?'none':'auto';
+  nn.style.opacity=i===N-1?'0':'0.3';nn.style.pointerEvents=i===N-1?'none':'auto';
   document.getElementById('dots').innerHTML=Array.from({length:N},(_,j)=>`<div class="dot${j===i?' on':''}"></div>`).join('');
 }
 function next(){if(i<N-1){i++;render();}}
