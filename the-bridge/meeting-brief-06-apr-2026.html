@@ -28,26 +28,34 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
 .c-label{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:14px;position:relative;z-index:1;}
 .c-title{font-family:'Instrument Serif',serif;font-size:clamp(30px,6.5vw,48px);color:white;line-height:1.1;margin-bottom:12px;position:relative;z-index:1;}
 .c-sub{font-size:15px;color:rgba(255,255,255,0.6);position:relative;z-index:1;}
-.c-hint{position:absolute;bottom:max(64px,env(safe-area-inset-bottom));left:44px;font-size:12px;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:5px;}
+.c-hint{position:absolute;bottom:max(64px,env(safe-area-inset-bottom));left:44px;font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:5px;}
 
 /* DARK SLIDES */
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
 .heading{font-family:'Instrument Serif',serif;font-size:clamp(24px,5vw,36px);color:white;line-height:1.2;margin-bottom:20px;}
 .body-text{font-size:clamp(16px,2.8vw,20px);color:rgba(255,255,255,0.72);line-height:1.75;}
+
+/* DIRECTOR'S NOTE — clearly not to be read aloud */
+.note{display:inline-flex;align-items:flex-start;gap:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 14px;margin-bottom:20px;}
+.note-icon{font-size:13px;flex-shrink:0;margin-top:1px;}
+.note-text{font-size:13px;color:rgba(255,255,255,0.45);line-height:1.5;font-style:normal;}
+
+/* WORDS TO SAY */
+.say-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin-bottom:10px;}
 .quote-block{border-left:3px solid var(--red);padding-left:20px;}
-.q-text{font-size:clamp(15px,2.6vw,19px);color:rgba(255,255,255,0.82);line-height:1.85;font-style:italic;}
+.q-text{font-size:clamp(15px,2.6vw,19px);color:rgba(255,255,255,0.9);line-height:1.85;}
 
 /* AREAS */
 .area-list{display:flex;flex-direction:column;gap:10px;}
 .area-item{display:flex;align-items:center;gap:14px;padding:13px 18px;background:rgba(255,255,255,0.05);border-radius:12px;border:1px solid rgba(255,255,255,0.07);}
 .a-num{width:26px;height:26px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:white;flex-shrink:0;}
-.a-name{font-size:16px;color:rgba(255,255,255,0.85);font-weight:500;}
+.a-name{font-size:16px;color:rgba(255,255,255,0.88);font-weight:500;}
 
 /* LISTEN */
 .listen-list{display:flex;flex-direction:column;gap:10px;}
 .l-item{padding:14px 18px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.07);}
-.l-label{font-size:11px;font-weight:600;color:var(--red);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px;}
-.l-text{font-size:15px;color:rgba(255,255,255,0.72);line-height:1.5;}
+.l-label{font-size:13px;font-weight:600;color:white;margin-bottom:5px;}
+.l-text{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.5;font-style:italic;}
 
 /* TIMING */
 #s7{background:var(--red);}
@@ -63,74 +71,93 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
 
 <div class="deck" id="deck">
 
+  <!-- SLIDE 1: COVER -->
   <div class="slide active" id="s1">
     <div class="c-label">Meeting brief · 6th April 2026</div>
     <div class="c-title">Call with Pastor Kayode &amp; Pastor Kemi</div>
     <div class="c-sub">For Pastor Shade Olatoye · General Overseer</div>
     <div class="c-hint">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2.5l3.5 3.5L4 9.5" stroke="rgba(255,255,255,0.35)" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2.5l3.5 3.5L4 9.5" stroke="rgba(255,255,255,0.3)" stroke-width="1.4" stroke-linecap="round"/></svg>
       Tap to continue
     </div>
   </div>
 
+  <!-- SLIDE 2: PURPOSE -->
   <div class="slide" id="s2">
-    <div class="eyebrow">Purpose</div>
-    <div class="heading">What this call is for</div>
-    <p class="body-text">Get ahead of the changes coming. Give them a signal — not a full disclosure. See how they respond.</p>
+    <div class="eyebrow">What this call is for</div>
+    <div class="heading">You are getting ahead of it.</div>
+    <p class="body-text">Let them know changes are coming — across the areas they are involved in. You are not asking their permission. You are giving them fair warning.</p>
   </div>
 
+  <!-- SLIDE 3: HOW TO OPEN -->
   <div class="slide" id="s3">
-    <div class="eyebrow">How to open</div>
-    <div class="heading">Say this</div>
+    <div class="note">
+      <span class="note-icon">👁</span>
+      <span class="note-text">Read the words below out loud — exactly as written, in your own pace.</span>
+    </div>
+    <div class="say-label">Your opening words</div>
     <div class="quote-block">
-      <p class="q-text">"The last few years have been hard on all of us. Grief has affected us differently and some of our relationships have been a little fractured. I'm not holding anything against you — but I wanted you to hear from me directly: the church is going through significant changes. I just wanted you to be aware."</p>
+      <p class="q-text">"The last few years have been hard on all of us. Grief has affected us differently and some of our relationships have been a little fractured. I am not holding anything against you — but I wanted you to hear from me directly: the church is going through significant changes. I just wanted you to be aware."</p>
     </div>
   </div>
 
+  <!-- SLIDE 4: AREAS -->
   <div class="slide" id="s4">
-    <div class="eyebrow">Name these — no detail needed</div>
-    <div class="heading" style="margin-bottom:16px;">Changes are coming to</div>
+    <div class="note">
+      <span class="note-icon">👁</span>
+      <span class="note-text">Read out each area below. Keep it short. Do not explain or give details — just name them.</span>
+    </div>
+    <div class="say-label">Areas where changes are coming</div>
     <div class="area-list">
       <div class="area-item"><div class="a-num">1</div><div class="a-name">Women's fellowship</div></div>
       <div class="area-item"><div class="a-num">2</div><div class="a-name">Events</div></div>
       <div class="area-item"><div class="a-num">3</div><div class="a-name">Finance</div></div>
-      <div class="area-item"><div class="a-num">4</div><div class="a-name">The charity structure</div></div>
+      <div class="area-item"><div class="a-num">4</div><div class="a-name">The charity</div></div>
       <div class="area-item"><div class="a-num">5</div><div class="a-name">How services are run</div></div>
     </div>
   </div>
 
+  <!-- SLIDE 5: LISTEN -->
   <div class="slide" id="s5">
-    <div class="eyebrow">Then — stop talking</div>
-    <div class="heading" style="margin-bottom:16px;">Listen for</div>
+    <div class="note">
+      <span class="note-icon">👁</span>
+      <span class="note-text">Stop talking after slide 4. Let them speak first. This slide is for you — do not read it aloud.</span>
+    </div>
+    <div class="say-label">What to watch for</div>
     <div class="listen-list">
       <div class="l-item">
-        <div class="l-label">Defensiveness or pushing back</div>
-        <div class="l-text">Note it, don't react. Keep your composure.</div>
+        <div class="l-label">They get upset or defensive</div>
+        <div class="l-text">Stay calm. Do not argue. Say: "I understand this is a lot."</div>
       </div>
       <div class="l-item">
-        <div class="l-label">Questions about specifics</div>
-        <div class="l-text">Deflect — "details are still being worked through."</div>
+        <div class="l-label">They ask what the changes are</div>
+        <div class="l-text">Say: "The details are still being worked through. I will keep you informed."</div>
       </div>
       <div class="l-item">
-        <div class="l-label">Warmth and support</div>
-        <div class="l-text">Receive it graciously. Don't over-commit.</div>
+        <div class="l-label">They are warm and supportive</div>
+        <div class="l-text">Receive it. Say thank you. Do not make promises.</div>
       </div>
     </div>
   </div>
 
+  <!-- SLIDE 6: CLOSE -->
   <div class="slide" id="s6">
-    <div class="eyebrow">How to close</div>
-    <div class="heading">End with this</div>
+    <div class="note">
+      <span class="note-icon">👁</span>
+      <span class="note-text">When the conversation is winding down, close with these words.</span>
+    </div>
+    <div class="say-label">Your closing words</div>
     <div class="quote-block">
-      <p class="q-text">"I just wanted you to hear it from me first. I value our relationship and I want us to navigate this together. More will become clearer in the coming weeks."</p>
+      <p class="q-text">"I just wanted you to hear it from me first. I value our relationship and I want us to move forward together. More will become clear in the coming weeks."</p>
     </div>
   </div>
 
+  <!-- SLIDE 7: TIMING -->
   <div class="slide" id="s7">
     <div class="t-num">20</div>
-    <div class="t-unit">minutes maximum</div>
-    <div class="t-cap">This is a signal, not a summit.</div>
-    <p class="t-body">Say what needs to be said, hear their response, and close it. Don't let it drift into negotiation.</p>
+    <div class="t-unit">minutes — then end the call</div>
+    <div class="t-cap">You have said what needed to be said.</div>
+    <p class="t-body">Do not let it go longer than it needs to. You are in control of this conversation — not them.</p>
   </div>
 
 </div>
@@ -141,17 +168,16 @@ html,body{height:100%;overflow:hidden;background:#0F172A;font-family:'DM Sans',s
 <div class="nav" id="nn" onclick="next()">
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7 4l6 6-6 6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
 </div>
-
 <div class="dots" id="dots"></div>
 
 <script>
-const N=7; let i=0;
+const N=7;let i=0;
 function render(){
   document.querySelectorAll('.slide').forEach((s,j)=>s.classList.toggle('active',j===i));
   document.getElementById('pf').style.width=((i+1)/N*100)+'%';
-  const np=document.getElementById('np'), nn=document.getElementById('nn');
-  np.style.opacity=i===0?'0':'0.25'; np.style.pointerEvents=i===0?'none':'auto';
-  nn.style.opacity=i===N-1?'0':'0.25'; nn.style.pointerEvents=i===N-1?'none':'auto';
+  const np=document.getElementById('np'),nn=document.getElementById('nn');
+  np.style.opacity=i===0?'0':'0.25';np.style.pointerEvents=i===0?'none':'auto';
+  nn.style.opacity=i===N-1?'0':'0.25';nn.style.pointerEvents=i===N-1?'none':'auto';
   document.getElementById('dots').innerHTML=Array.from({length:N},(_,j)=>`<div class="dot${j===i?' on':''}"></div>`).join('');
 }
 function next(){if(i<N-1){i++;render();}}
