@@ -214,6 +214,10 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
             <input class="finput" id="f-name" placeholder="e.g. Pastor Shade Olatoye">
           </div>
           <div class="frow">
+            <label class="flabel">Email (optional)</label>
+            <input class="finput" id="f-email" placeholder="e.g. shade@calvary.co.uk" type="email">
+          </div>
+          <div class="frow">
             <label class="flabel">PIN (4 digits)</label>
             <input class="finput" id="f-pin" placeholder="e.g. 1234" maxlength="4" type="text" inputmode="numeric">
           </div>
@@ -481,7 +485,7 @@ async function loadAdminList() {
       <div class="urow-av">${initials(u.name)}</div>
       <div class="urow-info">
         <div class="urow-name">${u.name} <span class="level-badge ${u.level==='cos'?'lb-cos':'lb-func'}" style="margin-left:4px;">${u.level==='cos'?'CoS':'Functional'}</span></div>
-        <div class="urow-meta">PIN: ${u.pin_hash ? 'set' : 'not set'} · ${u.active ? 'Active' : 'Suspended'} · Sections: ${u.level==='cos'?'All':(u.sections||[]).join(', ')||'none'}</div>
+        <div class="urow-meta">PIN: ${u.pin_hash ? 'set' : 'not set'} · ${u.active ? 'Active' : 'Suspended'} · ${u.email || 'no email'} · Sections: ${u.level==='cos'?'All':(u.sections||[]).join(', ')||'none'}</div>
       </div>
       <div class="urow-acts">
         <button class="xbtn" onclick="editUser(${u.id})">Edit</button>
@@ -495,6 +499,7 @@ async function editUser(id) {
   if (!data) return;
   document.getElementById('edit-id').value = data.id;
   document.getElementById('f-name').value = data.name;
+  document.getElementById('f-email').value = data.email || '';
   document.getElementById('f-pin').value = '';
   document.getElementById('f-level').value = data.level;
   levelChanged();
@@ -509,6 +514,7 @@ async function editUser(id) {
 
 async function saveUser() {
   const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
   const pin = document.getElementById('f-pin').value.trim();
   const level = document.getElementById('f-level').value;
   const editId = document.getElementById('edit-id').value;
@@ -520,7 +526,7 @@ async function saveUser() {
     ? ALL_SECTIONS.map(s => s.id)
     : [...selectedSections];
 
-  const payload = { name, level, sections, active: true };
+  const payload = { name, email: email || null, level, sections, active: true };
   if (pin) {
     if (!/^\d{4}$/.test(pin)) { msg.textContent = 'PIN must be exactly 4 digits.'; msg.className = 'amsg err'; return; }
     payload.pin_hash = hashPin(pin);
@@ -556,6 +562,7 @@ async function toggleActive(id, current) {
 function clearForm() {
   document.getElementById('edit-id').value = '';
   document.getElementById('f-name').value = '';
+  document.getElementById('f-email').value = '';
   document.getElementById('f-pin').value = '';
   document.getElementById('f-level').value = 'functional';
   selectedSections = new Set();
