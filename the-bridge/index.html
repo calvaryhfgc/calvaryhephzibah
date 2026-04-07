@@ -3383,6 +3383,68 @@ const drawerPages = [
 ];
 
 loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();renderProtocols();
+
+// ── ROLE-BASED VIEW ───────────────────────────────────────────────────────────
+(function applyRoleView() {
+  const params = new URLSearchParams(window.location.search);
+  const role = params.get('role');
+  const sectionsParam = params.get('sections');
+  const userName = params.get('user');
+
+  if (!role || !sectionsParam) return; // Direct access — show everything (PIN gate handles auth)
+
+  const allowed = sectionsParam.split(',').filter(Boolean);
+
+  // Hide nav items and pages not in allowed list
+  document.querySelectorAll('.nav-item').forEach(el => {
+    const onclick = el.getAttribute('onclick') || '';
+    const match = onclick.match(/showPage\('([^']+)'/);
+    if (match && !allowed.includes(match[1])) {
+      el.style.display = 'none';
+    }
+  });
+
+  // Hide nav group labels if all children hidden
+  document.querySelectorAll('.nav-group').forEach(group => {
+    const items = group.querySelectorAll('.nav-item');
+    const allHidden = [...items].every(i => i.style.display === 'none');
+    if (allHidden) group.style.display = 'none';
+  });
+
+  // If CoS not allowed, hide it from mobile drawer too
+  // Show first allowed page
+  const firstAllowed = allowed[0];
+  if (firstAllowed) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const firstPage = document.getElementById('page-' + firstAllowed);
+    if (firstPage) firstPage.classList.add('active');
+    document.getElementById('topbar-title').textContent = titles[firstAllowed] || firstAllowed;
+  }
+
+  // Update sidebar footer with user name
+  if (userName) {
+    const footer = document.querySelector('.sidebar-footer p');
+    if (footer) footer.innerHTML = `<strong>${userName}</strong><br>Calvary Hephzibah`;
+  }
+
+  // Update mobile drawer to only show allowed pages
+  // (drawerPages already declared above — filter it)
+  const filteredDrawer = drawerPages.filter(p => allowed.includes(p.id));
+  // Reassign for openMobDrawer to use
+  window._filteredDrawer = filteredDrawer;
+})();
+
+// Override openMobDrawer to respect filtered pages
+const _origOpenMobDrawer = openMobDrawer;
+window.openMobDrawer = function() {
+  const pages = window._filteredDrawer || drawerPages;
+  const grid = document.getElementById('mob-drawer-grid');
+  grid.innerHTML = pages.map(p => `
+    <div class="mob-drawer-item" onclick="showPage('${p.id}',null,null);closeMobDrawer()">
+      ${p.icon}<span>${p.label}</span>
+    </div>`).join('');
+  document.getElementById('mob-drawer').classList.add('open');
+};
 </script>
 </body>
 </html>
