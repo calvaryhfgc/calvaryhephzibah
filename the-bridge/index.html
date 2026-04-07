@@ -3500,7 +3500,8 @@ const drawerPages = [
   { id:'pastors-corner', label:"Pastor's Corner", icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1l1.5 3 3.5.5-2.5 2.5.5 3.5L7 9l-3 1.5.5-3.5L2 4.5 5.5 4z"/></svg>' },
 ];
 
-loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();renderProtocols();renderPcBriefs();
+loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();renderProtocols();
+setTimeout(renderPcBriefs, 100);
 
 // ── PASTOR'S CORNER ──────────────────────────────────────────────────────────
 
@@ -3562,14 +3563,12 @@ let pcNewCat = 'meeting';
 let pcSlideCount = 0;
 
 function renderPcBriefs() {
-  // Show/hide add button based on CoS level
-  const params = new URLSearchParams(window.location.search);
-  const level = params.get('level');
   const addBtn = document.getElementById('pc-add-btn');
-  if (addBtn && (level === 'cos' || !params.get('role'))) addBtn.style.display = '';
+  if (addBtn) addBtn.style.display = '';
 
   const grid = document.getElementById('pc-grid');
-  if (!grid) return;
+  if (!grid) { setTimeout(renderPcBriefs, 200); return; }
+
   const filtered = pcFilter === 'all' ? pcBriefs : pcBriefs.filter(b => b.category === pcFilter);
 
   if (!filtered.length) {
