@@ -1983,7 +1983,10 @@ function updatePinDots() {
 }
 
 // Check session
-if (sessionStorage.getItem('bridge_auth') === '1') {
+// Skip PIN gate if loaded from app.html (has role param)
+if (new URLSearchParams(window.location.search).get('role')) {
+  document.getElementById('pin-gate').classList.add('hidden');
+} else if (sessionStorage.getItem('bridge_auth') === '1') {
   document.getElementById('pin-gate').classList.add('hidden');
 }
 
