@@ -384,6 +384,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .proto-resp-item:last-child{border-bottom:none;}
 .proto-resp-dot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:6px;}
 
+/* ── PASTOR'S CORNER ── */
+.pc-card{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:18px 20px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow-sm);display:flex;align-items:flex-start;gap:14px;}
+.pc-card:hover{border-color:#CBD5E1;box-shadow:var(--shadow);transform:translateY(-1px);}
+.pc-card-icon{width:40px;height:40px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;}
+.pc-card-body{flex:1;min-width:0;}
+.pc-card-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.pc-card-meta{font-size:12px;color:var(--ink-4);margin-bottom:8px;}
+.pc-card-preview{font-size:12px;color:var(--ink-3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pc-card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #F1F5F9;}
+.pc-cat-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:0.4px;}
+.pcb-meeting{background:#EFF6FF;color:#2563EB;}
+.pcb-sermon{background:#F0FDF4;color:#16A34A;}
+.pcb-priorities{background:#FFFBEB;color:#D97706;}
+.pcb-guidance{background:#F3E8FF;color:#7C3AED;}
+.pc-slide-count{font-size:11px;color:var(--ink-4);}
+/* Slide content types */
+.slide-heading{font-family:'DM Sans',sans-serif;font-size:clamp(22px,4vw,34px);font-weight:700;color:white;line-height:1.2;margin-bottom:16px;}
+.slide-subheading{font-size:clamp(14px,2.5vw,18px);color:rgba(255,255,255,0.65);line-height:1.5;margin-bottom:20px;}
+.slide-body{font-size:clamp(13px,2vw,16px);color:rgba(255,255,255,0.8);line-height:1.7;}
+.slide-note{background:rgba(255,255,255,0.07);border-left:3px solid var(--red);padding:14px 18px;border-radius:0 8px 8px 0;font-size:clamp(12px,1.8vw,14px);color:rgba(255,255,255,0.6);font-style:italic;line-height:1.6;margin-top:16px;}
+.slide-bullets{list-style:none;display:flex;flex-direction:column;gap:10px;margin:12px 0;}
+.slide-bullets li{display:flex;align-items:flex-start;gap:10px;font-size:clamp(13px,2vw,16px);color:rgba(255,255,255,0.85);line-height:1.5;}
+.slide-bullets li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:7px;}
+.slide-say{background:rgba(196,30,42,0.15);border:1px solid rgba(196,30,42,0.3);border-radius:10px;padding:16px 20px;margin-top:16px;}
+.slide-say-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(196,30,42,0.8);margin-bottom:8px;}
+.slide-say-text{font-size:clamp(14px,2.2vw,17px);color:white;line-height:1.6;font-style:italic;}
+/* Slide builder */
+.slide-builder-item{background:var(--bg);border:1.5px solid var(--ink-5);border-radius:var(--r8);padding:12px 14px;}
+.slide-builder-item select{width:100%;background:var(--white);border:1.5px solid var(--ink-5);border-radius:6px;padding:6px 8px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink);margin-bottom:8px;outline:none;}
+.slide-builder-item textarea{width:100%;background:var(--white);border:1.5px solid var(--ink-5);border-radius:6px;padding:8px 10px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);resize:vertical;min-height:70px;outline:none;line-height:1.5;}
+.slide-builder-item textarea:focus{border-color:var(--red);}
+
 @media(max-width:768px){
   .sidebar{display:none;}
   .main{margin-left:0;}
@@ -552,6 +584,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         <div class="nav-item" onclick="showPage('cos',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><polyline points="7,4 7,7.5 9,9"/></svg>
           Chief of Staff
+        </div>
+        <div class="nav-item" onclick="showPage('pastors-corner',this)">
+          <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1l1.5 3 3.5.5-2.5 2.5.5 3.5L7 9l-3 1.5.5-3.5L2 4.5 5.5 4z"/></svg>
+          Pastor's Corner
         </div>
         <div class="nav-item" onclick="showPage('notes',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7.5" x2="8" y2="7.5"/></svg>
@@ -1671,6 +1707,83 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         <textarea class="notes-area" id="notes-area" placeholder="Write anything — thoughts, observations, sensitive context, decisions made, next steps…"></textarea>
       </div>
 
+      <!-- PASTOR'S CORNER -->
+      <div class="page" id="page-pastors-corner">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Pastor's Corner</div>
+            <div class="page-sub">Guidance notes, meeting briefs, and sermon prep — built for Pastor Shade.</div>
+          </div>
+          <button class="btn-red" id="pc-add-btn" onclick="openNewBriefModal()" style="display:none;">+ New brief</button>
+        </div>
+
+        <!-- Category filter -->
+        <div class="actions-toolbar" style="margin-bottom:20px;">
+          <button class="actions-filter af-active" id="pcf-all" onclick="setPcFilter('all',this)">All</button>
+          <button class="actions-filter" id="pcf-meeting" onclick="setPcFilter('meeting',this)">Meeting briefs</button>
+          <button class="actions-filter" id="pcf-sermon" onclick="setPcFilter('sermon',this)">Sermon prep</button>
+          <button class="actions-filter" id="pcf-priorities" onclick="setPcFilter('priorities',this)">Weekly priorities</button>
+          <button class="actions-filter" id="pcf-guidance" onclick="setPcFilter('guidance',this)">Guidance</button>
+        </div>
+
+        <div id="pc-grid" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PASTOR'S CORNER — SLIDE VIEWER -->
+<div id="pc-slide-viewer" style="display:none;position:fixed;inset:0;background:#0F172A;z-index:500;flex-direction:column;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button onclick="closePcViewer()" style="background:rgba(255,255,255,0.08);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">×</button>
+      <div id="pc-viewer-title" style="font-size:14px;font-weight:600;color:rgba(255,255,255,0.85);"></div>
+    </div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.4);" id="pc-slide-counter"></div>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;" onclick="pcSlideNext()">
+    <div id="pc-slide-content" style="width:100%;max-width:680px;"></div>
+  </div>
+  <div style="padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.08);">
+    <button onclick="pcSlidePrev()" id="pc-prev-btn" style="background:rgba(255,255,255,0.08);border:none;color:white;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;">← Back</button>
+    <div style="display:flex;gap:6px;" id="pc-slide-dots"></div>
+    <button onclick="pcSlideNext()" id="pc-next-btn" style="background:var(--red);border:none;color:white;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;">Next →</button>
+  </div>
+</div>
+
+<!-- PASTOR'S CORNER — NEW BRIEF MODAL -->
+<div class="modal-overlay" id="pc-new-modal">
+  <div class="detail-modal" style="max-width:560px;">
+    <div class="detail-header">
+      <div class="detail-title-row">
+        <div class="detail-title">New brief</div>
+        <button class="detail-close" onclick="closeNewBriefModal()">×</button>
+      </div>
+    </div>
+    <div class="detail-body">
+      <div class="detail-section">
+        <div class="detail-section-label">Title</div>
+        <input type="text" class="update-input" id="pc-new-title" placeholder="e.g. Meeting with Ps Kayode — April 2026" style="width:100%;">
+      </div>
+      <div class="detail-section">
+        <div class="detail-section-label">Category</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="proto-status-btn pst-draft selected" id="pccat-meeting" onclick="setPcCat('meeting')">Meeting brief</button>
+          <button class="proto-status-btn pst-draft" id="pccat-sermon" onclick="setPcCat('sermon')">Sermon prep</button>
+          <button class="proto-status-btn pst-draft" id="pccat-priorities" onclick="setPcCat('priorities')">Weekly priorities</button>
+          <button class="proto-status-btn pst-draft" id="pccat-guidance" onclick="setPcCat('guidance')">Guidance</button>
+        </div>
+      </div>
+      <div class="detail-section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <div class="detail-section-label" style="margin-bottom:0;">Slides</div>
+          <button class="btn-sm-red" onclick="addPcSlide()">+ Add slide</button>
+        </div>
+        <div id="pc-slides-builder" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+      <button class="btn-red" style="width:100%;padding:12px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;" onclick="savePcBrief()">Save brief</button>
+      <div class="auth-msg" id="pc-save-msg" style="text-align:center;margin-top:8px;"></div>
     </div>
   </div>
 </div>
@@ -3349,7 +3462,7 @@ const titles = {
   overview:'Ministry overview', actions:'Actions', priorities:'Priorities',
   finance:'Finance', vision:'Vision & mission', protocols:'Protocols',
   media:'Media team', worship:'Worship rebuild', pastoral:'Pastoral load',
-  cos:'Chief of Staff', notes:'Notes'
+  cos:'Chief of Staff', notes:'Notes', 'pastors-corner':"Pastor's Corner"
 };
 
 const mobNavIds = ['mob-priorities','mob-actions','mob-overview','mob-cos'];
@@ -3382,12 +3495,265 @@ const drawerPages = [
   { id:'media',     label:'Media team',    icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v7l-3-2"/></svg>' },
   { id:'worship',   label:'Worship',       icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1v12M4 3.5L7 1l3 2.5M1.5 9.5a5.5 5.5 0 0011 0"/></svg>' },
   { id:'pastoral',  label:'Pastoral load', icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 13c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"/></svg>' },
-  { id:'notes',     label:'Notes',         icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7.5" x2="8" y2="7.5"/></svg>' },
+  { id:'notes',          label:'Notes',           icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7.5" x2="8" y2="7.5"/></svg>' },
+  { id:'pastors-corner', label:"Pastor's Corner", icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1l1.5 3 3.5.5-2.5 2.5.5 3.5L7 9l-3 1.5.5-3.5L2 4.5 5.5 4z"/></svg>' },
 ];
 
-loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();renderProtocols();
+loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();renderProtocols();renderPcBriefs();
 
-// ── ROLE-BASED VIEW ───────────────────────────────────────────────────────────
+// ── PASTOR'S CORNER ──────────────────────────────────────────────────────────
+
+const pcCatMeta = {
+  meeting:    { label:'Meeting brief',      icon:'🤝', iconBg:'#EFF6FF', cls:'pcb-meeting' },
+  sermon:     { label:'Sermon prep',        icon:'📖', iconBg:'#F0FDF4', cls:'pcb-sermon' },
+  priorities: { label:'Weekly priorities',  icon:'⭐', iconBg:'#FFFBEB', cls:'pcb-priorities' },
+  guidance:   { label:'Guidance',           icon:'💡', iconBg:'#F3E8FF', cls:'pcb-guidance' },
+};
+
+// Seed briefs — these live in memory, Supabase persistence can be added later
+const pcBriefs = [
+  {
+    id: 1,
+    title: 'Meeting with Ps Kayode & Ps Kemi — April 2026',
+    category: 'meeting',
+    date: '6 Apr 2026',
+    slides: [
+      { type:'heading', content:'Meeting with\nPs Kayode & Ps Kemi', note:'This is a leadership accountability conversation. You are the General Overseer. You are in charge.' },
+      { type:'heading', content:'What happened', bullets:['Reporting authority was bypassed — decisions made without coming back to you','This cannot continue at this level of the organisation','You have given grace. Now clarity is needed.'] },
+      { type:'say', label:'You can say this', content:'I appreciate what you both bring. But delegated authority means you report back. That didn\'t happen. I need to know that won\'t happen again.' },
+      { type:'heading', content:'What you need from them', bullets:['An acknowledgement of what went wrong','A clear commitment to the reporting structure going forward','Respect for your position as General Overseer'] },
+      { type:'say', label:'If it gets difficult, say this', content:'I\'m not here to punish anyone. I\'m here to make sure we operate correctly. That\'s my responsibility to God and to this church.' },
+      { type:'heading', content:'How to close', note:'End with prayer. Keep it dignified. You don\'t need to resolve everything today — you just need to be heard and respected.', bullets:['Confirm the expectation going forward','Let them respond','Close in prayer'] },
+    ]
+  },
+  {
+    id: 2,
+    title: 'Worship transition — what you need to know',
+    category: 'guidance',
+    date: '7 Apr 2026',
+    slides: [
+      { type:'heading', content:'Worship Team\nTransition', note:'This is sensitive. Several key people are leaving at the same time. This brief explains what\'s happening and what the plan is.' },
+      { type:'heading', content:'Who is leaving', bullets:['Dr Ayo Olatoye — worship coordinator (also trustee — separate process)', 'Lina Olatoye', 'Suzana', 'Michael Kamumvu — preaching 19th April, likely leaving 26th April'] },
+      { type:'heading', content:'What is in place', bullets:['Caster Martins confirmed — willing to lead worship', 'Professional band and session singers being sourced', 'Target: Sunday 20th April — full sound', 'Bolaji Adebanjo (12 Collective) helping with musicians'] },
+      { type:'heading', content:'What you need to do', bullets:['Nothing urgent — Bolaji is managing this', 'When Caster comes to you: affirm him, thank him', 'If Dr Ayo raises worship: "Bolaji is handling it"'] },
+      { type:'say', label:'If anyone asks', content:'We are in a transition season. God is faithful. The worship will be stronger for it.' },
+    ]
+  },
+  {
+    id: 3,
+    title: 'Charity governance — what needs to happen',
+    category: 'guidance',
+    date: '7 Apr 2026',
+    slides: [
+      { type:'heading', content:'Charity Governance\nWhat needs to happen', note:'Global Harvest International (Charity 1135709). This affects our ability to apply for grants.' },
+      { type:'heading', content:'Current issues', bullets:['Dr Emmanuel Olatoye still listed as trustee — he needs to be formally removed', 'Dr Ayo Olatoye is a trustee — he needs to formally resign', 'Only 2 active trustees once Ayo leaves — need Bolaji added'] },
+      { type:'heading', content:'What you need to do', bullets:['Sign the trustee removal form for Dr Emmanuel', 'Receive Dr Ayo\'s formal resignation letter', 'Vote to appoint Bolaji as trustee (you need Ps Kayode\'s vote too)'] },
+      { type:'say', label:'When speaking to Dr Ayo', content:'I need you to formally resign as trustee in writing. Bolaji will send you the form. This is just admin — it doesn\'t change what you\'ve contributed.' },
+      { type:'heading', content:'Why this matters', note:'Until the trustee list is clean, we cannot apply for the Our Manchester VCFSE Fund (opens July 2026). That grant could bring in significant funding.', bullets:['Our Manchester Fund opens July 2026', 'Grant applications require clean governance', 'This is Bolaji\'s priority to manage — you just need to sign'] },
+    ]
+  },
+];
+
+let pcFilter = 'all';
+let pcCurrentBrief = null;
+let pcCurrentSlide = 0;
+let pcNewCat = 'meeting';
+let pcSlideCount = 0;
+
+function renderPcBriefs() {
+  // Show/hide add button based on CoS level
+  const params = new URLSearchParams(window.location.search);
+  const level = params.get('level');
+  const addBtn = document.getElementById('pc-add-btn');
+  if (addBtn && (level === 'cos' || !params.get('role'))) addBtn.style.display = '';
+
+  const grid = document.getElementById('pc-grid');
+  if (!grid) return;
+  const filtered = pcFilter === 'all' ? pcBriefs : pcBriefs.filter(b => b.category === pcFilter);
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div style="text-align:center;padding:48px;color:var(--ink-4);font-size:13px;">No briefs in this category yet.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(b => {
+    const m = pcCatMeta[b.category] || pcCatMeta.guidance;
+    const preview = b.slides[0]?.content?.replace(/\n/g,' ') || '';
+    return `<div class="pc-card" onclick="openPcBrief(${b.id})">
+      <div class="pc-card-icon" style="background:${m.iconBg};">${m.icon}</div>
+      <div class="pc-card-body">
+        <div class="pc-card-title">${b.title}</div>
+        <div class="pc-card-meta">${b.date} · ${b.slides.length} slide${b.slides.length!==1?'s':''}</div>
+        <div class="pc-card-preview">${preview}</div>
+        <div class="pc-card-footer">
+          <span class="pc-cat-badge ${m.cls}">${m.label}</span>
+          <span class="pc-slide-count">Tap to open →</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setPcFilter(f, el) {
+  pcFilter = f;
+  document.querySelectorAll('[id^="pcf-"]').forEach(b => b.classList.remove('af-active'));
+  el.classList.add('af-active');
+  renderPcBriefs();
+}
+
+function openPcBrief(id) {
+  const brief = pcBriefs.find(b => b.id === id);
+  if (!brief) return;
+  pcCurrentBrief = brief;
+  pcCurrentSlide = 0;
+  document.getElementById('pc-viewer-title').textContent = brief.title;
+  const viewer = document.getElementById('pc-slide-viewer');
+  viewer.style.display = 'flex';
+  renderPcSlide();
+}
+
+function closePcViewer() {
+  document.getElementById('pc-slide-viewer').style.display = 'none';
+  pcCurrentBrief = null;
+}
+
+function renderPcSlide() {
+  const slide = pcCurrentBrief.slides[pcCurrentSlide];
+  const total = pcCurrentBrief.slides.length;
+
+  document.getElementById('pc-slide-counter').textContent = `${pcCurrentSlide + 1} of ${total}`;
+
+  // Dots
+  document.getElementById('pc-slide-dots').innerHTML = pcCurrentBrief.slides.map((_,i) =>
+    `<div style="width:${i===pcCurrentSlide?'20px':'6px'};height:6px;border-radius:3px;background:${i===pcCurrentSlide?'var(--red)':'rgba(255,255,255,0.2)'};transition:all 0.2s;"></div>`
+  ).join('');
+
+  // Prev/Next buttons
+  document.getElementById('pc-prev-btn').style.opacity = pcCurrentSlide === 0 ? '0.3' : '1';
+  document.getElementById('pc-next-btn').textContent = pcCurrentSlide === total - 1 ? 'Done ✓' : 'Next →';
+
+  // Build slide HTML
+  let html = '';
+  if (slide.content) {
+    html += `<div class="slide-heading">${slide.content.replace(/\n/g,'<br>')}</div>`;
+  }
+  if (slide.subheading) {
+    html += `<div class="slide-subheading">${slide.subheading}</div>`;
+  }
+  if (slide.bullets?.length) {
+    html += `<ul class="slide-bullets">${slide.bullets.map(b => `<li>${b}</li>`).join('')}</ul>`;
+  }
+  if (slide.type === 'say') {
+    html = `<div class="slide-say"><div class="slide-say-label">${slide.label || 'You can say this'}</div><div class="slide-say-text">"${slide.content}"</div></div>`;
+  }
+  if (slide.note) {
+    html += `<div class="slide-note">${slide.note}</div>`;
+  }
+
+  document.getElementById('pc-slide-content').innerHTML = html;
+}
+
+function pcSlideNext() {
+  if (!pcCurrentBrief) return;
+  if (pcCurrentSlide >= pcCurrentBrief.slides.length - 1) { closePcViewer(); return; }
+  pcCurrentSlide++;
+  renderPcSlide();
+}
+
+function pcSlidePrev() {
+  if (pcCurrentSlide <= 0) return;
+  pcCurrentSlide--;
+  renderPcSlide();
+}
+
+// Keyboard navigation in slide viewer
+document.addEventListener('keydown', e => {
+  if (!pcCurrentBrief) return;
+  if (e.key === 'ArrowRight' || e.key === ' ') pcSlideNext();
+  if (e.key === 'ArrowLeft') pcSlidePrev();
+  if (e.key === 'Escape') closePcViewer();
+});
+
+// ── NEW BRIEF BUILDER ─────────────────────────────────────────────────────────
+function openNewBriefModal() {
+  pcNewCat = 'meeting';
+  pcSlideCount = 0;
+  document.getElementById('pc-new-title').value = '';
+  document.getElementById('pc-slides-builder').innerHTML = '';
+  document.getElementById('pc-save-msg').textContent = '';
+  document.querySelectorAll('[id^="pccat-"]').forEach(b => b.classList.remove('selected'));
+  document.getElementById('pccat-meeting').classList.add('selected');
+  addPcSlide();
+  document.getElementById('pc-new-modal').classList.add('open');
+}
+
+function closeNewBriefModal() {
+  document.getElementById('pc-new-modal').classList.remove('open');
+}
+
+function setPcCat(cat) {
+  pcNewCat = cat;
+  document.querySelectorAll('[id^="pccat-"]').forEach(b => b.classList.remove('selected'));
+  document.getElementById('pccat-' + cat)?.classList.add('selected');
+}
+
+function addPcSlide() {
+  pcSlideCount++;
+  const id = 'slide-' + pcSlideCount;
+  const div = document.createElement('div');
+  div.className = 'slide-builder-item';
+  div.id = id;
+  div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+      <div style="font-size:11px;font-weight:600;color:var(--ink-4);">SLIDE ${pcSlideCount}</div>
+      <button onclick="document.getElementById('${id}').remove()" style="background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:14px;">×</button>
+    </div>
+    <select class="slide-type-select">
+      <option value="heading">Heading + bullets</option>
+      <option value="say">Say this (direct quote prompt)</option>
+      <option value="note">Director note only</option>
+    </select>
+    <input type="text" placeholder="Slide heading / main text" style="width:100%;background:var(--white);border:1.5px solid var(--ink-5);border-radius:6px;padding:7px 10px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;margin-bottom:6px;" class="slide-heading-input">
+    <textarea placeholder="Bullets (one per line) or body text" class="slide-body-input"></textarea>
+    <textarea placeholder="Director note — context for Pastor Shade, not read aloud" class="slide-note-input" style="width:100%;background:var(--white);border:1.5px solid rgba(196,30,42,0.2);border-radius:6px;padding:7px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink-3);resize:vertical;min-height:50px;outline:none;margin-top:6px;line-height:1.5;" rows="2"></textarea>
+  `;
+  document.getElementById('pc-slides-builder').appendChild(div);
+}
+
+function savePcBrief() {
+  const title = document.getElementById('pc-new-title').value.trim();
+  const msg = document.getElementById('pc-save-msg');
+  if (!title) { msg.textContent = 'Please add a title.'; msg.style.color = 'var(--red)'; return; }
+
+  const slideEls = document.querySelectorAll('.slide-builder-item');
+  if (!slideEls.length) { msg.textContent = 'Add at least one slide.'; msg.style.color = 'var(--red)'; return; }
+
+  const slides = [...slideEls].map(el => {
+    const type = el.querySelector('.slide-type-select').value;
+    const content = el.querySelector('.slide-heading-input').value.trim();
+    const body = el.querySelector('.slide-body-input').value.trim();
+    const note = el.querySelector('.slide-note-input').value.trim();
+    const bullets = body ? body.split('\n').filter(l => l.trim()) : [];
+    return { type, content, bullets: bullets.length ? bullets : undefined, note: note || undefined };
+  });
+
+  const newBrief = {
+    id: Date.now(),
+    title,
+    category: pcNewCat,
+    date: new Date().toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'}),
+    slides,
+  };
+
+  pcBriefs.unshift(newBrief);
+  closeNewBriefModal();
+  renderPcBriefs();
+  showToast('Brief saved');
+}
+
+// ── END PASTOR'S CORNER ───────────────────────────────────────────────────────
+
+
 (function applyRoleView() {
   const params = new URLSearchParams(window.location.search);
   const role = params.get('role');
