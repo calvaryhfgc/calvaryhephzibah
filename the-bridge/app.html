@@ -249,17 +249,18 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 const db = supabase.createClient(SUPA_URL, SUPA_KEY);
 
 const ALL_SECTIONS = [
-  {id:'priorities', label:'Priorities'},
-  {id:'actions',    label:'Actions'},
-  {id:'overview',   label:'Ministries'},
-  {id:'finance',    label:'Finance'},
-  {id:'vision',     label:'Vision'},
-  {id:'protocols',  label:'Protocols'},
-  {id:'media',      label:'Media team'},
-  {id:'worship',    label:'Worship'},
-  {id:'pastoral',   label:'Pastoral'},
-  {id:'cos',        label:'Chief of Staff'},
-  {id:'notes',      label:'Notes'},
+  {id:'priorities',      label:'Priorities'},
+  {id:'actions',         label:'Actions'},
+  {id:'overview',        label:'Ministries'},
+  {id:'finance',         label:'Finance'},
+  {id:'vision',          label:'Vision'},
+  {id:'protocols',       label:'Protocols'},
+  {id:'media',           label:'Media team'},
+  {id:'worship',         label:'Worship'},
+  {id:'pastoral',        label:'Pastoral'},
+  {id:'cos',             label:'Chief of Staff'},
+  {id:'pastors-corner',  label:"Pastor's Corner"},
+  {id:'notes',           label:'Notes'},
 ];
 
 let users = [];
