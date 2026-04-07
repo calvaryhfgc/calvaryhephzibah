@@ -358,6 +358,32 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .alr-cell{font-size:12px;color:var(--ink-3);display:block;}
 .alr-due{font-size:12px;font-weight:500;display:block;}
 
+/* ── PROTOCOLS ── */
+.proto-card{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:18px 20px;cursor:pointer;transition:all 0.15s;box-shadow:var(--shadow-sm);display:flex;align-items:flex-start;gap:16px;}
+.proto-card:hover{border-color:#CBD5E1;box-shadow:var(--shadow);transform:translateY(-1px);}
+.proto-icon{width:38px;height:38px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+.proto-body{flex:1;min-width:0;}
+.proto-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px;}
+.proto-coordinator{font-size:12px;color:var(--ink-4);margin-bottom:8px;}
+.proto-scope-preview{font-size:12px;color:var(--ink-3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.proto-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:1px solid #F1F5F9;}
+.proto-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;text-transform:uppercase;letter-spacing:0.4px;}
+.pb-draft{background:#F1F5F9;color:var(--ink-4);}
+.pb-in_review{background:var(--amber-light);color:var(--amber);}
+.pb-approved{background:var(--green-light);color:var(--green);}
+.pb-needs_update{background:var(--red-light);color:var(--red);}
+.proto-update-count{font-size:11px;color:var(--ink-4);}
+.proto-status-btn{padding:7px 12px;border-radius:var(--r8);border:1.5px solid #E2E8F0;background:var(--white);font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all 0.12s;}
+.proto-status-btn:hover{border-color:#CBD5E1;background:var(--bg);}
+.proto-status-btn.selected{border-width:2px;}
+.pst-draft.selected{border-color:var(--slate);background:var(--slate-light);color:var(--slate);}
+.pst-review.selected{border-color:var(--amber);background:var(--amber-light);color:var(--amber);}
+.pst-approved.selected{border-color:var(--green);background:var(--green-light);color:var(--green);}
+.pst-update.selected{border-color:var(--red);background:var(--red-light);color:var(--red);}
+.proto-resp-item{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--ink-2);padding:6px 0;border-bottom:1px solid #F8FAFC;line-height:1.45;}
+.proto-resp-item:last-child{border-bottom:none;}
+.proto-resp-dot{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:6px;}
+
 @media(max-width:768px){
   .sidebar{display:none;}
   .main{margin-left:0;}
@@ -503,6 +529,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         <div class="nav-item" onclick="showPage('vision',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2C4 2 1.5 5 1.5 7S4 12 7 12s5.5-3 5.5-5S10 2 7 2z"/><circle cx="7" cy="7" r="1.5"/></svg>
           Vision & mission
+        </div>
+        <div class="nav-item" onclick="showPage('protocols',this)">
+          <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2h10v10H2z"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7" x2="9.5" y2="7"/><line x1="4.5" y1="9" x2="7" y2="9"/></svg>
+          Protocols
         </div>
         <div class="nav-item" onclick="showPage('media',this)">
           <svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v7l-3-2"/></svg>
@@ -652,6 +682,77 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
         </div>
         <div class="priority-list" id="priority-list">
           <div style="text-align:center;padding:40px;color:var(--ink-4);font-size:13px;">Loading…</div>
+        </div>
+      </div>
+
+      <!-- PROTOCOLS -->
+      <div class="page" id="page-protocols">
+        <div class="page-header">
+          <div>
+            <div class="page-title">Protocols</div>
+            <div class="page-sub">Governance framework for each ministry department. Track status, reviews, and updates.</div>
+          </div>
+        </div>
+
+        <!-- Framework overview strip -->
+        <div style="background:var(--ink);border-radius:var(--r12);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:4px;">Governance & Operations Framework</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.85);">Calvary Hephzibah Full Gospel Church · <span style="color:rgba(255,255,255,0.5);">Global Harvest International (Charity 1135709)</span></div>
+          </div>
+          <div style="display:flex;gap:8px;" id="proto-summary-strip"></div>
+        </div>
+
+        <!-- Protocol cards grid -->
+        <div id="protocols-grid" style="display:flex;flex-direction:column;gap:12px;"></div>
+      </div>
+
+      <!-- PROTOCOL DETAIL MODAL -->
+      <div class="modal-overlay" id="protocol-modal">
+        <div class="detail-modal" style="max-width:640px;">
+          <div class="detail-header">
+            <div class="detail-title-row">
+              <div class="detail-title" id="proto-modal-title"></div>
+              <button class="detail-close" onclick="closeProtocolModal()">×</button>
+            </div>
+            <div id="proto-modal-meta" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;"></div>
+          </div>
+          <div class="detail-body">
+            <div class="detail-section">
+              <div class="detail-section-label">Scope & purpose</div>
+              <div class="detail-notes-text" id="proto-modal-scope"></div>
+            </div>
+            <div class="detail-section">
+              <div class="detail-section-label">Key responsibilities</div>
+              <div id="proto-modal-responsibilities"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+              <div>
+                <div class="detail-section-label">Status</div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;" id="proto-status-btns">
+                  <button onclick="setProtoStatus('draft')" class="proto-status-btn pst-draft">Draft</button>
+                  <button onclick="setProtoStatus('in_review')" class="proto-status-btn pst-review">In review</button>
+                  <button onclick="setProtoStatus('approved')" class="proto-status-btn pst-approved">Approved</button>
+                  <button onclick="setProtoStatus('needs_update')" class="proto-status-btn pst-update">Needs update</button>
+                </div>
+              </div>
+              <div>
+                <div class="detail-section-label">Last reviewed</div>
+                <input type="date" class="update-input" id="proto-reviewed-input" style="width:100%;">
+              </div>
+            </div>
+            <div class="detail-section">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                <div class="detail-section-label" style="margin-bottom:0;">Updates & notes</div>
+                <div style="font-size:11px;color:var(--ink-4);" id="proto-update-count"></div>
+              </div>
+              <div class="update-input-row" style="margin-bottom:12px;">
+                <input type="text" class="update-input" id="proto-update-input" placeholder="Add a note — change made, decision, observation…">
+                <button class="btn-sm-red" onclick="addProtoUpdate()">Post</button>
+              </div>
+              <div class="updates-list" id="proto-updates-list"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1894,15 +1995,6 @@ document.addEventListener('keydown', e => {
 });
 
 // ── MOBILE DRAWER ────────────────────────────────────────────────────────────
-const drawerPages = [
-  { id:'finance',  label:'Finance',       icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="3" width="11" height="8" rx="1"/><line x1="1.5" y1="6" x2="12.5" y2="6"/><line x1="4" y1="9" x2="6" y2="9"/></svg>' },
-  { id:'vision',   label:'Vision',        icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2C4 2 1.5 5 1.5 7S4 12 7 12s5.5-3 5.5-5S10 2 7 2z"/><circle cx="7" cy="7" r="1.5"/></svg>' },
-  { id:'media',    label:'Media team',    icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v7l-3-2"/></svg>' },
-  { id:'worship',  label:'Worship',       icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1v12M4 3.5L7 1l3 2.5M1.5 9.5a5.5 5.5 0 0011 0"/></svg>' },
-  { id:'pastoral', label:'Pastoral load', icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 13c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"/></svg>' },
-  { id:'notes',    label:'Notes',         icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7.5" x2="8" y2="7.5"/></svg>' },
-];
-
 function openMobDrawer() {
   const grid = document.getElementById('mob-drawer-grid');
   grid.innerHTML = drawerPages.map(p => `
@@ -2724,7 +2816,539 @@ async function saveAction() {
   showToast('Action saved');
 }
 
-const titles={overview:'Ministry overview',actions:'Actions',priorities:'Priorities',finance:'Finance',vision:'Vision & mission',media:'Media team',worship:'Worship rebuild',pastoral:'Pastoral load',cos:'Chief of Staff',notes:'Notes'};
+// ── PROTOCOLS ────────────────────────────────────────────────────────────────
+const protocols = [
+  {
+    id:'governance',
+    name:'Governance & Authority',
+    sections:'Sections 01–04',
+    icon:'🏛️',
+    iconBg:'#EFF6FF',
+    coordinator:'General Overseer',
+    scope:'The foundational authority structure of the church — how we are structured, who holds authority, who reports to whom, and who decides what. The General Overseer holds ultimate authority under Christ. The Resident Pastor operates under delegated authority. The Leadership Team leads specific ministry areas and reports to the Resident Pastor.',
+    responsibilities:[
+      'Define and maintain the leadership hierarchy (GO → Resident Pastor → Leadership Team)',
+      'Document decision rights at each level of authority',
+      'Ensure all leaders understand their delegated authority and limits',
+      'Establish and maintain reporting lines and accountability structures',
+      'Govern the appointment and transition of leadership roles',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'accountability',
+    name:'Accountability & Reporting',
+    sections:'Section 05',
+    icon:'📊',
+    iconBg:'#F0FDF4',
+    coordinator:'Resident Pastor',
+    scope:'All ministry coordinators submit monthly reports covering activities, outcomes, challenges, support needed, and forward plans. Quarterly check-ins with the Resident Pastor. Annual reports and vision planning at year end. The Resident Pastor compiles all ministry reports and presents to the General Overseer.',
+    responsibilities:[
+      'Monthly report submission by last Sunday of each month',
+      'Quarterly one-to-one check-ins between Resident Pastor and each coordinator',
+      'Annual ministry reports before year end',
+      'Compilation and presentation of church-wide annual report by Resident Pastor',
+      'Goal-setting and resource planning for the coming year',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'staffing',
+    name:'Staff & Employment',
+    sections:'Section 06',
+    icon:'👤',
+    iconBg:'#FEF2F2',
+    coordinator:'General Overseer',
+    scope:'Currently one employed staff member: the Resident Pastor. Employment terms, probation, monthly one-to-ones, annual performance review, and contract renewal are all governed here. Employed staff have legal obligations distinct from volunteer roles. Performance standards apply and are non-negotiable.',
+    responsibilities:[
+      'Maintain employment terms, salary, and probation documentation',
+      'Conduct monthly one-to-ones between GO and Resident Pastor',
+      'Conduct annual performance review against Key Performance Areas',
+      'Manage compensation, development, and contract renewal discussions',
+      'Handle disciplinary procedures if required — in line with employment law',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'coordinators',
+    name:'Ministry Coordinator Guide',
+    sections:'Section 07',
+    icon:'🗂️',
+    iconBg:'#FFFBEB',
+    coordinator:'Resident Pastor',
+    scope:'The operating guide for all ministry coordinators. Covers primary responsibilities, what decisions coordinators can make independently, what requires approval, and how to lead well. Coordinators lead their ministry area, build teams, report monthly, and collaborate across ministries.',
+    responsibilities:[
+      'Lead ministry area with clear objectives aligned to church vision',
+      'Build, develop, and equip teams within their department',
+      'Submit monthly reports on time to the Resident Pastor',
+      'Attend Leadership Team meetings',
+      'Seek approval for new initiatives, spending, external commitments, and structural changes',
+      'Ensure DBS compliance and safeguarding within their team',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'compliance',
+    name:'Compliance & Legal',
+    sections:'Section 08',
+    icon:'⚖️',
+    iconBg:'#F8FAFC',
+    coordinator:'Resident Pastor',
+    scope:'Legal and compliance requirements for the church. DBS checks for anyone working with children or vulnerable adults. GDPR and data protection for all member data. Health and safety at all facilities and events. Safeguarding policy covering reporting, designated leads, and safe recruitment. Non-compliance is not optional.',
+    responsibilities:[
+      'Ensure all workers with children/vulnerable adults have a current DBS check (renewed every 3 years)',
+      'Store all member data on approved church systems only — GDPR compliant',
+      'Conduct risk assessments for events involving children or off-site activities',
+      'Maintain clear safeguarding reporting procedures — escalate immediately',
+      'Ensure first aid provision at all children\'s events',
+      'Maintain compliance documentation (DBS register, consent forms, incident logs)',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'finance',
+    name:'Finance & Stewardship',
+    sections:'Section 09',
+    icon:'💰',
+    iconBg:'#F0FDF4',
+    coordinator:'General Overseer',
+    scope:'All spending requires approval from the General Overseer — no exceptions. Finance requests must be submitted in advance with justification and cost. Payment is either by personal reimbursement with receipts or via church card. Annual budgets are planning tools — they do not replace individual approval. Financial records must be maintained and are subject to annual review.',
+    responsibilities:[
+      'All spending approved by General Overseer before commitment',
+      'Finance requests submitted in writing with justification and amount',
+      'Receipts required for all expenditure — submitted promptly',
+      'Annual budget proposals submitted by each ministry coordinator',
+      'Financial records maintained by church treasurer with full receipts',
+      'Annual accounts prepared, reviewed, and filed with Charity Commission',
+      'Weekly bank statements sent by Finance coordinator every Monday',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'meetings',
+    name:'Meetings & Decision Making',
+    sections:'Section 10',
+    icon:'📅',
+    iconBg:'#EFF6FF',
+    coordinator:'Resident Pastor',
+    scope:'Leadership Team meetings held monthly minimum. Resident Pastor prepares agenda, approved by General Overseer before circulation. Minutes sent to General Overseer after each meeting. All meetings start and end on time, have a clear purpose, and produce documented action items.',
+    responsibilities:[
+      'Monthly Leadership Team meetings chaired by Resident Pastor',
+      'Agenda prepared by Resident Pastor and submitted to GO for approval before circulation',
+      'Agenda circulated to attendees in advance',
+      'Key decisions and action items documented during meeting',
+      'Minutes sent to General Overseer after each meeting',
+      'Ministry team meetings held regularly at coordinator\'s discretion',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'communication',
+    name:'Communication Standards',
+    sections:'Section 11',
+    icon:'💬',
+    iconBg:'#FFFBEB',
+    coordinator:'Resident Pastor',
+    scope:'Internal communication follows the chain: team members → coordinator → Resident Pastor → General Overseer. Email for official requests, WhatsApp for quick updates, phone for urgent matters, face-to-face for difficult conversations. All external communications representing the church require approval. No gossip or negative speech about leaders or members.',
+    responsibilities:[
+      'Respect chain of communication — do not skip levels except in emergency or safeguarding',
+      'Respond within 48 hours to official communications',
+      'All external communications (social media, flyers, media, website) approved by Resident Pastor',
+      'Significant external communications require General Overseer approval',
+      'Use approved church branding and messaging in all public materials',
+      'Handle conflicts directly and lovingly — follow Matthew 18 principle',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'escalation',
+    name:'Escalation Procedures',
+    sections:'Section 12',
+    icon:'🚨',
+    iconBg:'#FEF2F2',
+    coordinator:'Resident Pastor',
+    scope:'Some situations must be escalated immediately — safeguarding concerns, legal or compliance issues, financial irregularities, serious conflicts, reputation risks. The rule: when in doubt, escalate. It is always better to raise something minor than to ignore something that becomes major.',
+    responsibilities:[
+      'Immediately escalate: any safeguarding concern, data breach, financial irregularity, serious conflict',
+      'Immediately escalate: media inquiries, public incidents, social media crises',
+      'Stay calm — gather facts and document before escalating',
+      'Do not gossip or spread the issue while escalating',
+      'Follow guidance given and keep information confidential if requested',
+      'Team members escalate to coordinator; coordinators escalate to Resident Pastor; Resident Pastor to GO',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'performance',
+    name:'Performance Reviews',
+    sections:'Section 13',
+    icon:'📈',
+    iconBg:'#F0FDF4',
+    coordinator:'Resident Pastor',
+    scope:'Reviews exist for growth and alignment, not punishment. Resident Pastor (employed): monthly one-to-ones with GO plus formal annual review with KPI assessment, goal setting, and contract discussion. Ministry coordinators (volunteers): quarterly check-ins with Resident Pastor plus annual reflection. Performance concerns follow a clear three-step process.',
+    responsibilities:[
+      'Monthly one-to-ones: Resident Pastor with General Overseer',
+      'Annual performance review for Resident Pastor against Key Performance Areas',
+      'Quarterly check-ins for all ministry coordinators with Resident Pastor',
+      'Annual reflection and vision-setting for all coordinators',
+      'Performance concerns: private conversation → documented conversation → decision point',
+      'All reviews developmental — focused on growth, encouragement, and alignment',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'evangelism',
+    name:'Evangelism Ministry Protocol',
+    sections:'Section 14 — Dept 1',
+    icon:'📢',
+    iconBg:'#FFF7ED',
+    coordinator:'Ps Gbenga Adebanjo',
+    scope:'Spreading the message of Jesus Christ, winning souls, and extending the Kingdom from the church to the city, nation, and world. Covers community outreach, door-to-door evangelism, special evangelistic events, new convert follow-up, and digital outreach.',
+    responsibilities:[
+      'Community outreach initiatives and door-to-door evangelism',
+      'Special evangelistic events and campaigns',
+      'Collaboration with local organisations and community partners',
+      'New convert follow-up and assimilation into church life',
+      'Digital outreach — social media evangelism and online presence',
+      'Mission awareness and support within the congregation',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'discipleship',
+    name:'Discipleship & Development Protocol',
+    sections:'Section 14 — Dept 2',
+    icon:'📖',
+    iconBg:'#EFF6FF',
+    coordinator:'Pastor Shade Olatoye',
+    scope:'Empowering members to grow spiritually, bringing believers to maturity and effective ministry in Christ. Covers Bible teaching, pastoral mentoring, life groups, and training programmes that equip members for service and leadership.',
+    responsibilities:[
+      'Structured Bible teaching and exposition programmes',
+      'Mentoring and discipleship pathways for new and growing believers',
+      'LIFE Group coordination — small group discipleship',
+      'Leadership development pipeline — identifying and equipping future leaders',
+      'Sermon series coordination across all channels',
+      'Wednesday and Friday online session leadership and content',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'operations',
+    name:'Meeting Operations Protocol',
+    sections:'Section 14 — Dept 3',
+    icon:'⚙️',
+    iconBg:'#F8FAFC',
+    coordinator:'Mrs Pauline Tulloch',
+    scope:'Ensuring things run smoothly in meetings and services. Covers facility setup, order of service coordination, ushering, seating, hospitality, and the practical logistics that allow Sunday services and other meetings to function well.',
+    responsibilities:[
+      'Facility setup and breakdown for all services and events',
+      'Order of service coordination with ministry coordinators',
+      'Ushering and seating management',
+      'Visitor welcome and first-time guest care',
+      'Refreshments and post-service hospitality logistics',
+      'Venue liaison with West Indian Community Centre',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'worship',
+    name:'Worship Ministry Protocol',
+    sections:'Section 14 — Dept 4',
+    icon:'🎵',
+    iconBg:'#FDF4FF',
+    coordinator:'TBC (transition underway)',
+    scope:'Ushering the congregation into the presence of God through music, song, and worship. Covers Sunday service worship, team development, song selection, sound and technical coordination, and the long-term worship rebuild strategy including MD appointment and full band assembly.',
+    responsibilities:[
+      'Sunday service worship leading — Caster Martins leading in current season',
+      'Worship team development and training',
+      'Song selection and arrangement aligned with sermon series',
+      'Sound and technical coordination with media team',
+      'MD relationship management and band coordination',
+      'Long-term worship leader discernment and development',
+    ],
+    status:'needs_update', reviewed:null, updates:[{text:'Significant transition underway. Dr Ayo Olatoye departing. Lina, Suzana, Michael Kamumvu also leaving. Caster confirmed as interim worship leader. Professional band and BVs being sourced via Bolaji Adebanjo. Long-term rebuild plan in progress.',author:'Bolaji',timestamp:'7 Apr 2026'}]
+  },
+  {
+    id:'finance_min',
+    name:'Finance Ministry Protocol',
+    sections:'Section 14 — Dept 5',
+    icon:'🏦',
+    iconBg:'#F0FDF4',
+    coordinator:'Ps Kayode Ogungbenro',
+    scope:'Budget management, offering counting and banking, financial record keeping, and ensuring church finances are handled with integrity and transparency. All spending requires General Overseer approval. Finance coordinator is responsible for weekly reporting to General Overseer.',
+    responsibilities:[
+      'Offering counting, banking, and weekly reconciliation',
+      'Financial record keeping with full receipts for all transactions',
+      'Weekly bank statement sent to General Overseer every Monday',
+      'Annual accounts preparation and Charity Commission filing',
+      'Budget tracking and variance reporting',
+      'Reimbursement processing with receipt verification',
+    ],
+    status:'needs_update', reviewed:null, updates:[{text:'Finance reporting to General Overseer not yet established. Weekly statement cadence being formalised. NatWest online banking access for General Overseer in progress. Historical statements request pending.',author:'Bolaji',timestamp:'7 Apr 2026'}]
+  },
+  {
+    id:'prayer',
+    name:'Intercessory Prayer Protocol',
+    sections:'Section 14 — Dept 6',
+    icon:'🙏',
+    iconBg:'#FFF7ED',
+    coordinator:'Ps Gbenga Adebanjo',
+    scope:'Building a culture of fervent prayer and intercession for the church and community. Covers pre-service prayer, prayer chains, corporate intercession, prayer meetings, special prayer events, and training in prayer for the congregation.',
+    responsibilities:[
+      'Pre-service prayer coordination — consistent, fervent, Spirit-led',
+      'Prayer chains and requests managed with confidentiality',
+      'Corporate intercession for church needs, leadership, and community',
+      'Monthly prayer meetings and special prayer events',
+      'Training in prayer for congregation members',
+      'Prayer support for all church initiatives and major decisions',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'media',
+    name:'Media Ministry Protocol',
+    sections:'Section 14 — Dept 7',
+    icon:'🎥',
+    iconBg:'#EFF6FF',
+    coordinator:'Bolaji Olatoye',
+    scope:'Video, audio, streaming, Zoom, and social media to extend the reach of the church. Covers Sunday service recording and live streaming, OBS operation, lyric and slide display, YouTube uploads, social media content, website maintenance, and the weekly media briefing workflow.',
+    responsibilities:[
+      'Sunday service live streaming — camera, OBS, and audio operation',
+      'On-screen lyrics, scripture, and sermon slides',
+      'Weekly media briefing production and deployment',
+      'YouTube uploads — sermons and shorts',
+      'Social media content — Instagram, Facebook, YouTube',
+      'Website maintenance and content updates',
+      'Media team training, recruitment, and development',
+    ],
+    status:'in_review', reviewed:'2026-04-01', updates:[{text:'Recruitment campaign live at calvaryhephzibah.co.uk/joinmedia. 6 recruits in onboarding: Scott (lead), Chinedu, Terrel, Tavoy, Noah, Tosin. Induction session to be scheduled.',author:'Bolaji',timestamp:'7 Apr 2026'}]
+  },
+  {
+    id:'building',
+    name:'Building & Environment Protocol',
+    sections:'Section 14 — Dept 8',
+    icon:'🏠',
+    iconBg:'#F8FAFC',
+    coordinator:'Deacon Femi Osipitan',
+    scope:'Facility management, maintenance, and ensuring the church environment honours God and is safe and welcoming for all. Covers venue liaison with West Indian Community Centre, setup and breakdown, equipment maintenance, and health and safety standards at 74 Carmoor Road.',
+    responsibilities:[
+      'Venue liaison with West Indian Community Centre — 74 Carmoor Road, Manchester M13 0FB',
+      'Facility setup and breakdown each Sunday',
+      'Equipment maintenance and procurement as approved',
+      'Health and safety standards — venue walkthrough before each service',
+      'Cleanliness and presentation standards',
+      'Coordination with operations team for special events',
+    ],
+    status:'approved', reviewed:'2026-03-01', updates:[]
+  },
+  {
+    id:'family',
+    name:'Family, Groups & Special Services Protocol',
+    sections:'Section 14 — Dept 9',
+    icon:'👨‍👩‍👧',
+    iconBg:'#FDF4FF',
+    coordinator:'Ps Kayode Ogungbenro',
+    scope:'Strengthening families, building relationships, and celebrating key moments in church life. Covers Valentine\'s Sunday, International Women\'s Week, Easter services, Graduation Service, Sunday School and Youth Sunday, and the Entrepreneur and Business Event. Also covers LIFE Groups for deeper community and accountability.',
+    responsibilities:[
+      'Annual special services calendar — planning and execution',
+      'Valentine\'s Sunday, International Women\'s Week, Easter, Graduation',
+      'Sunday School and Youth Sunday coordination',
+      'Entrepreneur and Business Event planning',
+      'LIFE Groups coordination — small group community and accountability',
+      'Family support and pastoral care for families in the congregation',
+    ],
+    status:'draft', reviewed:null, updates:[]
+  },
+  {
+    id:'hospitality',
+    name:'Hospitality Ministry Protocol',
+    sections:'Section 14 — Dept 10',
+    icon:'🤝',
+    iconBg:'#FFF7ED',
+    coordinator:'Deaconess Janet Oviri',
+    scope:'Creating a welcoming environment where everyone feels the love of Christ through practical care. Covers greeting and welcome, refreshments, first-time visitor follow-up, and the warm atmosphere that reflects the church\'s all-nations identity rooted in Ezekiel 47:10.',
+    responsibilities:[
+      'Greeting and welcoming all attendees — first impressions matter',
+      'First-time visitor care — identification, welcome pack, follow-up call',
+      'Refreshments coordination — consistent and generous',
+      'Special occasion hospitality for events and celebrations',
+      'Volunteer recruitment and rostering for hospitality team',
+      'Coordination with operations team on venue setup and flow',
+    ],
+    status:'approved', reviewed:'2026-03-01', updates:[]
+  },
+];
+
+const protocolStatusMeta = {
+  draft:        { label:'Draft',        cls:'pb-draft' },
+  in_review:    { label:'In review',    cls:'pb-in_review' },
+  approved:     { label:'Approved',     cls:'pb-approved' },
+  needs_update: { label:'Needs update', cls:'pb-needs_update' },
+};
+
+let currentProtoId = null;
+// Local overrides (before Supabase)
+const protoOverrides = {};
+
+function renderProtocols() {
+  const grid = document.getElementById('protocols-grid');
+
+  // Summary strip
+  const counts = {draft:0,in_review:0,approved:0,needs_update:0};
+  protocols.forEach(p => {
+    const s = (protoOverrides[p.id]?.status) || p.status;
+    counts[s] = (counts[s]||0) + 1;
+  });
+  document.getElementById('proto-summary-strip').innerHTML = Object.entries(counts).map(([k,v]) => {
+    if (!v) return '';
+    const m = protocolStatusMeta[k];
+    return `<span class="proto-badge ${m.cls}" style="font-size:11px;">${v} ${m.label}</span>`;
+  }).join('');
+
+  // Group: governance sections first, then departments
+  const govSections = protocols.filter(p => !p.sections.includes('Dept'));
+  const deptSections = protocols.filter(p => p.sections.includes('Dept'));
+
+  grid.innerHTML = `
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;">Governance Framework</div>
+    ${govSections.map(protoCardHtml).join('')}
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin:16px 0 6px;">Ministry Department Protocols</div>
+    ${deptSections.map(protoCardHtml).join('')}
+  `;
+}
+
+function protoCardHtml(p) {
+  const override = protoOverrides[p.id] || {};
+  const status = override.status || p.status;
+  const reviewed = override.reviewed || p.reviewed;
+  const updates = override.updates || p.updates;
+  const sm = protocolStatusMeta[status];
+  const reviewedStr = reviewed
+    ? new Date(reviewed).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})
+    : 'Not yet reviewed';
+  return `<div class="proto-card" onclick="openProtocolModal('${p.id}')">
+    <div class="proto-icon" style="background:${p.iconBg};">${p.icon}</div>
+    <div class="proto-body">
+      <div class="proto-name">${p.name}</div>
+      <div class="proto-coordinator">${p.sections} · ${p.coordinator}</div>
+      <div class="proto-scope-preview">${p.scope}</div>
+      <div class="proto-footer">
+        <span class="proto-badge ${sm.cls}">${sm.label}</span>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="proto-update-count">${updates.length ? `${updates.length} note${updates.length!==1?'s':''}` : 'No notes'}</span>
+          <span style="font-size:11px;color:var(--ink-4);">Reviewed: ${reviewedStr}</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function openProtocolModal(id) {
+  const p = protocols.find(x => x.id === id);
+  if (!p) return;
+  currentProtoId = id;
+  const override = protoOverrides[id] || {};
+  const status = override.status || p.status;
+  const reviewed = override.reviewed || p.reviewed;
+  const updates = override.updates || p.updates;
+
+  document.getElementById('proto-modal-title').textContent = p.name;
+  document.getElementById('proto-modal-meta').innerHTML = `
+    <span class="proto-badge ${protocolStatusMeta[status].cls}">${protocolStatusMeta[status].label}</span>
+    <span class="action-tag" style="font-size:11px;">${p.sections}</span>
+    <span class="action-tag" style="font-size:11px;">${p.coordinator}</span>
+  `;
+  document.getElementById('proto-modal-scope').textContent = p.scope;
+  document.getElementById('proto-modal-responsibilities').innerHTML = p.responsibilities.map(r =>
+    `<div class="proto-resp-item"><div class="proto-resp-dot"></div><span>${r}</span></div>`
+  ).join('');
+  document.getElementById('proto-reviewed-input').value = reviewed || '';
+  document.getElementById('proto-update-input').value = '';
+  document.getElementById('proto-update-count').textContent = updates.length ? `${updates.length} note${updates.length!==1?'s':''}` : '';
+
+  // Status buttons
+  document.querySelectorAll('.proto-status-btn').forEach(b => b.classList.remove('selected'));
+  const btnMap = {draft:'pst-draft',in_review:'pst-review',approved:'pst-approved',needs_update:'pst-update'};
+  document.querySelectorAll('.proto-status-btn').forEach(b => {
+    if (b.classList.contains(btnMap[status])) b.classList.add('selected');
+  });
+
+  // Updates
+  const ul = document.getElementById('proto-updates-list');
+  ul.innerHTML = !updates.length
+    ? '<div style="font-size:12px;color:var(--ink-4);padding:4px 0;">No notes yet.</div>'
+    : [...updates].reverse().map(u =>
+        `<div class="update-item"><div class="update-text">${u.text}</div><div class="update-meta">${u.author||'You'} · ${u.timestamp}</div></div>`
+      ).join('');
+
+  document.getElementById('protocol-modal').classList.add('open');
+}
+
+function setProtoStatus(status) {
+  if (!currentProtoId) return;
+  if (!protoOverrides[currentProtoId]) protoOverrides[currentProtoId] = {};
+  protoOverrides[currentProtoId].status = status;
+  document.querySelectorAll('.proto-status-btn').forEach(b => b.classList.remove('selected'));
+  const btnMap = {draft:'pst-draft',in_review:'pst-review',approved:'pst-approved',needs_update:'pst-update'};
+  document.querySelectorAll('.proto-status-btn').forEach(b => {
+    if (b.classList.contains(btnMap[status])) b.classList.add('selected');
+  });
+  // Update meta badge
+  document.getElementById('proto-modal-meta').querySelector('.proto-badge').className = `proto-badge ${protocolStatusMeta[status].cls}`;
+  document.getElementById('proto-modal-meta').querySelector('.proto-badge').textContent = protocolStatusMeta[status].label;
+  renderProtocols();
+  showToast('Status updated');
+}
+
+function addProtoUpdate() {
+  if (!currentProtoId) return;
+  const input = document.getElementById('proto-update-input');
+  const text = input.value.trim();
+  if (!text) return;
+  if (!protoOverrides[currentProtoId]) protoOverrides[currentProtoId] = {};
+  const p = protocols.find(x => x.id === currentProtoId);
+  const existing = protoOverrides[currentProtoId].updates || [...(p.updates||[])];
+  const newUpdate = { text, author:'You', timestamp: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) };
+  const updated = [...existing, newUpdate];
+  protoOverrides[currentProtoId].updates = updated;
+
+  // Also save reviewed date if set
+  const reviewedVal = document.getElementById('proto-reviewed-input').value;
+  if (reviewedVal) protoOverrides[currentProtoId].reviewed = reviewedVal;
+
+  input.value = '';
+  document.getElementById('proto-update-count').textContent = `${updated.length} note${updated.length!==1?'s':''}`;
+  const ul = document.getElementById('proto-updates-list');
+  ul.innerHTML = [...updated].reverse().map(u =>
+    `<div class="update-item"><div class="update-text">${u.text}</div><div class="update-meta">${u.author||'You'} · ${u.timestamp}</div></div>`
+  ).join('');
+  renderProtocols();
+  showToast('Note added');
+}
+
+function closeProtocolModal() {
+  // Save reviewed date on close
+  if (currentProtoId) {
+    const reviewedVal = document.getElementById('proto-reviewed-input').value;
+    if (reviewedVal) {
+      if (!protoOverrides[currentProtoId]) protoOverrides[currentProtoId] = {};
+      protoOverrides[currentProtoId].reviewed = reviewedVal;
+      renderProtocols();
+    }
+  }
+  document.getElementById('protocol-modal').classList.remove('open');
+  currentProtoId = null;
+}
+
+// ── END PROTOCOLS ─────────────────────────────────────────────────────────────
+
+const titles = {
+  overview:'Ministry overview', actions:'Actions', priorities:'Priorities',
+  finance:'Finance', vision:'Vision & mission', protocols:'Protocols',
+  media:'Media team', worship:'Worship rebuild', pastoral:'Pastoral load',
+  cos:'Chief of Staff', notes:'Notes'
+};
+
 const mobNavIds = ['mob-priorities','mob-actions','mob-overview','mob-cos'];
 
 function showPage(name, el, mobId) {
@@ -2734,7 +3358,6 @@ function showPage(name, el, mobId) {
   document.getElementById('page-'+name).classList.add('active');
   if (el) el.classList.add('active');
   if (mobId) document.getElementById(mobId)?.classList.add('active');
-  // Sync sidebar nav
   document.querySelectorAll('.nav-item').forEach(n => {
     if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'"+name+"'")) {
       n.classList.add('active');
@@ -2748,7 +3371,18 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2000);
 }
 
-loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();
+// Update mobile drawer to include protocols
+const drawerPages = [
+  { id:'protocols', label:'Protocols',     icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2h10v10H2z"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7" x2="9.5" y2="7"/><line x1="4.5" y1="9" x2="7" y2="9"/></svg>' },
+  { id:'finance',   label:'Finance',       icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="3" width="11" height="8" rx="1"/><line x1="1.5" y1="6" x2="12.5" y2="6"/><line x1="4" y1="9" x2="6" y2="9"/></svg>' },
+  { id:'vision',    label:'Vision',        icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 2C4 2 1.5 5 1.5 7S4 12 7 12s5.5-3 5.5-5S10 2 7 2z"/><circle cx="7" cy="7" r="1.5"/></svg>' },
+  { id:'media',     label:'Media team',    icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v7l-3-2"/></svg>' },
+  { id:'worship',   label:'Worship',       icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1v12M4 3.5L7 1l3 2.5M1.5 9.5a5.5 5.5 0 0011 0"/></svg>' },
+  { id:'pastoral',  label:'Pastoral load', icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="4.5" r="2.5"/><path d="M1.5 13c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5"/></svg>' },
+  { id:'notes',     label:'Notes',         icon:'<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7.5" x2="8" y2="7.5"/></svg>' },
+];
+
+loadMinistryStatuses();loadPriorities();loadNotes();loadTransactions();loadActions();renderProtocols();
 </script>
 </body>
 </html>
