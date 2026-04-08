@@ -614,6 +614,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div style="display:flex;align-items:center;gap:10px;">
         <div class="topbar-date" id="topbar-date"></div>
         <div id="topbar-action"></div>
+        <!-- Mobile user chip — shown when arriving from app.html redirect -->
+        <div id="mob-user-chip" style="display:none;">
+          <div style="display:flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--ink-5);border-radius:100px;padding:4px 10px 4px 6px;cursor:pointer;box-shadow:var(--shadow-sm);" onclick="toggleMobUserMenu()">
+            <div id="mob-chip-av" style="width:20px;height:20px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:white;"></div>
+            <span id="mob-chip-name" style="font-size:11px;font-weight:500;color:var(--ink-2);"></span>
+          </div>
+          <div id="mob-user-menu" style="position:absolute;top:48px;right:12px;background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r12);padding:6px;min-width:160px;box-shadow:var(--shadow);display:none;z-index:100;">
+            <div style="padding:8px 12px 10px;border-bottom:1px solid var(--ink-5);margin-bottom:4px;">
+              <div style="font-size:13px;font-weight:600;color:var(--ink);" id="mob-menu-name"></div>
+              <div style="font-size:11px;color:var(--ink-4);margin-top:2px;" id="mob-menu-level"></div>
+            </div>
+            <div style="padding:8px 12px;border-radius:8px;font-size:13px;color:var(--red);cursor:pointer;display:flex;align-items:center;gap:8px;" onclick="mobSwitchUser()">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2h3v10H9M6 10l3-3-3-3M9 7H1"/></svg>
+              Switch user
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -3879,6 +3896,21 @@ function savePcBrief() {
 // ── END PASTOR'S CORNER ───────────────────────────────────────────────────────
 
 
+function toggleMobUserMenu() {
+  const m = document.getElementById('mob-user-menu');
+  if (m) m.style.display = m.style.display === 'block' ? 'none' : 'block';
+}
+function mobSwitchUser() {
+  sessionStorage.removeItem('bridge_user');
+  window.location.href = 'app.html';
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('#mob-user-chip')) {
+    const m = document.getElementById('mob-user-menu');
+    if (m) m.style.display = 'none';
+  }
+});
+
 (function applyRoleView() {
   const params = new URLSearchParams(window.location.search);
   const role = params.get('role');
@@ -3915,10 +3947,18 @@ function savePcBrief() {
     document.getElementById('topbar-title').textContent = titles[firstAllowed] || firstAllowed;
   }
 
-  // Update sidebar footer with user name
+  // Mobile user chip — show when arriving from app.html redirect
   if (userName) {
-    const footer = document.querySelector('.sidebar-footer p');
-    if (footer) footer.innerHTML = `<strong>${userName}</strong><br>Calvary Hephzibah`;
+    const chip = document.getElementById('mob-user-chip');
+    if (chip) {
+      chip.style.display = 'block';
+      const av = userName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+      document.getElementById('mob-chip-av').textContent = av;
+      document.getElementById('mob-chip-name').textContent = userName.split(' ')[0];
+      document.getElementById('mob-menu-name').textContent = userName;
+      const lvl = params.get('level');
+      document.getElementById('mob-menu-level').textContent = lvl === 'cos' ? 'Chief of Staff' : 'Functional access';
+    }
   }
 
   // Update mobile drawer to only show allowed pages

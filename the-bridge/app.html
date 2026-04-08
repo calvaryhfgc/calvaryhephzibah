@@ -389,18 +389,6 @@ function showPinError(msg) {
 function launch() {
   document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
 
-  // User chip
-  const chip = document.getElementById('user-chip');
-  chip.style.display = 'block';
-  document.getElementById('chip-av').textContent = initials(currentUser.name);
-  document.getElementById('chip-name').textContent = currentUser.name.split(' ')[0];
-  document.getElementById('menu-name').textContent = currentUser.name;
-  document.getElementById('menu-level').textContent = currentUser.level === 'cos' ? 'Chief of Staff — full access' : 'Functional access';
-
-  if (currentUser.level === 'cos') {
-    document.getElementById('admin-mi').style.display = 'flex';
-  }
-
   // Build sections
   const sections = currentUser.level === 'cos'
     ? ALL_SECTIONS.map(s => s.id)
@@ -411,6 +399,27 @@ function launch() {
     level: currentUser.level,
     sections: sections.join(','),
   });
+
+  // On mobile — skip iframe, redirect directly to index.html
+  const isMobile = window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Save session so index.html can show the user chip
+    sessionStorage.setItem('bridge_user', JSON.stringify(currentUser));
+    window.location.href = `index.html?${params}`;
+    return;
+  }
+
+  // Desktop — use iframe
+  const chip = document.getElementById('user-chip');
+  chip.style.display = 'block';
+  document.getElementById('chip-av').textContent = initials(currentUser.name);
+  document.getElementById('chip-name').textContent = currentUser.name.split(' ')[0];
+  document.getElementById('menu-name').textContent = currentUser.name;
+  document.getElementById('menu-level').textContent = currentUser.level === 'cos' ? 'Chief of Staff — full access' : 'Functional access';
+
+  if (currentUser.level === 'cos') {
+    document.getElementById('admin-mi').style.display = 'flex';
+  }
 
   document.getElementById('frame').src = `index.html?${params}`;
   document.getElementById('app').style.display = 'block';
