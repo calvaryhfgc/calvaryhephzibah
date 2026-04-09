@@ -1,0 +1,25 @@
+{
+  "name": "The Bridge — Calvary Hephzibah",
+  "short_name": "The Bridge",
+  "description": "Church operations platform for Calvary Hephzibah Full Gospel Church",
+  "start_url": "/calvaryhephzibah/the-bridge/app.html",
+  "scope": "/calvaryhephzibah/the-bridge/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0F172A",
+  "theme_color": "#C41E2A",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
