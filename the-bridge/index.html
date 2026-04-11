@@ -2089,32 +2089,37 @@ const PIN_CODE = '2610';
 let pinEntry = '';
 
 function pinPress(d) {
-  if (pinEntry.length >= 4) return;
   pinEntry += d;
-  updatePinDots();
-  if (pinEntry.length === 4) {
+  for(let i=0;i<4;i++) {
+    const el = document.getElementById('pd'+i);
+    if(el) el.classList.toggle('filled', i < pinEntry.length);
+  }
+  if (pinEntry.length >= 4) {
     setTimeout(() => {
       if (pinEntry === PIN_CODE) {
         document.getElementById('pin-gate').classList.add('hidden');
-        sessionStorage.setItem('bridge_auth','1');
       } else {
-        document.getElementById('pin-error').textContent = 'Incorrect PIN — try again';
+        const err = document.getElementById('pin-error');
+        if(err) err.textContent = 'Incorrect PIN — try again';
         pinEntry = '';
-        updatePinDots();
+        for(let i=0;i<4;i++){const el=document.getElementById('pd'+i);if(el)el.classList.remove('filled');}
       }
     }, 120);
+    return;
   }
 }
 
 function pinDel() {
   pinEntry = pinEntry.slice(0,-1);
-  document.getElementById('pin-error').textContent = '';
-  updatePinDots();
+  const err = document.getElementById('pin-error');
+  if(err) err.textContent = '';
+  for(let i=0;i<4;i++){const el=document.getElementById('pd'+i);if(el)el.classList.toggle('filled',i<pinEntry.length);}
 }
 
 function updatePinDots() {
   for (let i=0;i<4;i++) {
-    document.getElementById('pd'+i).classList.toggle('filled', i < pinEntry.length);
+    const el = document.getElementById('pd'+i);
+    if(el) el.classList.toggle('filled', i < pinEntry.length);
   }
 }
 
