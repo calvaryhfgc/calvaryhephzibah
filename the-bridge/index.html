@@ -2823,9 +2823,20 @@ const defaultActions = [
   { id:21, title:'Activate the Wise Council WhatsApp group', function:'Leadership', owner:'Bolaji', status:'not_started', priority:'medium', due_date:'2026-04-08', notes:'Group: Bolaji, Auntie Pauline, Auntie June, Lydia Chi. Took weeks for Pastor Shade to set up — she struggled with the concept. Purpose: trusted, capable people with her best interests at heart to help her move past indecision. Not a meeting group — she communicates in it regularly. Bolaji to raise how to use it practically.', updates:[] },
   { id:22, title:'Dr Ayo Olatoye — worship ministry handover', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-19', notes:'Separate from the trustee resignation. Ensure the worship ministry transition is managed — equipment, access, contacts, any commitments he has made. Do not let things drift. Confirm his last Sunday and manage the handover professionally.', updates:[] },
   { id:23, title:'Worship team rehearsal — week of 14th April', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Caster confirmed. Band and BVs being sourced via Bolaji Adebanjo. Rehearsal must happen this week — before Sunday 20th April. Confirm date, time, and venue with all participants. Non-negotiable.', updates:[] },
+  { id:24, title:'Call Ps Kayode — get financial balance today', function:'Finance', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Balance has been outstanding for 2 days. Need it to cost the band and confirm the 19th plan. Call him today — he was going to send it last night but didn\'t. Also confirm the weekly Monday statement is in place.', updates:[] },
+  { id:25, title:'Cost the band and send budget to Pastor Shade', function:'Finance', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Once balance comes through from Ps Kayode, put together a short-term music cost plan: keys player, 2 BVs, Bolaji Adebanjo drums, Caster lead. Include per-Sunday cost and 4-week total. Send to Pastor Shade for approval today.', updates:[] },
+  { id:26, title:'Ask Bolaji Adebanjo — equipment setup and pack-down responsibility', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-12', notes:'Formally ask him to take responsibility for equipment setup and pack-down on Sunday mornings. He is an adult and already in conversation. He may need a small honorarium — explore that. Also push again for contact details of keys player and BVs.', updates:[] },
+  { id:27, title:'Contact Brother Ernest — ushering + scheduling roles', function:'Operations', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-11', notes:'Two roles for one conversation: (1) Ushering coordination lieutenant on Sunday mornings. (2) Scheduling and planning — rosters, putting things together. He doesn\'t have to be present for everything. Family situation acknowledged — ask warmly but clearly.', updates:[] },
+  { id:28, title:'Speak to Esther\'s mum — Esther as backing singer', function:'Worship', owner:'Pastor Shade', status:'not_started', priority:'high', due_date:'2026-04-14', notes:'Esther is a potential BV. Her mum\'s relationship with the church is complex but workable. Pastor Shade to approach mum directly — frame it as: we are in a season of need and Esther would be a blessing to the team. Even if she can only come on weekends she stays with her dad.', updates:[] },
+  { id:29, title:'Transition planning group — kickoff call today/tonight', function:'Leadership', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-12', notes:'Group confirmed: Pastor Gbenga, Auntie Pauline, Pastor Kayode. Excluded: Deacon Nipon (non-performance on search committee). First call must happen today or tonight — no later. Primary function: execute. Not a discussion group.', updates:[] },
+  { id:30, title:'Pastor Shade to announce Bolaji\'s delegated authority to leadership group', function:'Leadership', owner:'Pastor Shade', status:'not_started', priority:'urgent', due_date:'2026-04-12', notes:'This still hasn\'t happened. Without it Bolaji cannot call people and direct them — it\'s awkward and ineffective. Pastor Shade to message or tell the full leadership group that she has given Bolaji responsibility to coordinate operations. Today or tomorrow.', updates:[] },
+  { id:31, title:'Speak to Caster this week — expectations and training plan', function:'Worship', owner:'Bolaji', status:'not_started', priority:'high', due_date:'2026-04-14', notes:'Not before tomorrow (12th). During the week. Confirm his role, set expectations, begin the conversation about his development as worship leader. Direction agreed: train from within rather than hire externally. His "unreliability" is likely his work schedule (works Sundays after 1pm) not attitude. Approach warmly.', updates:[] },
+  { id:32, title:'Media team — individual conversations this week', function:'Media', owner:'Bolaji', status:'not_started', priority:'high', due_date:'2026-04-14', notes:'Scott, Terrell, Tavoy, Noah, Chinedu, Tosin — none have been spoken to individually yet. Do this this week. Budget confirmed by Pastor Shade — name the price for external trainer. Also respond to BJ\'s brother who volunteered.', updates:[] },
+  { id:33, title:'Source keys player for Sunday 19th', function:'Worship', owner:'Bolaji', status:'in_progress', priority:'urgent', due_date:'2026-04-14', notes:'Pipelines: BJ (Eddie — afternoon church, can do mornings), Ayo (offering suggestions), Lorraine Wright (Tosin Akindele contacted — Vocal Director, Voices Beyond). Need confirmed by Tuesday 14th to allow rehearsal mid-week.', updates:[{text:'DM sent to Tosin Akindele via Instagram. Lorraine doing warm intro. BJ working on Eddie\'s details.',author:'Bolaji',timestamp:'11 Apr 2026'}] },
+  { id:34, title:'Source 2 backing singers for Sunday 19th', function:'Worship', owner:'Bolaji', status:'in_progress', priority:'urgent', due_date:'2026-04-14', notes:'Pipelines: Tosin Akindele (Vocal Director, may bring Voices Beyond singers), BJ (female singer from his network), Esther (Pastor Shade to speak to her mum). Need 2 confirmed by Tuesday 14th.', updates:[{text:'Tosin Akindele approached. Esther to be pursued via mum.',author:'Bolaji',timestamp:'11 Apr 2026'}] },
+  { id:35, title:'Confirm rehearsal date for Sunday 19th band', function:'Worship', owner:'Bolaji', status:'not_started', priority:'urgent', due_date:'2026-04-14', notes:'Once musicians are confirmed, fix a rehearsal date — ideally Thursday or Friday 16th/17th. BJ\'s space potentially available. Caster to lead. Songs to be agreed in advance so everyone comes prepared.', updates:[] },
 ];
 
-async function loadActions() {
   if (!supabaseReady) { actions = [...defaultActions]; renderActions(); return; }
   const { data, error } = await db.from('bridge_actions').select('*').order('created_at', { ascending: true });
   actions = (!error && data && data.length) ? data : [...defaultActions];
@@ -3701,6 +3712,73 @@ const pcBriefs = [
           'Estimated preaching time: 35–45 minutes',
         ],
         note: 'Go through this together before Sunday. Let him take ownership of it — this is his sermon, you just helped him find the frame.'
+      },
+    ]
+  },
+  {
+    id: 6,
+    title: 'Sunday 19th April — what you need to approve',
+    category: 'priorities',
+    date: '11 Apr 2026',
+    slides: [
+      {
+        type: 'heading',
+        content: 'Sunday 19th April\nWhat needs your go-ahead',
+        note: 'This is the first Sunday after Ayo and Lina\'s last service. It needs to be strong. Bolaji is managing everything — you just need to approve the budget and give the green light.'
+      },
+      {
+        type: 'heading',
+        content: 'What is happening on the 19th',
+        bullets: [
+          'Michael Kamumvu preaching',
+          'Caster leading worship — confirmed and willing',
+          'Full band: keys player, drums (Bolaji Adebanjo), 2 backing singers',
+          'Media team on deck',
+          'First Sunday the congregation sees the new sound',
+        ],
+        note: 'This is a statement Sunday. The congregation will be watching. A strong, full sound says: we are fine. We are moving forward.'
+      },
+      {
+        type: 'heading',
+        content: 'What it will cost',
+        bullets: [
+          'Bolaji is costing this today — once Ps Kayode sends the bank balance',
+          'Session musicians: keys + 2 backing singers, paid per Sunday',
+          'Plan covers 4 weeks minimum — 19th April through mid-May',
+          'Budget comes to you today for approval',
+        ],
+        note: 'You already said: name the price and we will do it. The cost will be less than one month of a resident pastor salary.'
+      },
+      {
+        type: 'say',
+        label: 'When Bolaji sends you the cost, say this',
+        content: 'Yes — go ahead. Make sure they are confirmed and there is a rehearsal before Sunday.'
+      },
+      {
+        type: 'heading',
+        content: 'Everything else being handled',
+        bullets: [
+          'Equipment setup — Bolaji Adebanjo being asked to lead this',
+          'Ushering — Brother Ernest being asked to coordinate',
+          'Sister Petty arriving early',
+          'Transition planning group meeting tonight — Pastor Gbenga, Auntie Pauline, Ps Kayode',
+        ],
+        note: 'Bolaji is handling all of this. You do not need to manage it. You just need to let people know he has your authority.'
+      },
+      {
+        type: 'say',
+        label: 'Message to send to the leadership group today',
+        content: 'I have asked Bolaji to coordinate our operations through this transition season. Please work with him as you would work with me on these matters.'
+      },
+      {
+        type: 'heading',
+        content: 'Your three things for today',
+        bullets: [
+          'Tell Ps Kayode to send the financial balance today',
+          'Send the leadership group message about Bolaji\'s authority',
+          'Approve the budget when Bolaji sends it',
+        ],
+        note: 'Three things. That is all. Everything else is being handled.'
       },
     ]
   },
