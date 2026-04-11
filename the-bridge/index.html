@@ -2551,6 +2551,9 @@ let finFilter='all';
 function fmt(n){return'£'+Math.abs(n).toLocaleString('en-GB',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
 function updateFinanceSummary(){
+  const balEl=document.getElementById('fin-balance');
+  if(!balEl) return; // finance page not in DOM yet
+
   const now=new Date();
   const thisMonth=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
   const monthLabel=now.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
@@ -2568,21 +2571,24 @@ function updateFinanceSummary(){
   const mExpense=transactions.filter(t=>t.type==='expense'&&t.date.startsWith(thisMonth)).reduce((s,t)=>s+parseFloat(t.amount),0);
   const mNet=mIncome-mExpense;
 
-  const balEl=document.getElementById('fin-balance');
   balEl.textContent=fmt(balance);
   balEl.className='fin-card-amount '+(balance>=0?'balance-pos':'balance-neg');
 
-  document.getElementById('fin-month-income').textContent=fmt(mIncome);
-  document.getElementById('fin-month-expense').textContent=fmt(mExpense);
-
+  const miEl=document.getElementById('fin-month-income');
+  const meEl=document.getElementById('fin-month-expense');
   const netEl=document.getElementById('fin-month-net');
-  netEl.textContent=(mNet>=0?'+':'-')+fmt(mNet);
-  netEl.className='fin-card-amount '+(mNet>=0?'balance-pos':'balance-neg');
+  if(miEl) miEl.textContent=fmt(mIncome);
+  if(meEl) meEl.textContent=fmt(mExpense);
+  if(netEl){
+    netEl.textContent=(mNet>=0?'+':'-')+fmt(mNet);
+    netEl.className='fin-card-amount '+(mNet>=0?'balance-pos':'balance-neg');
+  }
 
   [document.getElementById('fin-month-label'),document.getElementById('fin-month-label2')].forEach(el=>{if(el)el.textContent=monthLabel;});
 
   // populate month filter dropdown
   const sel=document.getElementById('fin-month-filter');
+  if(!sel) return;
   const months=[...new Set(transactions.map(t=>t.date.substring(0,7)))].sort().reverse();
   const current=sel.value;
   sel.innerHTML='<option value="all">All transactions</option>';
