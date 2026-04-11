@@ -1,4 +1,4 @@
-const CACHE = 'bridge-v1';
+const CACHE = 'bridge-v2';
 const PRECACHE = [
   '/calvaryhephzibah/the-bridge/app.html',
   '/calvaryhephzibah/the-bridge/index.html',
