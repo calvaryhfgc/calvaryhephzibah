@@ -10,6 +10,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="The Bridge">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<script>
+// If no auth params present, redirect to app.html for proper login
+if (!new URLSearchParams(window.location.search).get('level')) {
+  window.location.replace('app.html');
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
@@ -314,22 +320,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 .btn-sm-red{background:var(--red);color:white;border:none;padding:9px 14px;border-radius:var(--r8);font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:background 0.12s;white-space:nowrap;}
 .btn-sm-red:hover{background:var(--red-dark);}
 
-/* ── PIN GATE ── */
-.pin-gate{position:fixed;inset:0;background:var(--ink);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px;}
-.pin-gate.hidden{display:none;}
-.pin-box{background:var(--white);border-radius:var(--r16);padding:32px 28px;width:100%;max-width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
-.pin-logo{width:36px;height:36px;background:var(--red);border-radius:var(--r8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
-.pin-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:6px;}
-.pin-sub{font-size:12px;color:var(--ink-4);margin-bottom:24px;}
-.pin-dots{display:flex;gap:12px;justify-content:center;margin-bottom:24px;}
-.pin-dot{width:12px;height:12px;border-radius:50%;background:var(--ink-5);transition:background 0.15s;}
-.pin-dot.filled{background:var(--red);}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
-.pin-btn{padding:14px;border:1.5px solid #E2E8F0;background:var(--white);border-radius:var(--r12);font-size:18px;font-weight:500;font-family:'DM Sans',sans-serif;color:var(--ink);cursor:pointer;transition:all 0.1s;}
-.pin-btn:active{background:var(--bg);border-color:#CBD5E1;transform:scale(0.96);}
-.pin-btn.pin-del{font-size:14px;color:var(--ink-3);}
-.pin-error{font-size:12px;color:var(--red);margin-top:12px;min-height:18px;}
-
 /* ── MOBILE NAV ── */
 .mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid #E2E8F0;z-index:30;padding:0 4px;padding-bottom:env(safe-area-inset-bottom);}
 .mobile-nav-inner{display:flex;align-items:stretch;}
@@ -481,37 +471,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 </head>
 <body>
 
-<!-- PIN GATE -->
-<div class="pin-gate" id="pin-gate">
-  <div class="pin-box">
-    <div class="pin-logo">
-      <svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg>
-    </div>
-    <div class="pin-title">The Bridge</div>
-    <div class="pin-sub">Calvary Hephzibah · Enter PIN to continue</div>
-    <div class="pin-dots" id="pin-dots">
-      <div class="pin-dot" id="pd0"></div>
-      <div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div>
-      <div class="pin-dot" id="pd3"></div>
-    </div>
-    <div class="pin-pad">
-      <button class="pin-btn" onclick="pinPress('1')">1</button>
-      <button class="pin-btn" onclick="pinPress('2')">2</button>
-      <button class="pin-btn" onclick="pinPress('3')">3</button>
-      <button class="pin-btn" onclick="pinPress('4')">4</button>
-      <button class="pin-btn" onclick="pinPress('5')">5</button>
-      <button class="pin-btn" onclick="pinPress('6')">6</button>
-      <button class="pin-btn" onclick="pinPress('7')">7</button>
-      <button class="pin-btn" onclick="pinPress('8')">8</button>
-      <button class="pin-btn" onclick="pinPress('9')">9</button>
-      <button class="pin-btn" style="visibility:hidden"></button>
-      <button class="pin-btn" onclick="pinPress('0')">0</button>
-      <button class="pin-btn pin-del" onclick="pinDel()">⌫</button>
-    </div>
-    <div class="pin-error" id="pin-error"></div>
-  </div>
-</div>
 
 <!-- MOBILE DRAWER -->
 <div class="mob-drawer" id="mob-drawer">
@@ -2084,57 +2043,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 <div class="toast" id="toast"></div>
 
 <script>
-// ── PIN GATE ─────────────────────────────────────────────────────────────────
-const PIN_CODE = '2610';
-let pinEntry = '';
-
-function pinPress(d) {
-  pinEntry += d;
-  for(let i=0;i<4;i++) {
-    const el = document.getElementById('pd'+i);
-    if(el) el.classList.toggle('filled', i < pinEntry.length);
-  }
-  if (pinEntry.length >= 4) {
-    setTimeout(() => {
-      if (pinEntry === PIN_CODE) {
-        document.getElementById('pin-gate').classList.add('hidden');
-      } else {
-        const err = document.getElementById('pin-error');
-        if(err) err.textContent = 'Incorrect PIN — try again';
-        pinEntry = '';
-        for(let i=0;i<4;i++){const el=document.getElementById('pd'+i);if(el)el.classList.remove('filled');}
-      }
-    }, 120);
-    return;
-  }
-}
-
-function pinDel() {
-  pinEntry = pinEntry.slice(0,-1);
-  const err = document.getElementById('pin-error');
-  if(err) err.textContent = '';
-  for(let i=0;i<4;i++){const el=document.getElementById('pd'+i);if(el)el.classList.toggle('filled',i<pinEntry.length);}
-}
-
-function updatePinDots() {
-  for (let i=0;i<4;i++) {
-    const el = document.getElementById('pd'+i);
-    if(el) el.classList.toggle('filled', i < pinEntry.length);
-  }
-}
-
-// Skip PIN gate only if loaded from app.html (has role param)
-if (new URLSearchParams(window.location.search).get('role')) {
-  document.getElementById('pin-gate').classList.add('hidden');
-}
-
-// Keyboard support for PIN
-document.addEventListener('keydown', e => {
-  if (document.getElementById('pin-gate').classList.contains('hidden')) return;
-  if (e.key >= '0' && e.key <= '9') pinPress(e.key);
-  if (e.key === 'Backspace') pinDel();
-});
-
 // ── MOBILE DRAWER ────────────────────────────────────────────────────────────
 function openMobDrawer() {
   const grid = document.getElementById('mob-drawer-grid');
