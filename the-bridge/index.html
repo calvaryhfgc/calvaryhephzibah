@@ -2170,11 +2170,14 @@ async function saveMinistryStatus() {
 
 async function loadMinistryStatuses(){
   if(!supabaseReady){renderMinistries();return;}
-  const{data}=await db.from('bridge_ministry_status').select('*');
-  if(data)data.forEach(r=>{
-    ministryStatuses[r.ministry_id]=r.status;
-    if(r.note)ministryNotes[r.ministry_id]=r.note;
-  });
+  try {
+    const timeout = new Promise((_,rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+    const {data} = await Promise.race([db.from('bridge_ministry_status').select('*'), timeout]);
+    if(data)data.forEach(r=>{
+      ministryStatuses[r.ministry_id]=r.status;
+      if(r.note)ministryNotes[r.ministry_id]=r.note;
+    });
+  } catch(e) {}
   renderMinistries();
 }
 
@@ -2215,8 +2218,14 @@ function renderPriorities(){
 
 async function loadPriorities(){
   if(!supabaseReady){priorities=[...defaultPriorities];renderPriorities();return;}
-  const{data,error}=await db.from('bridge_priorities').select('*').order('created_at',{ascending:true});
-  priorities=(!error&&data&&data.length)?data:[...defaultPriorities];
+  try {
+    const timeout = new Promise((_,rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+    const query = db.from('bridge_priorities').select('*').order('created_at',{ascending:true});
+    const {data,error} = await Promise.race([query, timeout]);
+    priorities=(!error&&data&&data.length)?data:[...defaultPriorities];
+  } catch(e) {
+    priorities=[...defaultPriorities];
+  }
   renderPriorities();
 }
 
@@ -2247,8 +2256,11 @@ document.getElementById('notes-area').addEventListener('input',()=>{
 
 async function loadNotes(){
   if(!supabaseReady)return;
-  const{data}=await db.from('bridge_notes').select('*').eq('id',1).single();
-  if(data)document.getElementById('notes-area').value=data.content||'';
+  try {
+    const timeout = new Promise((_,rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+    const {data} = await Promise.race([db.from('bridge_notes').select('*').eq('id',1).single(), timeout]);
+    if(data)document.getElementById('notes-area').value=data.content||'';
+  } catch(e) {}
 }
 
 // ── CSV STATEMENT UPLOAD ─────────────────────────────────────────────────────
@@ -2548,8 +2560,11 @@ function renderTransactions(){
 
 async function loadTransactions(){
   if(!supabaseReady){renderTransactions();return;}
-  const{data,error}=await db.from('bridge_finance').select('*').order('date',{ascending:false});
-  if(!error&&data)transactions=data;
+  try {
+    const timeout = new Promise((_,rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+    const {data,error} = await Promise.race([db.from('bridge_finance').select('*').order('date',{ascending:false}), timeout]);
+    if(!error&&data)transactions=data;
+  } catch(e) {}
   updateFinanceSummary();
   renderTransactions();
 }
@@ -2759,8 +2774,13 @@ const defaultActions = [
 ];
 
   if (!supabaseReady) { actions = [...defaultActions]; renderActions(); return; }
-  const { data, error } = await db.from('bridge_actions').select('*').order('created_at', { ascending: true });
-  actions = (!error && data && data.length) ? data : [...defaultActions];
+  try {
+    const timeout = new Promise((_,rej) => setTimeout(() => rej(new Error('timeout')), 5000));
+    const { data, error } = await Promise.race([db.from('bridge_actions').select('*').order('created_at', { ascending: true }), timeout]);
+    actions = (!error && data && data.length) ? data : [...defaultActions];
+  } catch(e) {
+    actions = [...defaultActions];
+  }
   renderActions();
 }
 
