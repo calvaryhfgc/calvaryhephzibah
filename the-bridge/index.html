@@ -2555,9 +2555,14 @@ function updateFinanceSummary(){
   const thisMonth=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
   const monthLabel=now.toLocaleDateString('en-GB',{month:'long',year:'numeric'});
 
+  // Use actual balance from most recent transaction if available
+  const withBalance = transactions.filter(t => t.balance != null);
+  const sorted = [...withBalance].sort((a,b) => new Date(b.date) - new Date(a.date));
+  const latestBalance = sorted.length ? parseFloat(sorted[0].balance) : null;
+
   const allIncome=transactions.filter(t=>t.type==='income').reduce((s,t)=>s+parseFloat(t.amount),0);
   const allExpense=transactions.filter(t=>t.type==='expense').reduce((s,t)=>s+parseFloat(t.amount),0);
-  const balance=allIncome-allExpense;
+  const balance = latestBalance !== null ? latestBalance : (allIncome - allExpense);
 
   const mIncome=transactions.filter(t=>t.type==='income'&&t.date.startsWith(thisMonth)).reduce((s,t)=>s+parseFloat(t.amount),0);
   const mExpense=transactions.filter(t=>t.type==='expense'&&t.date.startsWith(thisMonth)).reduce((s,t)=>s+parseFloat(t.amount),0);
