@@ -1,7 +1,5 @@
-const CACHE = 'bridge-v2';
+const CACHE = 'bridge-v3';
 const PRECACHE = [
-  '/calvaryhephzibah/the-bridge/app.html',
-  '/calvaryhephzibah/the-bridge/index.html',
   'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Instrument+Serif:ital@0;1&display=swap',
 ];
 
@@ -20,14 +18,21 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network first for Supabase API calls
-  if (e.request.url.includes('supabase.co')) {
-    e.respondWith(
-      fetch(e.request).catch(() => caches.match(e.request))
-    );
+  const url = new URL(e.request.url);
+  
+  // Always fetch HTML files fresh — never cache them
+  if (url.pathname.endsWith('.html') || url.pathname.endsWith('/')) {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
     return;
   }
-  // Cache first for everything else
+  
+  // Network first for Supabase API calls
+  if (e.request.url.includes('supabase.co')) {
+    e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    return;
+  }
+  
+  // Cache first for fonts and static assets
   e.respondWith(
     caches.match(e.request).then(cached => {
       if (cached) return cached;
