@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Planning Meeting — 8:30pm Tonight</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{--red:#C41E2A;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:#0F172A;color:white;overflow:hidden;}
+
+#viewer{position:fixed;inset:0;display:flex;flex-direction:column;}
+
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.title{font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);}
+.counter{font-size:12px;color:rgba(255,255,255,0.4);}
+
+.body{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 24px;cursor:pointer;overflow-y:auto;}
+.content{width:100%;max-width:640px;}
+
+.heading{font-family:'Instrument Serif',serif;font-size:clamp(26px,5vw,42px);color:white;line-height:1.2;margin-bottom:18px;}
+.bullets{list-style:none;display:flex;flex-direction:column;gap:12px;margin:14px 0;}
+.bullets li{display:flex;align-items:flex-start;gap:12px;font-size:clamp(15px,2.5vw,18px);color:rgba(255,255,255,0.85);line-height:1.5;}
+.bullets li::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;margin-top:9px;}
+.note{background:rgba(255,255,255,0.05);border-left:3px solid var(--red);padding:14px 18px;border-radius:0 8px 8px 0;font-size:14px;color:rgba(255,255,255,0.5);font-style:italic;margin-top:18px;line-height:1.6;}
+.say{background:rgba(196,30,42,0.12);border:1px solid rgba(196,30,42,0.3);border-radius:12px;padding:18px 20px;margin-top:16px;}
+.say-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(196,30,42,0.8);margin-bottom:10px;}
+.say-text{font-size:clamp(16px,2.8vw,20px);color:white;line-height:1.6;font-style:italic;}
+
+.footer{padding:16px 24px;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:space-between;}
+.dots{display:flex;gap:5px;}
+.dot{height:5px;border-radius:3px;background:rgba(255,255,255,0.2);transition:all 0.2s;}
+.dot.on{background:var(--red);}
+.btn{padding:12px 24px;border-radius:10px;border:none;font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;}
+.btn-prev{background:rgba(255,255,255,0.08);color:white;}
+.btn-next{background:var(--red);color:white;}
+</style>
+</head>
+<body>
+<div id="viewer">
+  <div class="header">
+    <div class="title">Planning Meeting · 8:30pm · 12 Apr 2026</div>
+    <div class="counter" id="counter"></div>
+  </div>
+  <div class="body" onclick="next()">
+    <div class="content" id="content"></div>
+  </div>
+  <div class="footer">
+    <button class="btn btn-prev" id="prev-btn" onclick="prev(event)">← Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="btn btn-next" id="next-btn" onclick="next()">Next →</button>
+  </div>
+</div>
+
+<script>
+const slides = [
+  {
+    heading: 'Planning Meeting\n8:30pm Tonight',
+    note: 'Attendees: Auntie Pauline, Pastor Gbenga. Half hour max. Only people who will work. No observers.'
+  },
+  {
+    heading: '1. Announce Bolaji\'s role',
+    bullets: [
+      'Tell the group Bolaji is coordinating operations through this transition',
+      'They work with him as they would work with you',
+      'This unblocks everything for the week ahead',
+    ],
+    note: 'This is the most important thing to say tonight. Say it first, clearly.'
+  },
+  {
+    type: 'say',
+    label: 'Say this to open',
+    text: 'I have asked Bolaji to coordinate our operations through this season. Please work with him as you would work with me. He has my full support.'
+  },
+  {
+    heading: '2. Sunday 19th — what is in place',
+    bullets: [
+      'Caster leading worship — confirmed',
+      'Bolaji Adebanjo on drums — confirmed',
+      'Keys player and 2 backing singers — being sourced this week',
+      'Rehearsal — Thursday or Friday this week',
+      'Budget being confirmed — your approval needed',
+    ],
+    note: 'Bolaji will update on this. You just need to approve the budget when he sends it.'
+  },
+  {
+    heading: '3. Operational gaps to fill',
+    bullets: [
+      'Equipment setup and pack-down — who?',
+      'Ushering coordination — Brother Ernest being asked',
+      'Who else in the congregation can be used this week?',
+    ],
+    note: 'Be brutal. Only people who will actually show up. If they cannot commit, move on.'
+  },
+  {
+    heading: '4. This week\'s priorities',
+    bullets: [
+      'Musicians confirmed by Tuesday',
+      'Rehearsal locked in by Wednesday',
+      'Media team individual conversations',
+      'Transition planning group operational from tonight',
+    ],
+    note: 'Close in prayer. Keep it to 30 minutes. The work starts now.'
+  },
+];
+
+let current = 0;
+
+function render() {
+  const s = slides[current];
+  const total = slides.length;
+
+  document.getElementById('counter').textContent = `${current+1} of ${total}`;
+  document.getElementById('prev-btn').style.opacity = current === 0 ? '0.3' : '1';
+  document.getElementById('next-btn').textContent = current === total-1 ? 'Done ✓' : 'Next →';
+
+  document.getElementById('dots').innerHTML = slides.map((_,i) =>
+    `<div class="dot${i===current?' on':''}" style="width:${i===current?20:5}px;"></div>`
+  ).join('');
+
+  let html = '';
+  if (s.type === 'say') {
+    html = `<div class="say"><div class="say-label">${s.label}</div><div class="say-text">"${s.text}"</div></div>`;
+  } else {
+    if (s.heading) html += `<div class="heading">${s.heading.replace(/\n/g,'<br>')}</div>`;
+    if (s.bullets?.length) html += `<ul class="bullets">${s.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`;
+  }
+  if (s.note) html += `<div class="note">${s.note}</div>`;
+  document.getElementById('content').innerHTML = html;
+}
+
+function next() {
+  if (current >= slides.length - 1) return;
+  current++;
+  render();
+}
+
+function prev(e) {
+  e?.stopPropagation();
+  if (current <= 0) return;
+  current--;
+  render();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') next();
+  if (e.key === 'ArrowLeft') prev();
+});
+
+render();
+</script>
+</body>
+</html>
