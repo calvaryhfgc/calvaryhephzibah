@@ -11,7 +11,15 @@
 <meta name="apple-mobile-web-app-title" content="The Bridge">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Load Supabase asynchronously — won't block page render
+window.supabaseReady = false;
+const s = document.createElement('script');
+s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+s.async = true;
+s.onload = () => { window.supabaseReady = true; };
+document.head.appendChild(s);
+</script>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
 :root{
@@ -252,7 +260,12 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 <script>
 const SUPA_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
-const db = supabase.createClient(SUPA_URL, SUPA_KEY);
+let db = null;
+
+function getDb() {
+  if (!db && window.supabase) db = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+  return db;
+}
 
 const ALL_SECTIONS = [
   {id:'priorities',      label:'Priorities'},
@@ -289,13 +302,39 @@ async function init() {
   showScreen('s-who');
 }
 
+// Hardcoded fallback (used if Supabase unavailable)
+const FALLBACK_USERS = [
+  { id:1, name:'Bolaji Olatoye', level:'cos', pin_hash:'bp_yhwbc0', sections:[], active:true }
+];
+
 async function loadUsers() {
-  const { data, error } = await db
-    .from('bridge_users_v2')
-    .select('id,name,level,sections,active')
-    .eq('active', true)
-    .order('name');
-  if (!error && data) users = data;
+  // Show screen immediately with loading state
+  renderUserList();
+  showScreen('s-who');
+
+  // Try Supabase with timeout
+  try {
+    let attempts = 0;
+    while (!window.supabase && attempts < 8) {
+      await new Promise(r => setTimeout(r, 500));
+      attempts++;
+    }
+    if (!window.supabase) throw new Error('no supabase');
+    const client = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+    const timeout = new Promise((_,rej) => setTimeout(() => rej('timeout'), 5000));
+    const { data, error } = await Promise.race([
+      client.from('bridge_users_v2').select('id,name,level,sections,active').eq('active', true).order('name'),
+      timeout
+    ]);
+    if (!error && data && data.length) {
+      users = data;
+      window._supabaseClient = client;
+    } else {
+      users = FALLBACK_USERS;
+    }
+  } catch(e) {
+    users = FALLBACK_USERS;
+  }
   renderUserList();
 }
 
@@ -359,26 +398,31 @@ function updateDots() {
 }
 
 async function checkPin() {
-  // Fetch the full user record including pin_hash
-  const { data, error } = await db
-    .from('bridge_users_v2')
-    .select('*')
-    .eq('id', currentUser.id)
-    .single();
-
-  if (error || !data) {
-    showPinError('Could not verify PIN. Try again.');
+  const client = window._supabaseClient;
+  if (!client) {
+    // Fallback: check against local data
+    const fallback = FALLBACK_USERS.find(u => u.id === currentUser.id);
+    if (!fallback || hashPin(pinEntry) !== fallback.pin_hash) {
+      showPinError('Incorrect PIN. Try again.');
+      return;
+    }
+    currentUser = { ...fallback };
+    launch();
     return;
   }
-
-  if (hashPin(pinEntry) !== data.pin_hash) {
-    showPinError('Incorrect PIN. Try again.');
-    return;
+  try {
+    const timeout = new Promise((_,rej) => setTimeout(() => rej('timeout'), 5000));
+    const { data, error } = await Promise.race([
+      client.from('bridge_users_v2').select('*').eq('id', currentUser.id).single(),
+      timeout
+    ]);
+    if (error || !data) { showPinError('Incorrect PIN. Try again.'); return; }
+    if (hashPin(pinEntry) !== data.pin_hash) { showPinError('Incorrect PIN. Try again.'); return; }
+    currentUser = data;
+    launch();
+  } catch(e) {
+    showPinError('Connection issue. Try again.');
   }
-
-  currentUser = data;
-  sessionStorage.setItem('bridge_user', JSON.stringify(data));
-  launch();
 }
 
 function showPinError(msg) {
@@ -468,7 +512,7 @@ function levelChanged() {
 }
 
 async function loadAdminList() {
-  const { data } = await db.from('bridge_users_v2').select('*').order('name');
+  const { data } = await getDb().from('bridge_users_v2').select('*').order('name');
   const el = document.getElementById('admin-list');
   if (!data?.length) { el.innerHTML = '<div style="font-size:13px;color:var(--ink-4);">No users yet.</div>'; return; }
   el.innerHTML = data.map(u => `
@@ -486,7 +530,7 @@ async function loadAdminList() {
 }
 
 async function editUser(id) {
-  const { data } = await db.from('bridge_users_v2').select('*').eq('id', id).single();
+  const { data } = await getDb().from('bridge_users_v2').select('*').eq('id', id).single();
   if (!data) return;
   document.getElementById('edit-id').value = data.id;
   document.getElementById('f-name').value = data.name;
@@ -525,10 +569,10 @@ async function saveUser() {
 
   let error;
   if (editId) {
-    ({ error } = await db.from('bridge_users_v2').update(payload).eq('id', editId));
+    ({ error } = await getDb().from('bridge_users_v2').update(payload).eq('id', editId));
   } else {
     if (!pin) { msg.textContent = 'PIN is required for new users.'; msg.className = 'amsg err'; return; }
-    ({ error } = await db.from('bridge_users_v2').insert([payload]));
+    ({ error } = await getDb().from('bridge_users_v2').insert([payload]));
   }
 
   if (error) {
@@ -544,7 +588,7 @@ async function saveUser() {
 }
 
 async function toggleActive(id, current) {
-  await db.from('bridge_users_v2').update({ active: !current }).eq('id', id);
+  await getDb().from('bridge_users_v2').update({ active: !current }).eq('id', id);
   loadAdminList();
   loadUsers();
   showToast(current ? 'User suspended' : 'User restored');
