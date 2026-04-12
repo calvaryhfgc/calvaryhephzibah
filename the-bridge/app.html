@@ -298,8 +298,8 @@ async function init() {
       return;
     } catch(e) { sessionStorage.removeItem('bridge_user'); }
   }
-  await loadUsers();
   showScreen('s-who');
+  loadUsers(); // don't await — show screen immediately
 }
 
 // Hardcoded fallback (used if Supabase unavailable)
@@ -308,34 +308,32 @@ const FALLBACK_USERS = [
 ];
 
 async function loadUsers() {
-  // Show screen immediately with loading state
+  // Show fallback immediately — don't wait
+  users = FALLBACK_USERS;
   renderUserList();
-  showScreen('s-who');
 
-  // Try Supabase with timeout
+  // Try to load real users in background
   try {
-    let attempts = 0;
-    while (!window.supabase && attempts < 8) {
-      await new Promise(r => setTimeout(r, 500));
-      attempts++;
-    }
-    if (!window.supabase) throw new Error('no supabase');
-    const client = window.supabase.createClient(SUPA_URL, SUPA_KEY);
-    const timeout = new Promise((_,rej) => setTimeout(() => rej('timeout'), 5000));
+    const client = await waitForSupabase();
+    if (!client) return;
     const { data, error } = await Promise.race([
       client.from('bridge_users_v2').select('id,name,level,sections,active').eq('active', true).order('name'),
-      timeout
+      new Promise((_,rej) => setTimeout(() => rej('timeout'), 5000))
     ]);
     if (!error && data && data.length) {
       users = data;
       window._supabaseClient = client;
-    } else {
-      users = FALLBACK_USERS;
+      renderUserList();
     }
-  } catch(e) {
-    users = FALLBACK_USERS;
+  } catch(e) {}
+}
+
+async function waitForSupabase() {
+  for (let i = 0; i < 10; i++) {
+    if (window.supabase) return window.supabase.createClient(SUPA_URL, SUPA_KEY);
+    await new Promise(r => setTimeout(r, 500));
   }
-  renderUserList();
+  return null;
 }
 
 function renderUserList() {
