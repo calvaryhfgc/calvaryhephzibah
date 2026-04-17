@@ -3,47 +3,90 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Mid-week — Calvary OS</title>
+<title>Calvary OS — Mid-week</title>
+<meta name="theme-color" content="#0A0A0A">
 <link rel="stylesheet" href="shell.css">
 </head>
 <body>
-<div id="cos-nav"></div>
-<div class="cos-page">
-<div class="cos-container">
-  <div class="cos-hero">
-    <div class="cos-hero-label">Mid-week Meetings</div>
-    <div class="cos-hero-title">Mid-week</div>
-    <div class="cos-hero-sub">Wednesday and Friday meetings — details, session leaders, Zoom links, notes.</div>
-  </div>
-  <div class="cos-grid-2">
-    <div class="cos-card" style="border-top:3px solid var(--red);">
-      <div class="cos-card-label">Wednesday</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:6px;">Midweek Service</div>
-      <div style="font-size:12px;color:var(--ink-4);margin-bottom:14px;line-height:1.6;">Time: 7:00pm<br>Location: Calvary Hephzibah, Manchester<br>Zoom: Available on request</div>
-      <span class="badge b-green">Active</span>
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-sub">Mid-week</div></div>
     </div>
-    <div class="cos-card" style="border-top:3px solid rgba(255,255,255,0.1);">
-      <div class="cos-card-label">Friday</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:6px;">Prayer Meeting</div>
-      <div style="font-size:12px;color:var(--ink-4);margin-bottom:14px;line-height:1.6;">Time: 7:00pm<br>Location: Calvary Hephzibah, Manchester<br>Zoom: Available on request</div>
-      <span class="badge b-green">Active</span>
+    <div class="auth-step active" id="step-who"><div class="auth-eyebrow">Welcome</div><div class="auth-heading">Select your name</div><div class="auth-sub">Your operational hub for Calvary Hephzibah.</div><div class="user-grid" id="user-grid"></div></div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg> Back</button>
+      <div class="auth-eyebrow">PIN Required</div><div class="auth-heading" id="pin-user-name">Enter your PIN</div><div class="auth-sub">4-digit PIN.</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
     </div>
   </div>
-  <div class="cos-card">
-    <div class="cos-card-label">Session Leaders</div>
-    <p style="font-size:13px;color:var(--ink-4);line-height:1.6;">Session leader schedule coming soon. This section will show who is leading each midweek service, their topic, any Zoom links, and handout materials.</p>
-  </div>
-  <div class="cos-card" style="background:rgba(196,30,42,0.05);border-color:rgba(196,30,42,0.1);">
-    <div class="cos-card-label">Coming soon</div>
-    <p style="font-size:13px;color:var(--ink-4);line-height:1.6;">Session leader management with topic tracking, resource uploads, and attendance notes will be added to this section. Contact Bolaji to contribute content.</p>
-  </div>
 </div>
+
+<div id="app">
+  <div class="topbar">
+    <a href="dashboard.html" class="topbar-logo" style="text-decoration:none;"><div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div><div class="topbar-logo-name">Calvary OS</div></a>
+    <div class="topbar-divider"></div><div class="topbar-section">📅 Mid-week</div>
+    <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-av" id="tb-av">?</div><div class="topbar-user-name" id="tb-name"></div></div><button class="topbar-signout" onclick="COS.signOut()">Sign out</button></div>
+  </div>
+  <div class="app-body">
+    <nav class="sidebar">
+      <div class="nav-section">
+        <div class="nav-section-label">Mid-week</div>
+        <div class="nav-item active" onclick="COS.navTo('wednesday',this)">📖 Wednesday</div>
+        <div class="nav-item" onclick="COS.navTo('friday',this)">🙏 Friday</div>
+        <div class="nav-item" onclick="COS.navTo('leaders',this)">👥 Leaders meeting</div>
+      </div>
+      <div class="nav-section"><a href="dashboard.html" class="nav-item" style="text-decoration:none;">← Dashboard</a></div>
+    </nav>
+    <div class="main">
+      <div class="page-body">
+
+        <div class="page active" id="pg-wednesday">
+          <div class="page-header"><div class="page-eyebrow">Mid-week</div><div class="page-title">Wednesday Bible Study</div><div class="page-sub">Weekly teaching and study session.</div></div>
+          <div class="card"><div class="card-label">Next session</div><div style="font-size:13px;color:var(--ink-3);">Details to be added each week.</div></div>
+          <div class="card"><div class="card-label">Format</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.7;">Opening prayer → Worship (1–2 songs) → Bible teaching (30–40 mins) → Discussion → Prayer ministry → Close</div>
+          </div>
+        </div>
+
+        <div class="page" id="pg-friday">
+          <div class="page-header"><div class="page-eyebrow">Mid-week</div><div class="page-title">Friday Prayer Meeting</div><div class="page-sub">Corporate intercession and prayer.</div></div>
+          <div class="card"><div class="card-label">Next session</div><div style="font-size:13px;color:var(--ink-3);">Details to be added each week.</div></div>
+          <div class="card"><div class="card-label">Format</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.7;">Worship → Intercession → Specific prayer points → Ministry time → Close</div>
+          </div>
+        </div>
+
+        <div class="page" id="pg-leaders">
+          <div class="page-header"><div class="page-eyebrow">Mid-week</div><div class="page-title">Leaders meeting</div><div class="page-sub">Monthly leadership team coordination.</div></div>
+          <div class="card"><div class="card-label">Next meeting</div><div style="font-size:13px;color:var(--ink-3);">To be confirmed.</div></div>
+          <div class="card"><div class="card-label">Attendees</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.8;">Pastor Shade Olatoye · Bolaji Olatoye · Pastor Gbenga Adebanjo · Pastor Kayode Ogungbenro · Auntie Pauline Tulloch · Sister Petty</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <nav class="mobile-nav"><div class="mob-nav-items">
+    <button class="mob-nav-btn active" onclick="COS.navTo('wednesday',this)">📖 Wed</button>
+    <button class="mob-nav-btn" onclick="COS.navTo('friday',this)">🙏 Fri</button>
+    <button class="mob-nav-btn" onclick="COS.navTo('leaders',this)">👥 Leaders</button>
+  </div></nav>
 </div>
+<div class="toast" id="toast"></div>
 <script src="shell.js"></script>
 <script>
-const user = requireAuth();
-if(!user || !canAccess(user,'midweek')) window.location.href='index.html';
-renderNav('midweek');
+function pageInit(){}
+COS.init('midweek');
 </script>
 </body>
 </html>

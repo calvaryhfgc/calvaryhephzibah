@@ -3,67 +3,138 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Departments — Calvary OS</title>
+<title>Calvary OS — Departments</title>
+<meta name="theme-color" content="#0A0A0A">
 <link rel="stylesheet" href="shell.css">
-<style>
-.dept-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r16);padding:18px 20px;cursor:pointer;transition:all 0.12s;}
-.dept-card:hover{background:var(--surface-2);border-color:var(--border-2);}
-.dept-icon{font-size:24px;margin-bottom:10px;}
-.dept-name{font-size:14px;font-weight:700;margin-bottom:4px;}
-.dept-coordinator{font-size:11px;color:var(--ink-4);margin-bottom:8px;}
-.dept-note{font-size:12px;color:var(--ink-4);line-height:1.5;}
-.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;}
-.sd-green{background:var(--green);}
-.sd-amber{background:var(--amber);}
-.sd-red{background:#FF6B6B;}
-</style>
 </head>
 <body>
-<div id="cos-nav"></div>
-<div class="cos-page">
-<div class="cos-container">
-  <div class="cos-hero">
-    <div class="cos-hero-label">Ministry Departments</div>
-    <div class="cos-hero-title">Departments</div>
-    <div class="cos-hero-sub">All church ministry departments — coordinators, status, and operational notes.</div>
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo"><div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div><div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-sub">Departments</div></div></div>
+    <div class="auth-step active" id="step-who"><div class="auth-eyebrow">Welcome</div><div class="auth-heading">Select your name</div><div class="auth-sub">Your operational hub.</div><div class="user-grid" id="user-grid"></div></div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg> Back</button>
+      <div class="auth-eyebrow">PIN Required</div><div class="auth-heading" id="pin-user-name">Enter your PIN</div><div class="auth-sub">4-digit PIN.</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
   </div>
-  <div class="cos-grid-2" id="dept-grid"></div>
 </div>
+
+<div id="app">
+  <div class="topbar">
+    <a href="dashboard.html" class="topbar-logo" style="text-decoration:none;"><div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div><div class="topbar-logo-name">Calvary OS</div></a>
+    <div class="topbar-divider"></div><div class="topbar-section">🏛️ Departments</div>
+    <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-av" id="tb-av">?</div><div class="topbar-user-name" id="tb-name"></div></div><button class="topbar-signout" onclick="COS.signOut()">Sign out</button></div>
+  </div>
+  <div class="app-body">
+    <nav class="sidebar">
+      <div class="nav-section">
+        <div class="nav-section-label">Departments</div>
+        <div class="nav-item active" onclick="COS.navTo('overview',this)">📋 Overview</div>
+        <div class="nav-item" onclick="COS.navTo('children',this)">👶 Children</div>
+        <div class="nav-item" onclick="COS.navTo('prayer',this)">🙏 Prayer</div>
+        <div class="nav-item" onclick="COS.navTo('hospitality',this)">🤝 Hospitality</div>
+        <div class="nav-item" onclick="COS.navTo('evangelism',this)">📢 Evangelism</div>
+        <div class="nav-item" onclick="COS.navTo('finance',this)">💰 Finance</div>
+        <div class="nav-item" onclick="COS.navTo('operations',this)">⚙️ Operations</div>
+      </div>
+      <div class="nav-section"><a href="dashboard.html" class="nav-item" style="text-decoration:none;">← Dashboard</a></div>
+    </nav>
+    <div class="main">
+      <div class="page-body">
+
+        <div class="page active" id="pg-overview">
+          <div class="page-header"><div class="page-eyebrow">Departments</div><div class="page-title">Ministry overview</div><div class="page-sub">All departments and their current status.</div></div>
+          <div id="dept-grid"></div>
+        </div>
+
+        <div class="page" id="pg-children">
+          <div class="page-header"><div class="page-eyebrow">Department</div><div class="page-title">Children's Ministry</div></div>
+          <div class="card"><div class="card-label">Coordinator</div><div style="font-size:14px;font-weight:600;color:var(--ink);">Adeola Awojobi</div></div>
+          <div class="card"><div class="card-label">Focus</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">Nurturing children in faith through age-appropriate teaching, activities, and pastoral care. Sunday School, children's church, holiday clubs. DBS checks mandatory for all workers.</div></div>
+        </div>
+
+        <div class="page" id="pg-prayer">
+          <div class="page-header"><div class="page-eyebrow">Department</div><div class="page-title">Intercessory Prayer</div></div>
+          <div class="card"><div class="card-label">Coordinator</div><div style="font-size:14px;font-weight:600;color:var(--ink);">Pastor Gbenga Adebanjo</div></div>
+          <div class="card"><div class="card-label">Focus</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">Pre-service prayer every Sunday. Prayer chains and requests. Corporate intercession for church and community. Prayer meetings and vigils.</div></div>
+        </div>
+
+        <div class="page" id="pg-hospitality">
+          <div class="page-header"><div class="page-eyebrow">Department</div><div class="page-title">Hospitality</div></div>
+          <div class="card"><div class="card-label">Coordinator</div><div style="font-size:14px;font-weight:600;color:var(--ink);">Deaconess Janet Oviri</div></div>
+          <div class="card"><div class="card-label">Focus</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">Creating a welcoming environment. Greeting and welcoming all attendees. First-time visitor care. Refreshments. Volunteer rostering.</div></div>
+        </div>
+
+        <div class="page" id="pg-evangelism">
+          <div class="page-header"><div class="page-eyebrow">Department</div><div class="page-title">Evangelism & Outreach</div></div>
+          <div class="card"><div class="card-label">Coordinator</div><div style="font-size:14px;font-weight:600;color:var(--ink);">Pastor Gbenga Adebanjo</div></div>
+          <div class="card"><div class="card-label">Focus</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">Spreading the message of Jesus Christ. Community outreach and door-to-door. New convert follow-up. Currently largely dormant — reactivation planned.</div></div>
+          <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:var(--r12);padding:12px 14px;"><div style="font-size:12px;color:var(--amber);">⚠️ Needs reactivation — currently inactive</div></div>
+        </div>
+
+        <div class="page" id="pg-finance">
+          <div class="page-header"><div class="page-eyebrow">Department</div><div class="page-title">Finance</div></div>
+          <div class="card"><div class="card-label">Coordinator</div><div style="font-size:14px;font-weight:600;color:var(--ink);">Pastor Kayode Ogungbenro</div></div>
+          <div class="card"><div class="card-label">Current balance</div><div style="font-size:26px;font-weight:700;color:var(--green);">£123,234.96</div><div style="font-size:12px;color:var(--ink-4);margin-top:4px;">As of April 2026 · Global Harvest International</div></div>
+          <div class="card"><div class="card-label">Reporting</div><div style="font-size:13px;color:var(--ink-2);line-height:1.6;">Weekly bank statement every Monday to Pastor Shade. Year-to-date statement received April 2026. NatWest online banking for Pastor Shade in progress.</div></div>
+        </div>
+
+        <div class="page" id="pg-operations">
+          <div class="page-header"><div class="page-eyebrow">Department</div><div class="page-title">Operations</div></div>
+          <div class="card"><div class="card-label">Coordinator</div><div style="font-size:14px;font-weight:600;color:var(--ink);">Auntie Pauline Tulloch</div></div>
+          <div class="card"><div class="card-label">Key people</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.8;">Brother Ernest — ushering rota · Sister Petty — setup (marathon affecting 19th) · Sister Lisa — recovering from car accident · Deacon Femi Osipitan — building & facilities</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <nav class="mobile-nav"><div class="mob-nav-items">
+    <button class="mob-nav-btn active" onclick="COS.navTo('overview',this)">📋 All</button>
+    <button class="mob-nav-btn" onclick="COS.navTo('children',this)">👶 Kids</button>
+    <button class="mob-nav-btn" onclick="COS.navTo('prayer',this)">🙏 Prayer</button>
+    <button class="mob-nav-btn" onclick="COS.navTo('finance',this)">💰 Finance</button>
+    <button class="mob-nav-btn" onclick="COS.navTo('operations',this)">⚙️ Ops</button>
+  </div></nav>
 </div>
+<div class="toast" id="toast"></div>
 <script src="shell.js"></script>
 <script>
-const user = requireAuth();
-if(!user || !canAccess(user,'departments')) window.location.href='index.html';
-renderNav('departments');
-
 const DEPTS = [
-  {icon:'🎵',name:'Worship Ministry',coordinator:'Caster Martins (interim)',status:'amber',note:'In transition. Professional band in place for 19th April. Long-term rebuild in progress.'},
-  {icon:'🎥',name:'Media & Communications',coordinator:'Bolaji Olatoye',status:'amber',note:'6 recruits onboarded. Induction session being scheduled. Scott as operational lead.'},
-  {icon:'🙏',name:'Intercessory Prayer',coordinator:'Pastor Gbenga Adebanjo',status:'green',note:'Running consistently. Pre-service prayer established.'},
-  {icon:'👶',name:"Children's Ministry",coordinator:'Adeola Awojobi',status:'green',note:'Functioning. DBS compliance maintained.'},
-  {icon:'🤝',name:'Hospitality',coordinator:'Deaconess Janet Oviri',status:'green',note:'Consistent and welcoming.'},
-  {icon:'📢',name:'Evangelism',coordinator:'Pastor Gbenga Adebanjo',status:'amber',note:'Largely dormant. Needs reactivation this quarter.'},
-  {icon:'❤️',name:'Pastoral Care',coordinator:'Pastor Gbenga Adebanjo',status:'amber',note:'Active but stretched with current transition season.'},
-  {icon:'💰',name:'Finance',coordinator:'Pastor Kayode Ogungbenro',status:'amber',note:'Weekly reporting being established. Balance healthy. Governance improvements in progress.'},
-  {icon:'🏗️',name:'Building & Environment',coordinator:'Deacon Femi Osipitan',status:'green',note:'Maintenance schedule in place.'},
-  {icon:'📋',name:'Admin & Operations',coordinator:'Pauline Tulloch',status:'amber',note:'Setup gaps being filled. Brother Ernest coordinating ushering rota.'},
+  { id:'children',     name:'Children\'s Ministry',  icon:'👶', status:'green',  coord:'Adeola Awojobi',              note:'Functioning. DBS compliance maintained.' },
+  { id:'prayer',       name:'Intercessory Prayer',    icon:'🙏', status:'green',  coord:'Pastor Gbenga Adebanjo',      note:'Running consistently. Pre-service prayer in place.' },
+  { id:'hospitality',  name:'Hospitality',            icon:'🤝', status:'green',  coord:'Deaconess Janet Oviri',       note:'Consistent and welcoming.' },
+  { id:'evangelism',   name:'Evangelism & Outreach',  icon:'📢', status:'amber',  coord:'Pastor Gbenga Adebanjo',      note:'Largely dormant. Needs reactivation.' },
+  { id:'finance',      name:'Finance',                icon:'💰', status:'amber',  coord:'Pastor Kayode Ogungbenro',    note:'Weekly reporting being established. Balance £123,234.96.' },
+  { id:'operations',   name:'Operations',             icon:'⚙️', status:'amber',  coord:'Auntie Pauline Tulloch',     note:'Setup gap with transition. Brother Ernest being asked for ushering.' },
 ];
 
-const statusLabel = {green:'Healthy',amber:'Needs attention',red:'Urgent'};
-const statusDot = {green:'sd-green',amber:'sd-amber',red:'sd-red'};
+function pageInit(){
+  const sc = {green:'var(--green)',amber:'var(--amber)',red:'var(--red)'};
+  const sl = {green:'Healthy',amber:'Attention needed',red:'Critical'};
+  document.getElementById('dept-grid').innerHTML = DEPTS.map(d=>`
+    <div class="list-item" onclick="COS.navTo('${d.id}',null)">
+      <div class="li-bar" style="background:${sc[d.status]};"></div>
+      <div style="font-size:20px;flex-shrink:0;">${d.icon}</div>
+      <div class="li-content">
+        <div class="li-title">${d.name}</div>
+        <div class="li-sub">${d.coord}</div>
+        <div style="font-size:11px;color:var(--ink-4);margin-top:2px;">${d.note}</div>
+      </div>
+      <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;background:${d.status==='green'?'var(--green-light)':d.status==='amber'?'var(--amber-light)':'rgba(196,30,42,0.1)'};color:${sc[d.status]};">${sl[d.status]}</span>
+    </div>`).join('');
+}
 
-document.getElementById('dept-grid').innerHTML = DEPTS.map(d=>`
-  <div class="dept-card">
-    <div class="dept-icon">${d.icon}</div>
-    <div class="dept-name">${d.name}</div>
-    <div class="dept-coordinator">${d.coordinator}</div>
-    <div class="dept-note">${d.note}</div>
-    <div style="margin-top:10px;">
-      <span class="badge ${d.status==='green'?'b-green':d.status==='amber'?'b-amber':'b-red'}">
-        <span class="status-dot ${statusDot[d.status]}"></span>${statusLabel[d.status]}
-      </span>
-    </div>
-  </div>`).join('');
+COS.init('departments');
 </script>
 </body>
 </html>

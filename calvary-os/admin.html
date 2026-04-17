@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Admin</title>
+<meta name="theme-color" content="#0A0A0A">
+<link rel="stylesheet" href="shell.css">
+</head>
+<body>
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo"><div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div><div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-sub">Admin</div></div></div>
+    <div class="auth-step active" id="step-who"><div class="auth-eyebrow">Welcome</div><div class="auth-heading">Select your name</div><div class="auth-sub">Admin access required.</div><div class="user-grid" id="user-grid"></div></div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg> Back</button>
+      <div class="auth-eyebrow">PIN Required</div><div class="auth-heading" id="pin-user-name">Enter your PIN</div><div class="auth-sub">4-digit PIN.</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <a href="dashboard.html" class="topbar-logo" style="text-decoration:none;"><div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div><div class="topbar-logo-name">Calvary OS</div></a>
+    <div class="topbar-divider"></div><div class="topbar-section">⚙️ Admin</div>
+    <div class="topbar-right"><div class="topbar-user"><div class="topbar-user-av" id="tb-av">?</div><div class="topbar-user-name" id="tb-name"></div></div><button class="topbar-signout" onclick="COS.signOut()">Sign out</button></div>
+  </div>
+  <div class="app-body">
+    <nav class="sidebar">
+      <div class="nav-section">
+        <div class="nav-section-label">Admin</div>
+        <div class="nav-item active" onclick="COS.navTo('users',this)">👤 Users & access</div>
+        <div class="nav-item" onclick="COS.navTo('pins',this)">🔑 PIN lookup</div>
+      </div>
+      <div class="nav-section"><a href="dashboard.html" class="nav-item" style="text-decoration:none;">← Dashboard</a></div>
+    </nav>
+    <div class="main">
+      <div class="page-body">
+
+        <div class="page active" id="pg-users">
+          <div class="page-header"><div class="page-eyebrow">Admin</div><div class="page-title">Users & access</div><div class="page-sub">All users and their section access.</div></div>
+          <div id="admin-users"></div>
+        </div>
+
+        <div class="page" id="pg-pins">
+          <div class="page-header"><div class="page-eyebrow">Admin</div><div class="page-title">PIN reference</div><div class="page-sub">Default PINs for each user. Share directly and securely.</div></div>
+          <div style="background:rgba(196,30,42,0.08);border:1px solid rgba(196,30,42,0.2);border-radius:var(--r12);padding:12px 14px;margin-bottom:16px;">
+            <div style="font-size:12px;color:var(--red);font-weight:600;">🔒 Admin only — do not share this screen</div>
+          </div>
+          <div id="pin-table"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="shell.js"></script>
+<script>
+// Default PINs (in a real app these would be set by users themselves)
+const DEFAULT_PINS = {
+  1:'2610', 2:'1234', 3:'3001', 4:'4002', 5:'5003',
+  6:'6004', 7:'7005', 8:'8006', 9:'9007', 10:'0001',
+  11:'0002', 12:'0003', 13:'0004', 14:'0005', 15:'0006', 16:'0007'
+};
+
+function pageInit(){
+  if(COS.currentUser?.level !== 'admin'){
+    document.getElementById('pg-users').innerHTML = '<div style="font-size:14px;color:var(--ink-3);padding:20px 0;">Admin access required.</div>';
+    return;
+  }
+
+  // Users
+  document.getElementById('admin-users').innerHTML = COS.users.map(u=>`
+    <div class="list-item" style="cursor:default;">
+      <div class="li-bar" style="background:${u.level==='admin'?'var(--red)':u.level==='lead'?'var(--blue)':'var(--ink-4)'};"></div>
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ink-4);flex-shrink:0;">${u.name.split(' ').slice(0,2).map(n=>n[0]).join('')}</div>
+      <div class="li-content">
+        <div class="li-title">${u.name}</div>
+        <div class="li-sub">${u.role}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">${u.sections.map(s=>`<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:var(--ink-5);color:var(--ink-4);">${s}</span>`).join('')}</div>
+      </div>
+      <span class="badge ${u.level==='admin'?'b-red':u.level==='lead'?'b-blue':'b-grey'}">${u.level}</span>
+    </div>`).join('');
+
+  // PIN table
+  document.getElementById('pin-table').innerHTML = `
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="data-table" style="width:100%;">
+        <thead><tr><th>Name</th><th>Role</th><th>Default PIN</th></tr></thead>
+        <tbody>${COS.users.map(u=>`
+          <tr>
+            <td style="font-weight:600;">${u.name}</td>
+            <td style="color:var(--ink-4);">${u.role}</td>
+            <td><code style="font-family:monospace;font-size:14px;letter-spacing:3px;color:var(--red);">${DEFAULT_PINS[u.id]||'----'}</code></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+COS.init('admin');
+</script>
+</body>
+</html>

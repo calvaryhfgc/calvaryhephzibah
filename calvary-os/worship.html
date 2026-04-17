@@ -3,254 +3,285 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Worship — Calvary OS</title>
+<title>Calvary OS — Worship</title>
+<meta name="theme-color" content="#0A0A0A">
 <link rel="stylesheet" href="shell.css">
-<style>
-.lyric-tool{background:linear-gradient(135deg,rgba(196,30,42,0.1),rgba(196,30,42,0.03));border:1px solid rgba(196,30,42,0.2);border-radius:var(--r16);padding:22px;margin-bottom:14px;}
-.lyric-tool-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:4px;}
-.lyric-tool-sub{font-size:12px;color:var(--ink-4);margin-bottom:16px;line-height:1.5;}
-.lyric-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--white);outline:none;margin-bottom:10px;}
-.lyric-input:focus{border-color:var(--red);}
-.lyric-textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--r8);padding:12px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--white);outline:none;min-height:140px;resize:vertical;line-height:1.8;}
-.lyric-textarea:focus{border-color:var(--red);}
-.lyric-preview{margin-top:14px;}
-.lyric-slide{background:var(--ink);border:1px solid var(--border);border-radius:var(--r12);padding:20px;margin-bottom:8px;text-align:center;min-height:80px;display:flex;align-items:center;justify-content:center;}
-.lyric-slide-text{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--white);line-height:1.6;}
-
-.song-library-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);margin-bottom:8px;gap:12px;cursor:pointer;transition:all 0.12s;}
-.song-library-item:hover{background:var(--surface-2);border-color:var(--border-2);}
-.sli-num{width:24px;height:24px;border-radius:6px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
-.sli-name{font-size:13px;font-weight:600;}
-.sli-meta{font-size:11px;color:var(--ink-4);margin-top:2px;}
-
-.team-member{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
-.team-member:last-child{border-bottom:none;}
-.tm-av{width:38px;height:38px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;}
-.tm-name{font-size:13px;font-weight:600;}
-.tm-role{font-size:11px;color:var(--ink-4);margin-top:1px;}
-.tm-status{margin-left:auto;}
-
-.guidance-item{padding:14px 16px;background:var(--surface);border-left:3px solid var(--red);border-radius:0 var(--r8) var(--r8) 0;margin-bottom:8px;}
-.guidance-title{font-size:13px;font-weight:600;margin-bottom:4px;}
-.guidance-text{font-size:12px;color:var(--ink-4);line-height:1.6;}
-</style>
 </head>
 <body>
-<div id="cos-nav"></div>
-<div class="cos-page">
-<div class="cos-container">
 
-  <div class="cos-hero">
-    <div class="cos-hero-label">Worship Ministry</div>
-    <div class="cos-hero-title">Worship</div>
-    <div class="cos-hero-sub">Song list, lyric formatter, worship team, and guidance.</div>
-  </div>
-
-  <div class="cos-tabs">
-    <button class="cos-tab active" onclick="setTab('songs',this)">This Sunday</button>
-    <button class="cos-tab" onclick="setTab('formatter',this)">Lyric Formatter</button>
-    <button class="cos-tab" onclick="setTab('library',this)">Song Library</button>
-    <button class="cos-tab" onclick="setTab('team',this)">The Team</button>
-    <button class="cos-tab" onclick="setTab('guidance',this)">Guidance</button>
-  </div>
-
-  <!-- THIS SUNDAY -->
-  <div id="tab-songs">
-    <div class="cos-card">
-      <div class="cos-card-label">Sunday 19th April — Worship Set</div>
-      <div id="sunday-songs"></div>
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-sub">Worship</div></div>
     </div>
-    <div class="cos-card">
-      <div class="cos-card-label">Worship team this Sunday</div>
-      <div id="sunday-team"></div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-eyebrow">Welcome</div><div class="auth-heading">Select your name</div>
+      <div class="auth-sub">Your operational hub for Calvary Hephzibah.</div>
+      <div class="user-grid" id="user-grid"></div>
     </div>
-    <div class="cos-card" style="background:rgba(196,30,42,0.06);border-color:rgba(196,30,42,0.15);">
-      <div class="cos-card-label">Note for worship team</div>
-      <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.7;">This is the first Sunday of our new season. Give it everything. The congregation needs to feel the presence of God — not just hear music. Come to rehearsal on Friday prepared. Know the songs. Come ready to lead people into worship, not just perform.</p>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg> Back</button>
+      <div class="auth-eyebrow">PIN Required</div><div class="auth-heading" id="pin-user-name">Enter your PIN</div>
+      <div class="auth-sub">4-digit PIN to access your workspace.</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
     </div>
   </div>
+</div>
 
-  <!-- LYRIC FORMATTER -->
-  <div id="tab-formatter" style="display:none;">
-    <div class="lyric-tool">
-      <div class="lyric-tool-title">Lyric Formatter</div>
-      <div class="lyric-tool-sub">Format song lyrics into presentation-ready slides. Two lines per slide, ~25-30 characters per line. Blank line between slides.</div>
-      <input class="lyric-input" id="lf-title" placeholder="Song title…">
-      <textarea class="lyric-textarea" id="lf-lyrics" placeholder="Paste lyrics here…&#10;&#10;Two lines per slide&#10;Like this example&#10;&#10;Then a blank line&#10;Between each slide"></textarea>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-        <button class="btn-red" onclick="generateSlides()">Generate slides</button>
-        <button class="btn-ghost" onclick="clearFormatter()">Clear</button>
-        <a id="lf-fullscreen" href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn-ghost">Open full tool ↗</a>
+<div id="app">
+  <div class="topbar">
+    <a href="dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">🎵 Worship</div>
+    <div class="topbar-right">
+      <div class="topbar-user"><div class="topbar-user-av" id="tb-av">?</div><div class="topbar-user-name" id="tb-name"></div></div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar">
+      <div class="nav-section">
+        <div class="nav-section-label">Worship</div>
+        <div class="nav-item active" onclick="COS.navTo('team',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="4" r="2"/><path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/><circle cx="11" cy="5" r="1.5"/><path d="M10 12c0-1.7 0.7-3 2-3.5"/></svg>Team</div>
+        <div class="nav-item" onclick="COS.navTo('songs',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v7a2.5 2.5 0 11-1-2V5L5 6V3l5-1z"/></svg>Song library</div>
+        <div class="nav-item" onclick="COS.navTo('formatter',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="10" height="10" rx="1"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="7" x2="9" y2="7"/><line x1="5" y1="9" x2="7" y2="9"/></svg>Lyric formatter</div>
+        <div class="nav-item" onclick="COS.navTo('guidance',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="5" x2="7" y2="7.5"/><circle cx="7" cy="9.5" r="0.5" fill="currentColor"/></svg>Guidance</div>
+        <div class="nav-item" onclick="COS.navTo('rebuild',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 7c0-2.8 2.2-5 5-5a5 5 0 014.3 2.5"/><polyline points="9,1 13.3,4.5 9,8"/><path d="M12 7a5 5 0 01-9.3 2.5"/></svg>Rebuild plan</div>
+      </div>
+      <div class="nav-section">
+        <a href="dashboard.html" class="nav-item" style="text-decoration:none;"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Dashboard</a>
+      </div>
+    </nav>
+
+    <div class="main">
+      <div class="page-body">
+
+        <!-- TEAM -->
+        <div class="page active" id="pg-team">
+          <div class="page-header">
+            <div class="page-eyebrow">Worship Ministry</div>
+            <div class="page-title">The Team</div>
+            <div class="page-sub">Current worship team members and session musicians.</div>
+          </div>
+          <div id="team-list"></div>
+        </div>
+
+        <!-- SONG LIBRARY -->
+        <div class="page" id="pg-songs">
+          <div class="page-header-row">
+            <div class="page-header">
+              <div class="page-eyebrow">Worship</div>
+              <div class="page-title">Song library</div>
+              <div class="page-sub">All songs used at Calvary. Download lyric slides.</div>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button class="filter-btn active" onclick="filterSongs('all',this)">All</button>
+            <button class="filter-btn" onclick="filterSongs('regular',this)">Regular</button>
+            <button class="filter-btn" onclick="filterSongs('offering',this)">Offering</button>
+          </div>
+          <div id="song-library"></div>
+        </div>
+
+        <!-- LYRIC FORMATTER -->
+        <div class="page" id="pg-formatter">
+          <div class="page-header">
+            <div class="page-eyebrow">Worship Tools</div>
+            <div class="page-title">Lyric formatter</div>
+            <div class="page-sub">Generate lyric slides for any song. Format lyrics, export as images for OBS.</div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-label">How it works</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">1. Enter the song title and paste the lyrics below — two lines per slide, with a blank line between each pair.</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">2. Click Generate. Download the ZIP file.</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">3. Extract the ZIP and upload the images to OBS.</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-label">Example format</div>
+            <pre style="font-family:monospace;font-size:12px;color:var(--ink-3);line-height:1.8;white-space:pre-wrap;background:var(--bg-3);padding:12px;border-radius:var(--r8);">He is Lord, He is Lord
+He is risen from the dead
+
+And He is Lord, every knee
+Shall bow, every tongue confess</pre>
+            <div style="font-size:11px;color:var(--ink-4);margin-top:8px;">Each pair of lines = one slide. Blank line = separator.</div>
+          </div>
+          <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-red" style="text-decoration:none;display:inline-block;">Open Lyric Formatter ↗</a>
+        </div>
+
+        <!-- GUIDANCE -->
+        <div class="page" id="pg-guidance">
+          <div class="page-header">
+            <div class="page-eyebrow">Worship</div>
+            <div class="page-title">Guidance</div>
+            <div class="page-sub">Standards and direction for the worship team.</div>
+          </div>
+          <div id="guidance-list"></div>
+        </div>
+
+        <!-- REBUILD PLAN -->
+        <div class="page" id="pg-rebuild">
+          <div class="page-header">
+            <div class="page-eyebrow">Worship</div>
+            <div class="page-title">Rebuild plan</div>
+            <div class="page-sub">Tactical (now) and strategic (2–3 months). The standard we are building to.</div>
+          </div>
+          <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r16);padding:22px 24px;margin-bottom:16px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;">The standard</div>
+            <div style="font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);line-height:1.5;">A full live band. Studio production in a live venue. Confident worship leadership. The Calvary sound — Spirit-led, musically excellent, impossible to ignore.</div>
+          </div>
+          <div class="grid-2" style="margin-bottom:16px;">
+            <div class="card" style="border-top:2px solid var(--red);">
+              <div class="card-label" style="color:var(--red);">Now — 19th April</div>
+              <ul style="font-size:13px;color:var(--ink-2);line-height:2;padding-left:16px;">
+                <li>Tosin Akindele leading worship</li>
+                <li>Keys + lead + 1 BV via Voices Beyond</li>
+                <li>Laolu Ogungbenro on drums</li>
+                <li>Morayo Ogungbenro on guitar</li>
+                <li>Friday evening rehearsal at church</li>
+              </ul>
+            </div>
+            <div class="card" style="border-top:2px solid var(--blue);">
+              <div class="card-label" style="color:var(--blue);">2–3 months</div>
+              <ul style="font-size:13px;color:var(--ink-2);line-height:2;padding-left:16px;">
+                <li>Caster Martins as worship leader (from 26th)</li>
+                <li>Tosin trains in-house volunteers</li>
+                <li>MD appointment — Bolaji Adebanjo</li>
+                <li>Full consistent band</li>
+                <li>Worship vision session with Pastor Shade</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Sound reference</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <span class="badge b-blue">Transformation Church</span>
+              <span class="badge b-blue">Maverick City Music</span>
+              <span class="badge b-grey">Pastor Emmanuel Iran</span>
+              <span class="badge b-grey">Spirit-led + musically tight</span>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-    <div id="lyric-preview" class="lyric-preview"></div>
   </div>
 
-  <!-- SONG LIBRARY -->
-  <div id="tab-library" style="display:none;">
-    <div class="cos-card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-        <div class="cos-card-label" style="margin-bottom:0;">Song Library</div>
-        <button class="btn-sm" onclick="openAddSong()">+ Add song</button>
-      </div>
-      <div id="song-library-list"></div>
+  <nav class="mobile-nav">
+    <div class="mob-nav-items">
+      <button class="mob-nav-btn active" onclick="COS.navTo('team',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="4" r="2"/><path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/></svg>Team</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('songs',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v7a2.5 2.5 0 11-1-2V5L5 6V3l5-1z"/></svg>Songs</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('formatter',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="10" height="10" rx="1"/></svg>Formatter</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('guidance',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/></svg>Guidance</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('rebuild',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 7c0-2.8 2.2-5 5-5"/></svg>Plan</button>
     </div>
-  </div>
-
-  <!-- TEAM -->
-  <div id="tab-team" style="display:none;">
-    <div class="cos-card">
-      <div class="cos-card-label">Worship Team</div>
-      <div id="team-list"></div>
-    </div>
-    <div class="cos-card">
-      <div class="cos-card-label">Session musicians — Sunday 19th</div>
-      <div id="session-list"></div>
-    </div>
-  </div>
-
-  <!-- GUIDANCE -->
-  <div id="tab-guidance" style="display:none;">
-    <div class="cos-card">
-      <div class="cos-card-label">Worship Standards & Guidance</div>
-      <div id="guidance-list"></div>
-    </div>
-    <div class="cos-card" style="border-top:3px solid var(--red);">
-      <div class="cos-card-label">The vision for Calvary worship</div>
-      <p style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--white);line-height:1.6;font-style:italic;">"A full live band. Studio production in a live venue. Confident worship leadership. The Calvary sound — Spirit-led, musically excellent, impossible to ignore."</p>
-      <div style="margin-top:16px;font-size:13px;color:var(--ink-4);line-height:1.6;">We are building toward Transformation Church quality, with the African gospel heart that is in our DNA. Not one at the expense of the other — both together.</div>
-    </div>
-  </div>
-
+  </nav>
 </div>
-</div>
+
+<div class="toast" id="toast"></div>
 
 <script src="shell.js"></script>
 <script>
-const user = requireAuth();
-if(!user || !canAccess(user,'worship')) window.location.href='index.html';
-renderNav('worship');
-
-const SUNDAY_SONGS = [
-  {name:'Days of Elijah',type:'Opening praise',lyricsUrl:'#'},
-  {name:'My Hands, My Feet, My Whole Body',type:'Praise',lyricsUrl:'#'},
-  {name:'Guide Me O Thou Great Jehovah (Afro Praise)',type:'Worship',lyricsUrl:'#'},
-  {name:'King of Glory',type:'Worship',lyricsUrl:'#'},
-  {name:'More Than Able',type:'Worship — generate lyrics',lyricsUrl:null},
+const TEAM = [
+  { name:'Tosin Akindele', role:'Session Lead Vocalist / Training Partner', status:'confirmed', note:'Voices Beyond. Friday rehearsal. £175/session. Can train in-house volunteers long term.', badge:'session' },
+  { name:'Caster Martins', role:'Interim Worship Leader', status:'available-26th', note:'Available from 26th April (working days this week). Loyal, committed. Training plan being developed.', badge:'team' },
+  { name:'Morayo Ogungbenro', role:'Electric Guitar', status:'available', note:'Available every Sunday until late September. Mocks 20 Apr–5 May — plays if she knows the set. Ps Kayode & Ps Kemi\'s daughter.', badge:'team' },
+  { name:'Laolu Ogungbenro', role:'Drums', status:'this-week', note:'Available this week only — back to uni after. Morayo\'s older brother. Confirm today for 19th.', badge:'team' },
+  { name:'Bolaji Adebanjo', role:'Drums / MD Candidate', status:'confirmed', note:'12 Collective. Confirmed on drums. Longer term MD candidate. Connected to Manchester musician network.', badge:'team' },
+  { name:'Keys player (TBC)', role:'Keys / Workstation', status:'pending', note:'Being sourced via Tosin Akindele. Workstation preferred — for tracks and full sound.', badge:'session' },
 ];
 
-const SUNDAY_TEAM_MEMBERS = [
-  {initials:'TA',name:'Tosin Akindele',role:'Lead vocalist (session)',status:'confirmed',statusCls:'b-green'},
-  {initials:'TK',name:"Tosin's BV",role:'Backing vocalist (session)',status:'pending',statusCls:'b-amber'},
-  {initials:'TK2',name:"Keys player",role:'Keys / workstation (session)',status:'confirmed',statusCls:'b-green'},
-  {initials:'MO',name:'Morayo Ogungbenro',role:'Guitar',status:'available',statusCls:'b-green'},
-  {initials:'LO',name:'Laolu Ogungbenro',role:'Drums',status:'confirm today',statusCls:'b-amber'},
+const SONGS = [
+  { title:'Days of Elijah', artist:'', type:'regular', lyrics:'https://drive.google.com/file/d/1Bj2qctPq1-BdZ9_eW_h_vE6Bkc5k6i9r/view' },
+  { title:'My Hands My Feet My Whole Body', artist:'', type:'regular', lyrics:'https://drive.google.com/file/d/1akN6Bc5RsXJI2JKUDjDOQD9weT-zvknz/view' },
+  { title:'Guide Me O Thou Great Jehovah (Afro Praise)', artist:'', type:'regular', lyrics:'https://drive.google.com/file/d/1iJxCNU1KszY9qvNQPEdJWUc7yzura_Gz/view' },
+  { title:'King of Glory', artist:'', type:'regular', lyrics:'https://drive.google.com/file/d/19js0IUmoCvS4vaE68-lls8mkirvSobO3/view' },
+  { title:'Praise The Name of Jesus', artist:'', type:'offering', lyrics:'https://drive.google.com/file/d/1yu3bjl3r3loA3gOiU4Yo3yogVJOzH1q4/view' },
+  { title:'In The Room', artist:'', type:'regular', lyrics:null },
+  { title:'More Than Able', artist:'', type:'regular', lyrics:null },
 ];
 
-const SESSION_MEMBERS = [
-  {initials:'TA',name:'Tosin Akindele',role:'Lead vocalist · Voices Beyond',note:'£175 · Confirmed'},
-  {initials:'BV',name:'Backing vocalist',role:'Voices Beyond',note:'£175 · Pending'},
-  {initials:'KP',name:'Keys player',role:'Session musician',note:'£175 · Confirmed'},
+const GUIDANCE = [
+  { title:'The sound we are building', body:'Spirit-led, musically excellent, impossible to ignore. Reference points: Transformation Church, Maverick City Music. Modern but accessible — we have older members and want to attract young people. Full live band sound with tracks/workstation. Not dry, not thin.' },
+  { title:'Song selection', body:'Songs should be singable by the congregation. Avoid songs that are only for performance. Mix of contemporary and familiar hymns where appropriate. Lyrics must be pre-loaded in OBS before service — no last-minute scrambles.' },
+  { title:'Rehearsal expectations', body:'Every musician must know the set before they arrive. Rehearsal is for arranging and tightening, not learning. If you don\'t know the songs, contact Bolaji before the rehearsal.' },
+  { title:'Stage conduct', body:'Worship is ministry, not performance. Eyes open, engage with the congregation. Transitions between songs should be smooth — no dead air. The worship leader leads the room, not just the musicians.' },
+  { title:'Dress code', body:'Smart and appropriate. No jeans with holes, no revealing clothing. When in doubt, dress up. You are on a platform representing the church.' },
+  { title:'Setup and pack down', body:'Whoever sets up the band equipment is responsible for packing it down. Leave the stage as you found it. Don\'t leave until everything is stored correctly.' },
 ];
 
-const SONG_LIBRARY = [
-  {name:'Days of Elijah',key:'D',tempo:'Upbeat',tags:['praise','classic'],lyricsUrl:'#'},
-  {name:'King of Glory',key:'G',tempo:'Moderate',tags:['worship'],lyricsUrl:'#'},
-  {name:'More Than Able',key:'A',tempo:'Mid',tags:['worship','contemporary'],lyricsUrl:null},
-  {name:'Praise The Name of Jesus',key:'C',tempo:'Moderate',tags:['offering'],lyricsUrl:'#'},
-  {name:'My Hands, My Feet, My Whole Body',key:'Bb',tempo:'Upbeat',tags:['praise','movement'],lyricsUrl:'#'},
-  {name:'Guide Me O Thou Great Jehovah (Afro Praise)',key:'G',tempo:'Afrobeat',tags:['hymn','afro'],lyricsUrl:'#'},
-];
+let songFilter = 'all';
 
-const GUIDANCE_ITEMS = [
-  {title:'Song format for lyrics', text:'Two lines per slide. Each line 25-30 characters max. Blank line between slides. Use the Lyric Formatter tab above to generate slides.'},
-  {title:'Rehearsal expectation', text:'Come to rehearsal knowing the songs. Rehearsal is not for learning — it is for tightening together. If you don\'t know a song, learn it before you arrive.'},
-  {title:'Set order principle', text:'Open with praise (high energy), transition to worship (intimate), close with a moment of response. Don\'t jump erratically between styles mid-set.'},
-  {title:'Leading vs performing', text:'You are leading people into the presence of God — not performing for them. Keep your eyes open, engage the congregation, repeat a bridge if the presence is building.'},
-  {title:'Sound and media coordination', text:'Agree the set list with media team before service. Media need the lyrics ready before worship begins. No last-minute song changes without telling media.'},
-  {title:'Starting worship', text:'When the worship leader opens, media team should have the first slide ready. Do not wait to be asked — anticipate the transition.'},
-];
+function filterSongs(f, el){
+  songFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderSongs();
+}
 
-// Render
-document.getElementById('sunday-songs').innerHTML = SUNDAY_SONGS.map((s,i)=>`
-  <div class="song-library-item">
-    <div class="sli-num">${i+1}</div>
-    <div style="flex:1;"><div class="sli-name">${s.name}</div><div class="sli-meta">${s.type}</div></div>
-    ${s.lyricsUrl
-      ? `<a href="${s.lyricsUrl}" class="btn-sm" target="_blank">📥 Lyrics</a>`
-      : `<button class="btn-sm" style="background:var(--amber);color:var(--ink);" onclick="setTab('formatter',document.querySelectorAll('.cos-tab')[1])">Generate</button>`}
-  </div>`).join('');
+function renderSongs(){
+  const filtered = songFilter==='all' ? SONGS : SONGS.filter(s=>s.type===songFilter);
+  document.getElementById('song-library').innerHTML = filtered.map(s=>`
+    <div class="list-item">
+      <div class="li-bar" style="background:${s.type==='offering'?'var(--green)':'var(--red)'};"></div>
+      <div class="li-content">
+        <div class="li-title">${s.title}</div>
+        <div class="li-sub">${s.type==='offering'?'Offering song':'Worship'}</div>
+      </div>
+      <div class="li-right">
+        ${s.lyrics
+          ? `<a href="${s.lyrics}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;">📥 Lyrics</a>`
+          : `<a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;">Generate →</a>`}
+      </div>
+    </div>`).join('');
+}
 
-document.getElementById('sunday-team').innerHTML = SUNDAY_TEAM_MEMBERS.map(m=>`
-  <div class="team-member">
-    <div class="tm-av">${m.initials}</div>
-    <div><div class="tm-name">${m.name}</div><div class="tm-role">${m.role}</div></div>
-    <div class="tm-status"><span class="badge ${m.statusCls}">${m.status}</span></div>
-  </div>`).join('');
-
-document.getElementById('song-library-list').innerHTML = SONG_LIBRARY.map((s,i)=>`
-  <div class="song-library-item">
-    <div class="sli-num">${i+1}</div>
-    <div style="flex:1;"><div class="sli-name">${s.name}</div><div class="sli-meta">Key: ${s.key} · ${s.tempo} · ${s.tags.join(', ')}</div></div>
-    ${s.lyricsUrl?`<a href="${s.lyricsUrl}" class="btn-sm" target="_blank">Lyrics</a>`:'<span style="font-size:11px;color:var(--amber);">No lyrics</span>'}
-  </div>`).join('');
-
-document.getElementById('team-list').innerHTML = [
-  {initials:'CM',name:'Caster Martins',role:'Interim worship leader',note:'Available from 26th April'},
-  {initials:'MO',name:'Morayo Ogungbenro',role:'Guitar',note:'Available until late September'},
-  {initials:'BA',name:'Bolaji Adebanjo',role:'Drums / MD candidate',note:'12 Collective'},
-  {initials:'LO',name:'Laolu Ogungbenro',role:'Drums',note:'Available this week only'},
-].map(m=>`
-  <div class="team-member">
-    <div class="tm-av">${m.initials}</div>
-    <div style="flex:1;"><div class="tm-name">${m.name}</div><div class="tm-role">${m.role}</div></div>
-    <div style="font-size:11px;color:var(--ink-4);text-align:right;">${m.note}</div>
-  </div>`).join('');
-
-document.getElementById('session-list').innerHTML = SESSION_MEMBERS.map(m=>`
-  <div class="team-member">
-    <div class="tm-av" style="background:var(--ink-3);">${m.initials}</div>
-    <div style="flex:1;"><div class="tm-name">${m.name}</div><div class="tm-role">${m.role}</div></div>
-    <div style="font-size:11px;color:var(--ink-4);">${m.note}</div>
-  </div>`).join('');
-
-document.getElementById('guidance-list').innerHTML = GUIDANCE_ITEMS.map(g=>`
-  <div class="guidance-item">
-    <div class="guidance-title">${g.title}</div>
-    <div class="guidance-text">${g.text}</div>
-  </div>`).join('');
-
-// Lyric Formatter
-function generateSlides(){
-  const title = document.getElementById('lf-title').value.trim();
-  const lyrics = document.getElementById('lf-lyrics').value.trim();
-  if(!lyrics){ showToast('Paste some lyrics first','error'); return; }
-  const blocks = lyrics.split(/\n\s*\n/).filter(b=>b.trim());
-  const preview = document.getElementById('lyric-preview');
-  preview.innerHTML = `
-    <div class="cos-card">
-      <div class="cos-card-label">${title||'Preview'} — ${blocks.length} slide${blocks.length!==1?'s':''}</div>
-      ${blocks.map((b,i)=>`
-        <div class="lyric-slide">
-          <div class="lyric-slide-text">${b.trim().replace(/\n/g,'<br>')}</div>
-        </div>`).join('')}
+function pageInit(){
+  // Team
+  document.getElementById('team-list').innerHTML = TEAM.map(m=>{
+    const sc = m.status==='confirmed'?'var(--green)':m.status==='available'?'var(--blue)':m.status==='pending'?'var(--amber)':m.status==='this-week'?'var(--amber)':'var(--ink-4)';
+    const sl = m.status==='confirmed'?'Confirmed':m.status==='available'?'Available':m.status==='available-26th'?'Available from 26th':m.status==='this-week'?'This week only':m.status==='pending'?'Pending':'Unknown';
+    return `<div class="card" style="margin-bottom:10px;">
+      <div style="display:flex;align-items:flex-start;gap:12px;">
+        <div style="width:38px;height:38px;border-radius:50%;background:var(--bg-3);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink-3);flex-shrink:0;">${m.name.split(' ').slice(0,2).map(n=>n[0]).join('')}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px;">
+            <div style="font-size:14px;font-weight:600;color:var(--ink);">${m.name}</div>
+            <span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;background:${m.badge==='session'?'rgba(196,30,42,0.1)':'var(--ink-5)'};color:${m.badge==='session'?'var(--red)':'var(--ink-4)'};">${m.badge}</span>
+          </div>
+          <div style="font-size:12px;color:var(--ink-4);margin-bottom:6px;">${m.role}</div>
+          <div style="font-size:12px;color:var(--ink-3);line-height:1.5;">${m.note}</div>
+          <div style="margin-top:8px;"><span style="font-size:11px;font-weight:600;color:${sc};">● ${sl}</span></div>
+        </div>
+      </div>
     </div>`;
-  showToast(`${blocks.length} slides generated`);
+  }).join('');
+
+  // Songs
+  renderSongs();
+
+  // Guidance
+  document.getElementById('guidance-list').innerHTML = GUIDANCE.map(g=>`
+    <div class="card" style="margin-bottom:10px;">
+      <div class="card-label">${g.title}</div>
+      <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">${g.body}</div>
+    </div>`).join('');
 }
 
-function clearFormatter(){
-  document.getElementById('lf-title').value='';
-  document.getElementById('lf-lyrics').value='';
-  document.getElementById('lyric-preview').innerHTML='';
-}
-
-function setTab(id, el){
-  ['songs','formatter','library','team','guidance'].forEach(t=>{
-    document.getElementById('tab-'+t).style.display = t===id?'block':'none';
-  });
-  document.querySelectorAll('.cos-tab').forEach(b=>b.classList.remove('active'));
-  if(el) el.classList.add('active');
-}
+COS.init('worship');
 </script>
 </body>
 </html>

@@ -3,210 +3,273 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Media — Calvary OS</title>
+<title>Calvary OS — Media</title>
+<meta name="theme-color" content="#0A0A0A">
 <link rel="stylesheet" href="shell.css">
-<style>
-.track-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r16);padding:18px 20px;cursor:pointer;transition:all 0.12s;}
-.track-card:hover{background:var(--surface-2);border-color:var(--border-2);transform:translateY(-1px);}
-.track-icon{width:40px;height:40px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px;}
-.track-name{font-size:14px;font-weight:700;margin-bottom:4px;}
-.track-desc{font-size:12px;color:var(--ink-4);line-height:1.5;}
-.phase-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
-.phase-item:last-child{border-bottom:none;}
-.phase-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
-.phase-current{background:var(--red);color:white;}
-.phase-pending{background:var(--surface-2);color:var(--ink-4);border:1px solid var(--border);}
-.phase-done{background:rgba(48,209,88,0.15);color:var(--green);border:1px solid rgba(48,209,88,0.2);}
-.phase-title{font-size:13px;font-weight:600;margin-bottom:3px;}
-.phase-desc{font-size:12px;color:var(--ink-4);line-height:1.5;}
-.resource-item{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border);gap:12px;}
-.resource-item:last-child{border-bottom:none;}
-</style>
 </head>
 <body>
-<div id="cos-nav"></div>
-<div class="cos-page">
-<div class="cos-container">
 
-  <div class="cos-hero">
-    <div class="cos-hero-label">Media Ministry</div>
-    <div class="cos-hero-title">Media</div>
-    <div class="cos-hero-sub">In-room, broadcast, online and social. Training, setup guides, and weekly briefings.</div>
-  </div>
-
-  <div class="cos-tabs">
-    <button class="cos-tab active" onclick="setTab('briefing',this)">Weekly Briefing</button>
-    <button class="cos-tab" onclick="setTab('training',this)">Training</button>
-    <button class="cos-tab" onclick="setTab('setup',this)">Setup Guide</button>
-    <button class="cos-tab" onclick="setTab('team',this)">Team</button>
-  </div>
-
-  <!-- BRIEFING -->
-  <div id="tab-briefing">
-    <div class="cos-card" style="border-top:3px solid var(--red);">
-      <div class="cos-card-label">This Sunday — 19th April 2026</div>
-      <p style="font-size:13px;color:var(--ink-4);margin-bottom:14px;">Full briefing includes order of service, camera setup, worship songs, sermon info, and media checklist.</p>
-      <a href="sunday.html" class="btn-red" style="display:inline-block;text-decoration:none;">View Sunday briefing →</a>
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-sub">Media</div></div>
     </div>
-    <div class="cos-card">
-      <div class="cos-card-label">Broadcast setup — this Sunday</div>
-      <div id="broadcast-checklist"></div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-eyebrow">Welcome</div><div class="auth-heading">Select your name</div>
+      <div class="auth-sub">Your operational hub for Calvary Hephzibah.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg> Back</button>
+      <div class="auth-eyebrow">PIN Required</div><div class="auth-heading" id="pin-user-name">Enter your PIN</div>
+      <div class="auth-sub">4-digit PIN to access your workspace.</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
     </div>
   </div>
+</div>
 
-  <!-- TRAINING -->
-  <div id="tab-training" style="display:none;">
-    <div class="cos-card">
-      <div class="cos-card-label">Media Tracks</div>
-      <div class="cos-grid-2" style="margin-bottom:16px;" id="tracks-grid"></div>
-    </div>
-    <div class="cos-card">
-      <div class="cos-card-label">5-Phase Training Plan</div>
-      <div id="phases-list"></div>
-    </div>
-  </div>
-
-  <!-- SETUP GUIDE -->
-  <div id="tab-setup" style="display:none;">
-    <div class="cos-card">
-      <div class="cos-card-label">OBS Scene Setup</div>
-      <div id="obs-guide"></div>
-    </div>
-    <div class="cos-card">
-      <div class="cos-card-label">Equipment List</div>
-      <div id="equipment-list"></div>
+<div id="app">
+  <div class="topbar">
+    <a href="dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">🎥 Media</div>
+    <div class="topbar-right">
+      <div class="topbar-user"><div class="topbar-user-av" id="tb-av">?</div><div class="topbar-user-name" id="tb-name"></div></div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
     </div>
   </div>
 
-  <!-- TEAM -->
-  <div id="tab-team" style="display:none;">
-    <div class="cos-card">
-      <div class="cos-card-label">Media Team — 6 members</div>
-      <div id="media-team-list"></div>
-    </div>
-    <div class="cos-card" style="background:rgba(196,30,42,0.06);border-color:rgba(196,30,42,0.15);">
-      <div class="cos-card-label">Induction session</div>
-      <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.6;">The induction session has not yet been scheduled. It will cover: vision and remit, track assignments, OBS orientation, Sunday morning workflow, and expectations. Duration: 90 minutes. Bolaji leads vision, Scott covers operations.</p>
-      <div style="margin-top:12px;">
-        <span class="badge b-amber">Scheduling in progress</span>
+  <div class="app-body">
+    <nav class="sidebar">
+      <div class="nav-section">
+        <div class="nav-section-label">Media</div>
+        <div class="nav-item active" onclick="COS.navTo('briefing',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/><line x1="4.5" y1="5" x2="9.5" y2="5"/><line x1="4.5" y1="7.5" x2="8" y2="7.5"/></svg>Weekly briefing</div>
+        <div class="nav-item" onclick="COS.navTo('setup',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v5l-3-2"/></svg>Setup guide</div>
+        <div class="nav-item" onclick="COS.navTo('training',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1l1.5 3 3.5.5-2.5 2.5.5 3.5L7 9l-3 1.5.5-3.5L2 4.5 5.5 4z"/></svg>Training plan</div>
+        <div class="nav-item" onclick="COS.navTo('team',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="4" r="2"/><path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/></svg>Team</div>
+        <div class="nav-item" onclick="COS.navTo('camera',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="2.5"/><rect x="1" y="3.5" width="12" height="8" rx="1.5"/><path d="M5 3.5V2.5a1 1 0 011-1h2a1 1 0 011 1v1"/></svg>Camera guide</div>
+      </div>
+      <div class="nav-section">
+        <a href="dashboard.html" class="nav-item" style="text-decoration:none;"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Dashboard</a>
+      </div>
+    </nav>
+
+    <div class="main">
+      <div class="page-body">
+
+        <!-- WEEKLY BRIEFING -->
+        <div class="page active" id="pg-briefing">
+          <div class="page-header">
+            <div class="page-eyebrow">Media</div>
+            <div class="page-title">Weekly briefing</div>
+            <div class="page-sub">Everything the media team needs for this Sunday.</div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-label">This Sunday — 19th April 2026</div>
+            <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">First Sunday post-transition</div>
+            <div style="font-size:12px;color:var(--ink-4);margin-bottom:16px;">Michael Kamumvu preaching · Tosin Akindele leading worship · 10:30am</div>
+            <a href="sunday.html" class="btn btn-ghost btn-sm" style="text-decoration:none;">Full Sunday briefing →</a>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-label">Key tasks this Sunday</div>
+            <div id="briefing-tasks"></div>
+          </div>
+          <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r12);padding:14px 16px;">
+            <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Previous briefings</div>
+            <a href="../the-bridge/media-briefing-01-mar-2026.html" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--ink-2);font-size:13px;">Sunday 1st March 2026 <span style="color:var(--ink-4);">→</span></a>
+          </div>
+        </div>
+
+        <!-- SETUP GUIDE -->
+        <div class="page" id="pg-setup">
+          <div class="page-header">
+            <div class="page-eyebrow">Media</div>
+            <div class="page-title">Setup guide</div>
+            <div class="page-sub">How to set up the media desk before every service.</div>
+          </div>
+          <div id="setup-guide"></div>
+        </div>
+
+        <!-- TRAINING PLAN -->
+        <div class="page" id="pg-training">
+          <div class="page-header">
+            <div class="page-eyebrow">Media</div>
+            <div class="page-title">Training plan</div>
+            <div class="page-sub">5-phase programme for all media team members.</div>
+          </div>
+          <div id="training-phases"></div>
+        </div>
+
+        <!-- TEAM -->
+        <div class="page" id="pg-team">
+          <div class="page-header">
+            <div class="page-eyebrow">Media</div>
+            <div class="page-title">Team</div>
+          </div>
+          <div id="media-team-list"></div>
+        </div>
+
+        <!-- CAMERA GUIDE -->
+        <div class="page" id="pg-camera">
+          <div class="page-header">
+            <div class="page-eyebrow">Media</div>
+            <div class="page-title">Camera guide</div>
+            <div class="page-sub">Framing, positioning and livestream setup.</div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-label">Pre-service checklist</div>
+            <div id="camera-checks"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-label">Framing guide</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.7;">Zoom in so there are only a few centimetres of space between the top of the speaker's head and the top of the frame. This creates a professional, engaged shot that keeps focus on the speaker without excessive empty space above.</div>
+            <div style="margin-top:14px;background:var(--bg-3);border-radius:var(--r8);padding:12px 14px;">
+              <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:6px;">✅ Good framing</div>
+              <ul style="font-size:12px;color:var(--ink-3);line-height:1.8;padding-left:16px;">
+                <li>Tight headroom — 2–5cm gap at top of frame</li>
+                <li>Speaker fills most of the frame</li>
+                <li>Eyes in the upper third of the screen</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-label">Equipment</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.6;margin-bottom:8px;"><strong>Phone camera</strong> — USB-C charger must be plugged in throughout the service. Check battery before service starts.</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.6;margin-bottom:8px;"><strong>Backend box</strong> — plug and play. Should auto-connect. If not, restart and re-plug.</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.6;"><strong>OBS</strong> — used for lyrics, scripture, and sermon slides on screen. Open before service starts. Test each scene.</div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
+  <nav class="mobile-nav">
+    <div class="mob-nav-items">
+      <button class="mob-nav-btn active" onclick="COS.navTo('briefing',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="10" height="11" rx="1"/></svg>Briefing</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('setup',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/></svg>Setup</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('training',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M7 1l1.5 3 3.5.5-2.5 2.5.5 3.5L7 9l-3 1.5.5-3.5L2 4.5 5.5 4z"/></svg>Training</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('team',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="4" r="2"/></svg>Team</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('camera',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="2.5"/></svg>Camera</button>
+    </div>
+  </nav>
 </div>
-</div>
+
+<div class="toast" id="toast"></div>
+
 <script src="shell.js"></script>
 <script>
-const user = requireAuth();
-if(!user || !canAccess(user,'media')) window.location.href='index.html';
-renderNav('media');
-
-const BROADCAST_CHECKLIST = [
-  {label:'Phone camera charged and USB-C plugged in',warning:true},
-  {label:'Phone mounted securely',warning:false},
-  {label:'OBS open and scenes tested',warning:false},
-  {label:'Livestream destination confirmed (YouTube/Facebook)',warning:false},
-  {label:'Test stream run before service',warning:true},
-  {label:'Lower thirds / title slides ready',warning:false},
-  {label:'Lyrics loaded in OBS',warning:false},
-  {label:'Sermon thumbnail loaded',warning:false},
+const BRIEFING_TASKS = [
+  'Phone camera charged and USB-C charger plugged in',
+  'Phone mounted securely and livestream connected',
+  'Camera framing checked — tight headroom',
+  'All worship song lyrics downloaded and loaded in OBS',
+  'Sermon thumbnail ready',
+  'Offering song lyrics ready — Praise The Name of Jesus',
+  'OBS scenes tested before service starts',
 ];
 
-const TRACKS = [
-  {icon:'📹',name:'Camera & Broadcast',desc:'Phone camera, tripod, OBS, livestream to YouTube'},
-  {icon:'🖥️',name:'Screen & Lyrics',desc:'ProPresenter / OBS — lyrics, scripture, sermon slides'},
-  {icon:'🎵',name:'Sound',desc:'Mixing desk, microphones, monitor levels'},
-  {icon:'📱',name:'Online & Social',desc:'Instagram, YouTube clips, website updates'},
+const SETUP_STEPS = [
+  { title:'Arrive by 9:00am', body:'Setup starts at 9am. This gives 90 minutes before the 10:30am service. Don\'t arrive after 9:30am.' },
+  { title:'Set up the backend box', body:'Plug in the backend box at the media desk. It should auto-connect. If it doesn\'t, unplug, wait 10 seconds, and re-plug.' },
+  { title:'Set up the phone camera', body:'Mount the phone on the tripod. Plug in the USB-C charger — it must stay connected throughout the service. Open the streaming app and connect to the YouTube live stream.' },
+  { title:'Open OBS', body:'Open OBS on the laptop. Check each scene: lyrics template, scripture template, sermon thumbnail. Test that switching scenes works.' },
+  { title:'Load this week\'s lyric slides', body:'Download lyric slides from the Sunday briefing. Import into OBS. Check they display correctly on screen. For any missing lyrics, use the Lyric Formatter.' },
+  { title:'Test the full chain', body:'Switch to each OBS scene. Confirm the output is showing on the projector/screen. Ask someone to stand at the front and check the camera framing from the back.' },
+  { title:'Confirm stream is live', body:'Before the service starts, confirm the YouTube livestream is active and the signal is clean. Check the comments/chat if accessible.' },
 ];
 
-const PHASES = [
-  {num:1,title:'Induction — Vision & track assignments',desc:'90 min session. Bolaji covers vision and remit. Scott covers the operational picture. Each recruit assigned to a track.',status:'current'},
-  {num:2,title:'In-room & Broadcast — hands on',desc:'Shadow Scott on camera and OBS. Learn the Sunday morning flow. Handle a section independently.',status:'pending'},
-  {num:3,title:'Online & Social — content and scheduling',desc:'Learn the clip workflow, Instagram cadence, YouTube upload process.',status:'pending'},
-  {num:4,title:'Weekly briefing workflow end to end',desc:'Receive the briefing, prepare all assets, set up OBS, run the service.',status:'pending'},
-  {num:5,title:'Live Sunday shadowing & sign-off',desc:'Run a Sunday with light oversight. Sign-off to operate independently.',status:'pending'},
-];
-
-const OBS_GUIDE = [
-  {label:'Scene: Worship',desc:'Lyrics overlay on camera feed. Switch to this at start of worship.'},
-  {label:'Scene: Speaker',desc:'Clean camera feed, no overlay. Used for preaching, announcements.'},
-  {label:'Scene: Scripture',desc:'Scripture text full-screen. Use for Bible readings.'},
-  {label:'Scene: Sermon title',desc:'Sermon thumbnail image. Display for 30s as preacher comes up.'},
-  {label:'Scene: Holding slide',desc:'Church logo / holding image. Use between segments.'},
-];
-
-const EQUIPMENT = [
-  {item:'Samsung phone (main camera)',note:'Black case, lives in the media box'},
-  {item:'USB-C charging cable',note:'Must be plugged in during streaming'},
-  {item:'Phone tripod / mount',note:'Adjust height to speaker eye level'},
-  {item:'Media laptop (OBS)',note:'Grey laptop, lives in the box'},
-  {item:'HDMI to projector',note:'Connects laptop to front screen'},
-  {item:'USB audio interface',note:'Sound input to OBS'},
+const TRAINING_PHASES = [
+  { phase:1, title:'Induction', duration:'Week 1', status:'now', tasks:['Vision and remit walkthrough','Introduction to the 3 tracks (in-room, broadcast, online)','Track assignment based on interests','Access to Calvary OS media module','Meet Scott and the team'] },
+  { phase:2, title:'In-room & Broadcast', duration:'Weeks 2–4', status:'next', tasks:['Backend box setup and operation','OBS: scenes, sources, switching','Phone camera setup and framing','Livestream connection and monitoring','Lyric and scripture slide management'] },
+  { phase:3, title:'Online & Social', duration:'Weeks 4–6', status:'upcoming', tasks:['YouTube uploads and descriptions','Instagram content (clips, announcements)','Sermon clip editing basics','Social media scheduling'] },
+  { phase:4, title:'Weekly briefing workflow', duration:'Weeks 6–8', status:'upcoming', tasks:['Reading and executing the weekly briefing','Pre-service checklist independently','Communicating with worship team on slides','Flagging issues before service starts'] },
+  { phase:5, title:'Live Sunday sign-off', duration:'Week 8+', status:'upcoming', tasks:['Solo operation of full Sunday media desk','Peer sign-off from Scott','Official Calvary media team member'] },
 ];
 
 const MEDIA_TEAM = [
-  {initials:'SS',name:'Scott Shokoya',role:'Media Lead — Camera & Broadcast',note:'Lead contact for all media questions'},
-  {initials:'CH',name:'Chinedu',role:'Recruit',note:'Track TBC at induction'},
-  {initials:'TR',name:'Terrel',role:'Recruit',note:'Bury. Starting college. Tech interest.'},
-  {initials:'TV',name:'Tavoy',role:'Recruit',note:'Bury. Terrel\'s brother.'},
-  {initials:'NO',name:'Noah',role:'Recruit',note:'Comes with Sister Petty'},
-  {initials:'TO',name:'Tosin',role:'Recruit',note:'Track TBC at induction'},
+  { name:'Scott Shokoya', role:'Media Lead — Camera & Broadcast', note:'Primary contact for media operations. Responsible for training the new recruits operationally.', status:'active' },
+  { name:'Chinedu', role:'Media Recruit', note:'Track TBC at induction.', status:'recruit' },
+  { name:'Terrel', role:'Media Recruit', note:'Sister Tash\'s son. Lives in Bury. In college. Tech-interested. Not available every Sunday.', status:'recruit' },
+  { name:'Tavoy', role:'Media Recruit', note:'Sister Tash\'s son. Brother of Terrel. Same availability as Terrel.', status:'recruit' },
+  { name:'Noah', role:'Media Recruit', note:'Comes with Sister Petty. Available most Sundays.', status:'recruit' },
 ];
 
-// Render checklists
-const bc = document.getElementById('broadcast-checklist');
-const savedBC = JSON.parse(localStorage.getItem('cos_broadcast_checks')||'{}');
-bc.innerHTML = BROADCAST_CHECKLIST.map((c,i)=>`
-  <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);">
-    <div id="bchk-${i}" onclick="toggleBC(${i})" style="width:18px;height:18px;border:1.5px solid var(--border-2);border-radius:4px;flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:${savedBC[i]?'var(--red)':'transparent'};border-color:${savedBC[i]?'var(--red)':'var(--border-2)'};">${savedBC[i]?'<span style="font-size:10px;color:white;">✓</span>':''}</div>
-    <div style="font-size:13px;${c.warning?'color:var(--amber);font-weight:600;':''}">${c.label}</div>
-  </div>`).join('');
+const CAMERA_CHECKS = [
+  'Battery checked — phone above 80% or charger plugged in',
+  'USB-C charger connected — must stay connected throughout',
+  'Phone mounted securely on tripod',
+  'Camera framing checked — tight headroom',
+  'Livestream connected and streaming',
+  'Test recording made and reviewed',
+];
 
-function toggleBC(i){
-  const s=JSON.parse(localStorage.getItem('cos_broadcast_checks')||'{}');
-  s[i]=!s[i];localStorage.setItem('cos_broadcast_checks',JSON.stringify(s));
-  const el=document.getElementById('bchk-'+i);
-  el.style.background=s[i]?'var(--red)':'transparent';
-  el.style.borderColor=s[i]?'var(--red)':'var(--border-2)';
-  el.innerHTML=s[i]?'<span style="font-size:10px;color:white;">✓</span>':'';
+function pageInit(){
+  // Briefing tasks
+  document.getElementById('briefing-tasks').innerHTML = BRIEFING_TASKS.map(t=>`
+    <div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+      <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;margin-top:1px;"></div>
+      <div style="font-size:13px;color:var(--ink-2);">${t}</div>
+    </div>`).join('');
+
+  // Setup guide
+  document.getElementById('setup-guide').innerHTML = SETUP_STEPS.map((s,i)=>`
+    <div class="card" style="margin-bottom:10px;display:flex;gap:14px;">
+      <div style="width:28px;height:28px;border-radius:50%;background:${i===0?'var(--red)':'var(--bg-3)'};border:1.5px solid ${i===0?'var(--red)':'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:${i===0?'white':'var(--ink-4)'};flex-shrink:0;">${i+1}</div>
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">${s.title}</div>
+        <div style="font-size:13px;color:var(--ink-3);line-height:1.6;">${s.body}</div>
+      </div>
+    </div>`).join('');
+
+  // Training phases
+  document.getElementById('training-phases').innerHTML = TRAINING_PHASES.map(p=>{
+    const sc = p.status==='now'?'var(--red)':p.status==='next'?'var(--amber)':'var(--ink-4)';
+    const sl = p.status==='now'?'Current':p.status==='next'?'Up next':'Upcoming';
+    return `<div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;">
+        <div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--ink-4);margin-bottom:3px;">Phase ${p.phase} · ${p.duration}</div>
+          <div style="font-size:16px;font-weight:600;color:var(--ink);">${p.title}</div>
+        </div>
+        <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:${p.status==='now'?'rgba(196,30,42,0.12)':p.status==='next'?'var(--amber-light)':'var(--ink-5)'};color:${sc};">${sl}</span>
+      </div>
+      <ul style="font-size:12px;color:var(--ink-3);line-height:1.9;padding-left:16px;">${p.tasks.map(t=>`<li>${t}</li>`).join('')}</ul>
+    </div>`;
+  }).join('');
+
+  // Team
+  document.getElementById('media-team-list').innerHTML = MEDIA_TEAM.map(m=>`
+    <div class="list-item" style="cursor:default;">
+      <div class="li-bar" style="background:${m.status==='active'?'var(--green)':'var(--amber)'};"></div>
+      <div class="li-content">
+        <div class="li-title">${m.name}</div>
+        <div class="li-sub">${m.role}</div>
+        <div style="font-size:11px;color:var(--ink-4);margin-top:3px;line-height:1.5;">${m.note}</div>
+      </div>
+      <span class="badge ${m.status==='active'?'b-green':'b-amber'}">${m.status}</span>
+    </div>`).join('');
+
+  // Camera checks
+  document.getElementById('camera-checks').innerHTML = CAMERA_CHECKS.map(c=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+      <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);flex-shrink:0;"></div>
+      <div style="font-size:13px;color:var(--ink-2);">${c}</div>
+    </div>`).join('');
 }
 
-document.getElementById('tracks-grid').innerHTML=TRACKS.map(t=>`
-  <div class="track-card">
-    <div class="track-icon" style="background:var(--surface-2);">${t.icon}</div>
-    <div class="track-name">${t.name}</div>
-    <div class="track-desc">${t.desc}</div>
-  </div>`).join('');
-
-document.getElementById('phases-list').innerHTML=PHASES.map(p=>`
-  <div class="phase-item">
-    <div class="phase-num phase-${p.status}">${p.num}</div>
-    <div><div class="phase-title">${p.title}</div><div class="phase-desc">${p.desc}</div></div>
-    <div style="margin-left:auto;flex-shrink:0;"><span class="badge ${p.status==='current'?'b-red':p.status==='done'?'b-green':'b-grey'}">${p.status}</span></div>
-  </div>`).join('');
-
-document.getElementById('obs-guide').innerHTML=OBS_GUIDE.map(g=>`
-  <div class="resource-item">
-    <div><div style="font-size:13px;font-weight:600;margin-bottom:2px;">${g.label}</div><div style="font-size:12px;color:var(--ink-4);">${g.desc}</div></div>
-  </div>`).join('');
-
-document.getElementById('equipment-list').innerHTML=EQUIPMENT.map(e=>`
-  <div class="resource-item">
-    <div><div style="font-size:13px;font-weight:600;">${e.item}</div><div style="font-size:11px;color:var(--ink-4);margin-top:2px;">${e.note}</div></div>
-  </div>`).join('');
-
-document.getElementById('media-team-list').innerHTML=MEDIA_TEAM.map(m=>`
-  <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
-    <div style="width:36px;height:36px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;">${m.initials}</div>
-    <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${m.name}</div><div style="font-size:11px;color:var(--ink-4);">${m.role}</div></div>
-    <div style="font-size:11px;color:var(--ink-4);text-align:right;max-width:140px;">${m.note}</div>
-  </div>`).join('');
-
-function setTab(id,el){
-  ['briefing','training','setup','team'].forEach(t=>document.getElementById('tab-'+t).style.display=t===id?'block':'none');
-  document.querySelectorAll('.cos-tab').forEach(b=>b.classList.remove('active'));
-  if(el)el.classList.add('active');
-}
+COS.init('media');
 </script>
 </body>
 </html>
