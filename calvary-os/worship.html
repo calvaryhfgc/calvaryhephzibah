@@ -51,19 +51,40 @@
   </div>
 
   <div class="app-body">
-    <nav class="sidebar">
+      <nav class="sidebar">
       <div class="nav-section">
         <div class="nav-section-label">Worship</div>
-        <div class="nav-item active" onclick="COS.navTo('team',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="4" r="2"/><path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/><circle cx="11" cy="5" r="1.5"/><path d="M10 12c0-1.7 0.7-3 2-3.5"/></svg>Team</div>
-        <div class="nav-item" onclick="COS.navTo('songs',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v7a2.5 2.5 0 11-1-2V5L5 6V3l5-1z"/></svg>Song library</div>
-        <div class="nav-item" onclick="COS.navTo('formatter',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="10" height="10" rx="1"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="7" x2="9" y2="7"/><line x1="5" y1="9" x2="7" y2="9"/></svg>Lyric formatter</div>
-        <div class="nav-item" onclick="COS.navTo('guidance',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><line x1="7" y1="5" x2="7" y2="7.5"/><circle cx="7" cy="9.5" r="0.5" fill="currentColor"/></svg>Guidance</div>
-        <div class="nav-item" onclick="COS.navTo('rebuild',this)"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 7c0-2.8 2.2-5 5-5a5 5 0 014.3 2.5"/><polyline points="9,1 13.3,4.5 9,8"/><path d="M12 7a5 5 0 01-9.3 2.5"/></svg>Rebuild plan</div>
+        <div class="nav-item active" onclick="COS.navTo('team',this)">👥 Team</div>
+        <div class="nav-item" onclick="COS.navTo('songs',this)">🎵 Song library</div>
+        <div class="nav-item" onclick="COS.navTo('formatter',this)">📝 Lyric formatter</div>
+        <div class="nav-item" onclick="COS.navTo('guidance',this)">💡 Guidance</div>
+        <div class="nav-item" onclick="COS.navTo('rebuild',this)">🔄 Rebuild plan</div>
       </div>
       <div class="nav-section">
-        <a href="dashboard.html" class="nav-item" style="text-decoration:none;"><svg class="nav-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="1" width="5" height="5" rx="1"/><rect x="8" y="1" width="5" height="5" rx="1"/><rect x="1" y="8" width="5" height="5" rx="1"/><rect x="8" y="8" width="5" height="5" rx="1"/></svg>Dashboard</a>
+        <div class="nav-section-label">Modules</div>
+        <a href="sunday.html" class="nav-item" data-mod="sunday" style="text-decoration:none;">
+          <span style="font-size:13px;margin-right:2px;">☀️</span> Sunday Service
+        </a>
+        <a href="worship.html" class="nav-item" data-mod="worship" style="text-decoration:none;background:var(--red-light);color:var(--ink);font-weight:600;">
+          <span style="font-size:13px;margin-right:2px;">🎵</span> Worship
+        </a>
+        <a href="media.html" class="nav-item" data-mod="media" style="text-decoration:none;">
+          <span style="font-size:13px;margin-right:2px;">🎥</span> Media
+        </a>
+        <a href="midweek.html" class="nav-item" data-mod="midweek" style="text-decoration:none;">
+          <span style="font-size:13px;margin-right:2px;">📅</span> Mid-week
+        </a>
+        <a href="departments.html" class="nav-item" data-mod="departments" style="text-decoration:none;">
+          <span style="font-size:13px;margin-right:2px;">🏛️</span> Departments
+        </a>
+        <a href="admin.html" class="nav-item" data-mod="admin" style="text-decoration:none;">
+          <span style="font-size:13px;margin-right:2px;">⚙️</span> Admin
+        </a>
       </div>
-    </nav>
+    <div style="margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);">
+      <a href="dashboard.html" style="font-size:12px;color:var(--ink-4);text-decoration:none;display:flex;align-items:center;gap:6px;">← Dashboard</a>
+    </div>
+  </nav>
 
     <div class="main">
       <div class="page-body">
