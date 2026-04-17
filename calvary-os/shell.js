@@ -4,7 +4,7 @@ const COS = {
 
   // ── USERS ─────────────────────────────────────────────────────────────────
   users: [
-    { id:1,  name:'Bolaji Olatoye',        role:'Chief of Staff',       level:'admin', pin:'bp_1kfu29s', sections:['sunday','worship','media','midweek','departments','admin'], active:true },
+    { id:1,  name:'Bolaji Olatoye',        role:'Chief of Staff',       level:'admin', pin:'bp_yhwbc0', sections:['sunday','worship','media','midweek','departments','admin'], active:true },
     { id:2,  name:'Pastor Shade Olatoye',  role:'General Overseer',     level:'admin', pin:'ps_a8vx3m2', sections:['sunday','worship','media','midweek','departments','admin'], active:true },
     { id:3,  name:'Scott Shokoya',         role:'Media Lead',           level:'lead',  pin:'ss_7kp4q1n', sections:['sunday','media'], active:true },
     { id:4,  name:'Caster Martins',        role:'Worship Leader',       level:'lead',  pin:'cm_3jw9s6t', sections:['sunday','worship'], active:true },
