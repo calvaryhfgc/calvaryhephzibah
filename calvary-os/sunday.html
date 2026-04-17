@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sunday Service — Calvary OS</title>
+<meta name="theme-color" content="#C41E2A">
+<link rel="stylesheet" href="shell.css">
+<style>
+.service-hero{
+  background:linear-gradient(135deg,rgba(196,30,42,0.15) 0%,rgba(196,30,42,0.05) 100%);
+  border:1px solid rgba(196,30,42,0.2);
+  border-radius:var(--r20);padding:28px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.service-hero::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(196,30,42,0.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.service-date{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+.service-title{font-family:'Cormorant Garamond',serif;font-size:clamp(22px,3.5vw,34px);font-weight:600;line-height:1.2;margin-bottom:8px;}
+.service-meta{font-size:13px;color:var(--ink-4);}
+.countdown{display:flex;gap:16px;margin-top:18px;flex-wrap:wrap;}
+.cd-unit{text-align:center;}
+.cd-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;color:var(--white);line-height:1;}
+.cd-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-top:2px;}
+
+.oos-table{width:100%;border-collapse:collapse;}
+.oos-table th{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);}
+.oos-table td{padding:12px;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;vertical-align:middle;}
+.oos-table tr:last-child td{border-bottom:none;}
+.oos-table tr:hover td{background:var(--surface);}
+.oos-sermon td{background:rgba(196,30,42,0.06)!important;}
+.oos-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(196,30,42,0.12);color:#FF6B6B;}
+
+.song-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);margin-bottom:8px;gap:12px;flex-wrap:wrap;}
+.song-name{font-size:13px;font-weight:600;}
+.song-artist{font-size:11px;color:var(--ink-4);margin-top:1px;}
+.song-dl{padding:6px 12px;background:var(--red);color:white;border-radius:var(--r8);font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;flex-shrink:0;}
+.song-dl.pending{background:var(--surface-2);color:var(--ink-4);cursor:default;}
+
+.yt-embed{width:100%;aspect-ratio:16/9;border-radius:var(--r12);border:none;background:var(--surface-2);}
+.yt-pending{width:100%;aspect-ratio:16/9;border-radius:var(--r12);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;}
+.yt-pending-icon{font-size:32px;opacity:0.3;}
+.yt-pending-text{font-size:13px;color:var(--ink-4);}
+
+.media-check-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.media-check-item:last-child{border-bottom:none;}
+.check-box{width:18px;height:18px;border:1.5px solid var(--border-2);border-radius:4px;flex-shrink:0;margin-top:2px;cursor:pointer;transition:all 0.1s;display:flex;align-items:center;justify-content:center;}
+.check-box.checked{background:var(--red);border-color:var(--red);}
+.check-box.checked::after{content:'✓';font-size:10px;color:white;}
+.check-label{font-size:13px;line-height:1.5;}
+.check-note{font-size:11px;color:var(--ink-4);margin-top:2px;}
+</style>
+</head>
+<body>
+<div id="cos-nav"></div>
+<div class="cos-page">
+<div class="cos-container">
+
+  <!-- Hero -->
+  <div class="service-hero">
+    <div class="service-date" id="service-date-label">Sunday Service</div>
+    <div class="service-title" id="service-sermon-title">The Resurrection Spirit Is At Work In Us</div>
+    <div class="service-meta">Preacher: <strong id="service-preacher">Pastor Gbenga Adebanjo</strong> &nbsp;·&nbsp; <span id="service-time">10:30am</span> &nbsp;·&nbsp; Calvary Hephzibah, Manchester</div>
+    <div class="countdown" id="countdown"></div>
+  </div>
+
+  <div class="cos-tabs">
+    <button class="cos-tab active" onclick="setTab('oos',this)">Order of Service</button>
+    <button class="cos-tab" onclick="setTab('songs',this)">Worship Songs</button>
+    <button class="cos-tab" onclick="setTab('media',this)">Media Checklist</button>
+    <button class="cos-tab" onclick="setTab('stream',this)">Live Stream</button>
+  </div>
+
+  <!-- ORDER OF SERVICE -->
+  <div id="tab-oos">
+    <div class="cos-card">
+      <div class="cos-card-label">Running Order</div>
+      <table class="oos-table">
+        <thead><tr><th>#</th><th>Item</th><th>Led by</th><th>Notes</th></tr></thead>
+        <tbody id="oos-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SONGS -->
+  <div id="tab-songs" style="display:none;">
+    <div class="cos-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div class="cos-card-label" style="margin-bottom:0;">Worship Songs</div>
+        <a href="worship.html" style="font-size:12px;color:var(--ink-4);text-decoration:none;">Open Lyric Formatter →</a>
+      </div>
+      <div id="songs-list"></div>
+    </div>
+    <div class="cos-card">
+      <div class="cos-card-label">Offering Song</div>
+      <div class="song-item">
+        <div><div class="song-name">Praise The Name of Jesus</div><div class="song-artist">Offering</div></div>
+        <a href="#" class="song-dl">📥 Lyrics</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEDIA CHECKLIST -->
+  <div id="tab-media" style="display:none;">
+    <div class="cos-card">
+      <div class="cos-card-label">Pre-service checklist</div>
+      <div id="media-checklist"></div>
+    </div>
+    <div class="cos-card" style="border-top:3px solid var(--red);">
+      <div class="cos-card-label">Camera framing guide</div>
+      <p style="font-size:13px;color:var(--ink-4);line-height:1.6;">Zoom in so there's only a few centimetres of space between the top of the speaker's head and the top of the frame. Eyes should sit in the upper third of the screen. Speaker should fill most of the frame.</p>
+      <div style="margin-top:12px;background:var(--surface-2);border-radius:var(--r8);padding:14px;">
+        <p style="font-size:12px;color:var(--ink-4);">✅ Tight headroom (2-5cm gap at top)<br>✅ Speaker fills most of the frame<br>✅ Eyes in upper third of screen<br>❌ No excessive empty space above head</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE STREAM -->
+  <div id="tab-stream" style="display:none;">
+    <div class="cos-card">
+      <div class="cos-card-label">This Sunday's Stream</div>
+      <div class="yt-pending" id="yt-container">
+        <div class="yt-pending-icon">📺</div>
+        <div class="yt-pending-text">Stream link will appear here once live</div>
+      </div>
+      <div style="margin-top:14px;font-size:12px;color:var(--ink-4);">
+        Past services: <a href="https://youtube.com/@calvaryhephzibah" target="_blank" style="color:var(--red);text-decoration:none;">youtube.com/@calvaryhephzibah</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+<script src="shell.js"></script>
+<script>
+const user = requireAuth();
+if(!user || !canAccess(user,'sunday')) window.location.href='index.html';
+renderNav('sunday');
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const SERVICE = {
+  date: 'Sunday 19th April 2026',
+  time: new Date('2026-04-19T10:30:00'),
+  sermon: 'The Resurrection Spirit Is At Work In Us',
+  preacher: 'Pastor Gbenga Adebanjo',
+  youtubeId: null, // Set once live e.g. 'dQw4w9WgXcQ'
+};
+
+const ORDER_OF_SERVICE = [
+  { item:'Welcome & Opening Prayer', leader:'Pastor Shade Olatoye', note:'' },
+  { item:'Worship', leader:'Worship Team', note:'', highlight:false },
+  { item:'Announcements', leader:'Pastor Kayode Ogungbenro', note:'' },
+  { item:'Scripture Reading', leader:'TBC', note:'', tbc:true },
+  { item:'Sermon', leader:SERVICE.preacher, note:SERVICE.sermon, sermon:true },
+  { item:'Offering', leader:'', note:'Praise The Name of Jesus' },
+  { item:'Closing Prayer', leader:'TBC', note:'', tbc:true },
+  { item:'Benediction', leader:'Pastor Shade Olatoye', note:'' },
+];
+
+const SONGS = [
+  { name:'Days of Elijah', type:'Praise', lyricsUrl:'#' },
+  { name:'My Hands, My Feet, My Whole Body', type:'Worship', lyricsUrl:'#' },
+  { name:'Guide Me O Thou Great Jehovah (Afro Praise)', type:'Worship', lyricsUrl:'#' },
+  { name:'King of Glory', type:'Worship', lyricsUrl:'#' },
+  { name:'More Than Able', type:'Worship', lyricsUrl:null },
+];
+
+const CHECKLIST = [
+  { label:'Phone camera charged', note:'Check battery level before service starts', warning:false },
+  { label:'USB-C charger plugged in during streaming', note:'⚠️ Required throughout — prevents battery drain mid-service', warning:true },
+  { label:'Phone mounted securely on tripod/stand', note:'Check it is stable and won\'t fall', warning:false },
+  { label:'Livestream connected and tested', note:'Confirm stream is live before service begins', warning:false },
+  { label:'Camera framing checked', note:'Tight headroom — few cm from top of head to top of frame', warning:false },
+  { label:'All worship song lyrics downloaded', note:'Open each lyric file before service to confirm it works', warning:false },
+  { label:'Sermon thumbnail ready', note:'Display for 30 seconds as preacher comes up', warning:false },
+  { label:'OBS scenes tested', note:'Switch between scenes before service', warning:false },
+  { label:'Screen layouts confirmed', note:'Lyrics, sermon slides, scripture all queued', warning:false },
+];
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+document.getElementById('service-date-label').textContent = SERVICE.date;
+document.getElementById('service-sermon-title').textContent = SERVICE.sermon;
+document.getElementById('service-preacher').textContent = SERVICE.preacher;
+
+// Countdown
+function updateCountdown(){
+  const now = new Date();
+  const diff = SERVICE.time - now;
+  if(diff <= 0){
+    document.getElementById('countdown').innerHTML = '<div style="font-size:13px;color:var(--red);font-weight:600;">● Service is live now</div>';
+    return;
+  }
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  document.getElementById('countdown').innerHTML = [
+    d?`<div class="cd-unit"><div class="cd-num">${d}</div><div class="cd-label">Days</div></div>`:'',
+    `<div class="cd-unit"><div class="cd-num">${String(h).padStart(2,'0')}</div><div class="cd-label">Hours</div></div>`,
+    `<div class="cd-unit"><div class="cd-num">${String(m).padStart(2,'0')}</div><div class="cd-label">Mins</div></div>`,
+    `<div class="cd-unit"><div class="cd-num">${String(s).padStart(2,'0')}</div><div class="cd-label">Secs</div></div>`,
+  ].join('');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// Order of service
+document.getElementById('oos-body').innerHTML = ORDER_OF_SERVICE.map((o,i)=>`
+  <tr class="${o.sermon?'oos-sermon':''}">
+    <td style="color:var(--ink-4);font-size:12px;">${i+1}</td>
+    <td>
+      <div style="font-weight:500;">${o.item}</div>
+      ${o.note?`<div style="font-size:11px;color:var(--ink-4);margin-top:2px;">${o.note}</div>`:''}
+    </td>
+    <td style="font-size:12px;color:var(--ink-4);">${o.leader||'—'}</td>
+    <td>${o.tbc?'<span class="oos-badge">TBC</span>':o.sermon?'<span class="oos-badge" style="background:rgba(196,30,42,0.2);color:var(--red);">Sermon</span>':''}</td>
+  </tr>`).join('');
+
+// Songs
+document.getElementById('songs-list').innerHTML = SONGS.map((s,i)=>`
+  <div class="song-item">
+    <div>
+      <div class="song-name">${i+1}. ${s.name}</div>
+      <div class="song-artist">${s.type}</div>
+    </div>
+    ${s.lyricsUrl
+      ? `<a href="${s.lyricsUrl}" class="song-dl" target="_blank">📥 Lyrics</a>`
+      : `<span class="song-dl pending">Generate →</span>`}
+  </div>`).join('');
+
+// Checklist
+const savedChecks = JSON.parse(localStorage.getItem('cos_sunday_checks')||'{}');
+document.getElementById('media-checklist').innerHTML = CHECKLIST.map((c,i)=>`
+  <div class="media-check-item">
+    <div class="check-box ${savedChecks[i]?'checked':''}" id="chk-${i}" onclick="toggleCheck(${i})"></div>
+    <div>
+      <div class="check-label" style="${c.warning?'color:var(--amber);font-weight:600;':''}">${c.label}</div>
+      <div class="check-note">${c.note}</div>
+    </div>
+  </div>`).join('');
+
+function toggleCheck(i){
+  const saved = JSON.parse(localStorage.getItem('cos_sunday_checks')||'{}');
+  saved[i] = !saved[i];
+  localStorage.setItem('cos_sunday_checks', JSON.stringify(saved));
+  document.getElementById('chk-'+i).classList.toggle('checked', saved[i]);
+}
+
+// YouTube
+if(SERVICE.youtubeId){
+  document.getElementById('yt-container').innerHTML = `<iframe class="yt-embed" src="https://www.youtube.com/embed/${SERVICE.youtubeId}" allowfullscreen></iframe>`;
+}
+
+// Tabs
+function setTab(id, el){
+  ['oos','songs','media','stream'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===id?'block':'none';
+  });
+  document.querySelectorAll('.cos-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>

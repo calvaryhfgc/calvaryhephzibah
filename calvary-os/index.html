@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#C41E2A">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{--red:#C41E2A;--red-d:#A8181F;--ink:#0A0A0A;--ink-2:#1C1C1E;--ink-3:#3A3A3C;--ink-4:#8E8E93;--white:#FFFFFF;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;overflow:hidden;}
+body{background:var(--ink);position:relative;}
+.bg-texture{position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 0%,rgba(196,30,42,0.08) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 80% 100%,rgba(196,30,42,0.05) 0%,transparent 60%),repeating-linear-gradient(0deg,transparent,transparent 80px,rgba(255,255,255,0.012) 80px,rgba(255,255,255,0.012) 81px),repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(255,255,255,0.012) 80px,rgba(255,255,255,0.012) 81px);pointer-events:none;z-index:0;}
+.shell{position:relative;z-index:1;height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;}
+.card{width:100%;max-width:380px;animation:cardIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(0.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.logo-wrap{text-align:center;margin-bottom:32px;}
+.logo-cross{display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;background:var(--red);border-radius:14px;margin-bottom:14px;box-shadow:0 0 0 1px rgba(196,30,42,0.3),0 8px 32px rgba(196,30,42,0.3);}
+.logo-cross svg{width:22px;height:22px;}
+.logo-name{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:600;color:var(--white);letter-spacing:0.5px;line-height:1;margin-bottom:4px;}
+.logo-tagline{font-size:11px;font-weight:500;color:var(--ink-4);letter-spacing:2.5px;text-transform:uppercase;}
+#screen-who{display:block;}
+#screen-pin{display:none;}
+.section-label{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;text-align:center;}
+.user-list{display:flex;flex-direction:column;gap:6px;max-height:340px;overflow-y:auto;margin-bottom:4px;}
+.user-list::-webkit-scrollbar{width:3px;}
+.user-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+.user-btn{display:flex;align-items:center;gap:12px;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;cursor:pointer;text-align:left;width:100%;transition:all 0.15s;font-family:'DM Sans',sans-serif;}
+.user-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.12);transform:translateX(2px);}
+.user-av{width:36px;height:36px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;}
+.user-info-name{font-size:13px;font-weight:600;color:var(--white);}
+.user-info-role{font-size:11px;color:var(--ink-4);margin-top:1px;}
+.pin-back{display:flex;align-items:center;gap:6px;background:none;border:none;font-size:12px;color:var(--ink-4);cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:20px;padding:0;transition:color 0.1s;}
+.pin-back:hover{color:var(--white);}
+.pin-who{text-align:center;margin-bottom:24px;}
+.pin-who-av{width:48px;height:48px;border-radius:14px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:white;margin:0 auto 10px;box-shadow:0 0 0 1px rgba(196,30,42,0.3),0 4px 20px rgba(196,30,42,0.25);}
+.pin-who-name{font-size:16px;font-weight:600;color:var(--white);}
+.pin-who-sub{font-size:12px;color:var(--ink-4);margin-top:2px;}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin-bottom:28px;}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);transition:all 0.15s;}
+.pin-dot.on{background:var(--red);border-color:var(--red);box-shadow:0 0 8px rgba(196,30,42,0.5);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.pkey{aspect-ratio:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;font-size:22px;font-weight:300;font-family:'Cormorant Garamond',serif;color:var(--white);cursor:pointer;transition:all 0.1s;-webkit-tap-highlight-color:transparent;user-select:none;display:flex;align-items:center;justify-content:center;}
+.pkey:active{background:rgba(255,255,255,0.12);transform:scale(0.95);}
+.pkey.del{font-size:16px;font-family:'DM Sans',sans-serif;color:var(--ink-4);}
+.pkey.empty{visibility:hidden;pointer-events:none;}
+.pin-msg{text-align:center;font-size:12px;color:var(--red);min-height:18px;margin-top:12px;}
+.login-footer{text-align:center;margin-top:20px;font-size:11px;color:rgba(255,255,255,0.15);letter-spacing:0.5px;}
+@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}
+</style>
+</head>
+<body>
+<div class="bg-texture"></div>
+<div class="shell">
+  <div class="card">
+    <div class="logo-wrap">
+      <div class="logo-cross"><svg viewBox="0 0 22 22" fill="none"><rect x="9" y="1" width="4" height="20" rx="1" fill="white"/><rect x="1" y="8" width="20" height="4" rx="1" fill="white"/></svg></div>
+      <div class="logo-name">Calvary OS</div>
+      <div class="logo-tagline">Calvary Hephzibah · Manchester</div>
+    </div>
+    <div id="screen-who">
+      <div class="section-label">Select your name</div>
+      <div class="user-list" id="user-list"></div>
+      <div class="login-footer">Calvary Hephzibah Full Gospel Church</div>
+    </div>
+    <div id="screen-pin">
+      <button class="pin-back" onclick="goWho()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="9,2 4,7 9,12"/></svg> Back</button>
+      <div class="pin-who">
+        <div class="pin-who-av" id="pin-av"></div>
+        <div class="pin-who-name" id="pin-name"></div>
+        <div class="pin-who-sub">Enter your PIN to continue</div>
+      </div>
+      <div class="pin-dots"><div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div><div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="pk('1')">1</button><button class="pkey" onclick="pk('2')">2</button><button class="pkey" onclick="pk('3')">3</button>
+        <button class="pkey" onclick="pk('4')">4</button><button class="pkey" onclick="pk('5')">5</button><button class="pkey" onclick="pk('6')">6</button>
+        <button class="pkey" onclick="pk('7')">7</button><button class="pkey" onclick="pk('8')">8</button><button class="pkey" onclick="pk('9')">9</button>
+        <button class="pkey empty"></button><button class="pkey" onclick="pk('0')">0</button><button class="pkey del" onclick="pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+<script>
+function hashPin(p){let h=5381;for(let i=0;i<p.length;i++)h=((h<<5)+h)^p.charCodeAt(i);return'cos_'+(h>>>0).toString(36);}
+const SECTIONS=['sunday','worship','media','midweek','departments'];
+const USERS=[
+  {id:1,name:'Bolaji Olatoye',initials:'BO',role:'Chief of Staff',level:'admin',pin:hashPin('2610'),sections:SECTIONS},
+  {id:2,name:'Pastor Shade Olatoye',initials:'PS',role:'General Overseer',level:'admin',pin:hashPin('0000'),sections:SECTIONS},
+  {id:3,name:'Scott Shokoya',initials:'SS',role:'Media Lead',level:'member',pin:hashPin('0000'),sections:['sunday','media']},
+  {id:4,name:'Caster Martins',initials:'CM',role:'Worship Leader',level:'member',pin:hashPin('0000'),sections:['sunday','worship']},
+  {id:5,name:'Morayo Ogungbenro',initials:'MO',role:'Worship — Guitar',level:'member',pin:hashPin('0000'),sections:['sunday','worship']},
+  {id:6,name:'Laolu Ogungbenro',initials:'LO',role:'Worship — Drums',level:'member',pin:hashPin('0000'),sections:['sunday','worship']},
+  {id:7,name:'Tosin Akindele',initials:'TA',role:'Voices Beyond',level:'member',pin:hashPin('0000'),sections:['sunday','worship']},
+  {id:8,name:'Bolaji Adebanjo',initials:'BA',role:'Worship — Drums / MD',level:'member',pin:hashPin('0000'),sections:['sunday','worship']},
+  {id:9,name:'Pauline Tulloch',initials:'PT',role:'Operations',level:'member',pin:hashPin('0000'),sections:['sunday','departments']},
+  {id:10,name:'Pastor Gbenga Adebanjo',initials:'GA',role:'Leadership',level:'member',pin:hashPin('0000'),sections:['sunday','departments','midweek']},
+  {id:11,name:'Pastor Kayode Ogungbenro',initials:'KO',role:'Leadership / Finance',level:'member',pin:hashPin('0000'),sections:['sunday','departments']},
+  {id:12,name:'Sister Petty',initials:'SP',role:'Operations',level:'member',pin:hashPin('0000'),sections:['sunday','departments']},
+  {id:13,name:'Chinedu',initials:'CH',role:'Media Team',level:'member',pin:hashPin('0000'),sections:['sunday','media']},
+  {id:14,name:'Terrel',initials:'TR',role:'Media Team',level:'member',pin:hashPin('0000'),sections:['sunday','media']},
+  {id:15,name:'Tavoy',initials:'TV',role:'Media Team',level:'member',pin:hashPin('0000'),sections:['sunday','media']},
+  {id:16,name:'Noah',initials:'NO',role:'Media Team',level:'member',pin:hashPin('0000'),sections:['sunday','media']},
+];
+let currentUser=null,pinEntry='';
+(function init(){
+  const sess=sessionStorage.getItem('calvary_os_user');
+  if(sess){try{const u=JSON.parse(sess);if(USERS.find(x=>x.id===u.id)){redirect(u);return;}}catch(e){sessionStorage.removeItem('calvary_os_user');}}
+  renderUsers();
+})();
+function renderUsers(){
+  document.getElementById('user-list').innerHTML=USERS.map(u=>`
+    <button class="user-btn" onclick="selectUser(${u.id})">
+      <div class="user-av">${u.initials}</div>
+      <div style="flex:1;"><div class="user-info-name">${u.name}</div><div class="user-info-role">${u.role}</div></div>
+      <div style="color:var(--ink-4);font-size:14px;">›</div>
+    </button>`).join('');
+}
+function selectUser(id){
+  const u=USERS.find(x=>x.id===id);if(!u)return;
+  currentUser=u;pinEntry='';updateDots();
+  document.getElementById('pin-av').textContent=u.initials;
+  document.getElementById('pin-name').textContent=u.name;
+  document.getElementById('pin-msg').textContent='';
+  document.getElementById('screen-who').style.display='none';
+  document.getElementById('screen-pin').style.display='block';
+}
+function goWho(){
+  currentUser=null;pinEntry='';updateDots();
+  document.getElementById('screen-who').style.display='block';
+  document.getElementById('screen-pin').style.display='none';
+  document.getElementById('pin-msg').textContent='';
+}
+function pk(d){if(pinEntry.length>=4)return;pinEntry+=d;updateDots();if(pinEntry.length===4)setTimeout(checkPin,180);}
+function pdel(){pinEntry=pinEntry.slice(0,-1);updateDots();document.getElementById('pin-msg').textContent='';}
+function updateDots(){for(let i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('on',i<pinEntry.length);}
+function checkPin(){
+  if(hashPin(pinEntry)!==currentUser.pin){
+    document.getElementById('pin-msg').textContent='Incorrect PIN — try again';
+    pinEntry='';updateDots();
+    const dots=document.querySelector('.pin-dots');
+    dots.style.animation='none';dots.offsetHeight;dots.style.animation='shake 0.4s ease';
+    return;
+  }
+  sessionStorage.setItem('calvary_os_user',JSON.stringify(currentUser));
+  redirect(currentUser);
+}
+function redirect(u){
+  const first=u.sections[0]||'sunday';
+  window.location.href=`${first}.html?user=${encodeURIComponent(u.name)}&level=${u.level}&sections=${u.sections.join(',')}`;
+}
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('screen-pin').style.display==='none')return;
+  if(e.key>='0'&&e.key<='9')pk(e.key);
+  if(e.key==='Backspace')pdel();
+  if(e.key==='Escape')goWho();
+});
+</script>
+</body>
+</html>

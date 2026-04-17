@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Worship — Calvary OS</title>
+<link rel="stylesheet" href="shell.css">
+<style>
+.lyric-tool{background:linear-gradient(135deg,rgba(196,30,42,0.1),rgba(196,30,42,0.03));border:1px solid rgba(196,30,42,0.2);border-radius:var(--r16);padding:22px;margin-bottom:14px;}
+.lyric-tool-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:4px;}
+.lyric-tool-sub{font-size:12px;color:var(--ink-4);margin-bottom:16px;line-height:1.5;}
+.lyric-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--r8);padding:10px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--white);outline:none;margin-bottom:10px;}
+.lyric-input:focus{border-color:var(--red);}
+.lyric-textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--r8);padding:12px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--white);outline:none;min-height:140px;resize:vertical;line-height:1.8;}
+.lyric-textarea:focus{border-color:var(--red);}
+.lyric-preview{margin-top:14px;}
+.lyric-slide{background:var(--ink);border:1px solid var(--border);border-radius:var(--r12);padding:20px;margin-bottom:8px;text-align:center;min-height:80px;display:flex;align-items:center;justify-content:center;}
+.lyric-slide-text{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--white);line-height:1.6;}
+
+.song-library-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r12);margin-bottom:8px;gap:12px;cursor:pointer;transition:all 0.12s;}
+.song-library-item:hover{background:var(--surface-2);border-color:var(--border-2);}
+.sli-num{width:24px;height:24px;border-radius:6px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.sli-name{font-size:13px;font-weight:600;}
+.sli-meta{font-size:11px;color:var(--ink-4);margin-top:2px;}
+
+.team-member{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.team-member:last-child{border-bottom:none;}
+.tm-av{width:38px;height:38px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0;}
+.tm-name{font-size:13px;font-weight:600;}
+.tm-role{font-size:11px;color:var(--ink-4);margin-top:1px;}
+.tm-status{margin-left:auto;}
+
+.guidance-item{padding:14px 16px;background:var(--surface);border-left:3px solid var(--red);border-radius:0 var(--r8) var(--r8) 0;margin-bottom:8px;}
+.guidance-title{font-size:13px;font-weight:600;margin-bottom:4px;}
+.guidance-text{font-size:12px;color:var(--ink-4);line-height:1.6;}
+</style>
+</head>
+<body>
+<div id="cos-nav"></div>
+<div class="cos-page">
+<div class="cos-container">
+
+  <div class="cos-hero">
+    <div class="cos-hero-label">Worship Ministry</div>
+    <div class="cos-hero-title">Worship</div>
+    <div class="cos-hero-sub">Song list, lyric formatter, worship team, and guidance.</div>
+  </div>
+
+  <div class="cos-tabs">
+    <button class="cos-tab active" onclick="setTab('songs',this)">This Sunday</button>
+    <button class="cos-tab" onclick="setTab('formatter',this)">Lyric Formatter</button>
+    <button class="cos-tab" onclick="setTab('library',this)">Song Library</button>
+    <button class="cos-tab" onclick="setTab('team',this)">The Team</button>
+    <button class="cos-tab" onclick="setTab('guidance',this)">Guidance</button>
+  </div>
+
+  <!-- THIS SUNDAY -->
+  <div id="tab-songs">
+    <div class="cos-card">
+      <div class="cos-card-label">Sunday 19th April — Worship Set</div>
+      <div id="sunday-songs"></div>
+    </div>
+    <div class="cos-card">
+      <div class="cos-card-label">Worship team this Sunday</div>
+      <div id="sunday-team"></div>
+    </div>
+    <div class="cos-card" style="background:rgba(196,30,42,0.06);border-color:rgba(196,30,42,0.15);">
+      <div class="cos-card-label">Note for worship team</div>
+      <p style="font-size:13px;color:rgba(255,255,255,0.8);line-height:1.7;">This is the first Sunday of our new season. Give it everything. The congregation needs to feel the presence of God — not just hear music. Come to rehearsal on Friday prepared. Know the songs. Come ready to lead people into worship, not just perform.</p>
+    </div>
+  </div>
+
+  <!-- LYRIC FORMATTER -->
+  <div id="tab-formatter" style="display:none;">
+    <div class="lyric-tool">
+      <div class="lyric-tool-title">Lyric Formatter</div>
+      <div class="lyric-tool-sub">Format song lyrics into presentation-ready slides. Two lines per slide, ~25-30 characters per line. Blank line between slides.</div>
+      <input class="lyric-input" id="lf-title" placeholder="Song title…">
+      <textarea class="lyric-textarea" id="lf-lyrics" placeholder="Paste lyrics here…&#10;&#10;Two lines per slide&#10;Like this example&#10;&#10;Then a blank line&#10;Between each slide"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        <button class="btn-red" onclick="generateSlides()">Generate slides</button>
+        <button class="btn-ghost" onclick="clearFormatter()">Clear</button>
+        <a id="lf-fullscreen" href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn-ghost">Open full tool ↗</a>
+      </div>
+    </div>
+    <div id="lyric-preview" class="lyric-preview"></div>
+  </div>
+
+  <!-- SONG LIBRARY -->
+  <div id="tab-library" style="display:none;">
+    <div class="cos-card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div class="cos-card-label" style="margin-bottom:0;">Song Library</div>
+        <button class="btn-sm" onclick="openAddSong()">+ Add song</button>
+      </div>
+      <div id="song-library-list"></div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div id="tab-team" style="display:none;">
+    <div class="cos-card">
+      <div class="cos-card-label">Worship Team</div>
+      <div id="team-list"></div>
+    </div>
+    <div class="cos-card">
+      <div class="cos-card-label">Session musicians — Sunday 19th</div>
+      <div id="session-list"></div>
+    </div>
+  </div>
+
+  <!-- GUIDANCE -->
+  <div id="tab-guidance" style="display:none;">
+    <div class="cos-card">
+      <div class="cos-card-label">Worship Standards & Guidance</div>
+      <div id="guidance-list"></div>
+    </div>
+    <div class="cos-card" style="border-top:3px solid var(--red);">
+      <div class="cos-card-label">The vision for Calvary worship</div>
+      <p style="font-family:'Cormorant Garamond',serif;font-size:19px;color:var(--white);line-height:1.6;font-style:italic;">"A full live band. Studio production in a live venue. Confident worship leadership. The Calvary sound — Spirit-led, musically excellent, impossible to ignore."</p>
+      <div style="margin-top:16px;font-size:13px;color:var(--ink-4);line-height:1.6;">We are building toward Transformation Church quality, with the African gospel heart that is in our DNA. Not one at the expense of the other — both together.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script src="shell.js"></script>
+<script>
+const user = requireAuth();
+if(!user || !canAccess(user,'worship')) window.location.href='index.html';
+renderNav('worship');
+
+const SUNDAY_SONGS = [
+  {name:'Days of Elijah',type:'Opening praise',lyricsUrl:'#'},
+  {name:'My Hands, My Feet, My Whole Body',type:'Praise',lyricsUrl:'#'},
+  {name:'Guide Me O Thou Great Jehovah (Afro Praise)',type:'Worship',lyricsUrl:'#'},
+  {name:'King of Glory',type:'Worship',lyricsUrl:'#'},
+  {name:'More Than Able',type:'Worship — generate lyrics',lyricsUrl:null},
+];
+
+const SUNDAY_TEAM_MEMBERS = [
+  {initials:'TA',name:'Tosin Akindele',role:'Lead vocalist (session)',status:'confirmed',statusCls:'b-green'},
+  {initials:'TK',name:"Tosin's BV",role:'Backing vocalist (session)',status:'pending',statusCls:'b-amber'},
+  {initials:'TK2',name:"Keys player",role:'Keys / workstation (session)',status:'confirmed',statusCls:'b-green'},
+  {initials:'MO',name:'Morayo Ogungbenro',role:'Guitar',status:'available',statusCls:'b-green'},
+  {initials:'LO',name:'Laolu Ogungbenro',role:'Drums',status:'confirm today',statusCls:'b-amber'},
+];
+
+const SESSION_MEMBERS = [
+  {initials:'TA',name:'Tosin Akindele',role:'Lead vocalist · Voices Beyond',note:'£175 · Confirmed'},
+  {initials:'BV',name:'Backing vocalist',role:'Voices Beyond',note:'£175 · Pending'},
+  {initials:'KP',name:'Keys player',role:'Session musician',note:'£175 · Confirmed'},
+];
+
+const SONG_LIBRARY = [
+  {name:'Days of Elijah',key:'D',tempo:'Upbeat',tags:['praise','classic'],lyricsUrl:'#'},
+  {name:'King of Glory',key:'G',tempo:'Moderate',tags:['worship'],lyricsUrl:'#'},
+  {name:'More Than Able',key:'A',tempo:'Mid',tags:['worship','contemporary'],lyricsUrl:null},
+  {name:'Praise The Name of Jesus',key:'C',tempo:'Moderate',tags:['offering'],lyricsUrl:'#'},
+  {name:'My Hands, My Feet, My Whole Body',key:'Bb',tempo:'Upbeat',tags:['praise','movement'],lyricsUrl:'#'},
+  {name:'Guide Me O Thou Great Jehovah (Afro Praise)',key:'G',tempo:'Afrobeat',tags:['hymn','afro'],lyricsUrl:'#'},
+];
+
+const GUIDANCE_ITEMS = [
+  {title:'Song format for lyrics', text:'Two lines per slide. Each line 25-30 characters max. Blank line between slides. Use the Lyric Formatter tab above to generate slides.'},
+  {title:'Rehearsal expectation', text:'Come to rehearsal knowing the songs. Rehearsal is not for learning — it is for tightening together. If you don\'t know a song, learn it before you arrive.'},
+  {title:'Set order principle', text:'Open with praise (high energy), transition to worship (intimate), close with a moment of response. Don\'t jump erratically between styles mid-set.'},
+  {title:'Leading vs performing', text:'You are leading people into the presence of God — not performing for them. Keep your eyes open, engage the congregation, repeat a bridge if the presence is building.'},
+  {title:'Sound and media coordination', text:'Agree the set list with media team before service. Media need the lyrics ready before worship begins. No last-minute song changes without telling media.'},
+  {title:'Starting worship', text:'When the worship leader opens, media team should have the first slide ready. Do not wait to be asked — anticipate the transition.'},
+];
+
+// Render
+document.getElementById('sunday-songs').innerHTML = SUNDAY_SONGS.map((s,i)=>`
+  <div class="song-library-item">
+    <div class="sli-num">${i+1}</div>
+    <div style="flex:1;"><div class="sli-name">${s.name}</div><div class="sli-meta">${s.type}</div></div>
+    ${s.lyricsUrl
+      ? `<a href="${s.lyricsUrl}" class="btn-sm" target="_blank">📥 Lyrics</a>`
+      : `<button class="btn-sm" style="background:var(--amber);color:var(--ink);" onclick="setTab('formatter',document.querySelectorAll('.cos-tab')[1])">Generate</button>`}
+  </div>`).join('');
+
+document.getElementById('sunday-team').innerHTML = SUNDAY_TEAM_MEMBERS.map(m=>`
+  <div class="team-member">
+    <div class="tm-av">${m.initials}</div>
+    <div><div class="tm-name">${m.name}</div><div class="tm-role">${m.role}</div></div>
+    <div class="tm-status"><span class="badge ${m.statusCls}">${m.status}</span></div>
+  </div>`).join('');
+
+document.getElementById('song-library-list').innerHTML = SONG_LIBRARY.map((s,i)=>`
+  <div class="song-library-item">
+    <div class="sli-num">${i+1}</div>
+    <div style="flex:1;"><div class="sli-name">${s.name}</div><div class="sli-meta">Key: ${s.key} · ${s.tempo} · ${s.tags.join(', ')}</div></div>
+    ${s.lyricsUrl?`<a href="${s.lyricsUrl}" class="btn-sm" target="_blank">Lyrics</a>`:'<span style="font-size:11px;color:var(--amber);">No lyrics</span>'}
+  </div>`).join('');
+
+document.getElementById('team-list').innerHTML = [
+  {initials:'CM',name:'Caster Martins',role:'Interim worship leader',note:'Available from 26th April'},
+  {initials:'MO',name:'Morayo Ogungbenro',role:'Guitar',note:'Available until late September'},
+  {initials:'BA',name:'Bolaji Adebanjo',role:'Drums / MD candidate',note:'12 Collective'},
+  {initials:'LO',name:'Laolu Ogungbenro',role:'Drums',note:'Available this week only'},
+].map(m=>`
+  <div class="team-member">
+    <div class="tm-av">${m.initials}</div>
+    <div style="flex:1;"><div class="tm-name">${m.name}</div><div class="tm-role">${m.role}</div></div>
+    <div style="font-size:11px;color:var(--ink-4);text-align:right;">${m.note}</div>
+  </div>`).join('');
+
+document.getElementById('session-list').innerHTML = SESSION_MEMBERS.map(m=>`
+  <div class="team-member">
+    <div class="tm-av" style="background:var(--ink-3);">${m.initials}</div>
+    <div style="flex:1;"><div class="tm-name">${m.name}</div><div class="tm-role">${m.role}</div></div>
+    <div style="font-size:11px;color:var(--ink-4);">${m.note}</div>
+  </div>`).join('');
+
+document.getElementById('guidance-list').innerHTML = GUIDANCE_ITEMS.map(g=>`
+  <div class="guidance-item">
+    <div class="guidance-title">${g.title}</div>
+    <div class="guidance-text">${g.text}</div>
+  </div>`).join('');
+
+// Lyric Formatter
+function generateSlides(){
+  const title = document.getElementById('lf-title').value.trim();
+  const lyrics = document.getElementById('lf-lyrics').value.trim();
+  if(!lyrics){ showToast('Paste some lyrics first','error'); return; }
+  const blocks = lyrics.split(/\n\s*\n/).filter(b=>b.trim());
+  const preview = document.getElementById('lyric-preview');
+  preview.innerHTML = `
+    <div class="cos-card">
+      <div class="cos-card-label">${title||'Preview'} — ${blocks.length} slide${blocks.length!==1?'s':''}</div>
+      ${blocks.map((b,i)=>`
+        <div class="lyric-slide">
+          <div class="lyric-slide-text">${b.trim().replace(/\n/g,'<br>')}</div>
+        </div>`).join('')}
+    </div>`;
+  showToast(`${blocks.length} slides generated`);
+}
+
+function clearFormatter(){
+  document.getElementById('lf-title').value='';
+  document.getElementById('lf-lyrics').value='';
+  document.getElementById('lyric-preview').innerHTML='';
+}
+
+function setTab(id, el){
+  ['songs','formatter','library','team','guidance'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display = t===id?'block':'none';
+  });
+  document.querySelectorAll('.cos-tab').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+</script>
+</body>
+</html>
