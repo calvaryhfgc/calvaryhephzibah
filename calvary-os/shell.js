@@ -159,12 +159,13 @@ const COS = {
   // ── NAVIGATION ────────────────────────────────────────────────────────────
   navTo(page, el){
     document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.querySelectorAll('.nav-item, .mob-nav-btn').forEach(n=>n.classList.remove('active'));
+    // Only remove active from onclick nav items — not from <a href> module links
+    document.querySelectorAll('.nav-item[onclick], .mob-nav-btn').forEach(n=>n.classList.remove('active'));
     const pg = document.getElementById('pg-'+page);
     if(pg) pg.classList.add('active');
     if(el) el.classList.add('active');
-    // Sync sidebar
-    document.querySelectorAll('.nav-item').forEach(n=>{
+    // Sync sidebar — only onclick items
+    document.querySelectorAll('.nav-item[onclick]').forEach(n=>{
       if((n.getAttribute('onclick')||'').includes("'"+page+"'")) n.classList.add('active');
     });
     // Update topbar section label
