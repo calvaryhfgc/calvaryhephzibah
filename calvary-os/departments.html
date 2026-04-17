@@ -4,74 +4,66 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Departments — Calvary OS</title>
-<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="shell.css">
 <style>
-.dept-card{
-  background:var(--white);border:1px solid var(--ink-6);
-  border-radius:var(--r12);padding:16px 18px;
-  cursor:pointer;transition:all 0.12s;
-}
-.dept-card:hover{border-color:var(--ink-5);box-shadow:var(--shadow);}
-.dept-icon{font-size:24px;margin-bottom:8px;}
-.dept-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px;}
-.dept-lead{font-size:11px;color:var(--ink-4);}
-.dept-status{display:flex;align-items:center;gap:5px;margin-top:8px;}
-.status-dot{width:7px;height:7px;border-radius:50%;}
+.dept-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r16);padding:18px 20px;cursor:pointer;transition:all 0.12s;}
+.dept-card:hover{background:var(--surface-2);border-color:var(--border-2);}
+.dept-icon{font-size:24px;margin-bottom:10px;}
+.dept-name{font-size:14px;font-weight:700;margin-bottom:4px;}
+.dept-coordinator{font-size:11px;color:var(--ink-4);margin-bottom:8px;}
+.dept-note{font-size:12px;color:var(--ink-4);line-height:1.5;}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;}
 .sd-green{background:var(--green);}
 .sd-amber{background:var(--amber);}
-.sd-red{background:var(--red);}
+.sd-red{background:#FF6B6B;}
 </style>
 </head>
 <body>
-<nav id="cos-nav"></nav>
+<div id="cos-nav"></div>
 <div class="cos-page">
 <div class="cos-container">
-
-  <div class="cos-page-header">
-    <div class="cos-page-eyebrow">Church Departments</div>
-    <div class="cos-page-title">Departments</div>
-    <div class="cos-page-sub">All ministry areas — coordinators, status, and resources.</div>
+  <div class="cos-hero">
+    <div class="cos-hero-label">Ministry Departments</div>
+    <div class="cos-hero-title">Departments</div>
+    <div class="cos-hero-sub">All church ministry departments — coordinators, status, and operational notes.</div>
   </div>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;" id="dept-grid"></div>
-
+  <div class="cos-grid-2" id="dept-grid"></div>
 </div>
 </div>
-<div id="cos-mob-nav"></div>
-<div class="cos-toast" id="cos-toast"></div>
-<script src="assets/shell.js"></script>
+<script src="shell.js"></script>
 <script>
-const user = COS.requireAccess('departments');
-if(user){ COS.renderNav('departments'); initPage(); }
+const user = requireAuth();
+if(!user || !canAccess(user,'departments')) window.location.href='index.html';
+renderNav('departments');
 
-const DEPARTMENTS = [
-  { name:'Worship Ministry',       icon:'🎵', lead:'Transition — Caster Martins (interim)', status:'amber', note:'Rebuilding. Session musicians for April.' },
-  { name:'Media & Communications', icon:'🎥', lead:'Bolaji Olatoye',                         status:'amber', note:'6 recruits. Induction pending.' },
-  { name:'Evangelism',             icon:'📢', lead:'Ps Gbenga Adebanjo',                     status:'amber', note:'Needs reactivation.' },
-  { name:'Intercessory Prayer',    icon:'🙏', lead:'Ps Gbenga Adebanjo',                     status:'green', note:'Consistent. Pre-service prayer in place.' },
-  { name:'Children\'s Ministry',  icon:'👧', lead:'Adeola Awojobi',                          status:'green', note:'Functioning. DBS maintained.' },
-  { name:'Pastoral Care',          icon:'💛', lead:'Ps Gbenga Adebanjo',                     status:'amber', note:'Active but stretched during transition.' },
-  { name:'Hospitality',            icon:'🤝', lead:'Deaconess Janet Oviri',                  status:'green', note:'Consistent and welcoming.' },
-  { name:'Finance',                icon:'💰', lead:'Ps Kayode Ogungbenro',                   status:'amber', note:'Weekly reporting being formalised.' },
-  { name:'Meeting Operations',     icon:'⚙️', lead:'Mrs Pauline Tulloch',                   status:'amber', note:'Setup gap with recent departures.' },
-  { name:'Governance & Admin',     icon:'🏛️', lead:'Bolaji Olatoye',                        status:'amber', note:'Trustee changes required. In progress.' },
+const DEPTS = [
+  {icon:'🎵',name:'Worship Ministry',coordinator:'Caster Martins (interim)',status:'amber',note:'In transition. Professional band in place for 19th April. Long-term rebuild in progress.'},
+  {icon:'🎥',name:'Media & Communications',coordinator:'Bolaji Olatoye',status:'amber',note:'6 recruits onboarded. Induction session being scheduled. Scott as operational lead.'},
+  {icon:'🙏',name:'Intercessory Prayer',coordinator:'Pastor Gbenga Adebanjo',status:'green',note:'Running consistently. Pre-service prayer established.'},
+  {icon:'👶',name:"Children's Ministry",coordinator:'Adeola Awojobi',status:'green',note:'Functioning. DBS compliance maintained.'},
+  {icon:'🤝',name:'Hospitality',coordinator:'Deaconess Janet Oviri',status:'green',note:'Consistent and welcoming.'},
+  {icon:'📢',name:'Evangelism',coordinator:'Pastor Gbenga Adebanjo',status:'amber',note:'Largely dormant. Needs reactivation this quarter.'},
+  {icon:'❤️',name:'Pastoral Care',coordinator:'Pastor Gbenga Adebanjo',status:'amber',note:'Active but stretched with current transition season.'},
+  {icon:'💰',name:'Finance',coordinator:'Pastor Kayode Ogungbenro',status:'amber',note:'Weekly reporting being established. Balance healthy. Governance improvements in progress.'},
+  {icon:'🏗️',name:'Building & Environment',coordinator:'Deacon Femi Osipitan',status:'green',note:'Maintenance schedule in place.'},
+  {icon:'📋',name:'Admin & Operations',coordinator:'Pauline Tulloch',status:'amber',note:'Setup gaps being filled. Brother Ernest coordinating ushering rota.'},
 ];
 
-function initPage(){
-  const statusDot = { green:'sd-green', amber:'sd-amber', red:'sd-red' };
-  const statusLabel = { green:'Functioning well', amber:'Needs attention', red:'Urgent' };
-  document.getElementById('dept-grid').innerHTML = DEPARTMENTS.map(d=>`
-    <div class="dept-card">
-      <div class="dept-icon">${d.icon}</div>
-      <div class="dept-name">${d.name}</div>
-      <div class="dept-lead">${d.lead}</div>
-      <div style="font-size:12px;color:var(--ink-3);margin-top:6px;line-height:1.4;">${d.note}</div>
-      <div class="dept-status">
-        <div class="status-dot ${statusDot[d.status]}"></div>
-        <span style="font-size:11px;color:var(--ink-4);">${statusLabel[d.status]}</span>
-      </div>
-    </div>`).join('');
-}
+const statusLabel = {green:'Healthy',amber:'Needs attention',red:'Urgent'};
+const statusDot = {green:'sd-green',amber:'sd-amber',red:'sd-red'};
+
+document.getElementById('dept-grid').innerHTML = DEPTS.map(d=>`
+  <div class="dept-card">
+    <div class="dept-icon">${d.icon}</div>
+    <div class="dept-name">${d.name}</div>
+    <div class="dept-coordinator">${d.coordinator}</div>
+    <div class="dept-note">${d.note}</div>
+    <div style="margin-top:10px;">
+      <span class="badge ${d.status==='green'?'b-green':d.status==='amber'?'b-amber':'b-red'}">
+        <span class="status-dot ${statusDot[d.status]}"></span>${statusLabel[d.status]}
+      </span>
+    </div>
+  </div>`).join('');
 </script>
 </body>
 </html>

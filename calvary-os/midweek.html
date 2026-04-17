@@ -4,68 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Mid-week — Calvary OS</title>
-<link rel="stylesheet" href="assets/shell.css">
+<link rel="stylesheet" href="shell.css">
 </head>
 <body>
-<nav id="cos-nav"></nav>
+<div id="cos-nav"></div>
 <div class="cos-page">
 <div class="cos-container">
-
-  <div class="cos-page-header">
-    <div class="cos-page-eyebrow">Mid-week Meetings</div>
-    <div class="cos-page-title">Mid-week</div>
-    <div class="cos-page-sub">Wednesday and Friday sessions, resources and notes.</div>
+  <div class="cos-hero">
+    <div class="cos-hero-label">Mid-week Meetings</div>
+    <div class="cos-hero-title">Mid-week</div>
+    <div class="cos-hero-sub">Wednesday and Friday meetings — details, session leaders, Zoom links, notes.</div>
   </div>
-
   <div class="cos-grid-2">
-
-    <!-- Wednesday -->
-    <div class="cos-card">
-      <div class="cos-card-label">Wednesday Service</div>
-      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;">
-        <div style="width:42px;height:42px;border-radius:var(--r8);background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">📖</div>
-        <div>
-          <div style="font-size:15px;font-weight:600;color:var(--ink);">Bible Study / Prayer</div>
-          <div style="font-size:12px;color:var(--ink-4);margin-top:2px;">Details to be added</div>
-        </div>
-      </div>
-      <div style="background:var(--bg);border-radius:var(--r8);padding:14px;font-size:13px;color:var(--ink-4);text-align:center;">
-        Wednesday session details coming soon.
-      </div>
+    <div class="cos-card" style="border-top:3px solid var(--red);">
+      <div class="cos-card-label">Wednesday</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:6px;">Midweek Service</div>
+      <div style="font-size:12px;color:var(--ink-4);margin-bottom:14px;line-height:1.6;">Time: 7:00pm<br>Location: Calvary Hephzibah, Manchester<br>Zoom: Available on request</div>
+      <span class="badge b-green">Active</span>
     </div>
-
-    <!-- Friday -->
-    <div class="cos-card">
-      <div class="cos-card-label">Friday Service</div>
-      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;">
-        <div style="width:42px;height:42px;border-radius:var(--r8);background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🙏</div>
-        <div>
-          <div style="font-size:15px;font-weight:600;color:var(--ink);">Prayer & Worship</div>
-          <div style="font-size:12px;color:var(--ink-4);margin-top:2px;">Details to be added</div>
-        </div>
-      </div>
-      <div style="background:var(--bg);border-radius:var(--r8);padding:14px;font-size:13px;color:var(--ink-4);text-align:center;">
-        Friday session details coming soon.
-      </div>
+    <div class="cos-card" style="border-top:3px solid rgba(255,255,255,0.1);">
+      <div class="cos-card-label">Friday</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:6px;">Prayer Meeting</div>
+      <div style="font-size:12px;color:var(--ink-4);margin-bottom:14px;line-height:1.6;">Time: 7:00pm<br>Location: Calvary Hephzibah, Manchester<br>Zoom: Available on request</div>
+      <span class="badge b-green">Active</span>
     </div>
-
   </div>
-
-  <!-- This week -->
-  <div class="cos-card" style="background:var(--ink);border:none;color:white;">
-    <div class="cos-card-label" style="color:rgba(255,255,255,0.3);">This week — special note</div>
-    <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:8px;">Friday 17th April — Worship Rehearsal</div>
-    <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6;">Band rehearsal with Tosin Akindele's session musicians for Sunday 19th. Venue: Calvary Hephzibah church. Time TBC. All worship team members to attend.</div>
+  <div class="cos-card">
+    <div class="cos-card-label">Session Leaders</div>
+    <p style="font-size:13px;color:var(--ink-4);line-height:1.6;">Session leader schedule coming soon. This section will show who is leading each midweek service, their topic, any Zoom links, and handout materials.</p>
   </div>
-
+  <div class="cos-card" style="background:rgba(196,30,42,0.05);border-color:rgba(196,30,42,0.1);">
+    <div class="cos-card-label">Coming soon</div>
+    <p style="font-size:13px;color:var(--ink-4);line-height:1.6;">Session leader management with topic tracking, resource uploads, and attendance notes will be added to this section. Contact Bolaji to contribute content.</p>
+  </div>
 </div>
 </div>
-<div id="cos-mob-nav"></div>
-<div class="cos-toast" id="cos-toast"></div>
-<script src="assets/shell.js"></script>
+<script src="shell.js"></script>
 <script>
-const user = COS.requireAccess('midweek');
-if(user){ COS.renderNav('midweek'); }
+const user = requireAuth();
+if(!user || !canAccess(user,'midweek')) window.location.href='index.html';
+renderNav('midweek');
 </script>
 </body>
 </html>
