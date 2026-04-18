@@ -155,7 +155,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 // CONFIG
 // ============================================================
 const SUPABASE_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
-const SUPABASE_ANON_KEY = 'REPLACE_WITH_ANON_KEY';  // from Supabase dashboard → Project Settings → API
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';  // from Supabase dashboard → Project Settings → API
 
 const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   realtime: { params: { eventsPerSecond: 10 } }
