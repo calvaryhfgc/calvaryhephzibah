@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calvary Overlay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --shadow: 0 4px 24px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: transparent;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: white;
+    overflow: hidden;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Live status indicator (dev only — hidden with ?hud=off) */
+  .hud {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.6);
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: opacity 0.3s;
+    z-index: 100;
+  }
+  .hud.off { display: none; }
+  .hud .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #888;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .hud.connected .dot { background: #22c55e; }
+  .hud.error .dot { background: #ef4444; }
+
+  /* Stage — bottom-aligned by default, centred for verse mode */
+  .stage {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8vh;
+    padding: 0 6vw;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    pointer-events: none;
+  }
+  .stage.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* LYRIC MODE — two lines, huge, outlined for video legibility */
+  .lyric-line {
+    font-weight: 700;
+    font-size: clamp(3.5rem, 6.5vw, 6rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-shadow: var(--shadow);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.4);
+    margin: 0 auto;
+    max-width: 22ch;
+  }
+  .lyric-line + .lyric-line {
+    margin-top: 0.2em;
+  }
+
+  /* VERSE MODE — centred, serif for scripture, with reference below */
+  .verse-stage {
+    top: 50%;
+    bottom: auto;
+    transform: translate(0, -50%) translateY(20px);
+  }
+  .verse-stage.active {
+    transform: translate(0, -50%) translateY(0);
+  }
+  .verse-text {
+    font-family: 'Inter', serif;
+    font-weight: 600;
+    font-size: clamp(2.5rem, 4.5vw, 4rem);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    text-shadow: var(--shadow);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.4);
+    max-width: 30ch;
+    margin: 0 auto 1.5rem;
+  }
+  .verse-ref {
+    font-weight: 500;
+    font-size: clamp(1.25rem, 1.8vw, 1.75rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #C41E2A;
+    text-shadow: var(--shadow);
+  }
+
+  /* GRAPHIC MODE — full-bleed image, contained */
+  .graphic-stage {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .graphic-stage img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+</style>
+</head>
+<body>
+
+<div id="hud" class="hud"><span class="dot"></span><span id="hud-text">connecting…</span></div>
+
+<div id="lyric-stage" class="stage">
+  <div id="lyric-line1" class="lyric-line"></div>
+  <div id="lyric-line2" class="lyric-line"></div>
+</div>
+
+<div id="verse-stage" class="stage verse-stage">
+  <div id="verse-text" class="verse-text"></div>
+  <div id="verse-ref" class="verse-ref"></div>
+</div>
+
+<div id="graphic-stage" class="stage graphic-stage">
+  <img id="graphic-img" src="" alt="">
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// ============================================================
+// CONFIG
+// ============================================================
+const SUPABASE_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const SUPABASE_ANON_KEY = 'REPLACE_WITH_ANON_KEY';  // from Supabase dashboard → Project Settings → API
+
+const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  realtime: { params: { eventsPerSecond: 10 } }
+});
+
+// ============================================================
+// HUD (status indicator — hidden with ?hud=off in OBS)
+// ============================================================
+const hud = document.getElementById('hud');
+const hudText = document.getElementById('hud-text');
+const params = new URLSearchParams(location.search);
+if (params.get('hud') === 'off') hud.classList.add('off');
+
+function setStatus(state, label) {
+  hud.classList.remove('connected', 'error');
+  if (state) hud.classList.add(state);
+  hudText.textContent = label;
+}
+
+// ============================================================
+// STAGES
+// ============================================================
+const stages = {
+  lyric:   document.getElementById('lyric-stage'),
+  verse:   document.getElementById('verse-stage'),
+  graphic: document.getElementById('graphic-stage'),
+};
+
+function hideAll() {
+  Object.values(stages).forEach(s => s.classList.remove('active'));
+}
+
+function render(mode, payload) {
+  hideAll();
+
+  if (mode === 'blank' || !mode) return;
+
+  if (mode === 'lyric') {
+    document.getElementById('lyric-line1').textContent = payload.line1 || '';
+    document.getElementById('lyric-line2').textContent = payload.line2 || '';
+    requestAnimationFrame(() => stages.lyric.classList.add('active'));
+  } else if (mode === 'verse') {
+    document.getElementById('verse-text').textContent = payload.text || '';
+    document.getElementById('verse-ref').textContent =
+      [payload.reference, payload.version].filter(Boolean).join(' · ');
+    requestAnimationFrame(() => stages.verse.classList.add('active'));
+  } else if (mode === 'graphic' && payload.image_url) {
+    document.getElementById('graphic-img').src = payload.image_url;
+    requestAnimationFrame(() => stages.graphic.classList.add('active'));
+  }
+}
+
+// ============================================================
+// INITIAL FETCH + REALTIME SUBSCRIPTION
+// ============================================================
+async function fetchCurrent() {
+  const { data, error } = await client
+    .from('control_room_live')
+    .select('mode, payload')
+    .eq('id', 1)
+    .single();
+
+  if (error) {
+    setStatus('error', 'fetch failed');
+    console.error(error);
+    return;
+  }
+  render(data.mode, data.payload);
+  setStatus('connected', 'live');
+}
+
+function subscribe() {
+  const channel = client
+    .channel('control-room-live')
+    .on('postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'control_room_live', filter: 'id=eq.1' },
+      ({ new: row }) => render(row.mode, row.payload))
+    .subscribe((status) => {
+      if (status === 'SUBSCRIBED') setStatus('connected', 'live');
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        setStatus('error', 'reconnecting…');
+        setTimeout(() => { client.removeChannel(channel); subscribe(); }, 2000);
+      }
+    });
+}
+
+// ============================================================
+// BOOT
+// ============================================================
+fetchCurrent();
+subscribe();
+
+// Re-sync every 30s as a safety net (realtime should handle this,
+// but if the connection silently dies OBS won't notice)
+setInterval(fetchCurrent, 30000);
+</script>
+
+</body>
+</html>

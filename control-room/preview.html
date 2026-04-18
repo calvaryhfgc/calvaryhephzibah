@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Overlay Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    background: #0A0A0A;
+    color: white;
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+  .bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 14px 20px;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .bar button {
+    padding: 8px 14px;
+    background: #141414;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .bar button:hover { background: #1c1c1c; border-color: rgba(255,255,255,0.3); }
+  .bar .label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    align-self: center;
+    margin-right: 8px;
+  }
+  .stage-container {
+    padding-top: 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .preview {
+    aspect-ratio: 16 / 9;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .preview .caption {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 10px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 5;
+    color: rgba(255,255,255,0.8);
+  }
+  .preview.worship {
+    background: linear-gradient(135deg, #2c1810 0%, #5c2a1a 40%, #1a0d08 100%);
+  }
+  .preview.cam {
+    background: linear-gradient(180deg, #3d2f28 0%, #5c4a3f 50%, #2a1f18 100%);
+  }
+  .preview.stage-bg {
+    background: linear-gradient(180deg, #1a3a5c 0%, #2d5a87 60%, #0a1a30 100%);
+  }
+  .preview.daylight {
+    background: linear-gradient(180deg, #8ba8c4 0%, #b0c5d8 60%, #5a7590 100%);
+  }
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+  }
+  .note {
+    padding: 20px;
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    line-height: 1.6;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .note strong { color: white; }
+  .note code {
+    background: #141414;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <span class="label">Test:</span>
+  <button onclick="setOverlay('blank')">Blank</button>
+  <button onclick="setOverlay('lyric-short')">Lyric (short)</button>
+  <button onclick="setOverlay('lyric-long')">Lyric (long)</button>
+  <button onclick="setOverlay('verse-short')">Verse (short)</button>
+  <button onclick="setOverlay('verse-long')">Verse (long)</button>
+</div>
+
+<div class="stage-container">
+  <div class="preview worship">
+    <span class="caption">Worship lighting (warm)</span>
+    <iframe id="p1" srcdoc=""></iframe>
+  </div>
+  <div class="preview cam">
+    <span class="caption">Preacher mid-shot (brown)</span>
+    <iframe id="p2" srcdoc=""></iframe>
+  </div>
+  <div class="preview stage-bg">
+    <span class="caption">Stage (blue)</span>
+    <iframe id="p3" srcdoc=""></iframe>
+  </div>
+  <div class="preview daylight">
+    <span class="caption">Bright daylight (worst case)</span>
+    <iframe id="p4" srcdoc=""></iframe>
+  </div>
+</div>
+
+<div class="note">
+  <p><strong>What this is:</strong> a local preview of what the overlay will look like on top of different kinds of camera feeds. Use the buttons above to test different states. The hardest case is bright daylight — text must still be readable there.</p>
+  <p style="margin-top: 10px;">This page does NOT talk to Supabase. For the real thing, open <code>overlay.html</code> directly.</p>
+</div>
+
+<script>
+const STATES = {
+  'blank': { mode: 'blank', payload: {} },
+  'lyric-short': { mode: 'lyric', payload: { line1: 'Holy, holy, holy', line2: 'Lord God Almighty' } },
+  'lyric-long': { mode: 'lyric', payload: {
+    line1: "He's my rock, He's my fortress",
+    line2: "He's my deliverer, in Him will I trust"
+  } },
+  'verse-short': { mode: 'verse', payload: {
+    reference: 'John 3:16',
+    text: 'For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.',
+    version: 'KJV'
+  } },
+  'verse-long': { mode: 'verse', payload: {
+    reference: '1 Peter 3:15',
+    text: 'But sanctify the Lord God in your hearts: and be ready always to give an answer to every man that asketh you a reason of the hope that is in you with meekness and fear:',
+    version: 'KJV'
+  } },
+};
+
+function buildOverlay(state) {
+  const { mode, payload } = state;
+  return `
+<!DOCTYPE html><html><head>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:transparent;font-family:'Inter',sans-serif;color:white;overflow:hidden;-webkit-font-smoothing:antialiased}
+  :root{--shadow:0 4px 24px rgba(0,0,0,0.85),0 0 2px rgba(0,0,0,1)}
+  .stage{position:absolute;left:0;right:0;bottom:8vh;padding:0 6vw;text-align:center}
+  .lyric-line{font-weight:700;font-size:clamp(3.5rem,6.5vw,6rem);line-height:1.15;letter-spacing:-0.02em;text-shadow:var(--shadow);-webkit-text-stroke:1px rgba(0,0,0,0.4);max-width:22ch;margin:0 auto}
+  .lyric-line+.lyric-line{margin-top:0.2em}
+  .verse-stage{top:50%;bottom:auto;transform:translateY(-50%)}
+  .verse-text{font-weight:600;font-size:clamp(2.5rem,4.5vw,4rem);line-height:1.35;letter-spacing:-0.015em;text-shadow:var(--shadow);-webkit-text-stroke:1px rgba(0,0,0,0.4);max-width:30ch;margin:0 auto 1.5rem}
+  .verse-ref{font-weight:500;font-size:clamp(1.25rem,1.8vw,1.75rem);letter-spacing:0.08em;text-transform:uppercase;color:#C41E2A;text-shadow:var(--shadow)}
+</style></head><body>
+${mode === 'lyric' ? `
+  <div class="stage">
+    <div class="lyric-line">${payload.line1 || ''}</div>
+    <div class="lyric-line">${payload.line2 || ''}</div>
+  </div>` : ''}
+${mode === 'verse' ? `
+  <div class="stage verse-stage">
+    <div class="verse-text">${payload.text || ''}</div>
+    <div class="verse-ref">${payload.reference} · ${payload.version}</div>
+  </div>` : ''}
+</body></html>`;
+}
+
+function setOverlay(key) {
+  const state = STATES[key];
+  const html = buildOverlay(state);
+  ['p1','p2','p3','p4'].forEach(id => {
+    document.getElementById(id).srcdoc = html;
+  });
+}
+
+// Start on lyric
+setOverlay('lyric-short');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0A0A0A">
+<title>Calvary Control Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1c1c1c;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --text: #FFFFFF;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --text-dim: rgba(255, 255, 255, 0.4);
+    --red: #C41E2A;
+    --red-glow: rgba(196, 30, 42, 0.25);
+    --green: #22c55e;
+    --amber: #F59E0B;
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  input {
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+  }
+  input:focus { outline: none; }
+  .serif { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -0.01em; }
+  .muted { color: var(--text-muted); }
+  .hidden { display: none !important; }
+
+  /* ============ LOGIN ============ */
+  #login {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 32px 24px;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  .brand {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .brand-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--red);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .brand h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+  .brand p {
+    color: var(--text-muted);
+    margin-top: 8px;
+    font-size: 15px;
+  }
+  .user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .user-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .user-btn:hover, .user-btn.selected {
+    border-color: var(--red);
+    background: var(--surface-2);
+  }
+  .user-btn .name { font-weight: 600; }
+  .user-btn .role {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .pin-entry { display: none; }
+  .pin-entry.show { display: block; }
+  .pin-entry h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .pin-entry .for { color: var(--text-muted); margin-bottom: 20px; font-size: 14px; }
+  .pin-input {
+    width: 100%;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 12px;
+    margin-bottom: 12px;
+  }
+  .pin-input:focus { border-color: var(--red); }
+  .pin-error {
+    color: #f87171;
+    font-size: 14px;
+    text-align: center;
+    min-height: 20px;
+  }
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-top: 12px;
+  }
+
+  /* ============ APP SHELL ============ */
+  #app { display: none; min-height: 100vh; flex-direction: column; }
+  #app.show { display: flex; }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding-top: calc(14px + env(safe-area-inset-top));
+  }
+  .topbar .title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+  }
+  .topbar .live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-dim);
+  }
+  .live.connected .live-dot { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .live.error .live-dot { background: #ef4444; }
+
+  /* ============ NOW PLAYING ============ */
+  .now-playing {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin: 16px 20px;
+  }
+  .now-playing .mode-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .now-playing .mode-tag.blank { background: rgba(255,255,255,0.08); color: var(--text-muted); }
+  .now-playing .mode-tag.lyric { background: var(--red-glow); color: #ff6b74; }
+  .now-playing .mode-tag.verse { background: rgba(245, 158, 11, 0.2); color: var(--amber); }
+  .now-playing .mode-tag.graphic { background: rgba(34, 197, 94, 0.2); color: var(--green); }
+  .now-playing .np-title {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .now-playing .np-line {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    line-height: 1.2;
+    min-height: 1.2em;
+  }
+  .now-playing .np-line + .np-line {
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .now-playing.blank .np-line {
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  /* ============ TRANSPORT (Next / Prev / Blank) ============ */
+  .transport {
+    display: grid;
+    grid-template-columns: 1fr 1fr 2fr;
+    gap: 10px;
+    padding: 0 20px 16px;
+  }
+  .transport button {
+    height: 64px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    transition: transform 0.08s, background 0.15s, border-color 0.15s;
+  }
+  .transport button:active { transform: scale(0.97); }
+  .transport button:hover { background: var(--surface-2); border-color: var(--border-strong); }
+  .transport .next {
+    background: var(--red);
+    border-color: var(--red);
+  }
+  .transport .next:hover { background: #e02b38; border-color: #e02b38; }
+  .transport button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* ============ SETLIST ============ */
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 20px 10px;
+  }
+  .section-head h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+  }
+  .date-pill {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+  }
+  .setlist {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .song-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .song-card.active { border-color: var(--red); background: var(--surface-2); }
+  .song-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    cursor: pointer;
+  }
+  .song-head .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .song-head .title { font-weight: 600; font-size: 16px; }
+  .song-head .sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .song-head .right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .song-slides {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 8px;
+    gap: 4px;
+    flex-direction: column;
+  }
+  .song-card.open .song-slides { display: flex; }
+  .slide-row {
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    transition: background 0.12s;
+  }
+  .slide-row:hover { background: var(--surface-2); }
+  .slide-row.live { background: var(--red-glow); border-left: 3px solid var(--red); padding-left: 9px; }
+  .slide-num {
+    color: var(--text-dim);
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 20px;
+    padding-top: 2px;
+  }
+  .slide-text {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+  .slide-text .l2 { color: var(--text-muted); }
+
+  /* ============ BIBLE SEARCH ============ */
+  .bible-panel {
+    margin: 24px 20px 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .bible-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .bible-input-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .bible-input {
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-weight: 500;
+  }
+  .bible-input::placeholder { color: var(--text-dim); }
+  .bible-go {
+    padding: 0 20px;
+    background: var(--red);
+    border-radius: var(--radius);
+    font-weight: 700;
+  }
+  .bible-go:hover { background: #e02b38; }
+  .bible-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+  }
+  .bible-result {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-top: 10px;
+    display: none;
+  }
+  .bible-result.show { display: block; }
+  .bible-ref {
+    font-size: 11px;
+    color: var(--red);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .bible-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+  .bible-push {
+    background: var(--red);
+    color: white;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    width: 100%;
+  }
+  .bible-push:hover { background: #e02b38; }
+  .bible-error {
+    color: #f87171;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    text-align: center;
+    padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+    color: var(--text-dim);
+    font-size: 12px;
+  }
+  .footer a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px; }
+  .logout-btn {
+    background: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <div class="brand">
+    <span class="brand-badge">Calvary</span>
+    <h1>Control Room</h1>
+    <p>Lyrics · Verses · Graphics</p>
+  </div>
+
+  <div id="user-picker">
+    <div class="user-list" id="user-list">
+      <!-- populated by JS -->
+    </div>
+  </div>
+
+  <div id="pin-entry" class="pin-entry">
+    <h2>Enter PIN</h2>
+    <p class="for">for <span id="pin-for">...</span></p>
+    <input id="pin-input" class="pin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="• • • •">
+    <div id="pin-error" class="pin-error"></div>
+    <button class="link-btn" onclick="resetLogin()">← Back to users</button>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <div class="topbar">
+    <div class="title">Control Room</div>
+    <div id="live-indicator" class="live">
+      <span class="live-dot"></span>
+      <span id="live-text">connecting</span>
+    </div>
+  </div>
+
+  <!-- Now Playing -->
+  <div id="now-playing" class="now-playing blank">
+    <div class="mode-tag blank" id="np-tag">Blank</div>
+    <div class="np-title" id="np-title">Nothing on screen</div>
+    <div class="np-line" id="np-line1">—</div>
+    <div class="np-line" id="np-line2"></div>
+  </div>
+
+  <!-- Transport -->
+  <div class="transport">
+    <button onclick="prev()" id="btn-prev">← Prev</button>
+    <button onclick="blank()" id="btn-blank">Blank</button>
+    <button onclick="next()" class="next" id="btn-next">Next →</button>
+  </div>
+
+  <!-- Setlist -->
+  <div class="section-head">
+    <h3>Today's set list</h3>
+    <span class="date-pill" id="date-pill">—</span>
+  </div>
+  <div id="setlist" class="setlist">
+    <!-- populated -->
+  </div>
+
+  <!-- Bible -->
+  <div class="bible-panel">
+    <h3>Scripture search</h3>
+    <div class="bible-input-row">
+      <input id="bible-input" class="bible-input" type="text" placeholder="e.g. John 3:16" autocomplete="off">
+      <button class="bible-go" onclick="searchVerse()">Find</button>
+    </div>
+    <div class="bible-hint">Type a reference like <em>John 3:16</em> or <em>1 Cor 13:4</em></div>
+    <div id="bible-result" class="bible-result">
+      <div id="bible-ref" class="bible-ref"></div>
+      <div id="bible-text" class="bible-text"></div>
+      <button class="bible-push" onclick="pushVerse()">Push to screen</button>
+    </div>
+    <div id="bible-error" class="bible-error"></div>
+  </div>
+
+  <div class="footer">
+    <p>Signed in as <span id="user-display" class="muted">—</span> · <button class="logout-btn" onclick="logout()">Sign out</button></p>
+    <p style="margin-top: 8px;">Overlay URL: <a id="overlay-link" href="overlay.html" target="_blank">overlay.html</a></p>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// ============================================================
+// CONFIG
+// ============================================================
+const SUPABASE_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const SUPABASE_ANON_KEY = 'REPLACE_WITH_ANON_KEY';
+const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// djb2 hash — same as The Bridge / Calvary OS PIN hashing
+function hashPin(p) {
+  let h = 5381;
+  for (let i = 0; i < p.length; i++) h = ((h << 5) + h) ^ p.charCodeAt(i);
+  return 'bp_' + (h >>> 0).toString(36);
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let currentUser = null;
+let plan = null;               // { id, service_date, items: [{ id, kind, title, slides:[], section }] }
+let currentSongIdx = -1;       // index into plan.items
+let currentSlideIdx = -1;      // index into plan.items[currentSongIdx].slides
+let allUsers = [];
+let verseResult = null;        // { reference, text, version }
+
+// ============================================================
+// LOGIN
+// ============================================================
+async function loadUsers() {
+  const { data, error } = await client
+    .from('control_room_users')
+    .select('id, name, pin_hash, role, active')
+    .eq('active', true)
+    .order('name');
+  if (error) { console.error(error); return; }
+  allUsers = data;
+  const list = document.getElementById('user-list');
+  list.innerHTML = data.map(u => `
+    <button class="user-btn" onclick="window.pickUser('${u.id}')">
+      <span class="name">${u.name}</span>
+      <span class="role">${u.role}</span>
+    </button>
+  `).join('');
+}
+
+window.pickUser = (id) => {
+  const u = allUsers.find(x => x.id === id);
+  if (!u) return;
+  document.getElementById('user-picker').classList.add('hidden');
+  document.getElementById('pin-entry').classList.add('show');
+  document.getElementById('pin-for').textContent = u.name;
+  document.getElementById('pin-input').dataset.userId = id;
+  document.getElementById('pin-input').focus();
+};
+
+window.resetLogin = () => {
+  document.getElementById('user-picker').classList.remove('hidden');
+  document.getElementById('pin-entry').classList.remove('show');
+  document.getElementById('pin-input').value = '';
+  document.getElementById('pin-error').textContent = '';
+};
+
+document.getElementById('pin-input').addEventListener('input', (e) => {
+  const pin = e.target.value;
+  if (pin.length !== 4) return;
+  const uid = e.target.dataset.userId;
+  const user = allUsers.find(x => x.id === uid);
+  if (!user) return;
+  if (hashPin(pin) === user.pin_hash) {
+    currentUser = user;
+    sessionStorage.setItem('cr_user', JSON.stringify(user));
+    enterApp();
+  } else {
+    document.getElementById('pin-error').textContent = 'Wrong PIN. Try again.';
+    e.target.value = '';
+  }
+});
+
+window.logout = () => {
+  sessionStorage.removeItem('cr_user');
+  location.reload();
+};
+
+// ============================================================
+// APP BOOT
+// ============================================================
+async function enterApp() {
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  document.getElementById('user-display').textContent = currentUser.name;
+  document.getElementById('overlay-link').href = 'overlay.html';
+  await loadPlan();
+  subscribeLive();
+}
+
+async function loadPlan() {
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById('date-pill').textContent = new Date().toLocaleDateString('en-GB', {
+    weekday: 'short', day: 'numeric', month: 'short'
+  });
+
+  const { data: plans } = await client
+    .from('control_room_plans')
+    .select('id, service_date, notes')
+    .eq('service_date', today)
+    .limit(1);
+
+  if (!plans || plans.length === 0) {
+    renderEmptyPlan();
+    return;
+  }
+
+  const { data: items } = await client
+    .from('control_room_plan_items')
+    .select('*')
+    .eq('plan_id', plans[0].id)
+    .order('position');
+
+  plan = { ...plans[0], items: items || [] };
+  renderSetlist();
+}
+
+function renderEmptyPlan() {
+  document.getElementById('setlist').innerHTML = `
+    <div style="padding: 32px; text-align: center; background: var(--surface); border-radius: var(--radius-lg); border: 1px dashed var(--border-strong);">
+      <div style="font-family: 'Instrument Serif', serif; font-size: 22px; margin-bottom: 6px;">No set list loaded</div>
+      <div class="muted" style="font-size: 14px;">Upload songs for today in the admin panel.</div>
+    </div>
+  `;
+}
+
+function renderSetlist() {
+  const sl = document.getElementById('setlist');
+  if (!plan || plan.items.length === 0) return renderEmptyPlan();
+
+  sl.innerHTML = plan.items.map((item, i) => {
+    const isActive = i === currentSongIdx;
+    const slides = (item.slides || []).map((s, j) => {
+      const isLive = isActive && j === currentSlideIdx;
+      return `
+        <div class="slide-row ${isLive ? 'live' : ''}" onclick="window.goto(${i}, ${j})">
+          <div class="slide-num">${j + 1}</div>
+          <div class="slide-text">
+            <div>${escapeHtml(s.line1 || '')}</div>
+            ${s.line2 ? `<div class="l2">${escapeHtml(s.line2)}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="song-card ${isActive ? 'active open' : ''}" data-idx="${i}">
+        <div class="song-head" onclick="window.toggleSong(${i})">
+          <div class="meta">
+            <div class="title">${escapeHtml(item.title)}</div>
+            <div class="sub">${item.section || item.kind} · ${(item.slides || []).length} slides</div>
+          </div>
+          <div class="right">${isActive ? 'Playing' : ''}</div>
+        </div>
+        <div class="song-slides">${slides}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.toggleSong = (i) => {
+  document.querySelectorAll('.song-card').forEach(c => {
+    if (parseInt(c.dataset.idx) === i) c.classList.toggle('open');
+  });
+};
+
+window.goto = async (songIdx, slideIdx) => {
+  currentSongIdx = songIdx;
+  currentSlideIdx = slideIdx;
+  const item = plan.items[songIdx];
+  const slide = item.slides[slideIdx];
+  await pushLive('lyric', {
+    song_title: item.title,
+    line1: slide.line1 || '',
+    line2: slide.line2 || ''
+  });
+  renderSetlist();
+};
+
+// ============================================================
+// TRANSPORT
+// ============================================================
+window.next = async () => {
+  if (!plan) return;
+  if (currentSongIdx === -1) return goto(0, 0);
+  const song = plan.items[currentSongIdx];
+  if (currentSlideIdx + 1 < (song.slides || []).length) {
+    return goto(currentSongIdx, currentSlideIdx + 1);
+  }
+  // next song
+  if (currentSongIdx + 1 < plan.items.length) {
+    return goto(currentSongIdx + 1, 0);
+  }
+};
+
+window.prev = async () => {
+  if (!plan || currentSongIdx === -1) return;
+  if (currentSlideIdx > 0) return goto(currentSongIdx, currentSlideIdx - 1);
+  if (currentSongIdx > 0) {
+    const prevSong = plan.items[currentSongIdx - 1];
+    return goto(currentSongIdx - 1, (prevSong.slides || []).length - 1);
+  }
+};
+
+window.blank = async () => {
+  currentSongIdx = -1;
+  currentSlideIdx = -1;
+  await pushLive('blank', {});
+  renderSetlist();
+};
+
+// ============================================================
+// BIBLE SEARCH
+// ============================================================
+document.getElementById('bible-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') searchVerse();
+});
+
+window.searchVerse = async () => {
+  const q = document.getElementById('bible-input').value.trim();
+  const err = document.getElementById('bible-error');
+  const res = document.getElementById('bible-result');
+  err.textContent = '';
+  res.classList.remove('show');
+  if (!q) return;
+
+  const parsed = parseRef(q);
+  if (!parsed) {
+    err.textContent = 'Couldn\'t parse that reference. Try "John 3:16" or "1 Cor 13:4".';
+    return;
+  }
+
+  const { data, error } = await client
+    .from('control_room_bible')
+    .select('book, chapter, verse, text, version')
+    .eq('version', 'KJV')
+    .ilike('book', parsed.book + '%')
+    .eq('chapter', parsed.chapter)
+    .eq('verse', parsed.verse)
+    .limit(1);
+
+  if (error || !data || data.length === 0) {
+    err.textContent = 'Verse not found. Check the reference and try again.';
+    return;
+  }
+
+  const v = data[0];
+  verseResult = {
+    reference: `${v.book} ${v.chapter}:${v.verse}`,
+    text: v.text,
+    version: v.version
+  };
+  document.getElementById('bible-ref').textContent = verseResult.reference + ' · ' + v.version;
+  document.getElementById('bible-text').textContent = v.text;
+  res.classList.add('show');
+};
+
+window.pushVerse = async () => {
+  if (!verseResult) return;
+  currentSongIdx = -1;
+  currentSlideIdx = -1;
+  await pushLive('verse', verseResult);
+  renderSetlist();
+};
+
+// Book name aliases — lets operator type "1 cor" or "jn"
+const BOOK_ALIASES = {
+  'gen': 'Genesis', 'ge': 'Genesis',
+  'ex': 'Exodus', 'exo': 'Exodus',
+  'lev': 'Leviticus',
+  'num': 'Numbers',
+  'deut': 'Deuteronomy', 'dt': 'Deuteronomy',
+  'josh': 'Joshua',
+  'judg': 'Judges', 'jdg': 'Judges',
+  'ruth': 'Ruth',
+  '1sam': '1 Samuel', '1 sam': '1 Samuel',
+  '2sam': '2 Samuel', '2 sam': '2 Samuel',
+  '1kgs': '1 Kings', '1 kgs': '1 Kings', '1 ki': '1 Kings',
+  '2kgs': '2 Kings', '2 kgs': '2 Kings', '2 ki': '2 Kings',
+  'ps': 'Psalms', 'psa': 'Psalms', 'psalm': 'Psalms',
+  'prov': 'Proverbs', 'pr': 'Proverbs',
+  'eccl': 'Ecclesiastes', 'ecc': 'Ecclesiastes',
+  'song': 'Song of Solomon',
+  'isa': 'Isaiah',
+  'jer': 'Jeremiah',
+  'lam': 'Lamentations',
+  'ezek': 'Ezekiel', 'ezk': 'Ezekiel',
+  'dan': 'Daniel',
+  'matt': 'Matthew', 'mt': 'Matthew',
+  'mk': 'Mark', 'mrk': 'Mark',
+  'lk': 'Luke', 'luk': 'Luke',
+  'jn': 'John', 'jhn': 'John',
+  'acts': 'Acts', 'ac': 'Acts',
+  'rom': 'Romans',
+  '1cor': '1 Corinthians', '1 cor': '1 Corinthians',
+  '2cor': '2 Corinthians', '2 cor': '2 Corinthians',
+  'gal': 'Galatians',
+  'eph': 'Ephesians',
+  'phil': 'Philippians', 'php': 'Philippians',
+  'col': 'Colossians',
+  '1thess': '1 Thessalonians', '1 thess': '1 Thessalonians', '1 th': '1 Thessalonians',
+  '2thess': '2 Thessalonians', '2 thess': '2 Thessalonians', '2 th': '2 Thessalonians',
+  '1tim': '1 Timothy', '1 tim': '1 Timothy',
+  '2tim': '2 Timothy', '2 tim': '2 Timothy',
+  'tit': 'Titus',
+  'phlm': 'Philemon',
+  'heb': 'Hebrews',
+  'jas': 'James', 'jam': 'James',
+  '1pet': '1 Peter', '1 pet': '1 Peter', '1pe': '1 Peter',
+  '2pet': '2 Peter', '2 pet': '2 Peter', '2pe': '2 Peter',
+  '1jn': '1 John', '1 jn': '1 John',
+  '2jn': '2 John', '2 jn': '2 John',
+  '3jn': '3 John', '3 jn': '3 John',
+  'rev': 'Revelation'
+};
+
+function parseRef(q) {
+  // "John 3:16", "1 Cor 13:4", "jn 3:16"
+  const m = q.match(/^\s*(\d?\s?[a-z]+)\s*(\d+)\s*[:\.]\s*(\d+)\s*$/i);
+  if (!m) return null;
+  const rawBook = m[1].trim().toLowerCase().replace(/\s+/g, ' ');
+  const book = BOOK_ALIASES[rawBook]
+            || BOOK_ALIASES[rawBook.replace(/\s/g, '')]
+            || (rawBook.charAt(0).toUpperCase() + rawBook.slice(1));
+  return { book, chapter: parseInt(m[2]), verse: parseInt(m[3]) };
+}
+
+// ============================================================
+// LIVE STATE (push + subscribe)
+// ============================================================
+async function pushLive(mode, payload) {
+  const { error } = await client
+    .from('control_room_live')
+    .update({
+      mode, payload,
+      updated_at: new Date().toISOString(),
+      updated_by: currentUser.name
+    })
+    .eq('id', 1);
+  if (error) console.error('push failed', error);
+}
+
+function subscribeLive() {
+  const indicator = document.getElementById('live-indicator');
+  const text = document.getElementById('live-text');
+
+  // Initial fetch
+  client.from('control_room_live').select('mode, payload').eq('id', 1).single()
+    .then(({ data }) => { if (data) renderNowPlaying(data.mode, data.payload); });
+
+  client.channel('control-room-live-operator')
+    .on('postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'control_room_live', filter: 'id=eq.1' },
+      ({ new: row }) => renderNowPlaying(row.mode, row.payload))
+    .subscribe((status) => {
+      indicator.classList.remove('connected', 'error');
+      if (status === 'SUBSCRIBED') { indicator.classList.add('connected'); text.textContent = 'live'; }
+      else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        indicator.classList.add('error'); text.textContent = 'reconnecting';
+      }
+    });
+}
+
+function renderNowPlaying(mode, payload) {
+  const np = document.getElementById('now-playing');
+  const tag = document.getElementById('np-tag');
+  const title = document.getElementById('np-title');
+  const l1 = document.getElementById('np-line1');
+  const l2 = document.getElementById('np-line2');
+
+  np.className = 'now-playing ' + mode;
+  tag.className = 'mode-tag ' + mode;
+  tag.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
+
+  if (mode === 'blank') {
+    title.textContent = 'Nothing on screen';
+    l1.textContent = '—';
+    l2.textContent = '';
+  } else if (mode === 'lyric') {
+    title.textContent = payload.song_title || 'Song';
+    l1.textContent = payload.line1 || '';
+    l2.textContent = payload.line2 || '';
+  } else if (mode === 'verse') {
+    title.textContent = (payload.reference || '') + (payload.version ? ' · ' + payload.version : '');
+    l1.textContent = payload.text || '';
+    l2.textContent = '';
+  } else if (mode === 'graphic') {
+    title.textContent = payload.name || 'Graphic';
+    l1.textContent = '(image on screen)';
+    l2.textContent = '';
+  }
+}
+
+// ============================================================
+// UTILS
+// ============================================================
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ============================================================
+// BOOT
+// ============================================================
+(async () => {
+  const saved = sessionStorage.getItem('cr_user');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    await enterApp();
+  } else {
+    await loadUsers();
+  }
+})();
+</script>
+
+</body>
+</html>
