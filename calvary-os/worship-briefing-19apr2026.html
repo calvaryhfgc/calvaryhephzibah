@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Worship Briefing — Sunday 19th April 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{
+  --red:#C41E2A;--red-light:#FEF2F2;--red-mid:#FECACA;
+  --ink:#111827;--ink-2:#374151;--ink-3:#6B7280;--ink-4:#9CA3AF;--ink-5:#E5E7EB;--ink-6:#F9FAFB;
+  --white:#FFFFFF;--bg:#F5F6FA;
+  --green:#16A34A;--green-light:#F0FDF4;
+  --amber:#D97706;--amber-light:#FFFBEB;
+  --purple:#7C3AED;--purple-light:#F3E8FF;
+  --blue:#2563EB;--blue-light:#EFF6FF;
+}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;}
+.container{max-width:780px;margin:0 auto;padding:32px 20px 80px;}
+
+/* Header */
+.header{background:var(--red);border-radius:20px;padding:32px 28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-60px;right:-40px;width:200px;height:200px;background:rgba(255,255,255,0.07);border-radius:50%;}
+.header::after{content:'';position:absolute;bottom:-30px;right:80px;width:100px;height:100px;background:rgba(255,255,255,0.05);border-radius:50%;}
+.header-eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:8px;}
+.header-title{font-family:'Lora',serif;font-size:28px;font-weight:600;color:white;line-height:1.2;margin-bottom:6px;}
+.header-sub{font-size:14px;color:rgba(255,255,255,0.8);}
+.header-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.meta-chip{background:rgba(255,255,255,0.15);color:white;font-size:12px;font-weight:500;padding:5px 12px;border-radius:100px;}
+
+/* Vibe card */
+.vibe-card{background:var(--ink);border-radius:16px;padding:22px 24px;margin-bottom:20px;}
+.vibe-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.vibe-headline{font-family:'Lora',serif;font-size:20px;color:white;margin-bottom:10px;font-style:italic;}
+.vibe-points{display:flex;flex-direction:column;gap:6px;}
+.vibe-point{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:rgba(255,255,255,0.8);}
+.vibe-point::before{content:'→';color:var(--red);font-weight:700;flex-shrink:0;}
+
+/* Team */
+.team-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+.team-chip{display:flex;align-items:center;gap:8px;background:var(--white);border:1.5px solid var(--ink-5);border-radius:100px;padding:7px 14px 7px 8px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
+.team-av{width:28px;height:28px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;}
+.team-name{font-size:13px;font-weight:600;color:var(--ink);}
+.team-role{font-size:11px;color:var(--ink-4);}
+
+/* Section headers */
+.section-block{margin-bottom:28px;}
+.section-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.section-label-pill{background:var(--red);color:white;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:100px;}
+.section-keys{font-size:12px;color:var(--ink-4);font-weight:500;}
+.section-note{font-size:13px;color:var(--ink-3);font-style:italic;}
+
+/* Song card */
+.song-card{background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:20px 22px;margin-bottom:12px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
+.song-card.highlight{border-left:4px solid var(--red);}
+.song-number{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:var(--red);color:white;font-size:11px;font-weight:700;flex-shrink:0;margin-right:8px;}
+.song-title{font-family:'Lora',serif;font-size:19px;font-weight:600;color:var(--ink);display:inline;}
+.song-artist{font-size:12px;color:var(--ink-4);margin-top:2px;margin-bottom:14px;}
+.song-meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.key-badge{background:var(--ink-6);border:1px solid var(--ink-5);color:var(--ink-2);font-size:12px;font-weight:600;padding:3px 10px;border-radius:6px;font-family:monospace;}
+.tempo-badge{background:var(--purple-light);color:var(--purple);font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;}
+.energy-badge{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px;}
+.e-high{background:#FEF3C7;color:#92400E;}
+.e-build{background:var(--green-light);color:var(--green);}
+.e-tender{background:var(--blue-light);color:var(--blue);}
+.e-celebratory{background:var(--red-light);color:var(--red);}
+
+/* Chord chart */
+.chord-section{margin-bottom:12px;}
+.chord-section-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;}
+.chord-row{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px;}
+.chord-part{font-size:11px;color:var(--ink-4);min-width:60px;flex-shrink:0;}
+.chords{font-family:monospace;font-size:15px;font-weight:700;color:var(--ink);letter-spacing:2px;}
+.chord-note{font-size:12px;color:var(--ink-3);font-style:italic;margin-top:4px;}
+
+/* Vibe notes */
+.vibe-note{background:var(--ink-6);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:10px 14px;margin:12px 0;font-size:13px;color:var(--ink-2);line-height:1.6;}
+.vibe-note strong{color:var(--ink);font-weight:600;}
+
+/* Transition */
+.transition-block{background:var(--amber-light);border:1.5px solid var(--amber-mid,#FDE68A);border-radius:12px;padding:12px 16px;margin:10px 0;display:flex;gap:10px;align-items:flex-start;}
+.transition-icon{font-size:16px;flex-shrink:0;}
+.transition-text{font-size:13px;color:var(--ink-2);line-height:1.6;}
+.transition-text strong{color:var(--amber);font-weight:600;}
+
+/* Rehearsal note */
+.rehearsal-note{background:var(--purple-light);border:1.5px solid #DDD6FE;border-radius:12px;padding:12px 16px;margin:10px 0;display:flex;gap:10px;align-items:flex-start;}
+.rehearsal-text{font-size:13px;color:#4C1D95;line-height:1.6;}
+
+/* Audio clip placeholder */
+.audio-clip{background:var(--ink);border-radius:10px;padding:12px 16px;margin:10px 0;display:flex;align-items:center;gap:12px;}
+.play-btn{width:34px;height:34px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;text-decoration:none;}
+.audio-label{font-size:13px;font-weight:600;color:white;}
+.audio-desc{font-size:11px;color:rgba(255,255,255,0.5);margin-top:1px;}
+.audio-pending{font-size:12px;color:rgba(255,255,255,0.4);font-style:italic;}
+
+/* General instructions */
+.instruction-card{background:var(--white);border:1px solid var(--ink-5);border-radius:14px;padding:18px 20px;margin-bottom:10px;}
+.instruction-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.instruction-list{display:flex;flex-direction:column;gap:6px;}
+.instruction-item{display:flex;gap:10px;font-size:14px;color:var(--ink-2);line-height:1.5;}
+.instruction-item::before{content:'•';color:var(--red);font-weight:700;flex-shrink:0;}
+
+/* Divider */
+.flow-divider{display:flex;align-items:center;gap:8px;margin:6px 0 14px;padding-left:4px;}
+.flow-arrow{font-size:18px;color:var(--ink-4);}
+.flow-note{font-size:12px;color:var(--ink-4);font-style:italic;}
+
+@media(max-width:600px){
+  .container{padding:16px 14px 60px;}
+  .header{padding:24px 20px;}
+  .header-title{font-size:22px;}
+  .song-card{padding:16px 18px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-eyebrow">Worship Team Briefing</div>
+    <div class="header-title">Sunday 19th April 2026</div>
+    <div class="header-sub">Calvary Hephzibah Full Gospel Church · 10:30am</div>
+    <div class="header-meta">
+      <span class="meta-chip">🎵 8 songs</span>
+      <span class="meta-chip">🎹 B · E · G</span>
+      <span class="meta-chip">⏱ ~35 mins</span>
+      <span class="meta-chip">First Sunday post-transition</span>
+    </div>
+  </div>
+
+  <!-- Vibe -->
+  <div class="vibe-card">
+    <div class="vibe-label">The Direction</div>
+    <div class="vibe-headline">"Familiar but fresh. Traditional but tight and tidy."</div>
+    <div class="vibe-points">
+      <div class="vibe-point">Greatest hits energy — play the parts everyone knows. No deep dives into bridges or extended vamps.</div>
+      <div class="vibe-point">If the lyrics weren't on screen, people should still know where they are.</div>
+      <div class="vibe-point">Start with a bang and keep the energy high — but with dynamics. Let it breathe where it needs to.</div>
+      <div class="vibe-point">Tight transitions. Don't let the energy drop between songs. Keep the cadence going.</div>
+      <div class="vibe-point">This is the congregation's first Sunday in the new season. Make it feel like home.</div>
+    </div>
+  </div>
+
+  <!-- Team -->
+  <div class="team-row">
+    <div class="team-chip"><div class="team-av">V</div><div><div class="team-name">Vanessa</div><div class="team-role">Lead Vocalist</div></div></div>
+    <div class="team-chip"><div class="team-av">E</div><div><div class="team-name">Esther</div><div class="team-role">Backing vocalist</div></div></div>
+    <div class="team-chip"><div class="team-av">Ed</div><div><div class="team-name">Eddie</div><div class="team-role">Keys</div></div></div>
+    <div class="team-chip"><div class="team-av">La</div><div><div class="team-name">Laolu</div><div class="team-role">Drums</div></div></div>
+    <div class="team-chip"><div class="team-av">Mo</div><div><div class="team-name">Morayo</div><div class="team-role">Electric guitar</div></div></div>
+    <div class="team-chip"><div class="team-av">BA</div><div><div class="team-name">Bolaji A</div><div class="team-role">Bass</div></div></div>
+  </div>
+
+  <!-- PRAISE SECTION -->
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-label-pill">Praise</span>
+      <span class="section-keys">B major → E major</span>
+    </div>
+    <div class="section-note">Open strong. Full band from bar one. Congregation should feel it immediately.</div>
+
+    <!-- Song 1 -->
+    <div class="song-card highlight">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">1</span>
+        <span class="song-title">Trading My Sorrows</span>
+      </div>
+      <div class="song-artist">Darrell Evans</div>
+      <div class="song-meta-row">
+        <span class="key-badge">B major</span>
+        <span class="tempo-badge">↑ Upbeat</span>
+        <span class="energy-badge e-high">🔥 High energy — OPEN HERE</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse</span>
+          <span class="chords">1 — 5 — 6m — 4</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Chorus</span>
+          <span class="chords">1 — 5 — 4 — 4</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Yes Lord</span>
+          <span class="chords">1 — 5 — 6m — 4</span>
+        </div>
+        <div class="chord-note">In B: 1=B · 4=E · 5=F# · 6m=G#m</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> Verse → Chorus → "Yes Lord" section → Chorus out. Don't go into the bridge. Keep it to the parts everyone sings without thinking.</div>
+      <div class="vibe-note"><strong>Drums:</strong> Full from bar one. This is the bang. Drive it.</div>
+
+      <div class="audio-clip">
+        <a href="https://drive.google.com/file/d/1I4jlxHp_WXqm9FX_SrPjS9cpKtacSp62/view?usp=sharing" target="_blank" class="play-btn">▶</a>
+        <div><div class="audio-label">Rehearsal clip — Trading My Sorrows</div><div class="audio-desc">Tap to open recording</div></div>
+      </div>
+    </div>
+
+    <div class="flow-divider">
+      <span class="flow-arrow">↓</span>
+      <span class="flow-note">Stay in B. No gap. Keep the groove going.</span>
+    </div>
+
+    <!-- Song 2 -->
+    <div class="song-card highlight">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">2</span>
+        <span class="song-title">Lord You Are Good</span>
+      </div>
+      <div class="song-artist">Israel Houghton</div>
+      <div class="song-meta-row">
+        <span class="key-badge">B major</span>
+        <span class="tempo-badge">↑ Driving</span>
+        <span class="energy-badge e-celebratory">🎉 Celebratory</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse</span>
+          <span class="chords">1 — 4 — 1 — 4</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Chorus</span>
+          <span class="chords">1 — 5 — 4 — 1</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Tag</span>
+          <span class="chords">4 — 1 — 4 — 5</span>
+        </div>
+        <div class="chord-note">In B: 1=B · 4=E · 5=F#</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> Verse → Chorus → Tag ("You are good") × 2. That's it. End on "You are good" and go straight into the transition — don't resolve it.</div>
+
+      <div class="transition-block">
+        <span class="transition-icon">⚡</span>
+        <div class="transition-text"><strong>Transition into Friend of God:</strong> End Lord You Are Good on "You are good" — don't play the final resolution. Laolu drops to just kick and hi-hat groove. Eddie finds E major. One bar drums only, then Morayo comes in on the Friend of God groove. Vanessa leads in on bar 3. No gap, no silence. The congregation shouldn't notice the key change — they should just arrive at Friend of God.</div>
+      </div>
+
+      <div class="rehearsal-note">
+        <div class="rehearsal-text">🎙 <strong>From rehearsal:</strong> "Keep the cadence. You don't need to do anything too intricate. Just drums, while you find the note. Then go." — The bang was already high from Trading My Sorrows. Don't lose it here.</div>
+      </div>
+
+      <div class="audio-clip">
+        <a href="#" class="play-btn">▶</a>
+        <div><div class="audio-label">Rehearsal clip — Lord You Are Good + transition</div><div class="audio-pending">Link coming — Bolaji adding shortly</div></div>
+      </div>
+    </div>
+
+    <div class="flow-divider">
+      <span class="flow-arrow">↓</span>
+      <span class="flow-note">Key change B → E. Drums only for one bar. No silence.</span>
+    </div>
+
+    <!-- Song 3 -->
+    <div class="song-card highlight">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">3</span>
+        <span class="song-title">Friend of God</span>
+      </div>
+      <div class="song-artist">Israel Houghton / Michael Gungor</div>
+      <div class="song-meta-row">
+        <span class="key-badge">E major</span>
+        <span class="tempo-badge">↑ Medium-up</span>
+        <span class="energy-badge e-build">✨ Build</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse</span>
+          <span class="chords">1 — 5 — 4 — 1</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Chorus</span>
+          <span class="chords">1 — 5 — 6m — 4</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Bridge</span>
+          <span class="chords">4 — 1 — 5 — 4</span>
+        </div>
+        <div class="chord-note">In E: 1=E · 4=A · 5=B · 6m=C#m</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> Verse → Chorus → Chorus again. Skip the bridge. End strong on the chorus. This closes out praise — land it with energy before the shift into worship.</div>
+      <div class="vibe-note"><strong>Transition out:</strong> End Friend of God cleanly. Brief pause — Vanessa speaks to the congregation. Then lead into Here I Am to Worship.</div>
+
+      <div class="audio-clip">
+        <a href="#" class="play-btn">▶</a>
+        <div><div class="audio-label">Rehearsal clip — Friend of God</div><div class="audio-pending">Link coming — Bolaji adding shortly</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORSHIP SECTION -->
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-label-pill">Worship</span>
+      <span class="section-keys">B major throughout</span>
+    </div>
+    <div class="section-note">Shift in atmosphere. From celebration to adoration. Let it land. Dynamics matter here.</div>
+
+    <!-- Song 4 -->
+    <div class="song-card">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">4</span>
+        <span class="song-title">Here I Am to Worship</span>
+      </div>
+      <div class="song-artist">Tim Hughes</div>
+      <div class="song-meta-row">
+        <span class="key-badge">B major</span>
+        <span class="tempo-badge">↓ Mid-tempo</span>
+        <span class="energy-badge e-tender">💙 Tender</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse</span>
+          <span class="chords">1 — 5 — 4 — 4</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Chorus</span>
+          <span class="chords">1 — 5 — 6m — 4</span>
+        </div>
+        <div class="chord-note">In B: 1=B · 4=E · 5=F# · 6m=G#m</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> Verse softly — let Vanessa carry it. Chorus builds. Verse → Chorus → Chorus. Don't overplay. This is the moment the room shifts from praise into worship.</div>
+      <div class="vibe-note"><strong>Guitar:</strong> Light touch on verse. Build on chorus but stay under the vocal.</div>
+    </div>
+
+    <div class="flow-divider">
+      <span class="flow-arrow">↓</span>
+      <span class="flow-note">Stay in B. Flow straight through.</span>
+    </div>
+
+    <!-- Song 5 -->
+    <div class="song-card">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">5</span>
+        <span class="song-title">What a Beautiful Name</span>
+      </div>
+      <div class="song-artist">Hillsong Worship</div>
+      <div class="song-meta-row">
+        <span class="key-badge">B major</span>
+        <span class="tempo-badge">↓ Mid-tempo</span>
+        <span class="energy-badge e-build">✨ Build</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse</span>
+          <span class="chords">1 — 5 — 6m — 4</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Pre-chorus</span>
+          <span class="chords">4 — 1 — 5 — 5</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Chorus</span>
+          <span class="chords">1 — 5 — 6m — 4</span>
+        </div>
+        <div class="chord-note">In B: 1=B · 4=E · 5=F# · 6m=G#m</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> Verse → Pre-chorus → Chorus. Keep it to what everyone knows. Don't go into "Death could not hold you" bridge unless there's a clear moment for it. End on chorus.</div>
+    </div>
+
+    <div class="flow-divider">
+      <span class="flow-arrow">↓</span>
+      <span class="flow-note">Stay in B. Let Vanessa lead the room down into I Exalt Thee.</span>
+    </div>
+
+    <!-- Song 6 -->
+    <div class="song-card">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">6</span>
+        <span class="song-title">I Exalt Thee</span>
+      </div>
+      <div class="song-artist">Pete Sanchez Jr.</div>
+      <div class="song-meta-row">
+        <span class="key-badge">B major</span>
+        <span class="tempo-badge">↓ Slow & reverent</span>
+        <span class="energy-badge e-tender">💙 Reverent</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse/Chorus</span>
+          <span class="chords">1 — 4 — 1 — 5</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Tag</span>
+          <span class="chords">4 — 5 — 1 — 1</span>
+        </div>
+        <div class="chord-note">In B: 1=B · 4=E · 5=F#</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> This is the deepest point of worship. Simple, spacious, reverent. Keys and vocals carry it. Drums very light — brushes or light kick only. Guitar: sparse chords only. Let there be space.</div>
+      <div class="vibe-note"><strong>End:</strong> Fade out gently. Vanessa holds the room. This closes the worship set before offering.</div>
+    </div>
+  </div>
+
+  <!-- OFFERING SECTION -->
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-label-pill">Offering</span>
+      <span class="section-keys">G major</span>
+    </div>
+
+    <!-- Song 7 -->
+    <div class="song-card">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">7</span>
+        <span class="song-title">Ancient of Days</span>
+      </div>
+      <div class="song-artist">Ron Kenoly / Jamie Harvill</div>
+      <div class="song-meta-row">
+        <span class="key-badge">G major</span>
+        <span class="tempo-badge">↑ Stately</span>
+        <span class="energy-badge e-celebratory">🎉 Joyful</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse</span>
+          <span class="chords">1 — 4 — 5 — 1</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Chorus</span>
+          <span class="chords">1 — 4 — 1 — 5</span>
+        </div>
+        <div class="chord-note">In G: 1=G · 4=C · 5=D</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> Verse → Chorus × 2. Played during offering — warm, joyful, not heavy. Medium energy. Let the congregation sing along while they give.</div>
+    </div>
+  </div>
+
+  <!-- END OF SERVICE -->
+  <div class="section-block">
+    <div class="section-header">
+      <span class="section-label-pill">End of Service</span>
+      <span class="section-keys">G major (continue from offering)</span>
+    </div>
+
+    <!-- Song 8 -->
+    <div class="song-card">
+      <div style="margin-bottom:10px;">
+        <span class="song-number">8</span>
+        <span class="song-title">Here I Am to Worship</span>
+      </div>
+      <div class="song-artist">Tim Hughes</div>
+      <div class="song-meta-row">
+        <span class="key-badge">G major</span>
+        <span class="tempo-badge">↓ Gentle close</span>
+        <span class="energy-badge e-tender">💙 Send-off</span>
+      </div>
+
+      <div class="chord-section">
+        <div class="chord-section-title">Chord progression (Nashville numbers)</div>
+        <div class="chord-row">
+          <span class="chord-part">Verse</span>
+          <span class="chords">1 — 5 — 4 — 4</span>
+        </div>
+        <div class="chord-row">
+          <span class="chord-part">Chorus</span>
+          <span class="chords">1 — 5 — 6m — 4</span>
+        </div>
+        <div class="chord-note">In G: 1=G · 4=C · 5=D · 6m=Em</div>
+      </div>
+
+      <div class="vibe-note"><strong>Play:</strong> Chorus only × 2 — just the "Here I am to worship" part. Gentle. Let people leave with it. Fade to close.</div>
+    </div>
+  </div>
+
+  <!-- General notes -->
+  <div style="margin-top:8px;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">General instructions</div>
+
+    <div class="instruction-card">
+      <div class="instruction-title">For Vanessa — Worship leader</div>
+      <div class="instruction-list">
+        <div class="instruction-item">Open Trading My Sorrows with confidence — full energy from bar one</div>
+        <div class="instruction-item">You carry the transition into worship after Friend of God — take a moment, address the congregation, then lead into Here I Am to Worship</div>
+        <div class="instruction-item">I Exalt Thee is the deepest point — hold the room, don't rush out of it</div>
+        <div class="instruction-item">Vibe direction: familiar and warm. These people know these songs. Remind them why they love them.</div>
+      </div>
+    </div>
+
+    <div class="instruction-card">
+      <div class="instruction-title">For Eddie — Keys</div>
+      <div class="instruction-list">
+        <div class="instruction-item">Own the transitions — especially B → E between Lord You Are Good and Friend of God</div>
+        <div class="instruction-item">Transition plan: drums solo one bar, you find the note, Morayo joins, Vanessa in on bar 3</div>
+        <div class="instruction-item">I Exalt Thee — space is your friend. Less is more.</div>
+        <div class="instruction-item">Ancient of Days in G — stately, not rushed</div>
+      </div>
+    </div>
+
+    <div class="instruction-card">
+      <div class="instruction-title">For Laolu — Drums</div>
+      <div class="instruction-list">
+        <div class="instruction-item">Trading My Sorrows — full from bar one. This is the bang that sets the tone for the whole service.</div>
+        <div class="instruction-item">Lord You Are Good transition: when Vanessa signals, drop to kick and hi-hat only. Hold it for one bar while Eddie finds E. Then full band.</div>
+        <div class="instruction-item">I Exalt Thee — brushes or very light touch. Don't drive it, support it.</div>
+        <div class="instruction-item">Read Vanessa. She's leading the room — follow her cues on endings.</div>
+      </div>
+    </div>
+
+    <div class="instruction-card">
+      <div class="instruction-title">For Morayo — Guitar</div>
+      <div class="instruction-list">
+        <div class="instruction-item">Praise set — rhythm guitar, driving, confident</div>
+        <div class="instruction-item">Here I Am to Worship (worship) — light touch on verse, build on chorus</div>
+        <div class="instruction-item">I Exalt Thee — sparse chords, space between them</div>
+        <div class="instruction-item">Friend of God — you come in after Eddie finds E, one bar after Laolu drops. Then you both build together.</div>
+      </div>
+    </div>
+
+    <div class="instruction-card">
+      <div class="instruction-title">For Esther — Backing vocals</div>
+      <div class="instruction-list">
+        <div class="instruction-item">Follow Vanessa's lead throughout</div>
+        <div class="instruction-item">Praise set — full voice, harmonies, energy</div>
+        <div class="instruction-item">Worship set — softer blend, support not compete</div>
+        <div class="instruction-item">I Exalt Thee — minimal, only where it adds</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:28px;text-align:center;font-size:12px;color:var(--ink-4);line-height:1.8;">
+    Calvary Hephzibah Full Gospel Church · Sunday 19th April 2026<br>
+    Prepared by Bolaji Olatoye · calvary-os
+  </div>
+
+</div>
+</body>
+</html>
