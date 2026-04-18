@@ -270,9 +270,9 @@ async function pageInit() {
 async function loadThisSunday() {
   try {
     const today = new Date().toISOString().split('T')[0];
-    let services = await DB.get('cos_services', `?order=service_date.asc&service_date=gte.${today}&limit=1`);
+    let services = await sbFetch(`cos_services?order=service_date.asc&service_date=gte.${today}&limit=1`);
     if (!services.length) {
-      services = await DB.get('cos_services', `?order=service_date.desc&limit=1`);
+      services = await sbFetch('cos_services?order=service_date.desc&limit=1');
     }
     if (services.length) {
       currentService = services[0];
@@ -358,7 +358,7 @@ async function loadArchive() {
   document.getElementById('arch-loading').style.display = 'flex';
   document.getElementById('arch-list').style.display = 'none';
   try {
-    allServices = await DB.get('cos_services', '?order=service_date.desc');
+    allServices = await sbFetch('cos_services?order=service_date.desc');
     const isAdmin = COS.currentUser?.level === 'admin';
     document.getElementById('arch-list').innerHTML = allServices.map(s => `
       <div class="service-card" onclick="viewArchiveService('${s.service_date}')">
@@ -496,7 +496,12 @@ async function saveService() {
   };
 
   try {
-    await DB.upsert('cos_services', payload);
+    const existing = document.getElementById('ns-id').value;
+    if (existing) {
+      await sbPatch('cos_services', `id=eq.${existing}`, payload);
+    } else {
+      await sbPost('cos_services', payload);
+    }
     msg.textContent = '✅ Saved'; msg.style.color = 'var(--green)';
     COS.toast('Service saved');
     await loadThisSunday();
