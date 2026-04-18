@@ -113,6 +113,57 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
   .header-title{font-size:22px;}
   .song-card{padding:16px 18px;}
 }
+
+/* ── SONG NAV ── */
+.song-nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--white);
+  border-bottom:1px solid var(--ink-5);
+  padding:10px 16px;
+  margin:0 -20px 20px;
+  display:flex;gap:6px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  box-shadow:0 2px 8px rgba(17,24,39,0.06);
+}
+.song-nav::-webkit-scrollbar{display:none;}
+.sn-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:7px 12px;border-radius:10px;border:none;
+  background:var(--bg);cursor:pointer;
+  font-family:'Poppins',sans-serif;
+  white-space:nowrap;flex-shrink:0;
+  transition:all 0.12s;text-decoration:none;
+}
+.sn-btn:hover,.sn-btn:active{background:var(--red-light);}
+.sn-btn.active{background:var(--red);color:white;}
+.sn-num{font-size:10px;font-weight:700;color:var(--ink-4);}
+.sn-btn.active .sn-num{color:rgba(255,255,255,0.7);}
+.sn-name{font-size:12px;font-weight:600;color:var(--ink-2);}
+.sn-btn.active .sn-name{color:white;}
+.sn-section{font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);}
+.sn-btn.active .sn-section{color:rgba(255,255,255,0.6);}
+
+/* Next song button */
+.next-song-btn{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;padding:14px 18px;
+  background:var(--ink);color:white;
+  border:none;border-radius:12px;
+  font-family:'Poppins',sans-serif;
+  font-size:14px;font-weight:600;
+  cursor:pointer;margin-top:16px;
+  text-decoration:none;transition:background 0.12s;
+}
+.next-song-btn:hover{background:#1f2937;}
+.next-song-btn span{font-size:12px;color:rgba(255,255,255,0.5);font-weight:400;}
+
+@media(max-width:600px){
+  .song-nav{margin:0 -14px 16px;padding:8px 12px;}
+  .sn-btn{padding:6px 10px;}
+  .next-song-btn{padding:13px 16px;}
+}
 </style>
 </head>
 <body>
@@ -154,6 +205,50 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
     <div class="team-chip"><div class="team-av">BA</div><div><div class="team-name">Bolaji A</div><div class="team-role">Bass</div></div></div>
   </div>
 
+  <!-- Song navigation -->
+  <nav class="song-nav" id="song-nav">
+    <a href="#trading-my-sorrows" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">1</span>
+      <span class="sn-name">Trading</span>
+      <span class="sn-section">Praise</span>
+    </a>
+    <a href="#lord-you-are-good" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">2</span>
+      <span class="sn-name">Lord You</span>
+      <span class="sn-section">Praise</span>
+    </a>
+    <a href="#friend-of-god" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">3</span>
+      <span class="sn-name">Friend</span>
+      <span class="sn-section">Praise</span>
+    </a>
+    <a href="#here-i-am-to-worship" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">4</span>
+      <span class="sn-name">Here I Am</span>
+      <span class="sn-section">Worship</span>
+    </a>
+    <a href="#what-a-beautiful-name" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">5</span>
+      <span class="sn-name">Beautiful</span>
+      <span class="sn-section">Worship</span>
+    </a>
+    <a href="#i-exalt-thee" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">6</span>
+      <span class="sn-name">I Exalt</span>
+      <span class="sn-section">Worship</span>
+    </a>
+    <a href="#ancient-of-days" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">7</span>
+      <span class="sn-name">Ancient</span>
+      <span class="sn-section">Offering</span>
+    </a>
+    <a href="#here-i-am-to-worship-close" class="sn-btn" onclick="setActive(this)">
+      <span class="sn-num">8</span>
+      <span class="sn-name">Here I Am</span>
+      <span class="sn-section">Close</span>
+    </a>
+  </nav>
+
   <!-- PRAISE SECTION -->
   <div class="section-block">
     <div class="section-header">
@@ -163,7 +258,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
     <div class="section-note">Open strong. Full band from bar one. Congregation should feel it immediately.</div>
 
     <!-- Song 1 -->
-    <div class="song-card highlight">
+    <div class="song-card highlight" id="trading-my-sorrows" data-song="trading-my-sorrows">
       <div style="margin-bottom:10px;">
         <span class="song-number">1</span>
         <span class="song-title">Trading My Sorrows</span>
@@ -236,13 +331,15 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
       </div>
     </div>
 
+    <a href="#lord-you-are-good" class="next-song-btn" onclick="setActiveById('lord-you-are-good')"><div><span style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:1px;">Next →</span>#2 — Lord You Are Good</div><span>↓</span></a>
+
     <div class="flow-divider">
       <span class="flow-arrow">↓</span>
       <span class="flow-note">Stay in B. No gap. Keep the groove going.</span>
     </div>
 
     <!-- Song 2 -->
-    <div class="song-card highlight">
+    <div class="song-card highlight" id="lord-you-are-good" data-song="lord-you-are-good">
       <div style="margin-bottom:10px;">
         <span class="song-number">2</span>
         <span class="song-title">Lord You Are Good</span>
@@ -315,13 +412,15 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
       </div>
     </div>
 
+    <a href="#friend-of-god" class="next-song-btn" onclick="setActiveById('friend-of-god')"><div><span style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:1px;">Next →</span>#3 — Friend of God</div><span>↓</span></a>
+
     <div class="flow-divider">
       <span class="flow-arrow">↓</span>
       <span class="flow-note">Key change B → E. Drums only for one bar. No silence.</span>
     </div>
 
     <!-- Song 3 -->
-    <div class="song-card highlight">
+    <div class="song-card highlight" id="friend-of-god" data-song="friend-of-god">
       <div style="margin-bottom:10px;">
         <span class="song-number">3</span>
         <span class="song-title">Friend of God</span>
@@ -369,7 +468,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
     <div class="section-note">Shift in atmosphere. From celebration to adoration. Let it land. Dynamics matter here.</div>
 
     <!-- Song 4 -->
-    <div class="song-card">
+    <div class="song-card" id="here-i-am-to-worship" data-song="here-i-am-to-worship">
       <div style="margin-bottom:10px;">
         <span class="song-number">4</span>
         <span class="song-title">Here I Am to Worship</span>
@@ -427,13 +526,15 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
       </div>
     </div>
 
+    <a href="#what-a-beautiful-name" class="next-song-btn" onclick="setActiveById('what-a-beautiful-name')"><div><span style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:1px;">Next →</span>#5 — What a Beautiful Name</div><span>↓</span></a>
+
     <div class="flow-divider">
       <span class="flow-arrow">↓</span>
       <span class="flow-note">Stay in B. Flow straight through.</span>
     </div>
 
     <!-- Song 5 -->
-    <div class="song-card">
+    <div class="song-card" id="what-a-beautiful-name" data-song="what-a-beautiful-name">
       <div style="margin-bottom:10px;">
         <span class="song-number">5</span>
         <span class="song-title">What a Beautiful Name</span>
@@ -490,13 +591,15 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="vibe-note"><strong>Play:</strong> Verse → Pre-chorus → Chorus. Keep it to what everyone knows. Don't go into "Death could not hold you" bridge unless there's a clear moment for it. End on chorus.</div>
     </div>
 
+    <a href="#i-exalt-thee" class="next-song-btn" onclick="setActiveById('i-exalt-thee')"><div><span style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:1px;">Next →</span>#6 — I Exalt Thee</div><span>↓</span></a>
+
     <div class="flow-divider">
       <span class="flow-arrow">↓</span>
       <span class="flow-note">Stay in B. Let Vanessa lead the room down into I Exalt Thee.</span>
     </div>
 
     <!-- Song 6 -->
-    <div class="song-card">
+    <div class="song-card" id="i-exalt-thee" data-song="i-exalt-thee">
       <div style="margin-bottom:10px;">
         <span class="song-number">6</span>
         <span class="song-title">I Exalt Thee</span>
@@ -547,7 +650,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
     </div>
 
     <!-- Song 7 -->
-    <div class="song-card">
+    <div class="song-card" id="ancient-of-days" data-song="ancient-of-days">
       <div style="margin-bottom:10px;">
         <span class="song-number">7</span>
         <span class="song-title">Ancient of Days</span>
@@ -584,7 +687,7 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
     </div>
 
     <!-- Song 8 -->
-    <div class="song-card">
+    <div class="song-card" id="here-i-am-to-worship-close">
       <div style="margin-bottom:10px;">
         <span class="song-number">8</span>
         <span class="song-title">Here I Am to Worship</span>
@@ -674,5 +777,35 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
   </div>
 
 </div>
+
+<script>
+function setActive(el) {
+  document.querySelectorAll('.sn-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setActiveById(id) {
+  document.querySelectorAll('.sn-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('href') === '#' + id);
+  });
+}
+
+// Auto-highlight nav on scroll
+const songs = document.querySelectorAll('[id]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      document.querySelectorAll('.sn-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('href') === '#' + id);
+      });
+      // Scroll nav button into view
+      const activeBtn = document.querySelector('.sn-btn.active');
+      if (activeBtn) activeBtn.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+    }
+  });
+}, { threshold: 0.3 });
+
+songs.forEach(s => observer.observe(s));
+</script>
 </body>
 </html>
