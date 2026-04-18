@@ -205,6 +205,69 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
     <div class="team-chip"><div class="team-av">BA</div><div><div class="team-name">Bolaji A</div><div class="team-role">Bass</div></div></div>
   </div>
 
+  <!-- Set list overview -->
+  <div style="background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:20px 22px;margin-bottom:20px;box-shadow:0 1px 2px rgba(17,24,39,0.05);">
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;">Set list</div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin-bottom:8px;">Praise · B major</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <a href="#trading-my-sorrows" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('trading-my-sorrows')">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</span>
+          <span style="font-size:15px;font-weight:600;color:var(--ink);">Trading My Sorrows</span>
+        </a>
+        <a href="#lord-you-are-good" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('lord-you-are-good')">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</span>
+          <span style="font-size:15px;font-weight:600;color:var(--ink);">Lord You Are Good</span>
+        </a>
+        <a href="#friend-of-god" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('friend-of-god')">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</span>
+          <span style="font-size:15px;font-weight:600;color:var(--ink);">Friend of God <span style="font-size:12px;font-weight:500;color:var(--ink-4);">(→ E major)</span></span>
+        </a>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--ink-5);margin-bottom:14px;"></div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;">Worship · B major</div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <a href="#here-i-am-to-worship" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('here-i-am-to-worship')">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">4</span>
+          <span style="font-size:15px;font-weight:600;color:var(--ink);">Here I Am to Worship</span>
+        </a>
+        <a href="#what-a-beautiful-name" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('what-a-beautiful-name')">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">5</span>
+          <span style="font-size:15px;font-weight:600;color:var(--ink);">What a Beautiful Name</span>
+        </a>
+        <a href="#i-exalt-thee" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('i-exalt-thee')">
+          <span style="width:22px;height:22px;border-radius:50%;background:var(--blue);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">6</span>
+          <span style="font-size:15px;font-weight:600;color:var(--ink);">I Exalt Thee</span>
+        </a>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--ink-5);margin-bottom:14px;"></div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin-bottom:8px;">Offering · G major</div>
+      <a href="#ancient-of-days" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('ancient-of-days')">
+        <span style="width:22px;height:22px;border-radius:50%;background:var(--green);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">7</span>
+        <span style="font-size:15px;font-weight:600;color:var(--ink);">Ancient of Days</span>
+      </a>
+    </div>
+
+    <div style="height:1px;background:var(--ink-5);margin-bottom:14px;"></div>
+
+    <div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">End of Service · G major</div>
+      <a href="#here-i-am-to-worship-close" style="display:flex;align-items:center;gap:10px;text-decoration:none;" onclick="setActiveById('here-i-am-to-worship-close')">
+        <span style="width:22px;height:22px;border-radius:50%;background:var(--ink-4);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">8</span>
+        <span style="font-size:15px;font-weight:600;color:var(--ink);">Here I Am to Worship</span>
+      </a>
+    </div>
+  </div>
+
   <!-- Song navigation -->
   <nav class="song-nav" id="song-nav">
     <a href="#trading-my-sorrows" class="sn-btn" onclick="setActive(this)">
