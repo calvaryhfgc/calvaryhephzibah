@@ -219,8 +219,8 @@ async function fetchCurrent() {
     .single();
 
   if (error) {
-    setStatus('error', 'fetch failed');
-    console.error(error);
+    setStatus('error', 'fetch failed: ' + (error.message || error.code || 'unknown').toString().slice(0, 40));
+    console.error('fetchCurrent error:', error);
     return;
   }
   render(data.mode, data.payload);

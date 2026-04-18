@@ -571,20 +571,35 @@ let verseResult = null;        // { reference, text, version }
 // LOGIN
 // ============================================================
 async function loadUsers() {
-  const { data, error } = await client
-    .from('control_room_users')
-    .select('id, name, pin_hash, role, active')
-    .eq('active', true)
-    .order('name');
-  if (error) { console.error(error); return; }
-  allUsers = data;
   const list = document.getElementById('user-list');
-  list.innerHTML = data.map(u => `
-    <button class="user-btn" onclick="window.pickUser('${u.id}')">
-      <span class="name">${u.name}</span>
-      <span class="role">${u.role}</span>
-    </button>
-  `).join('');
+  list.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 14px;">Loading users…</div>';
+  try {
+    const { data, error } = await client
+      .from('control_room_users')
+      .select('id, name, pin_hash, role, active')
+      .eq('active', true)
+      .order('name');
+    if (error) throw error;
+    if (!data || data.length === 0) {
+      list.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 14px; border: 1px dashed var(--border-strong); border-radius: var(--radius);">No users found. Did the schema run?</div>';
+      return;
+    }
+    allUsers = data;
+    list.innerHTML = data.map(u => `
+      <button class="user-btn" onclick="window.pickUser('${u.id}')">
+        <span class="name">${u.name}</span>
+        <span class="role">${u.role}</span>
+      </button>
+    `).join('');
+  } catch (err) {
+    console.error('loadUsers failed:', err);
+    list.innerHTML = `
+      <div style="padding: 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius); font-size: 13px; color: #fca5a5; line-height: 1.5;">
+        <div style="font-weight: 700; margin-bottom: 6px;">Couldn't load users</div>
+        <div style="font-family: monospace; font-size: 12px; word-break: break-word;">${(err.message || err).toString().slice(0, 300)}</div>
+        <div style="margin-top: 8px; color: var(--text-muted);">Open browser DevTools → Console for full error.</div>
+      </div>`;
+  }
 }
 
 window.pickUser = (id) => {
