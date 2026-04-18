@@ -6,6 +6,29 @@
 <title>Calvary OS — Sunday Service</title>
 <meta name="theme-color" content="#0A0A0A">
 <link rel="stylesheet" href="shell.css">
+<style>
+.song-section-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin:16px 0 6px;}
+.song-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r8);margin-bottom:6px;}
+.song-row-title{font-size:13px;font-weight:600;color:var(--ink);}
+.order-type-sermon td{background:rgba(196,30,42,0.06)!important;font-weight:600;}
+.order-type-highlight td{background:rgba(59,130,246,0.06)!important;}
+.service-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:14px 16px;cursor:pointer;transition:all 0.12s;margin-bottom:8px;}
+.service-card:hover{border-color:var(--border-hover);transform:translateY(-1px);}
+.service-card-date{font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.service-card-sermon{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.service-card-meta{font-size:12px;color:var(--ink-4);}
+.form-section{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r16);padding:20px 22px;margin-bottom:14px;}
+.form-section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;}
+.order-row-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.order-row-item input,.order-row-item select,.song-row-form input,.song-row-form select{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r6);padding:7px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;}
+.order-row-item input{flex:1;}
+.song-row-form{display:grid;grid-template-columns:1fr 140px auto;gap:8px;margin-bottom:8px;align-items:center;}
+.song-row-form input,.song-row-form select{width:100%;}
+.rmv{background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:18px;padding:0 2px;flex-shrink:0;line-height:1;}
+.loading-state{display:flex;align-items:center;justify-content:center;padding:60px 20px;color:var(--ink-4);font-size:14px;gap:10px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;}
+</style>
 </head>
 <body>
 
@@ -17,13 +40,13 @@
     </div>
     <div class="auth-step active" id="step-who">
       <div class="auth-eyebrow">Welcome</div><div class="auth-heading">Select your name</div>
-      <div class="auth-sub">Your operational hub for Calvary Hephzibah.</div>
+      <div class="auth-sub">Calvary Hephzibah Full Gospel Church</div>
       <div class="user-grid" id="user-grid"></div>
     </div>
     <div class="auth-step" id="step-pin">
       <button class="pin-back" onclick="COS._goBack()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg> Back</button>
       <div class="auth-eyebrow">PIN Required</div><div class="auth-heading" id="pin-user-name">Enter your PIN</div>
-      <div class="auth-sub">4-digit PIN to access your workspace.</div>
+      <div class="auth-sub">4-digit PIN.</div>
       <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
       <div class="pin-pad">
         <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
@@ -43,7 +66,7 @@
       <div class="topbar-logo-name">Calvary OS</div>
     </a>
     <div class="topbar-divider"></div>
-    <div class="topbar-section">☀️ Sunday Service</div>
+    <div class="topbar-section" id="tb-section">☀️ Sunday Service</div>
     <div class="topbar-right">
       <div class="topbar-user"><div class="topbar-user-av" id="tb-av">?</div><div class="topbar-user-name" id="tb-name"></div></div>
       <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
@@ -51,150 +74,97 @@
   </div>
 
   <div class="app-body">
-      <nav class="sidebar">
+    <nav class="sidebar">
       <div class="nav-section">
         <div class="nav-section-label">This Sunday</div>
-        <div class="nav-item active" onclick="COS.navTo('overview',this)">📋 Overview</div>
-        <div class="nav-item" onclick="COS.navTo('order',this)">📄 Order of service</div>
-        <div class="nav-item" onclick="COS.navTo('songs',this)">🎵 Worship songs</div>
-        <div class="nav-item" onclick="COS.navTo('sermon',this)">📖 Sermon</div>
-        <div class="nav-item" onclick="COS.navTo('checklist',this)">✅ Checklist</div>
-        <div class="nav-item" onclick="COS.navTo('stream',this)">📺 Stream & links</div>
+        <div class="nav-item active" onclick="navPage('overview',this)">📋 Overview</div>
+        <div class="nav-item" onclick="navPage('order',this)">📄 Order of service</div>
+        <div class="nav-item" onclick="navPage('songs',this)">🎵 Worship songs</div>
+        <div class="nav-item" onclick="navPage('sermon',this)">📖 Sermon</div>
+        <div class="nav-item" onclick="navPage('checklist',this)">✅ Checklist</div>
+        <div class="nav-item" onclick="navPage('stream',this)">📺 Stream & links</div>
+        <div class="nav-item" onclick="navPage('archive',this)">🗂 Previous Sundays</div>
+        <div class="nav-item" id="nav-new" onclick="navPage('new-service',this)" style="display:none;">➕ New Sunday</div>
       </div>
       <div class="nav-section">
         <div class="nav-section-label">Modules</div>
-        <a href="sunday.html" class="nav-item" data-mod="sunday" style="text-decoration:none;background:var(--red-light);color:var(--ink);font-weight:600;">
-          <span style="font-size:13px;margin-right:2px;">☀️</span> Sunday Service
-        </a>
-        <a href="worship.html" class="nav-item" data-mod="worship" style="text-decoration:none;">
-          <span style="font-size:13px;margin-right:2px;">🎵</span> Worship
-        </a>
-        <a href="media.html" class="nav-item" data-mod="media" style="text-decoration:none;">
-          <span style="font-size:13px;margin-right:2px;">🎥</span> Media
-        </a>
-        <a href="midweek.html" class="nav-item" data-mod="midweek" style="text-decoration:none;">
-          <span style="font-size:13px;margin-right:2px;">📅</span> Mid-week
-        </a>
-        <a href="departments.html" class="nav-item" data-mod="departments" style="text-decoration:none;">
-          <span style="font-size:13px;margin-right:2px;">🏛️</span> Departments
-        </a>
-        <a href="admin.html" class="nav-item" data-mod="admin" style="text-decoration:none;">
-          <span style="font-size:13px;margin-right:2px;">⚙️</span> Admin
-        </a>
+        <a href="sunday.html" class="nav-item" style="text-decoration:none;background:var(--red-light);color:var(--ink);font-weight:600;">☀️ Sunday Service</a>
+        <a href="worship.html" class="nav-item" style="text-decoration:none;">🎵 Worship</a>
+        <a href="media.html" class="nav-item" style="text-decoration:none;">🎥 Media</a>
+        <a href="midweek.html" class="nav-item" style="text-decoration:none;">📅 Mid-week</a>
+        <a href="departments.html" class="nav-item" style="text-decoration:none;">🏛️ Departments</a>
+        <a href="admin.html" class="nav-item" style="text-decoration:none;">⚙️ Admin</a>
       </div>
-    <div style="margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);">
-      <a href="dashboard.html" style="font-size:12px;color:var(--ink-4);text-decoration:none;display:flex;align-items:center;gap:6px;">← Dashboard</a>
-    </div>
-  </nav>
+      <div style="margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);">
+        <a href="dashboard.html" style="font-size:12px;color:var(--ink-4);text-decoration:none;">← Dashboard</a>
+      </div>
+    </nav>
 
     <div class="main">
       <div class="page-body">
 
-        <!-- THIS SUNDAY -->
+        <!-- OVERVIEW -->
         <div class="page active" id="pg-overview">
-          <div class="page-header">
-            <div class="page-eyebrow">Sunday 19th April 2026</div>
-            <div class="page-title">Sunday Service</div>
-            <div class="page-sub">First Sunday post-transition. 10:30am start. Calvary Hephzibah, Manchester.</div>
-          </div>
-
-          <!-- Status chips -->
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;" id="status-chips"></div>
-
-          <!-- Key info grid -->
-          <div class="grid-2" style="margin-bottom:16px;">
-            <div class="card">
-              <div class="card-label">Preacher</div>
-              <div class="card-title">Brother Michael Kabalu</div>
-              <div style="font-size:12px;color:var(--ink-4);margin-top:4px;">The Case for the Resurrection of Jesus Christ</div>
+          <div id="ov-loading" class="loading-state"><div class="spinner"></div>Loading service…</div>
+          <div id="ov-content" style="display:none;">
+            <div class="page-header">
+              <div class="page-eyebrow" id="ov-eyebrow"></div>
+              <div class="page-title" id="ov-title">Sunday Service</div>
+              <div class="page-sub" id="ov-sub"></div>
             </div>
-            <div class="card">
-              <div class="card-label">Worship lead</div>
-              <div class="card-title">Vanessa</div>
-              <div style="font-size:12px;color:var(--ink-4);margin-top:4px;">Lead vocalist / Worship leader · Via Tosin Akindele (Voices Beyond)</div>
+            <div class="grid-2" style="margin-bottom:16px;">
+              <div class="card"><div class="card-label">Preacher</div><div class="card-title" id="ov-preacher">—</div><div style="font-size:12px;color:var(--ink-4);margin-top:4px;" id="ov-sermon-short"></div></div>
+              <div class="card"><div class="card-label">Worship</div><div class="card-title" id="ov-worship">—</div></div>
+              <div class="card"><div class="card-label">Service time</div><div class="card-title">10:30am</div><div style="font-size:12px;color:var(--ink-4);margin-top:4px;">Setup from 9:00am</div></div>
+              <div class="card"><div class="card-label">Scripture</div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-top:4px;" id="ov-scripture">—</div></div>
             </div>
-            <div class="card">
-              <div class="card-label">Service time</div>
-              <div class="card-title">10:30am</div>
-              <div style="font-size:12px;color:var(--ink-4);margin-top:4px;">Doors open 9:00am · Setup from 9:00am</div>
-            </div>
-            <div class="card">
-              <div class="card-label">Rehearsal</div>
-              <div class="card-title">Friday evening</div>
-              <div style="font-size:12px;color:var(--ink-4);margin-top:4px;">At church · Tosin confirmed</div>
-            </div>
-          </div>
-
-          <!-- Band -->
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-label">Band — Sunday 19th</div>
-            <div id="band-list"></div>
-          </div>
-
-          <!-- Alert -->
-          <div style="background:rgba(196,30,42,0.08);border:1px solid rgba(196,30,42,0.2);border-radius:var(--r12);padding:14px 16px;">
-            <div style="font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">⚠️ Action required</div>
-            <div style="font-size:13px;color:var(--ink-2);line-height:1.5;">Budget of <strong>£350</strong> needs Pastor Shade approval before musicians can be finalised. Bolaji to send today.</div>
+            <div class="card"><div class="card-label">Band</div><div id="ov-band"></div></div>
           </div>
         </div>
 
-        <!-- ORDER OF SERVICE -->
+        <!-- ORDER -->
         <div class="page" id="pg-order">
-          <div class="page-header">
-            <div class="page-eyebrow">Sunday 19th April 2026</div>
-            <div class="page-title">Order of service</div>
-          </div>
-          <div class="card" style="padding:0;overflow:hidden;">
-            <table class="data-table" style="width:100%;">
-              <thead><tr><th>#</th><th>Item</th><th>Assigned to</th><th>Notes</th></tr></thead>
-              <tbody id="order-tbody"></tbody>
-            </table>
+          <div class="page-header"><div class="page-eyebrow" id="ord-eyebrow"></div><div class="page-title">Order of service</div></div>
+          <div id="ord-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div id="ord-content" style="display:none;">
+            <div class="card" style="padding:0;overflow:hidden;">
+              <table class="data-table" style="width:100%;"><thead><tr><th>#</th><th>Item</th><th>Assigned to</th><th>Notes</th></tr></thead>
+              <tbody id="order-tbody"></tbody></table>
+            </div>
           </div>
         </div>
 
-        <!-- WORSHIP SONGS -->
+        <!-- SONGS -->
         <div class="page" id="pg-songs">
-          <div class="page-header">
-            <div class="page-eyebrow">Sunday 19th April 2026</div>
-            <div class="page-title">Worship songs</div>
-            <div class="page-sub">Songs for this Sunday. Download lyric slides for each.</div>
-          </div>
-          <div id="songs-list"></div>
-          <div style="margin-top:16px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r12);padding:16px 18px;">
-            <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Generate lyrics on the fly</div>
-            <div style="font-size:13px;color:var(--ink-3);margin-bottom:12px;">For any song without pre-made slides, use the Lyric Formatter.</div>
-            <a href="worship.html#formatter" class="btn btn-ghost btn-sm" style="text-decoration:none;">Open Lyric Formatter →</a>
+          <div class="page-header"><div class="page-eyebrow" id="songs-eyebrow"></div><div class="page-title">Worship songs</div><div class="page-sub">Download or generate lyric slides for each song.</div></div>
+          <div id="songs-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div id="songs-content" style="display:none;">
+            <div id="songs-list"></div>
+            <div style="margin-top:16px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r12);padding:16px 18px;">
+              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Generate lyrics on the fly</div>
+              <div style="font-size:13px;color:var(--ink-3);margin-bottom:10px;">No lyric slides? Use the Lyric Formatter to create them.</div>
+              <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;">Open Lyric Formatter →</a>
+            </div>
           </div>
         </div>
 
         <!-- SERMON -->
         <div class="page" id="pg-sermon">
-          <div class="page-header">
-            <div class="page-eyebrow">Sunday 19th April 2026</div>
-            <div class="page-title">Sermon</div>
-          </div>
-          <div class="card">
-            <div class="card-label">Preacher</div>
-            <div class="card-title" style="font-size:22px;margin-bottom:2px;">Brother Michael Kabalu</div>
-            <div style="font-size:13px;color:var(--ink-3);margin-bottom:16px;">The Case for the Resurrection of Jesus Christ · 1 Corinthians 15:1–8 · 1 Peter 3:14–16</div>
-            <div style="background:var(--bg-3);border-radius:var(--r8);padding:12px 14px;font-size:12px;color:var(--ink-4);line-height:1.6;">
-              💡 Display sermon thumbnail for 30 seconds as the preacher comes up. Slides to be uploaded here once provided.
+          <div class="page-header"><div class="page-eyebrow" id="ser-eyebrow"></div><div class="page-title">Sermon</div></div>
+          <div id="ser-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div id="ser-content" style="display:none;">
+            <div class="card" style="margin-bottom:14px;">
+              <div class="card-label">Preacher</div>
+              <div style="font-size:22px;font-family:'Instrument Serif',serif;color:var(--ink);margin-bottom:4px;" id="ser-preacher"></div>
+              <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;" id="ser-title"></div>
+              <div style="font-size:13px;color:var(--ink-4);" id="ser-scripture"></div>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-label">Media instructions</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-              <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
-                <div style="width:22px;height:22px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;">1</div>
-                <div style="font-size:13px;color:var(--ink-2);">Display sermon thumbnail as preacher walks up — hold for ~30 seconds</div>
-              </div>
-              <div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);align-items:flex-start;">
-                <div style="width:22px;height:22px;border-radius:50%;background:var(--bg-4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--ink-4);">2</div>
-                <div style="font-size:13px;color:var(--ink-2);">Switch to preacher's slides when they begin — follow their cues</div>
-              </div>
-              <div style="display:flex;gap:10px;padding:10px 0;align-items:flex-start;">
-                <div style="width:22px;height:22px;border-radius:50%;background:var(--bg-4);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--ink-4);">3</div>
-                <div style="font-size:13px;color:var(--ink-2);">Keep camera framing tight — small gap between top of head and top of frame</div>
+            <div class="card">
+              <div class="card-label">Media instructions</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.8;">
+                <div style="padding:8px 0;border-bottom:1px solid var(--border);">1. Display sermon thumbnail as preacher walks up — hold ~30 seconds</div>
+                <div style="padding:8px 0;border-bottom:1px solid var(--border);">2. Switch to preacher's slides — follow their cues</div>
+                <div style="padding:8px 0;">3. Keep camera tight — small gap at top of frame</div>
               </div>
             </div>
           </div>
@@ -202,31 +172,62 @@
 
         <!-- CHECKLIST -->
         <div class="page" id="pg-checklist">
-          <div class="page-header">
-            <div class="page-eyebrow">Sunday 19th April 2026</div>
-            <div class="page-title">Pre-service checklist</div>
-            <div class="page-sub">Complete before 10:30am. Tap items to check them off.</div>
-          </div>
+          <div class="page-header"><div class="page-eyebrow" id="chk-eyebrow"></div><div class="page-title">Pre-service checklist</div><div class="page-sub">Complete before 10:30am. Tap to check off.</div></div>
           <div id="checklist-body"></div>
         </div>
 
-        <!-- STREAM & LINKS -->
+        <!-- STREAM -->
         <div class="page" id="pg-stream">
-          <div class="page-header">
-            <div class="page-eyebrow">Sunday 19th April 2026</div>
-            <div class="page-title">Stream & links</div>
-          </div>
-          <div class="card">
+          <div class="page-header"><div class="page-eyebrow" id="str-eyebrow"></div><div class="page-title">Stream & links</div></div>
+          <div class="card" style="margin-bottom:14px;">
             <div class="card-label">YouTube livestream</div>
-            <div style="font-size:13px;color:var(--ink-3);margin-bottom:12px;">Link will be added here once the stream is set up for Sunday.</div>
-            <div style="background:var(--bg-3);border-radius:var(--r8);padding:12px 14px;font-size:12px;color:var(--ink-4);">⏳ Not yet available</div>
+            <div id="stream-wrap"><div style="font-size:13px;color:var(--ink-4);">⏳ Link not yet available</div></div>
           </div>
           <div class="card">
             <div class="card-label">Useful links</div>
-            <div style="display:flex;flex-direction:column;gap:8px;">
-              <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-3);border-radius:var(--r8);text-decoration:none;color:var(--ink-2);font-size:13px;">Song Lyric Formatter <span style="color:var(--ink-4);">→</span></a>
-              <a href="https://calvaryhephzibah.co.uk" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-3);border-radius:var(--r8);text-decoration:none;color:var(--ink-2);font-size:13px;">Church website <span style="color:var(--ink-4);">→</span></a>
+            <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-3);border-radius:var(--r8);text-decoration:none;color:var(--ink-2);font-size:13px;margin-bottom:6px;">Song Lyric Formatter <span>→</span></a>
+            <a href="https://calvaryhephzibah.co.uk" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-3);border-radius:var(--r8);text-decoration:none;color:var(--ink-2);font-size:13px;">Church website <span>→</span></a>
+          </div>
+        </div>
+
+        <!-- ARCHIVE -->
+        <div class="page" id="pg-archive">
+          <div class="page-header"><div class="page-eyebrow">Sunday Service</div><div class="page-title">Previous Sundays</div><div class="page-sub">All service records.</div></div>
+          <div id="arch-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div id="arch-list" style="display:none;"></div>
+        </div>
+
+        <!-- NEW / EDIT SERVICE -->
+        <div class="page" id="pg-new-service">
+          <div class="page-header"><div class="page-eyebrow">Admin</div><div class="page-title" id="ns-heading">New Sunday</div></div>
+          <input type="hidden" id="ns-id">
+          <div class="form-section">
+            <div class="form-section-title">Service details</div>
+            <div class="field-row">
+              <div class="field"><label>Date</label><input type="date" id="ns-date"></div>
+              <div class="field"><label>Badge</label><input id="ns-badge" placeholder="Sunday Service"></div>
             </div>
+            <div class="field"><label>Preacher</label><input id="ns-preacher" placeholder="e.g. Brother Michael Kabalu"></div>
+            <div class="field"><label>Sermon title</label><input id="ns-sermon" placeholder="e.g. The Case for the Resurrection"></div>
+            <div class="field"><label>Scripture</label><input id="ns-scripture" placeholder="e.g. 1 Corinthians 15:1–8"></div>
+            <div class="field"><label>Worship leader</label><input id="ns-worship" placeholder="e.g. Vanessa (via Tosin Akindele)"></div>
+            <div class="field"><label>YouTube URL (once live)</label><input id="ns-youtube" placeholder="https://youtube.com/..."></div>
+            <div class="field"><label>Notes</label><textarea id="ns-notes" style="min-height:60px;" placeholder="Any additional context…"></textarea></div>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title">Order of service</div>
+            <div id="ns-order-rows"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addOrderRow()" style="margin-top:4px;">+ Add item</button>
+          </div>
+          <div class="form-section">
+            <div class="form-section-title">Worship songs</div>
+            <div id="ns-song-rows"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addSongRow()" style="margin-top:4px;">+ Add song</button>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:32px;">
+            <button class="btn btn-red" onclick="saveService()">Save</button>
+            <button class="btn btn-ghost" onclick="navPage('overview',null)">Cancel</button>
+            <span id="ns-msg" style="font-size:13px;"></span>
           </div>
         </div>
 
@@ -236,161 +237,313 @@
 
   <nav class="mobile-nav">
     <div class="mob-nav-items">
-      <button class="mob-nav-btn active" onclick="COS.navTo('overview',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/></svg>Overview</button>
-      <button class="mob-nav-btn" onclick="COS.navTo('order',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2h10v10H2z"/></svg>Order</button>
-      <button class="mob-nav-btn" onclick="COS.navTo('songs',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v7a2.5 2.5 0 11-1-2V5L5 6V3l5-1z"/></svg>Songs</button>
-      <button class="mob-nav-btn" onclick="COS.navTo('checklist',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><polyline points="4,7 6,9 10,5"/></svg>Checklist</button>
-      <button class="mob-nav-btn" onclick="COS.navTo('stream',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="9" height="7" rx="1"/><path d="M10 5.5l3-2v5l-3-2"/></svg>Stream</button>
+      <button class="mob-nav-btn active" onclick="navPage('overview',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/></svg>Overview</button>
+      <button class="mob-nav-btn" onclick="navPage('order',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2h10v10H2z"/></svg>Order</button>
+      <button class="mob-nav-btn" onclick="navPage('songs',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v7a2.5 2.5 0 11-1-2V5L5 6V3l5-1z"/></svg>Songs</button>
+      <button class="mob-nav-btn" onclick="navPage('checklist',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><polyline points="4,7 6,9 10,5"/></svg>Check</button>
+      <button class="mob-nav-btn" onclick="navPage('archive',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="4" width="12" height="8" rx="1"/><path d="M1 4l6-3 6 3"/></svg>Archive</button>
     </div>
   </nav>
 </div>
 
 <div class="toast" id="toast"></div>
-
 <script src="shell.js"></script>
 <script>
-const SERVICE = {
-  date: 'Sunday 19th April 2026',
-  time: '10:30am',
-  preacher: 'Michael Kamumvu',
-  worshipLead: 'Vanessa (via Tosin Akindele)',
-  band: [
-    { name:'Tosin Akindele', role:'Lead Vocals / Worship Direction', status:'confirmed', paid:true },
-    { name:'Keys player (TBC)', role:'Keys / Workstation', status:'pending', paid:true },
-    { name:'Lead Singer', role:'Lead Vocals', status:'pending', paid:true },
-    
-    { name:'Laolu Ogungbenro', role:'Drums', status:'confirm today', paid:false },
-    { name:'Morayo Ogungbenro', role:'Electric Guitar', status:'available', paid:false },
-    { name:'Bolaji Adebanjo', role:'Drums (backup)', status:'on standby', paid:false },
-  ],
-  order: [
-    { n:1, item:'Welcome & Bible Reading', leader:'Pastor Shade Olatoye', notes:'' },
-    { n:2, item:'Opening Prayer', leader:'Pastor Kayode Ogungbenro', notes:'' },
-    { n:3, item:'Worship', leader:'Vanessa + Band', notes:'Full set — songs TBC' },
-    { n:4, item:'Communion', leader:'Brother Michael Kabalu', notes:'' },
-    { n:5, item:'Announcements', leader:'Pastor Kayode Ogungbenro', notes:'' },
-    { n:6, item:'Bible Reading', leader:'Sister Tash Campbell', notes:'1 Corinthians 15:1–8 · 1 Peter 3:14–16' },
-    { n:7, item:'Sermon — The Case for the Resurrection of Jesus Christ', leader:'Brother Michael Kabalu', notes:'' },
-    { n:8, item:'Thanksgiving', leader:'Pastor Shade Olatoye', notes:'' },
-    { n:9, item:'Closing Prayer', leader:'Mummy Osho', notes:'' },
-    { n:10, item:'Benediction', leader:'Deacon Labi Sokoya', notes:'' },
-  ],
-  songs: [
-    { title:'Lord You Are Good', artist:'', section:'Praise', lyrics:null, note:'' },
-    { title:'Trading My Sorrows', artist:'', section:'Praise', lyrics:null, note:'' },
-    { title:'All Things Are Possible (Almighty God)', artist:'', section:'Praise', lyrics:null, note:'' },
-    { title:'Friend of God', artist:'', section:'Praise', lyrics:null, note:'' },
-    { title:'My Jesus (Shout to the Lord)', artist:'', section:'Worship', lyrics:null, note:'' },
-    { title:'Here I Am to Worship', artist:'', section:'Worship', lyrics:null, note:'Also used at end of service' },
-    { title:'Ancient of Days', artist:'', section:'Offering', lyrics:null, note:'Display during offering' },
-  ],
-  checklist: [
-    { section:'Setup', items:[
-      'Church open — confirm with Brother Al',
-      'Chairs arranged and rows set',
-      'PA system on and tested',
-      'Band equipment set up before rehearsal',
-    ]},
-    { section:'Media', items:[
-      'Phone camera charged + USB-C charger plugged in',
-      'Phone mounted securely on tripod',
-      'Camera framing checked — tight headroom',
-      'Livestream connected and tested',
-      'OBS open and scenes prepared',
-      'Lyric slides loaded for all worship songs',
-      'Sermon thumbnail ready',
-    ]},
-    { section:'Worship', items:[
-      'Band arrive for soundcheck',
-      'Set list confirmed and distributed',
-      'Lyric slides tested on screen',
-      'In-ear monitors or wedges checked',
-    ]},
-    { section:'Front of house', items:[
-      'Ushers briefed and in position by 10:15am',
-      'Offering bags/plates ready',
-      'Welcome team at door',
-    ]},
-  ],
-};
-
+let currentService = null;
+let allServices = [];
 let checkState = {};
 
-function pageInit(){
-  // Status chips
-  document.getElementById('status-chips').innerHTML = [
-    {label:'Budget pending £350', color:var_('--red'), bg:'rgba(196,30,42,0.1)'),
-    {label:'Rehearsal Fri eve', color:var_('--amber'), bg:'rgba(245,158,11,0.1)'},
-    {label:'Set list TBC', color:var_('--ink-4'), bg:'var(--ink-5)'},
-    {label:'10:30am start', color:var_('--green'), bg:'rgba(34,197,94,0.1)'},
-  ].map(c=>`<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:5px 11px;background:${c.bg};border-radius:100px;color:${c.color};">${c.label}</span>`).join('');
+function navPage(page, el) {
+  COS.navTo(page, el);
+  if (page === 'archive') loadArchive();
+  if (page === 'new-service') initNewForm();
+}
 
-  // Band
-  document.getElementById('band-list').innerHTML = SERVICE.band.map(b=>{
+async function pageInit() {
+  if (COS.currentUser?.level === 'admin') {
+    document.getElementById('nav-new').style.display = 'flex';
+  }
+  renderChecklist();
+  await loadThisSunday();
+}
+
+async function loadThisSunday() {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    let services = await DB.get('cos_services', `?order=service_date.asc&service_date=gte.${today}&limit=1`);
+    if (!services.length) {
+      services = await DB.get('cos_services', `?order=service_date.desc&limit=1`);
+    }
+    if (services.length) {
+      currentService = services[0];
+      renderService(currentService);
+    } else {
+      document.getElementById('ov-loading').innerHTML = '<div style="color:var(--ink-4);font-size:13px;">No service records yet. Create one using New Sunday.</div>';
+    }
+  } catch(e) {
+    document.getElementById('ov-loading').innerHTML = '<div style="color:var(--red);font-size:13px;">Could not load service. Check connection.</div>';
+    console.error(e);
+  }
+}
+
+function renderService(s) {
+  const dateStr = fmtDate(s.service_date);
+  ['ov-eyebrow','ord-eyebrow','songs-eyebrow','ser-eyebrow','chk-eyebrow','str-eyebrow'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.textContent = dateStr;
+  });
+
+  // Overview
+  document.getElementById('ov-title').textContent = s.badge || 'Sunday Service';
+  document.getElementById('ov-sub').textContent = `${dateStr} · 10:30am · Calvary Hephzibah, Manchester`;
+  document.getElementById('ov-preacher').textContent = s.preacher || '—';
+  document.getElementById('ov-sermon-short').textContent = s.sermon_title || '';
+  document.getElementById('ov-worship').textContent = s.worship_leader || '—';
+  document.getElementById('ov-scripture').textContent = s.scripture || '—';
+  const band = s.band || [];
+  document.getElementById('ov-band').innerHTML = band.length ? band.map(b => {
     const sc = b.status==='confirmed'?'var(--green)':b.status==='pending'?'var(--amber)':'var(--ink-4)';
-    return `<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);">
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
       <div style="width:8px;height:8px;border-radius:50%;background:${sc};flex-shrink:0;"></div>
-      <div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--ink);">${b.name}</div><div style="font-size:11px;color:var(--ink-4);">${b.role}</div></div>
-      <div style="display:flex;align-items:center;gap:6px;">
-        ${b.paid?`<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:rgba(196,30,42,0.1);color:var(--red);font-weight:700;">PAID</span>`:`<span style="font-size:10px;padding:2px 7px;border-radius:100px;background:var(--green-light);color:var(--green);font-weight:700;">VOLUNTEER</span>`}
-        <span style="font-size:11px;color:${sc};">${b.status}</span>
-      </div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${b.name}</div><div style="font-size:11px;color:var(--ink-4);">${b.role}</div></div>
+      <span style="font-size:10px;padding:2px 7px;border-radius:100px;background:${b.paid?'rgba(196,30,42,0.1)':'var(--green-light)'};color:${b.paid?'var(--red)':'var(--green)'};">${b.paid?'PAID':'VOLUNTEER'}</span>
     </div>`;
-  }).join('');
+  }).join('') : '<div style="font-size:13px;color:var(--ink-4);">Band not confirmed yet.</div>';
+  document.getElementById('ov-loading').style.display = 'none';
+  document.getElementById('ov-content').style.display = 'block';
 
-  // Order of service
-  document.getElementById('order-tbody').innerHTML = SERVICE.order.map(r=>
-    `<tr><td style="color:var(--ink-4);font-weight:600;">${r.n}</td><td style="font-weight:500;">${r.item}</td><td>${r.leader||'—'}</td><td style="color:var(--ink-4);">${r.notes||'—'}</td></tr>`
+  // Order
+  const order = s.order_of_service || [];
+  document.getElementById('order-tbody').innerHTML = order.map(r =>
+    `<tr class="order-type-${r.type||'normal'}"><td style="color:var(--ink-4);font-weight:600;">${r.n}</td><td style="font-weight:500;">${r.item}</td><td>${r.assigned||'—'}</td><td style="color:var(--ink-4);">${r.notes||'—'}</td></tr>`
   ).join('');
+  document.getElementById('ord-loading').style.display = 'none';
+  document.getElementById('ord-content').style.display = 'block';
 
   // Songs
-  document.getElementById('songs-list').innerHTML = SERVICE.songs.map((s,i)=>`
-    <div class="card" style="margin-bottom:10px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-        <div>
-          <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;">${i+1}. ${s.title}</div>
-          ${s.artist?`<div style="font-size:12px;color:var(--ink-4);">${s.artist}</div>`:''}
-          ${s.note?`<div style="font-size:12px;color:var(--ink-3);margin-top:4px;font-style:italic;">${s.note}</div>`:''}
-        </div>
-        ${s.lyrics?`<a href="${s.lyrics}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;">📥 Lyrics</a>`:`<span style="font-size:11px;color:var(--ink-4);padding:6px 0;">TBC</span>`}
-      </div>
-    </div>`).join('');
+  const songs = s.songs || [];
+  const sectionOrder = ['Praise','Worship','Offering','End of Service'];
+  let html = '';
+  sectionOrder.forEach(sec => {
+    const secSongs = songs.filter(x => x.section === sec);
+    if (!secSongs.length) return;
+    html += `<div class="song-section-label">${sec}</div>`;
+    secSongs.forEach(song => {
+      html += `<div class="song-row">
+        <div class="song-row-title">${song.title}</div>
+        ${song.lyrics
+          ? `<a href="${song.lyrics}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0;">📥 Lyrics</a>`
+          : `<a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0;font-size:11px;">Generate →</a>`}
+      </div>`;
+    });
+  });
+  document.getElementById('songs-list').innerHTML = html || '<div style="font-size:13px;color:var(--ink-4);">No songs added yet.</div>';
+  document.getElementById('songs-loading').style.display = 'none';
+  document.getElementById('songs-content').style.display = 'block';
 
-  // Checklist
-  const cl = document.getElementById('checklist-body');
-  cl.innerHTML = SERVICE.checklist.map(sec=>`
+  // Sermon
+  document.getElementById('ser-preacher').textContent = s.preacher || '—';
+  document.getElementById('ser-title').textContent = s.sermon_title || 'Title TBC';
+  document.getElementById('ser-scripture').textContent = s.scripture || '';
+  document.getElementById('ser-loading').style.display = 'none';
+  document.getElementById('ser-content').style.display = 'block';
+
+  // Stream
+  if (s.youtube_url) {
+    document.getElementById('stream-wrap').innerHTML = `<a href="${s.youtube_url}" target="_blank" class="btn btn-red" style="text-decoration:none;display:inline-block;">▶ Watch Live</a>`;
+  }
+}
+
+// ── ARCHIVE ───────────────────────────────────────────────────────────────
+async function loadArchive() {
+  document.getElementById('arch-loading').style.display = 'flex';
+  document.getElementById('arch-list').style.display = 'none';
+  try {
+    allServices = await DB.get('cos_services', '?order=service_date.desc');
+    const isAdmin = COS.currentUser?.level === 'admin';
+    document.getElementById('arch-list').innerHTML = allServices.map(s => `
+      <div class="service-card" onclick="viewArchiveService('${s.service_date}')">
+        <div class="service-card-date">${fmtDate(s.service_date)}</div>
+        <div class="service-card-sermon">${s.sermon_title || 'No sermon title'}</div>
+        <div class="service-card-meta">${s.preacher||'—'} · ${s.worship_leader||'—'}</div>
+        ${isAdmin ? `<div style="margin-top:8px;"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();editService('${s.service_date}')">Edit</button></div>` : ''}
+      </div>`).join('') || '<div style="font-size:13px;color:var(--ink-4);">No records yet.</div>';
+    document.getElementById('arch-loading').style.display = 'none';
+    document.getElementById('arch-list').style.display = 'block';
+  } catch(e) {
+    document.getElementById('arch-loading').innerHTML = '<div style="color:var(--red);font-size:13px;">Could not load archive.</div>';
+  }
+}
+
+function viewArchiveService(date) {
+  const s = allServices.find(x => x.service_date === date);
+  if (!s) return;
+  currentService = s;
+  renderService(s);
+  navPage('overview', document.querySelector('.nav-item[onclick*="overview"]'));
+}
+
+// ── ADMIN FORM ─────────────────────────────────────────────────────────────
+function initNewForm() {
+  document.getElementById('ns-heading').textContent = 'New Sunday';
+  document.getElementById('ns-id').value = '';
+  ['ns-date','ns-badge','ns-preacher','ns-sermon','ns-scripture','ns-worship','ns-youtube','ns-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('ns-order-rows').innerHTML = '';
+  document.getElementById('ns-song-rows').innerHTML = '';
+  document.getElementById('ns-msg').textContent = '';
+  // Default order
+  [
+    {n:1,item:'Welcome & Bible Reading',assigned:'',type:'normal'},
+    {n:2,item:'Opening Prayer',assigned:'',type:'normal'},
+    {n:3,item:'Worship',assigned:'Worship Team',type:'normal'},
+    {n:4,item:'Communion',assigned:'',type:'normal'},
+    {n:5,item:'Announcements',assigned:'',type:'normal'},
+    {n:6,item:'Bible Reading',assigned:'',type:'highlight'},
+    {n:7,item:'Sermon',assigned:'',type:'sermon'},
+    {n:8,item:'Closing Prayer',assigned:'',type:'normal'},
+    {n:9,item:'Benediction',assigned:'',type:'normal'},
+  ].forEach(r => addOrderRow(r));
+}
+
+function editService(date) {
+  const s = allServices.find(x => x.service_date === date);
+  if (!s) return;
+  document.getElementById('ns-heading').textContent = 'Edit Sunday';
+  document.getElementById('ns-id').value = s.id || '';
+  document.getElementById('ns-date').value = s.service_date || '';
+  document.getElementById('ns-badge').value = s.badge || '';
+  document.getElementById('ns-preacher').value = s.preacher || '';
+  document.getElementById('ns-sermon').value = s.sermon_title || '';
+  document.getElementById('ns-scripture').value = s.scripture || '';
+  document.getElementById('ns-worship').value = s.worship_leader || '';
+  document.getElementById('ns-youtube').value = s.youtube_url || '';
+  document.getElementById('ns-notes').value = s.notes || '';
+  document.getElementById('ns-order-rows').innerHTML = '';
+  document.getElementById('ns-song-rows').innerHTML = '';
+  document.getElementById('ns-msg').textContent = '';
+  (s.order_of_service||[]).forEach(r => addOrderRow(r));
+  (s.songs||[]).forEach(r => addSongRow(r));
+  navPage('new-service', document.getElementById('nav-new'));
+}
+
+let oc=0, sc2=0;
+function addOrderRow(d={}) {
+  oc++;
+  const div = document.createElement('div');
+  div.className = 'order-row-item';
+  div.innerHTML = `
+    <input placeholder="Item" value="${(d.item||'').replace(/"/g,'&quot;')}" data-f="item" style="flex:1;">
+    <input placeholder="Assigned to" value="${(d.assigned||'').replace(/"/g,'&quot;')}" data-f="assigned" style="max-width:150px;">
+    <select data-f="type" style="width:100px;">
+      <option value="normal" ${d.type==='normal'||!d.type?'selected':''}>Normal</option>
+      <option value="highlight" ${d.type==='highlight'?'selected':''}>Highlight</option>
+      <option value="sermon" ${d.type==='sermon'?'selected':''}>Sermon</option>
+    </select>
+    <button class="rmv" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('ns-order-rows').appendChild(div);
+}
+
+function addSongRow(d={}) {
+  sc2++;
+  const div = document.createElement('div');
+  div.className = 'song-row-form';
+  div.innerHTML = `
+    <input placeholder="Song title" value="${(d.title||'').replace(/"/g,'&quot;')}" data-f="title">
+    <select data-f="section">
+      <option value="Praise" ${d.section==='Praise'?'selected':''}>Praise</option>
+      <option value="Worship" ${d.section==='Worship'?'selected':''}>Worship</option>
+      <option value="Offering" ${d.section==='Offering'?'selected':''}>Offering</option>
+      <option value="End of Service" ${d.section==='End of Service'?'selected':''}>End</option>
+    </select>
+    <button class="rmv" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('ns-song-rows').appendChild(div);
+}
+
+async function saveService() {
+  const msg = document.getElementById('ns-msg');
+  const date = document.getElementById('ns-date').value;
+  if (!date) { msg.textContent = 'Date required.'; msg.style.color='var(--red)'; return; }
+  msg.textContent = 'Saving…'; msg.style.color = 'var(--ink-4)';
+
+  const orderRows = [];
+  document.querySelectorAll('#ns-order-rows .order-row-item').forEach((row, i) => {
+    const item = row.querySelector('[data-f="item"]').value.trim();
+    if (!item) return;
+    orderRows.push({ n:i+1, item, assigned:row.querySelector('[data-f="assigned"]').value.trim(), type:row.querySelector('[data-f="type"]').value });
+  });
+
+  const songRows = [];
+  document.querySelectorAll('#ns-song-rows .song-row-form').forEach(row => {
+    const title = row.querySelector('[data-f="title"]').value.trim();
+    if (!title) return;
+    songRows.push({ title, section:row.querySelector('[data-f="section"]').value, lyrics:null });
+  });
+
+  const payload = {
+    service_date: date,
+    badge: document.getElementById('ns-badge').value.trim() || 'Sunday Service',
+    preacher: document.getElementById('ns-preacher').value.trim(),
+    sermon_title: document.getElementById('ns-sermon').value.trim(),
+    scripture: document.getElementById('ns-scripture').value.trim(),
+    worship_leader: document.getElementById('ns-worship').value.trim(),
+    youtube_url: document.getElementById('ns-youtube').value.trim() || null,
+    notes: document.getElementById('ns-notes').value.trim(),
+    order_of_service: orderRows,
+    songs: songRows,
+    updated_at: new Date().toISOString()
+  };
+
+  try {
+    await DB.upsert('cos_services', payload);
+    msg.textContent = '✅ Saved'; msg.style.color = 'var(--green)';
+    COS.toast('Service saved');
+    await loadThisSunday();
+    setTimeout(() => navPage('overview', document.querySelector('.nav-item[onclick*="overview"]')), 800);
+  } catch(e) {
+    msg.textContent = 'Error — try again.'; msg.style.color = 'var(--red)';
+    console.error(e);
+  }
+}
+
+// ── CHECKLIST ─────────────────────────────────────────────────────────────
+function renderChecklist() {
+  const sections = [
+    {section:'Setup', items:['Church open — confirm with Brother Al','Chairs arranged','PA system on and tested','Band equipment set up']},
+    {section:'Media', items:['Phone charged + USB-C charger plugged in','Phone mounted on tripod','Camera framing checked — tight headroom','Livestream connected and tested','OBS open and scenes prepared','Lyric slides loaded for all worship songs','Sermon thumbnail ready']},
+    {section:'Worship', items:['Band arrive for soundcheck','Set list confirmed and distributed','Lyric slides tested on screen','Monitors checked']},
+    {section:'Front of house', items:['Ushers in position by 10:15am','Offering bags ready','Welcome team at door']},
+  ];
+  document.getElementById('checklist-body').innerHTML = sections.map(sec => `
     <div style="margin-bottom:16px;">
       <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">${sec.section}</div>
-      ${sec.items.map(item=>{
-        const key = sec.section+item;
-        return `<div class="list-item" onclick="toggleCheck(this,'${key.replace(/'/g,"\\'")}')">
-          <div style="width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;" id="cb-${btoa(key).replace(/=/g,'')}">
-          </div>
+      ${sec.items.map(item => {
+        const k = (sec.section+item).replace(/[^a-zA-Z0-9]/g,'');
+        return `<div class="list-item" onclick="toggleCheck(this,'${k}')">
+          <div id="cb${k}" style="width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;"></div>
           <div class="li-content"><div class="li-title">${item}</div></div>
         </div>`;
       }).join('')}
     </div>`).join('');
 }
 
-function toggleCheck(el, key){
+function toggleCheck(el, key) {
   checkState[key] = !checkState[key];
-  const cb = el.querySelector('div[id^="cb-"]');
-  if(checkState[key]){
-    cb.style.background='var(--green)';
-    cb.style.borderColor='var(--green)';
+  const cb = document.getElementById('cb'+key);
+  if (checkState[key]) {
+    cb.style.background='var(--green)';cb.style.borderColor='var(--green)';
     cb.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>';
-    el.querySelector('.li-title').style.textDecoration='line-through';
-    el.querySelector('.li-title').style.color='var(--ink-4)';
+    el.querySelector('.li-title').style.cssText='text-decoration:line-through;color:var(--ink-4);';
   } else {
-    cb.style.background='';
-    cb.style.borderColor='var(--border)';
-    cb.innerHTML='';
-    el.querySelector('.li-title').style.textDecoration='';
-    el.querySelector('.li-title').style.color='';
+    cb.style.background='';cb.style.borderColor='var(--border)';cb.innerHTML='';
+    el.querySelector('.li-title').style.cssText='';
   }
 }
 
-function var_(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+function fmtDate(d) {
+  return new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
 
 COS.init('sunday');
 </script>

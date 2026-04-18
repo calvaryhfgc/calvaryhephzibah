@@ -1,5 +1,45 @@
 // ── CALVARY OS — SHARED SHELL ──────────────────────────────────────────────
 
+// ── SUPABASE ──────────────────────────────────────────────────────────────
+const SUPA_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
+
+const DB = {
+  async get(table, query='') {
+    const res = await fetch(`${SUPA_URL}/rest/v1/${table}${query}`, {
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    if (!res.ok) throw new Error(`DB get failed: ${res.status}`);
+    return res.json();
+  },
+  async upsert(table, data) {
+    const res = await fetch(`${SUPA_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': `Bearer ${SUPA_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates,return=representation'
+      },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error(`DB upsert failed: ${res.status}`);
+    return res.json();
+  },
+  async del(table, query) {
+    const res = await fetch(`${SUPA_URL}/rest/v1/${table}${query}`, {
+      method: 'DELETE',
+      headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` }
+    });
+    if (!res.ok) throw new Error(`DB delete failed: ${res.status}`);
+    return res.json();
+  }
+};
+
 const COS = {
 
   // ── USERS ─────────────────────────────────────────────────────────────────
