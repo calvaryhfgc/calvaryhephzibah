@@ -3,50 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Calvary OS — Sunday Service</title>
-<meta name="theme-color" content="#0A0A0A">
+<title>Calvary OS — Sunday</title>
+<meta name="theme-color" content="#FFFFFF">
 <link rel="stylesheet" href="shell.css">
-<style>
-.song-section-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin:16px 0 6px;}
-.song-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r8);margin-bottom:6px;}
-.song-row-title{font-size:13px;font-weight:600;color:var(--ink);}
-.order-type-sermon td{background:rgba(196,30,42,0.06)!important;font-weight:600;}
-.order-type-highlight td{background:rgba(59,130,246,0.06)!important;}
-.service-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r12);padding:14px 16px;cursor:pointer;transition:all 0.12s;margin-bottom:8px;}
-.service-card:hover{border-color:var(--border-hover);transform:translateY(-1px);}
-.service-card-date{font-size:11px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
-.service-card-sermon{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
-.service-card-meta{font-size:12px;color:var(--ink-4);}
-.form-section{background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r16);padding:20px 22px;margin-bottom:14px;}
-.form-section-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:14px;}
-.order-row-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.order-row-item input,.order-row-item select,.song-row-form input,.song-row-form select{background:var(--bg-3);border:1px solid var(--border);border-radius:var(--r6);padding:7px 10px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;}
-.order-row-item input{flex:1;}
-.song-row-form{display:grid;grid-template-columns:1fr 140px auto;gap:8px;margin-bottom:8px;align-items:center;}
-.song-row-form input,.song-row-form select{width:100%;}
-.rmv{background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:18px;padding:0 2px;flex-shrink:0;line-height:1;}
-.loading-state{display:flex;align-items:center;justify-content:center;padding:60px 20px;color:var(--ink-4);font-size:14px;gap:10px;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite;}
-</style>
 </head>
 <body>
 
 <div id="auth-screen">
   <div class="auth-wrap">
-    <div class="auth-logo">
+    <div class="auth-logo-block">
       <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
-      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-sub">Sunday Service</div></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
     </div>
     <div class="auth-step active" id="step-who">
-      <div class="auth-eyebrow">Welcome</div><div class="auth-heading">Select your name</div>
-      <div class="auth-sub">Calvary Hephzibah Full Gospel Church</div>
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
       <div class="user-grid" id="user-grid"></div>
     </div>
     <div class="auth-step" id="step-pin">
-      <button class="pin-back" onclick="COS._goBack()"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg> Back</button>
-      <div class="auth-eyebrow">PIN Required</div><div class="auth-heading" id="pin-user-name">Enter your PIN</div>
-      <div class="auth-sub">4-digit PIN.</div>
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
       <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
       <div class="pin-pad">
         <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
@@ -60,111 +37,169 @@
 </div>
 
 <div id="app">
+  <!-- Topbar -->
   <div class="topbar">
-    <a href="dashboard.html" class="topbar-logo" style="text-decoration:none;">
+    <a href="sunday.html" class="topbar-logo" style="text-decoration:none;">
       <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
       <div class="topbar-logo-name">Calvary OS</div>
     </a>
     <div class="topbar-divider"></div>
-    <div class="topbar-section" id="tb-section">☀️ Sunday Service</div>
+    <div class="topbar-section" id="tb-section">Sunday Service</div>
     <div class="topbar-right">
-      <div class="topbar-user"><div class="topbar-user-av" id="tb-av">?</div><div class="topbar-user-name" id="tb-name"></div></div>
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
       <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
     </div>
   </div>
 
   <div class="app-body">
+    <!-- Sidebar (desktop) -->
     <nav class="sidebar">
       <div class="nav-section">
-        <div class="nav-section-label">This Sunday</div>
-        <div class="nav-item active" onclick="navPage('overview',this)">📋 Overview</div>
-        <div class="nav-item" onclick="navPage('order',this)">📄 Order of service</div>
-        <div class="nav-item" onclick="navPage('songs',this)">🎵 Worship songs</div>
-        <div class="nav-item" onclick="navPage('sermon',this)">📖 Sermon</div>
-        <div class="nav-item" onclick="navPage('checklist',this)">✅ Checklist</div>
-        <div class="nav-item" onclick="navPage('stream',this)">📺 Stream & links</div>
-        <div class="nav-item" onclick="navPage('archive',this)">🗂 Previous Sundays</div>
-        <div class="nav-item" id="nav-new" onclick="navPage('new-service',this)" style="display:none;">➕ New Sunday</div>
+        <div class="nav-section-label">Sunday Service</div>
+        <div class="nav-item active" onclick="navPage('overview',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><polyline points="8,5 8,8.5 10,10"/></svg>
+          This Sunday
+        </div>
+        <div class="nav-item" onclick="navPage('order',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="1.5"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="11" y2="9"/></svg>
+          Order of service
+        </div>
+        <div class="nav-item" onclick="navPage('songs',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2v8a3 3 0 11-1-2.2V5L6 6.5V3l6-1z"/></svg>
+          Worship songs
+        </div>
+        <div class="nav-item" onclick="navPage('sermon',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 2h8a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><line x1="5" y1="6" x2="11" y2="6"/><line x1="5" y1="9" x2="8" y2="9"/></svg>
+          Sermon
+        </div>
+        <div class="nav-item" onclick="navPage('checklist',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="1.5"/><polyline points="5,8 7,10 11,6"/></svg>
+          Checklist
+        </div>
+        <div class="nav-item" onclick="navPage('stream',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="4" width="10" height="8" rx="1"/><path d="M11 7l4-2v6l-4-2"/></svg>
+          Stream & links
+        </div>
+        <div class="nav-item" onclick="navPage('archive',this)">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="5" width="14" height="9" rx="1"/><path d="M1 5l7-4 7 4"/></svg>
+          Previous Sundays
+        </div>
+        <div class="nav-item" id="nav-new" onclick="navPage('new-service',this)" style="display:none;">
+          <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><line x1="8" y1="5" x2="8" y2="11"/><line x1="5" y1="8" x2="11" y2="8"/></svg>
+          New Sunday
+        </div>
       </div>
       <div class="nav-section">
         <div class="nav-section-label">Modules</div>
-        <a href="sunday.html" class="nav-item" style="text-decoration:none;background:var(--red-light);color:var(--ink);font-weight:600;">☀️ Sunday Service</a>
         <a href="worship.html" class="nav-item" style="text-decoration:none;">🎵 Worship</a>
         <a href="media.html" class="nav-item" style="text-decoration:none;">🎥 Media</a>
         <a href="midweek.html" class="nav-item" style="text-decoration:none;">📅 Mid-week</a>
         <a href="departments.html" class="nav-item" style="text-decoration:none;">🏛️ Departments</a>
-        <a href="admin.html" class="nav-item" style="text-decoration:none;">⚙️ Admin</a>
-      </div>
-      <div style="margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);">
-        <a href="dashboard.html" style="font-size:12px;color:var(--ink-4);text-decoration:none;">← Dashboard</a>
       </div>
     </nav>
 
+    <!-- Main content -->
     <div class="main">
       <div class="page-body">
 
         <!-- OVERVIEW -->
         <div class="page active" id="pg-overview">
-          <div id="ov-loading" class="loading-state"><div class="spinner"></div>Loading service…</div>
+          <div id="ov-loading" style="padding:40px 0;text-align:center;">
+            <div style="font-size:14px;color:var(--ink-4);">Loading service…</div>
+          </div>
           <div id="ov-content" style="display:none;">
-            <div class="page-header">
-              <div class="page-eyebrow" id="ov-eyebrow"></div>
-              <div class="page-title" id="ov-title">Sunday Service</div>
-              <div class="page-sub" id="ov-sub"></div>
+            <div class="hero-card">
+              <div class="hero-eyebrow" id="ov-eyebrow">Sunday Service</div>
+              <div class="hero-title" id="ov-title">Sunday Service</div>
+              <div class="hero-sub" id="ov-sub">Loading…</div>
+              <div class="hero-chips" id="ov-chips"></div>
             </div>
-            <div class="grid-2" style="margin-bottom:16px;">
-              <div class="card"><div class="card-label">Preacher</div><div class="card-title" id="ov-preacher">—</div><div style="font-size:12px;color:var(--ink-4);margin-top:4px;" id="ov-sermon-short"></div></div>
-              <div class="card"><div class="card-label">Worship</div><div class="card-title" id="ov-worship">—</div></div>
-              <div class="card"><div class="card-label">Service time</div><div class="card-title">10:30am</div><div style="font-size:12px;color:var(--ink-4);margin-top:4px;">Setup from 9:00am</div></div>
-              <div class="card"><div class="card-label">Scripture</div><div style="font-size:13px;font-weight:600;color:var(--ink);margin-top:4px;" id="ov-scripture">—</div></div>
+
+            <div class="section-label">Service details</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+              <div class="card" style="margin-bottom:0;">
+                <div class="card-label">Preacher</div>
+                <div style="font-size:16px;font-weight:600;color:var(--ink);" id="ov-preacher">—</div>
+                <div style="font-size:12px;color:var(--ink-4);margin-top:3px;" id="ov-sermon-short"></div>
+              </div>
+              <div class="card" style="margin-bottom:0;">
+                <div class="card-label">Worship</div>
+                <div style="font-size:16px;font-weight:600;color:var(--ink);" id="ov-worship">—</div>
+                <div style="font-size:12px;color:var(--ink-4);margin-top:3px;" id="ov-scripture"></div>
+              </div>
             </div>
-            <div class="card"><div class="card-label">Band</div><div id="ov-band"></div></div>
+
+            <div class="card">
+              <div class="card-label">Band</div>
+              <div id="ov-band"></div>
+            </div>
+
+            <div id="ov-alert" style="display:none;background:var(--amber-light);border:1.5px solid var(--amber-mid);border-radius:var(--r14);padding:14px 16px;margin-top:4px;">
+              <div style="font-size:12px;font-weight:600;color:var(--amber);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">⚠️ Needs attention</div>
+              <div style="font-size:14px;color:var(--ink-2);" id="ov-alert-text"></div>
+            </div>
           </div>
         </div>
 
-        <!-- ORDER -->
+        <!-- ORDER OF SERVICE -->
         <div class="page" id="pg-order">
-          <div class="page-header"><div class="page-eyebrow" id="ord-eyebrow"></div><div class="page-title">Order of service</div></div>
-          <div id="ord-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div class="page-eyebrow" id="ord-eyebrow">Sunday Service</div>
+          <div class="page-title">Order of service</div>
+          <div id="ord-loading" style="padding:20px 0;color:var(--ink-4);font-size:14px;">Loading…</div>
           <div id="ord-content" style="display:none;">
-            <div class="card" style="padding:0;overflow:hidden;">
-              <table class="data-table" style="width:100%;"><thead><tr><th>#</th><th>Item</th><th>Assigned to</th><th>Notes</th></tr></thead>
-              <tbody id="order-tbody"></tbody></table>
-            </div>
+            <div class="order-card" id="order-list"></div>
           </div>
         </div>
 
         <!-- SONGS -->
         <div class="page" id="pg-songs">
-          <div class="page-header"><div class="page-eyebrow" id="songs-eyebrow"></div><div class="page-title">Worship songs</div><div class="page-sub">Download or generate lyric slides for each song.</div></div>
-          <div id="songs-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div class="page-eyebrow" id="songs-eyebrow">Sunday Service</div>
+          <div class="page-title">Worship songs</div>
+          <div class="page-sub">Today's set. Tap Generate for any song without slides.</div>
+          <div id="songs-loading" style="padding:20px 0;color:var(--ink-4);font-size:14px;">Loading…</div>
           <div id="songs-content" style="display:none;">
             <div id="songs-list"></div>
-            <div style="margin-top:16px;background:var(--bg-2);border:1px solid var(--border);border-radius:var(--r12);padding:16px 18px;">
-              <div style="font-size:11px;font-weight:700;color:var(--ink-4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Generate lyrics on the fly</div>
-              <div style="font-size:13px;color:var(--ink-3);margin-bottom:10px;">No lyric slides? Use the Lyric Formatter to create them.</div>
-              <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;">Open Lyric Formatter →</a>
+            <div style="background:var(--amber-light);border:1.5px solid var(--amber-mid);border-radius:var(--r14);padding:14px 16px;margin-top:8px;">
+              <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:4px;">Missing lyric slides?</div>
+              <div style="font-size:14px;color:var(--ink-2);margin-bottom:10px;">Use the Lyric Formatter to generate slides for any song.</div>
+              <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-white btn-sm" style="text-decoration:none;">Open Lyric Formatter →</a>
             </div>
           </div>
         </div>
 
         <!-- SERMON -->
         <div class="page" id="pg-sermon">
-          <div class="page-header"><div class="page-eyebrow" id="ser-eyebrow"></div><div class="page-title">Sermon</div></div>
-          <div id="ser-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div class="page-eyebrow" id="ser-eyebrow">Sunday Service</div>
+          <div class="page-title">Sermon</div>
+          <div id="ser-loading" style="padding:20px 0;color:var(--ink-4);font-size:14px;">Loading…</div>
           <div id="ser-content" style="display:none;">
-            <div class="card" style="margin-bottom:14px;">
+            <div class="card">
               <div class="card-label">Preacher</div>
-              <div style="font-size:22px;font-family:'Instrument Serif',serif;color:var(--ink);margin-bottom:4px;" id="ser-preacher"></div>
-              <div style="font-size:15px;font-weight:600;color:var(--ink);margin-bottom:3px;" id="ser-title"></div>
-              <div style="font-size:13px;color:var(--ink-4);" id="ser-scripture"></div>
+              <div style="font-size:20px;font-weight:700;color:var(--ink);margin-bottom:4px;" id="ser-preacher">—</div>
+            </div>
+            <div class="card">
+              <div class="card-label">Sermon title</div>
+              <div style="font-size:17px;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:6px;" id="ser-title">—</div>
+              <div style="font-size:14px;color:var(--ink-3);" id="ser-scripture"></div>
             </div>
             <div class="card">
               <div class="card-label">Media instructions</div>
-              <div style="font-size:13px;color:var(--ink-2);line-height:1.8;">
-                <div style="padding:8px 0;border-bottom:1px solid var(--border);">1. Display sermon thumbnail as preacher walks up — hold ~30 seconds</div>
-                <div style="padding:8px 0;border-bottom:1px solid var(--border);">2. Switch to preacher's slides — follow their cues</div>
-                <div style="padding:8px 0;">3. Keep camera tight — small gap at top of frame</div>
+              <div style="display:flex;flex-direction:column;gap:0;">
+                <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--ink-5);">
+                  <div style="width:26px;height:26px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">1</div>
+                  <div style="font-size:15px;color:var(--ink-2);line-height:1.4;">Display sermon thumbnail as preacher walks up — hold for ~30 seconds</div>
+                </div>
+                <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--ink-5);">
+                  <div style="width:26px;height:26px;border-radius:50%;background:var(--bg-2);border:1.5px solid var(--ink-5);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink-4);flex-shrink:0;">2</div>
+                  <div style="font-size:15px;color:var(--ink-2);line-height:1.4;">Switch to preacher's slides when they begin</div>
+                </div>
+                <div style="display:flex;gap:12px;padding:12px 0;">
+                  <div style="width:26px;height:26px;border-radius:50%;background:var(--bg-2);border:1.5px solid var(--ink-5);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink-4);flex-shrink:0;">3</div>
+                  <div style="font-size:15px;color:var(--ink-2);line-height:1.4;">Keep camera framing tight — small gap top of head to top of frame</div>
+                </div>
               </div>
             </div>
           </div>
@@ -172,86 +207,109 @@
 
         <!-- CHECKLIST -->
         <div class="page" id="pg-checklist">
-          <div class="page-header"><div class="page-eyebrow" id="chk-eyebrow"></div><div class="page-title">Pre-service checklist</div><div class="page-sub">Complete before 10:30am. Tap to check off.</div></div>
+          <div class="page-eyebrow" id="chk-eyebrow">Sunday Service</div>
+          <div class="page-title">Pre-service checklist</div>
+          <div class="page-sub">Tap each item as you complete it. Complete before 10:30am.</div>
           <div id="checklist-body"></div>
+          <div style="background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:var(--r14);padding:12px 16px;margin-top:8px;display:none;" id="checklist-done">
+            <div style="font-size:15px;font-weight:600;color:var(--green);">✅ All done — ready for service!</div>
+          </div>
         </div>
 
         <!-- STREAM -->
         <div class="page" id="pg-stream">
-          <div class="page-header"><div class="page-eyebrow" id="str-eyebrow"></div><div class="page-title">Stream & links</div></div>
-          <div class="card" style="margin-bottom:14px;">
+          <div class="page-eyebrow" id="str-eyebrow">Sunday Service</div>
+          <div class="page-title">Stream & links</div>
+          <div class="card" id="stream-wrap">
             <div class="card-label">YouTube livestream</div>
-            <div id="stream-wrap"><div style="font-size:13px;color:var(--ink-4);">⏳ Link not yet available</div></div>
+            <div style="font-size:14px;color:var(--ink-3);margin-bottom:12px;">Link will appear here once the stream is live.</div>
+            <div style="background:var(--bg);border-radius:var(--r10);padding:12px;font-size:13px;color:var(--ink-4);">⏳ Not yet live</div>
           </div>
           <div class="card">
             <div class="card-label">Useful links</div>
-            <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-3);border-radius:var(--r8);text-decoration:none;color:var(--ink-2);font-size:13px;margin-bottom:6px;">Song Lyric Formatter <span>→</span></a>
-            <a href="https://calvaryhephzibah.co.uk" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-3);border-radius:var(--r8);text-decoration:none;color:var(--ink-2);font-size:13px;">Church website <span>→</span></a>
+            <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--ink-5);text-decoration:none;color:var(--ink-2);font-size:15px;font-weight:500;">Song Lyric Formatter <span style="color:var(--ink-4);">→</span></a>
+            <a href="https://calvaryhephzibah.co.uk" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;text-decoration:none;color:var(--ink-2);font-size:15px;font-weight:500;">Church website <span style="color:var(--ink-4);">→</span></a>
           </div>
         </div>
 
         <!-- ARCHIVE -->
         <div class="page" id="pg-archive">
-          <div class="page-header"><div class="page-eyebrow">Sunday Service</div><div class="page-title">Previous Sundays</div><div class="page-sub">All service records.</div></div>
-          <div id="arch-loading" class="loading-state"><div class="spinner"></div>Loading…</div>
+          <div class="page-eyebrow">History</div>
+          <div class="page-title">Previous Sundays</div>
+          <div class="page-sub">All past service records.</div>
+          <div id="arch-loading" style="padding:20px 0;color:var(--ink-4);font-size:14px;">Loading…</div>
           <div id="arch-list" style="display:none;"></div>
         </div>
 
-        <!-- NEW / EDIT SERVICE -->
+        <!-- NEW SERVICE (admin) -->
         <div class="page" id="pg-new-service">
-          <div class="page-header"><div class="page-eyebrow">Admin</div><div class="page-title" id="ns-heading">New Sunday</div></div>
+          <div class="page-eyebrow">Admin</div>
+          <div class="page-title" id="ns-heading">New Sunday</div>
+          <div class="page-sub">Fill in this week's service details.</div>
           <input type="hidden" id="ns-id">
-          <div class="form-section">
-            <div class="form-section-title">Service details</div>
-            <div class="field-row">
-              <div class="field"><label>Date</label><input type="date" id="ns-date"></div>
-              <div class="field"><label>Badge</label><input id="ns-badge" placeholder="Sunday Service"></div>
-            </div>
-            <div class="field"><label>Preacher</label><input id="ns-preacher" placeholder="e.g. Brother Michael Kabalu"></div>
-            <div class="field"><label>Sermon title</label><input id="ns-sermon" placeholder="e.g. The Case for the Resurrection"></div>
-            <div class="field"><label>Scripture</label><input id="ns-scripture" placeholder="e.g. 1 Corinthians 15:1–8"></div>
-            <div class="field"><label>Worship leader</label><input id="ns-worship" placeholder="e.g. Vanessa (via Tosin Akindele)"></div>
-            <div class="field"><label>YouTube URL (once live)</label><input id="ns-youtube" placeholder="https://youtube.com/..."></div>
-            <div class="field"><label>Notes</label><textarea id="ns-notes" style="min-height:60px;" placeholder="Any additional context…"></textarea></div>
+
+          <div class="field"><label>Service date *</label><input type="date" id="ns-date"></div>
+          <div class="field-row">
+            <div class="field"><label>Badge</label><input id="ns-badge" placeholder="Sunday Service"></div>
+            <div class="field"><label>Time</label><input id="ns-time" placeholder="10:30am" value="10:30am"></div>
           </div>
-          <div class="form-section">
-            <div class="form-section-title">Order of service</div>
-            <div id="ns-order-rows"></div>
-            <button class="btn btn-ghost btn-sm" onclick="addOrderRow()" style="margin-top:4px;">+ Add item</button>
-          </div>
-          <div class="form-section">
-            <div class="form-section-title">Worship songs</div>
-            <div id="ns-song-rows"></div>
-            <button class="btn btn-ghost btn-sm" onclick="addSongRow()" style="margin-top:4px;">+ Add song</button>
-          </div>
-          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-bottom:32px;">
-            <button class="btn btn-red" onclick="saveService()">Save</button>
-            <button class="btn btn-ghost" onclick="navPage('overview',null)">Cancel</button>
-            <span id="ns-msg" style="font-size:13px;"></span>
-          </div>
+          <div class="field"><label>Preacher</label><input id="ns-preacher" placeholder="Name of preacher"></div>
+          <div class="field"><label>Sermon title</label><input id="ns-sermon" placeholder="Sermon title"></div>
+          <div class="field"><label>Scripture</label><input id="ns-scripture" placeholder="e.g. John 3:16"></div>
+          <div class="field"><label>Worship leader</label><input id="ns-worship" placeholder="Name"></div>
+          <div class="field"><label>YouTube link (once live)</label><input id="ns-youtube" placeholder="https://youtube.com/..."></div>
+
+          <div class="section-label">Order of service</div>
+          <div id="ns-order-rows"></div>
+          <button class="btn btn-white btn-sm" onclick="addOrderRow()" style="margin-bottom:16px;">+ Add item</button>
+
+          <div class="section-label">Worship songs</div>
+          <div id="ns-song-rows"></div>
+          <button class="btn btn-white btn-sm" onclick="addSongRow()" style="margin-bottom:16px;">+ Add song</button>
+
+          <div class="field"><label>Notes</label><textarea id="ns-notes" placeholder="Any additional context for this Sunday…"></textarea></div>
+
+          <button class="btn btn-red btn-block" onclick="saveService()" style="margin-top:4px;">Save service record</button>
+          <div id="ns-msg" style="font-size:13px;text-align:center;margin-top:10px;min-height:20px;"></div>
         </div>
 
       </div>
     </div>
   </div>
 
-  <nav class="mobile-nav">
-    <div class="mob-nav-items">
-      <button class="mob-nav-btn active" onclick="navPage('overview',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/></svg>Overview</button>
-      <button class="mob-nav-btn" onclick="navPage('order',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2h10v10H2z"/></svg>Order</button>
-      <button class="mob-nav-btn" onclick="navPage('songs',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v7a2.5 2.5 0 11-1-2V5L5 6V3l5-1z"/></svg>Songs</button>
-      <button class="mob-nav-btn" onclick="navPage('checklist',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><polyline points="4,7 6,9 10,5"/></svg>Check</button>
-      <button class="mob-nav-btn" onclick="navPage('archive',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="4" width="12" height="8" rx="1"/><path d="M1 4l6-3 6 3"/></svg>Archive</button>
-    </div>
+  <!-- Bottom nav -->
+  <nav class="bottom-nav">
+    <button class="bn-item active" onclick="navPage('overview',this)">
+      <div class="bn-icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8.5"/><polyline points="11,7 11,11.5 14,13.5"/></svg></div>
+      <span>Today</span>
+    </button>
+    <button class="bn-item" onclick="navPage('order',this)">
+      <div class="bn-icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="16" height="16" rx="2"/><line x1="7" y1="8" x2="15" y2="8"/><line x1="7" y1="12" x2="15" y2="12"/></svg></div>
+      <span>Order</span>
+    </button>
+    <button class="bn-item" onclick="navPage('songs',this)">
+      <div class="bn-icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M16 3v10a4 4 0 11-1.5-3.1V8L8 9.5V5l8-2z"/></svg></div>
+      <span>Songs</span>
+    </button>
+    <button class="bn-item" onclick="navPage('checklist',this)">
+      <div class="bn-icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="16" height="16" rx="2"/><polyline points="7,11 10,14 15,8"/></svg></div>
+      <span>Checklist</span>
+    </button>
+    <a href="worship.html" class="bn-item" style="text-decoration:none;">
+      <div class="bn-icon-wrap"><svg viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="1" width="8" height="8" rx="1"/><rect x="13" y="1" width="8" height="8" rx="1"/><rect x="1" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></div>
+      <span>More</span>
+    </a>
   </nav>
 </div>
 
 <div class="toast" id="toast"></div>
+
 <script src="shell.js"></script>
 <script>
 let currentService = null;
 let allServices = [];
 let checkState = {};
+let oc = 0, sc2 = 0;
 
 function navPage(page, el) {
   COS.navTo(page, el);
@@ -271,51 +329,83 @@ async function loadThisSunday() {
   try {
     const today = new Date().toISOString().split('T')[0];
     let services = await sbFetch(`cos_services?order=service_date.asc&service_date=gte.${today}&limit=1`);
-    if (!services.length) {
+    if (!services || !services.length) {
       services = await sbFetch('cos_services?order=service_date.desc&limit=1');
     }
-    if (services.length) {
+    if (services && services.length) {
       currentService = services[0];
       renderService(currentService);
     } else {
-      document.getElementById('ov-loading').innerHTML = '<div style="color:var(--ink-4);font-size:13px;">No service records yet. Create one using New Sunday.</div>';
+      document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--ink-4);padding:20px 0;">No service records yet. Tap New Sunday to create one.</div>';
     }
   } catch(e) {
-    document.getElementById('ov-loading').innerHTML = '<div style="color:var(--red);font-size:13px;">Could not load service. Check connection.</div>';
+    document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--red);">Could not load service details.</div>';
     console.error(e);
   }
 }
 
 function renderService(s) {
-  const dateStr = fmtDate(s.service_date);
+  const dateStr = new Date(s.service_date + 'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   ['ov-eyebrow','ord-eyebrow','songs-eyebrow','ser-eyebrow','chk-eyebrow','str-eyebrow'].forEach(id => {
     const el = document.getElementById(id); if(el) el.textContent = dateStr;
   });
+  document.getElementById('tb-section').textContent = dateStr;
 
   // Overview
-  document.getElementById('ov-title').textContent = s.badge || 'Sunday Service';
-  document.getElementById('ov-sub').textContent = `${dateStr} · 10:30am · Calvary Hephzibah, Manchester`;
+  document.getElementById('ov-title').textContent = s.sermon_title || s.badge || 'Sunday Service';
+  document.getElementById('ov-sub').textContent = `${dateStr} · ${s.time || '10:30am'} · Calvary Hephzibah`;
   document.getElementById('ov-preacher').textContent = s.preacher || '—';
   document.getElementById('ov-sermon-short').textContent = s.sermon_title || '';
   document.getElementById('ov-worship').textContent = s.worship_leader || '—';
-  document.getElementById('ov-scripture').textContent = s.scripture || '—';
+  document.getElementById('ov-scripture').textContent = s.scripture || '';
+
+  // Chips
   const band = s.band || [];
+  const confirmed = band.filter(b=>b.status==='confirmed').length;
+  const pending = band.filter(b=>b.status==='pending').length;
+  document.getElementById('ov-chips').innerHTML = [
+    {label:`${s.time||'10:30am'} start`, color:'rgba(255,255,255,0.7)'},
+    pending > 0 ? {label:`${pending} TBC`, color:'#FDE68A'} : null,
+    confirmed > 0 ? {label:`${confirmed} confirmed`, color:'#BBF7D0'} : null,
+  ].filter(Boolean).map(c=>`<span class="hero-chip"><span style="width:6px;height:6px;border-radius:50%;background:${c.color};flex-shrink:0;"></span>${c.label}</span>`).join('');
+
+  // Band
   document.getElementById('ov-band').innerHTML = band.length ? band.map(b => {
+    const initials = b.name.split(' ').slice(0,2).map(n=>n[0]).join('');
     const sc = b.status==='confirmed'?'var(--green)':b.status==='pending'?'var(--amber)':'var(--ink-4)';
-    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
-      <div style="width:8px;height:8px;border-radius:50%;background:${sc};flex-shrink:0;"></div>
-      <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${b.name}</div><div style="font-size:11px;color:var(--ink-4);">${b.role}</div></div>
-      <span style="font-size:10px;padding:2px 7px;border-radius:100px;background:${b.paid?'rgba(196,30,42,0.1)':'var(--green-light)'};color:${b.paid?'var(--red)':'var(--green)'};">${b.paid?'PAID':'VOLUNTEER'}</span>
+    return `<div class="band-row">
+      <div class="band-av">${initials}</div>
+      <div style="flex:1;">
+        <div class="band-name">${b.name}</div>
+        <div class="band-role">${b.role}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        ${b.paid?`<span class="badge b-red" style="font-size:10px;">Paid</span>`:`<span class="badge b-green" style="font-size:10px;">Vol</span>`}
+        <span style="font-size:12px;font-weight:600;color:${sc};">${b.status}</span>
+      </div>
     </div>`;
-  }).join('') : '<div style="font-size:13px;color:var(--ink-4);">Band not confirmed yet.</div>';
+  }).join('') : '<div style="font-size:14px;color:var(--ink-4);">Band not confirmed yet.</div>';
+
+  // Notes/alert
+  if (s.notes) {
+    document.getElementById('ov-alert').style.display = 'block';
+    document.getElementById('ov-alert-text').textContent = s.notes;
+  }
+
   document.getElementById('ov-loading').style.display = 'none';
   document.getElementById('ov-content').style.display = 'block';
 
   // Order
   const order = s.order_of_service || [];
-  document.getElementById('order-tbody').innerHTML = order.map(r =>
-    `<tr class="order-type-${r.type||'normal'}"><td style="color:var(--ink-4);font-weight:600;">${r.n}</td><td style="font-weight:500;">${r.item}</td><td>${r.assigned||'—'}</td><td style="color:var(--ink-4);">${r.notes||'—'}</td></tr>`
-  ).join('');
+  document.getElementById('order-list').innerHTML = order.map(r => `
+    <div class="order-row order-type-${r.type||'normal'}">
+      <div class="order-num">${r.n}</div>
+      <div style="flex:1;">
+        <div class="order-item">${r.item}</div>
+        ${r.notes ? `<div style="font-size:12px;color:var(--ink-4);margin-top:2px;">${r.notes}</div>` : ''}
+      </div>
+      <div class="order-assigned">${r.assigned||''}</div>
+    </div>`).join('');
   document.getElementById('ord-loading').style.display = 'none';
   document.getElementById('ord-content').style.display = 'block';
 
@@ -324,19 +414,19 @@ function renderService(s) {
   const sectionOrder = ['Praise','Worship','Offering','End of Service'];
   let html = '';
   sectionOrder.forEach(sec => {
-    const secSongs = songs.filter(x => x.section === sec);
-    if (!secSongs.length) return;
+    const ss = songs.filter(x=>x.section===sec);
+    if(!ss.length) return;
     html += `<div class="song-section-label">${sec}</div>`;
-    secSongs.forEach(song => {
+    ss.forEach(song => {
       html += `<div class="song-row">
-        <div class="song-row-title">${song.title}</div>
+        <div><div class="song-row-title">${song.title}</div></div>
         ${song.lyrics
-          ? `<a href="${song.lyrics}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0;">📥 Lyrics</a>`
-          : `<a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0;font-size:11px;">Generate →</a>`}
+          ? `<a href="${song.lyrics}" target="_blank" class="btn btn-white btn-sm" style="text-decoration:none;flex-shrink:0;">📥 Lyrics</a>`
+          : `<a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0;font-size:12px;">Generate →</a>`}
       </div>`;
     });
   });
-  document.getElementById('songs-list').innerHTML = html || '<div style="font-size:13px;color:var(--ink-4);">No songs added yet.</div>';
+  document.getElementById('songs-list').innerHTML = html || '<div style="font-size:14px;color:var(--ink-4);">No songs added yet.</div>';
   document.getElementById('songs-loading').style.display = 'none';
   document.getElementById('songs-content').style.display = 'block';
 
@@ -349,28 +439,32 @@ function renderService(s) {
 
   // Stream
   if (s.youtube_url) {
-    document.getElementById('stream-wrap').innerHTML = `<a href="${s.youtube_url}" target="_blank" class="btn btn-red" style="text-decoration:none;display:inline-block;">▶ Watch Live</a>`;
+    document.getElementById('stream-wrap').innerHTML = `
+      <div class="card-label">YouTube livestream</div>
+      <a href="${s.youtube_url}" target="_blank" class="btn btn-red" style="text-decoration:none;display:inline-flex;">▶ Watch Live</a>`;
   }
 }
 
 // ── ARCHIVE ───────────────────────────────────────────────────────────────
 async function loadArchive() {
-  document.getElementById('arch-loading').style.display = 'flex';
+  document.getElementById('arch-loading').style.display = 'block';
   document.getElementById('arch-list').style.display = 'none';
   try {
-    allServices = await sbFetch('cos_services?order=service_date.desc');
+    allServices = await sbFetch('cos_services?order=service_date.desc') || [];
     const isAdmin = COS.currentUser?.level === 'admin';
-    document.getElementById('arch-list').innerHTML = allServices.map(s => `
-      <div class="service-card" onclick="viewArchiveService('${s.service_date}')">
-        <div class="service-card-date">${fmtDate(s.service_date)}</div>
+    document.getElementById('arch-list').innerHTML = allServices.map(s => {
+      const dateStr = new Date(s.service_date+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+      return `<div class="service-card" onclick="viewArchiveService('${s.service_date}')">
+        <div class="service-card-date">${dateStr}</div>
         <div class="service-card-sermon">${s.sermon_title || 'No sermon title'}</div>
         <div class="service-card-meta">${s.preacher||'—'} · ${s.worship_leader||'—'}</div>
-        ${isAdmin ? `<div style="margin-top:8px;"><button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();editService('${s.service_date}')">Edit</button></div>` : ''}
-      </div>`).join('') || '<div style="font-size:13px;color:var(--ink-4);">No records yet.</div>';
+        ${isAdmin ? `<div style="margin-top:10px;"><button class="btn btn-white btn-sm" onclick="event.stopPropagation();editService('${s.service_date}')">Edit</button></div>` : ''}
+      </div>`;
+    }).join('') || '<div style="font-size:14px;color:var(--ink-4);">No records yet.</div>';
     document.getElementById('arch-loading').style.display = 'none';
     document.getElementById('arch-list').style.display = 'block';
   } catch(e) {
-    document.getElementById('arch-loading').innerHTML = '<div style="color:var(--red);font-size:13px;">Could not load archive.</div>';
+    document.getElementById('arch-loading').innerHTML = '<div style="color:var(--red);font-size:14px;">Could not load records.</div>';
   }
 }
 
@@ -387,13 +481,12 @@ function initNewForm() {
   document.getElementById('ns-heading').textContent = 'New Sunday';
   document.getElementById('ns-id').value = '';
   ['ns-date','ns-badge','ns-preacher','ns-sermon','ns-scripture','ns-worship','ns-youtube','ns-notes'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
+    const el = document.getElementById(id); if(el) el.value = el.defaultValue || '';
   });
   document.getElementById('ns-order-rows').innerHTML = '';
   document.getElementById('ns-song-rows').innerHTML = '';
   document.getElementById('ns-msg').textContent = '';
-  // Default order
+  oc = 0; sc2 = 0;
   [
     {n:1,item:'Welcome & Bible Reading',assigned:'',type:'normal'},
     {n:2,item:'Opening Prayer',assigned:'',type:'normal'},
@@ -402,8 +495,9 @@ function initNewForm() {
     {n:5,item:'Announcements',assigned:'',type:'normal'},
     {n:6,item:'Bible Reading',assigned:'',type:'highlight'},
     {n:7,item:'Sermon',assigned:'',type:'sermon'},
-    {n:8,item:'Closing Prayer',assigned:'',type:'normal'},
-    {n:9,item:'Benediction',assigned:'',type:'normal'},
+    {n:8,item:'Thanksgiving',assigned:'',type:'normal'},
+    {n:9,item:'Closing Prayer',assigned:'',type:'normal'},
+    {n:10,item:'Benediction',assigned:'',type:'normal'},
   ].forEach(r => addOrderRow(r));
 }
 
@@ -423,21 +517,21 @@ function editService(date) {
   document.getElementById('ns-order-rows').innerHTML = '';
   document.getElementById('ns-song-rows').innerHTML = '';
   document.getElementById('ns-msg').textContent = '';
+  oc = 0; sc2 = 0;
   (s.order_of_service||[]).forEach(r => addOrderRow(r));
   (s.songs||[]).forEach(r => addSongRow(r));
   navPage('new-service', document.getElementById('nav-new'));
 }
 
-let oc=0, sc2=0;
 function addOrderRow(d={}) {
   oc++;
   const div = document.createElement('div');
   div.className = 'order-row-item';
   div.innerHTML = `
-    <input placeholder="Item" value="${(d.item||'').replace(/"/g,'&quot;')}" data-f="item" style="flex:1;">
-    <input placeholder="Assigned to" value="${(d.assigned||'').replace(/"/g,'&quot;')}" data-f="assigned" style="max-width:150px;">
-    <select data-f="type" style="width:100px;">
-      <option value="normal" ${d.type==='normal'||!d.type?'selected':''}>Normal</option>
+    <input placeholder="Item" value="${(d.item||'').replace(/"/g,'&quot;')}" data-f="item" style="flex:2;min-width:120px;">
+    <input placeholder="Assigned to" value="${(d.assigned||'').replace(/"/g,'&quot;')}" data-f="assigned" style="flex:1;min-width:100px;">
+    <select data-f="type" style="width:110px;">
+      <option value="normal" ${!d.type||d.type==='normal'?'selected':''}>Normal</option>
       <option value="highlight" ${d.type==='highlight'?'selected':''}>Highlight</option>
       <option value="sermon" ${d.type==='sermon'?'selected':''}>Sermon</option>
     </select>
@@ -450,8 +544,8 @@ function addSongRow(d={}) {
   const div = document.createElement('div');
   div.className = 'song-row-form';
   div.innerHTML = `
-    <input placeholder="Song title" value="${(d.title||'').replace(/"/g,'&quot;')}" data-f="title">
-    <select data-f="section">
+    <input placeholder="Song title" value="${(d.title||'').replace(/"/g,'&quot;')}" data-f="title" style="flex:1;min-width:140px;">
+    <select data-f="section" style="width:120px;">
       <option value="Praise" ${d.section==='Praise'?'selected':''}>Praise</option>
       <option value="Worship" ${d.section==='Worship'?'selected':''}>Worship</option>
       <option value="Offering" ${d.section==='Offering'?'selected':''}>Offering</option>
@@ -471,14 +565,14 @@ async function saveService() {
   document.querySelectorAll('#ns-order-rows .order-row-item').forEach((row, i) => {
     const item = row.querySelector('[data-f="item"]').value.trim();
     if (!item) return;
-    orderRows.push({ n:i+1, item, assigned:row.querySelector('[data-f="assigned"]').value.trim(), type:row.querySelector('[data-f="type"]').value });
+    orderRows.push({n:i+1,item,assigned:row.querySelector('[data-f="assigned"]').value.trim(),type:row.querySelector('[data-f="type"]').value});
   });
 
   const songRows = [];
   document.querySelectorAll('#ns-song-rows .song-row-form').forEach(row => {
     const title = row.querySelector('[data-f="title"]').value.trim();
     if (!title) return;
-    songRows.push({ title, section:row.querySelector('[data-f="section"]').value, lyrics:null });
+    songRows.push({title,section:row.querySelector('[data-f="section"]').value,lyrics:null});
   });
 
   const payload = {
@@ -496,18 +590,18 @@ async function saveService() {
   };
 
   try {
-    const existing = document.getElementById('ns-id').value;
-    if (existing) {
-      await sbPatch('cos_services', `id=eq.${existing}`, payload);
+    const existingId = document.getElementById('ns-id').value;
+    if (existingId) {
+      await sbPatch('cos_services', `id=eq.${existingId}`, payload);
     } else {
       await sbPost('cos_services', payload);
     }
-    msg.textContent = '✅ Saved'; msg.style.color = 'var(--green)';
+    msg.textContent = '✅ Saved!'; msg.style.color = 'var(--green)';
     COS.toast('Service saved');
     await loadThisSunday();
     setTimeout(() => navPage('overview', document.querySelector('.nav-item[onclick*="overview"]')), 800);
   } catch(e) {
-    msg.textContent = 'Error — try again.'; msg.style.color = 'var(--red)';
+    msg.textContent = 'Error saving — try again.'; msg.style.color = 'var(--red)';
     console.error(e);
   }
 }
@@ -515,39 +609,40 @@ async function saveService() {
 // ── CHECKLIST ─────────────────────────────────────────────────────────────
 function renderChecklist() {
   const sections = [
-    {section:'Setup', items:['Church open — confirm with Brother Al','Chairs arranged','PA system on and tested','Band equipment set up']},
-    {section:'Media', items:['Phone charged + USB-C charger plugged in','Phone mounted on tripod','Camera framing checked — tight headroom','Livestream connected and tested','OBS open and scenes prepared','Lyric slides loaded for all worship songs','Sermon thumbnail ready']},
-    {section:'Worship', items:['Band arrive for soundcheck','Set list confirmed and distributed','Lyric slides tested on screen','Monitors checked']},
-    {section:'Front of house', items:['Ushers in position by 10:15am','Offering bags ready','Welcome team at door']},
+    {s:'Setup', items:['Church open — confirmed with Brother Al','Chairs arranged','PA system on and tested','Band equipment set up']},
+    {s:'Media', items:['Phone charged + USB-C charger plugged in','Phone mounted on tripod','Camera framing checked — tight headroom','Livestream connected and tested','OBS open and scenes prepared','All lyric slides loaded','Sermon thumbnail ready']},
+    {s:'Worship', items:['Band arrive for soundcheck','Set list confirmed and distributed','Lyric slides tested on screen','Monitors checked']},
+    {s:'Front of house', items:['Ushers in position by 10:15am','Offering bags ready','Welcome team at door']},
   ];
+  let total = 0;
   document.getElementById('checklist-body').innerHTML = sections.map(sec => `
-    <div style="margin-bottom:16px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">${sec.section}</div>
-      ${sec.items.map(item => {
-        const k = (sec.section+item).replace(/[^a-zA-Z0-9]/g,'');
-        return `<div class="list-item" onclick="toggleCheck(this,'${k}')">
-          <div id="cb${k}" style="width:18px;height:18px;border-radius:5px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;"></div>
-          <div class="li-content"><div class="li-title">${item}</div></div>
-        </div>`;
-      }).join('')}
-    </div>`).join('');
+    <div class="section-label">${sec.s}</div>
+    ${sec.items.map(item => {
+      total++;
+      const k = (sec.s+item).replace(/[^a-zA-Z0-9]/g,'');
+      return `<div class="check-row" id="row-${k}" onclick="toggleCheck('${k}')">
+        <div class="check-box" id="cb-${k}"></div>
+        <div class="check-text">${item}</div>
+      </div>`;
+    }).join('')}`).join('');
+  window._checkTotal = total;
 }
 
-function toggleCheck(el, key) {
+function toggleCheck(key) {
   checkState[key] = !checkState[key];
-  const cb = document.getElementById('cb'+key);
+  const row = document.getElementById('row-'+key);
+  const cb = document.getElementById('cb-'+key);
   if (checkState[key]) {
-    cb.style.background='var(--green)';cb.style.borderColor='var(--green)';
-    cb.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2,5 4,7 8,3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>';
-    el.querySelector('.li-title').style.cssText='text-decoration:line-through;color:var(--ink-4);';
+    row.classList.add('done');
+    cb.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>';
   } else {
-    cb.style.background='';cb.style.borderColor='var(--border)';cb.innerHTML='';
-    el.querySelector('.li-title').style.cssText='';
+    row.classList.remove('done');
+    cb.innerHTML = '';
   }
-}
-
-function fmtDate(d) {
-  return new Date(d+'T12:00:00').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const done = Object.values(checkState).filter(Boolean).length;
+  const doneEl = document.getElementById('checklist-done');
+  if (done >= window._checkTotal) doneEl.style.display = 'block';
+  else doneEl.style.display = 'none';
 }
 
 COS.init('sunday');

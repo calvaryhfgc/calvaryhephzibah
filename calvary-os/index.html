@@ -5,43 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Calvary OS</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0A0A0A">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="stylesheet" href="shell.css">
-<style>
-/* Index-specific: after login redirect to dashboard */
-</style>
 </head>
 <body>
 
 <div id="auth-screen">
   <div class="auth-wrap">
-    <div class="auth-logo">
+    <div class="auth-logo-block">
       <div class="auth-logo-icon">
         <svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg>
       </div>
       <div>
         <div class="auth-logo-name">Calvary OS</div>
-        <div class="auth-logo-sub">Calvary Hephzibah Full Gospel Church</div>
+        <div class="auth-logo-church">Calvary Hephzibah Full Gospel Church</div>
       </div>
     </div>
 
-    <!-- Step 1: Who are you -->
     <div class="auth-step active" id="step-who">
-      <div class="auth-eyebrow">Welcome</div>
-      <div class="auth-heading">Select your name</div>
-      <div class="auth-sub">Your operational hub for Calvary Hephzibah.</div>
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
       <div class="user-grid" id="user-grid"></div>
     </div>
 
-    <!-- Step 2: PIN -->
     <div class="auth-step" id="step-pin">
       <button class="pin-back" onclick="COS._goBack()">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2L4 6l4 4"/></svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg>
         Back
       </button>
-      <div class="auth-eyebrow">PIN Required</div>
-      <div class="auth-heading" id="pin-user-name">Enter your PIN</div>
-      <div class="auth-sub">4-digit PIN to access your workspace.</div>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
       <div class="pin-dots">
         <div class="pin-dot" id="pd0"></div>
         <div class="pin-dot" id="pd1"></div>
@@ -70,11 +63,10 @@
 <div class="toast" id="toast"></div>
 <script src="shell.js"></script>
 <script>
-// Override _launchApp to redirect to dashboard
 const _orig = COS._launchApp.bind(COS);
 COS._launchApp = function(){
   sessionStorage.setItem('cos_session', JSON.stringify(this.currentUser));
-  window.location.href = 'dashboard.html';
+  window.location.href = 'sunday.html';
 };
 COS.init();
 </script>
