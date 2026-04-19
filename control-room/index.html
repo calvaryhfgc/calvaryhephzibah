@@ -364,6 +364,134 @@
   }
   .slide-text .l2 { color: var(--text-muted); }
 
+  /* ============ DISPLAY SETTINGS ============ */
+  .display-panel {
+    margin: 24px 20px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .display-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .display-head h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0;
+  }
+  .display-toggle {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+  .display-toggle:hover { border-color: var(--border-strong); color: var(--text); }
+  .display-body { display: none; margin-top: 16px; }
+  .display-body.open { display: block; }
+  .display-field { margin-bottom: 16px; }
+  .display-field:last-child { margin-bottom: 0; }
+  .display-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .preset-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .preset-btn {
+    padding: 10px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .preset-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .preset-btn.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .slider-row input[type="range"] {
+    flex: 1;
+    accent-color: var(--red);
+    height: 4px;
+  }
+  .slider-value {
+    min-width: 44px;
+    text-align: right;
+    font-family: 'DM Sans', monospace;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .display-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .display-actions .btn {
+    padding: 12px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .display-actions .btn:hover { border-color: var(--border-strong); }
+  .display-actions .btn.apply { background: var(--red); border-color: var(--red); }
+  .display-actions .btn.apply:hover { background: #e02b38; border-color: #e02b38; }
+  .display-actions .btn.apply:disabled {
+    background: var(--surface-2);
+    border-color: var(--border);
+    color: var(--text-dim);
+    cursor: not-allowed;
+  }
+  .display-preview-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: 10px;
+    font-style: italic;
+  }
+  .display-dirty-badge {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
   /* ============ BIBLE SEARCH ============ */
   .bible-panel {
     margin: 24px 20px 40px;
@@ -518,6 +646,51 @@
     <!-- populated -->
   </div>
 
+  <!-- Display settings -->
+  <div class="display-panel">
+    <div class="display-head">
+      <h3>Display <span id="display-dirty" class="display-dirty-badge" style="display:none"></span></h3>
+      <button class="display-toggle" onclick="toggleDisplay()">
+        <span id="display-toggle-text">Adjust</span>
+      </button>
+    </div>
+    <p class="muted" style="font-size: 13px; margin: 4px 0 0;">Position and size of text on the overlay. Changes apply live to OBS.</p>
+
+    <div id="display-body" class="display-body">
+      <div class="display-field">
+        <span class="display-label">Position</span>
+        <div class="preset-row">
+          <button class="preset-btn" data-pos="top" onclick="setPresetPosition('top')">Top</button>
+          <button class="preset-btn" data-pos="middle" onclick="setPresetPosition('middle')">Middle</button>
+          <button class="preset-btn" data-pos="bottom" onclick="setPresetPosition('bottom')">Bottom</button>
+        </div>
+      </div>
+
+      <div class="display-field">
+        <span class="display-label">Distance from edge</span>
+        <div class="slider-row">
+          <input type="range" id="offset-slider" min="0" max="30" value="8" oninput="onOffsetChange()">
+          <span class="slider-value" id="offset-value">8%</span>
+        </div>
+      </div>
+
+      <div class="display-field">
+        <span class="display-label">Text size</span>
+        <div class="preset-row">
+          <button class="preset-btn" data-size="small" onclick="setPresetSize('small')">Small</button>
+          <button class="preset-btn" data-size="medium" onclick="setPresetSize('medium')">Medium</button>
+          <button class="preset-btn" data-size="large" onclick="setPresetSize('large')">Large</button>
+        </div>
+      </div>
+
+      <div class="display-actions">
+        <button class="btn" onclick="revertDisplay()">Revert</button>
+        <button class="btn apply" id="apply-display-btn" onclick="applyDisplay()">Apply to overlay</button>
+      </div>
+      <p class="display-preview-hint">Changes save when you tap Apply. Revert to undo unsaved changes.</p>
+    </div>
+  </div>
+
   <!-- Bible -->
   <div class="bible-panel">
     <h3>Scripture search</h3>
@@ -649,6 +822,7 @@ async function enterApp() {
   document.getElementById('user-display').textContent = currentUser.name;
   document.getElementById('overlay-link').href = 'overlay.html';
   await loadPlan();
+  await loadDisplaySettings();
   subscribeLive();
 }
 
@@ -888,6 +1062,85 @@ function parseRef(q) {
             || (rawBook.charAt(0).toUpperCase() + rawBook.slice(1));
   return { book, chapter: parseInt(m[2]), verse: parseInt(m[3]) };
 }
+
+// ============================================================
+// DISPLAY SETTINGS
+// ============================================================
+let displaySaved = { position: 'bottom', vertical_offset: 8, size: 'medium' };
+let displayDraft = { position: 'bottom', vertical_offset: 8, size: 'medium' };
+
+async function loadDisplaySettings() {
+  const { data, error } = await client
+    .from('control_room_display')
+    .select('position, vertical_offset, size')
+    .eq('id', 1)
+    .single();
+  if (error || !data) { console.error('display load:', error); return; }
+  displaySaved = { ...data };
+  displayDraft = { ...data };
+  renderDisplayPanel();
+}
+
+function renderDisplayPanel() {
+  document.querySelectorAll('.preset-btn[data-pos]').forEach(b => {
+    b.classList.toggle('active', b.dataset.pos === displayDraft.position);
+  });
+  document.querySelectorAll('.preset-btn[data-size]').forEach(b => {
+    b.classList.toggle('active', b.dataset.size === displayDraft.size);
+  });
+  document.getElementById('offset-slider').value = displayDraft.vertical_offset;
+  document.getElementById('offset-value').textContent = displayDraft.vertical_offset + '%';
+
+  // Dirty indicator
+  const dirty = JSON.stringify(displayDraft) !== JSON.stringify(displaySaved);
+  document.getElementById('display-dirty').style.display = dirty ? 'inline-block' : 'none';
+  document.getElementById('apply-display-btn').disabled = !dirty;
+}
+
+window.toggleDisplay = () => {
+  const body = document.getElementById('display-body');
+  const text = document.getElementById('display-toggle-text');
+  body.classList.toggle('open');
+  text.textContent = body.classList.contains('open') ? 'Close' : 'Adjust';
+};
+
+window.setPresetPosition = (pos) => {
+  displayDraft.position = pos;
+  renderDisplayPanel();
+};
+
+window.setPresetSize = (size) => {
+  displayDraft.size = size;
+  renderDisplayPanel();
+};
+
+window.onOffsetChange = () => {
+  const v = parseInt(document.getElementById('offset-slider').value);
+  displayDraft.vertical_offset = v;
+  document.getElementById('offset-value').textContent = v + '%';
+  renderDisplayPanel();
+};
+
+window.revertDisplay = () => {
+  displayDraft = { ...displaySaved };
+  renderDisplayPanel();
+};
+
+window.applyDisplay = async () => {
+  const { error } = await client
+    .from('control_room_display')
+    .update({
+      position: displayDraft.position,
+      vertical_offset: displayDraft.vertical_offset,
+      size: displayDraft.size,
+      updated_at: new Date().toISOString(),
+      updated_by: currentUser.name
+    })
+    .eq('id', 1);
+  if (error) { console.error('display save:', error); alert('Failed to save: ' + error.message); return; }
+  displaySaved = { ...displayDraft };
+  renderDisplayPanel();
+};
 
 // ============================================================
 // LIVE STATE (push + subscribe)

@@ -50,28 +50,58 @@
   .hud.connected .dot { background: #22c55e; }
   .hud.error .dot { background: #ef4444; }
 
-  /* Stage — bottom-aligned by default, centred for verse mode */
+  /* Stage — positioning controlled by CSS variables set via JS */
+  :root {
+    --stage-anchor: bottom;
+    --stage-offset: 8vh;
+    --lyric-scale: 1;
+    --verse-scale: 1;
+  }
   .stage {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 8vh;
     padding: 0 6vw;
     text-align: center;
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    transition: opacity 0.4s ease, transform 0.4s ease, bottom 0.3s ease, top 0.3s ease;
     pointer-events: none;
   }
-  .stage.active {
-    opacity: 1;
+  /* Bottom anchor */
+  .stage[data-anchor="bottom"] {
+    bottom: var(--stage-offset);
+    top: auto;
+    transform: translateY(20px);
+  }
+  .stage[data-anchor="bottom"].active {
     transform: translateY(0);
+    opacity: 1;
+  }
+  /* Top anchor */
+  .stage[data-anchor="top"] {
+    top: var(--stage-offset);
+    bottom: auto;
+    transform: translateY(-20px);
+  }
+  .stage[data-anchor="top"].active {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  /* Middle anchor */
+  .stage[data-anchor="middle"] {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(calc(-50% + 20px));
+  }
+  .stage[data-anchor="middle"].active {
+    transform: translateY(-50%);
+    opacity: 1;
   }
 
   /* LYRIC MODE — two lines, huge, outlined for video legibility */
   .lyric-line {
     font-weight: 700;
-    font-size: clamp(3.5rem, 6.5vw, 6rem);
+    font-size: calc(clamp(3.5rem, 6.5vw, 6rem) * var(--lyric-scale));
     line-height: 1.15;
     letter-spacing: -0.02em;
     text-shadow: var(--shadow);
@@ -84,18 +114,10 @@
   }
 
   /* VERSE MODE — centred, serif for scripture, with reference below */
-  .verse-stage {
-    top: 50%;
-    bottom: auto;
-    transform: translate(0, -50%) translateY(20px);
-  }
-  .verse-stage.active {
-    transform: translate(0, -50%) translateY(0);
-  }
   .verse-text {
     font-family: 'Inter', serif;
     font-weight: 600;
-    font-size: clamp(2.5rem, 4.5vw, 4rem);
+    font-size: calc(clamp(2.5rem, 4.5vw, 4rem) * var(--verse-scale));
     line-height: 1.35;
     letter-spacing: -0.015em;
     text-shadow: var(--shadow);
@@ -105,7 +127,7 @@
   }
   .verse-ref {
     font-weight: 500;
-    font-size: clamp(1.25rem, 1.8vw, 1.75rem);
+    font-size: calc(clamp(1.25rem, 1.8vw, 1.75rem) * var(--verse-scale));
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #C41E2A;
@@ -134,12 +156,12 @@
 
 <div id="hud" class="hud"><span class="dot"></span><span id="hud-text">connecting…</span></div>
 
-<div id="lyric-stage" class="stage">
+<div id="lyric-stage" class="stage" data-anchor="bottom">
   <div id="lyric-line1" class="lyric-line"></div>
   <div id="lyric-line2" class="lyric-line"></div>
 </div>
 
-<div id="verse-stage" class="stage verse-stage">
+<div id="verse-stage" class="stage" data-anchor="bottom">
   <div id="verse-text" class="verse-text"></div>
   <div id="verse-ref" class="verse-ref"></div>
 </div>
@@ -209,6 +231,44 @@ function render(mode, payload) {
 }
 
 // ============================================================
+// DISPLAY SETTINGS (position, size)
+// ============================================================
+const SIZE_SCALE = { small: 0.8, medium: 1.0, large: 1.25 };
+
+function applyDisplaySettings(settings) {
+  const anchor = settings.position || 'bottom';
+  const offset = typeof settings.vertical_offset === 'number' ? settings.vertical_offset : 8;
+  const scale = SIZE_SCALE[settings.size] || 1.0;
+
+  // Update CSS variables
+  document.documentElement.style.setProperty('--stage-offset', offset + 'vh');
+  document.documentElement.style.setProperty('--lyric-scale', scale);
+  document.documentElement.style.setProperty('--verse-scale', scale);
+
+  // Update anchor on both stages
+  document.getElementById('lyric-stage').dataset.anchor = anchor;
+  document.getElementById('verse-stage').dataset.anchor = anchor;
+}
+
+async function fetchDisplaySettings() {
+  const { data, error } = await client
+    .from('control_room_display')
+    .select('position, vertical_offset, size')
+    .eq('id', 1)
+    .single();
+  if (error) { console.error('display settings fetch:', error); return; }
+  applyDisplaySettings(data);
+}
+
+function subscribeDisplaySettings() {
+  client.channel('control-room-display')
+    .on('postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'control_room_display', filter: 'id=eq.1' },
+      ({ new: row }) => applyDisplaySettings(row))
+    .subscribe();
+}
+
+// ============================================================
 // INITIAL FETCH + REALTIME SUBSCRIPTION
 // ============================================================
 async function fetchCurrent() {
@@ -245,6 +305,8 @@ function subscribe() {
 // ============================================================
 // BOOT
 // ============================================================
+fetchDisplaySettings();
+subscribeDisplaySettings();
 fetchCurrent();
 subscribe();
 
