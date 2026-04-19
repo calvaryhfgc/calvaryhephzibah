@@ -132,6 +132,7 @@
     <li><a href="#setup">Setting it up in OBS (one-time)</a></li>
     <li><a href="#testing">Testing before service</a></li>
     <li><a href="#sunday">What to do on Sunday morning</a></li>
+    <li><a href="#distributed">Running the overlay from multiple machines</a></li>
     <li><a href="#refs">Quick reference — URLs and PINs</a></li>
     <li><a href="#trouble">Troubleshooting</a></li>
   </ol>
@@ -332,6 +333,73 @@
 
   <div class="callout info">
     <strong>During the service:</strong> you don't need to do anything with the overlay. The operator drives it. Your job is the camera, audio, and the stream. If the overlay ever freezes or misbehaves, right-click Calvary Overlay in Sources → Refresh. It'll be back in 2 seconds.
+  </div>
+</section>
+
+<section class="section" id="distributed">
+  <h2>Running the overlay from multiple machines</h2>
+  <p class="lede">The thing that trips most people up: your OBS does not need to be on the same computer — or even the same room — as whoever is pushing slides.</p>
+
+  <h3>How it actually works</h3>
+  <p>The overlay, the operator app, and OBS are three separate things. They don't talk to each other directly. They all talk to a shared database in the cloud (Supabase). That's why any of them can run anywhere — phone, laptop, a different church, a different country — as long as the device has internet.</p>
+
+  <p>Your OBS machine just reads the database. Whoever is pushing slides writes to the database. They never communicate directly.</p>
+
+  <div class="callout tip">
+    <strong>What this means for you:</strong> you don't have to run the operator app yourself. You don't have to be near whoever's driving it. Your only job is making sure OBS has the overlay loaded and the stream is healthy.
+  </div>
+
+  <h3>The typical Sunday setup</h3>
+
+  <div class="step">
+    <div class="step-num">A</div>
+    <div class="step-body">
+      <h4>You — OBS at the media desk</h4>
+      <p>You focus on camera, audio, and the stream out to YouTube. The Calvary Overlay source is loaded but you never interact with it during service. Everything else is handled remotely.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">B</div>
+    <div class="step-body">
+      <h4>A second operator — laptop or phone anywhere in the room</h4>
+      <p>This person sits with the worship team, the preacher's notes, or just at the back with a laptop. They open the operator app, sign in with their PIN, and tap through slides during service.</p>
+      <p>Could be Bolaji, Tolu, Auntie Pauline, or any trained team member. As the church grows you can have multiple people rotating in this role.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">C</div>
+    <div class="step-body">
+      <h4>A backup operator — on their phone as a safety net</h4>
+      <p>Because multiple people can be signed in at once, Bolaji can keep the operator app open on his phone during service. If the main operator fumbles — wrong slide, stuck on the chorus, forgets to blank between sections — the backup can push the right thing from their phone without getting up.</p>
+      <p>Both operators see each other's pushes on their Now Playing card, so there's no confusion about what's on screen.</p>
+    </div>
+  </div>
+
+  <h3>Things this unlocks</h3>
+
+  <div class="callout info" style="margin-top:20px">
+    <strong>Remote training.</strong> Bolaji can train you on the overlay from home — he runs the operator app, you watch your OBS update live, over a Zoom screenshare. No need to be in the same building.
+  </div>
+
+  <div class="callout info">
+    <strong>Dry runs during the week.</strong> On a Saturday evening you can test the full loop from your sofa. Open OBS, load the overlay, open the operator app in another tab, tap through Sunday's set list. If anything's off you find out before 11 AM on Sunday.
+  </div>
+
+  <div class="callout info">
+    <strong>Disaster recovery.</strong> If the media desk computer dies mid-service, any laptop with OBS installed can pick up where it left off — load the overlay URL into a fresh OBS install and the overlay state is whatever it was when the old machine went down. The database remembers.
+  </div>
+
+  <div class="callout info">
+    <strong>Multi-site in the future.</strong> If Calvary ever plants a second campus, the same control room can drive overlays in two buildings simultaneously. One set list, two OBS machines at two locations, identical output.
+  </div>
+
+  <h3>What this does NOT change</h3>
+  <p>You still need the Calvary Overlay source in OBS. You still need to test before service. You still need internet on the OBS machine. The distributed model is about who can push slides — not about magic wifi-free overlay rendering.</p>
+
+  <div class="callout warn">
+    <strong>One honest limitation:</strong> if the church's internet goes down, the operator app can still push slides from a phone on 4G — but OBS will be stuck on whatever the overlay last showed, because OBS can't read from Supabase without its own internet. Tether the OBS machine to a phone's mobile hotspot if the church wifi ever fails mid-service.
   </div>
 </section>
 
