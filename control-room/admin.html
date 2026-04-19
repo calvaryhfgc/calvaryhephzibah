@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0A">
+<title>Control Room — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1c1c1c;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #FFFFFF;
+    --text-muted: rgba(255,255,255,0.6);
+    --text-dim: rgba(255,255,255,0.4);
+    --red: #C41E2A;
+    --red-glow: rgba(196,30,42,0.25);
+    --green: #22c55e;
+    --amber: #F59E0B;
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:15px;line-height:1.5;min-height:100vh}
+  button{font-family:inherit;font-size:inherit;background:none;border:none;color:inherit;cursor:pointer}
+  input,textarea,select{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none}
+  input:focus,textarea:focus,select:focus{outline:none}
+  .serif{font-family:'Instrument Serif',serif;font-weight:400;letter-spacing:-0.01em}
+  .mono{font-family:'JetBrains Mono',monospace;font-size:13px}
+  .muted{color:var(--text-muted)}
+  .dim{color:var(--text-dim)}
+  .hidden{display:none!important}
+
+  /* LAYOUT */
+  .shell{max-width:1200px;margin:0 auto;padding:20px}
+  @media (min-width:900px){.shell{padding:32px}}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:24px}
+  .topbar h1{font-family:'Instrument Serif',serif;font-size:32px;font-weight:400}
+  .topbar .back{color:var(--text-muted);font-size:14px;text-decoration:none;display:flex;align-items:center;gap:4px}
+  .topbar .back:hover{color:var(--text)}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px}
+  .tab{padding:10px 16px;background:none;color:var(--text-muted);font-weight:600;font-size:14px;border-bottom:2px solid transparent;border-radius:0;margin-bottom:-1px}
+  .tab.active{color:var(--text);border-bottom-color:var(--red)}
+  .tab:hover{color:var(--text)}
+
+  .panel{display:none}
+  .panel.active{display:block}
+
+  /* TWO-COL on desktop */
+  .two-col{display:grid;grid-template-columns:1fr;gap:20px}
+  @media (min-width:900px){.two-col{grid-template-columns:380px 1fr;gap:32px}}
+
+  /* CARDS */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+  .card h2{font-family:'Instrument Serif',serif;font-size:24px;font-weight:400;margin-bottom:12px}
+  .card h3{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-muted);margin-bottom:10px}
+
+  /* FORM */
+  label{display:block;font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+  .input,.select,.textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:14px;transition:border-color 0.15s;font-weight:500}
+  .input:focus,.select:focus,.textarea:focus{border-color:var(--red)}
+  .textarea{font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.6;min-height:280px;resize:vertical}
+
+  .btn{padding:12px 20px;border-radius:var(--radius);font-weight:700;font-size:14px;letter-spacing:0.3px;border:1px solid var(--border);background:var(--surface);transition:all 0.12s;cursor:pointer}
+  .btn:hover{background:var(--surface-2);border-color:var(--border-strong)}
+  .btn:active{transform:scale(0.98)}
+  .btn.primary{background:var(--red);border-color:var(--red);color:white}
+  .btn.primary:hover{background:#e02b38;border-color:#e02b38}
+  .btn.danger{color:#f87171;border-color:rgba(248,113,113,0.3)}
+  .btn.danger:hover{background:rgba(248,113,113,0.1)}
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* SONG LIST */
+  .song-list{display:flex;flex-direction:column;gap:6px;max-height:70vh;overflow-y:auto;padding-right:4px}
+  .song-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all 0.12s}
+  .song-item:hover{border-color:var(--border-strong)}
+  .song-item.selected{background:var(--surface-2);border-color:var(--red)}
+  .song-item .meta{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+  .song-item .title{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .song-item .sub{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px}
+
+  /* SLIDE PREVIEW */
+  .slides-preview{display:flex;flex-direction:column;gap:6px;margin-top:14px;max-height:320px;overflow-y:auto}
+  .slide-chip{background:var(--bg);padding:10px 12px;border-radius:8px;display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border)}
+  .slide-chip .num{color:var(--text-dim);font-size:12px;font-weight:600;min-width:20px;padding-top:2px}
+  .slide-chip .text{font-size:14px;line-height:1.35}
+  .slide-chip .l2{color:var(--text-muted)}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--border-strong);padding:12px 20px;border-radius:var(--radius);font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
+  .toast.success{border-color:var(--green);color:var(--green)}
+  .toast.error{border-color:#ef4444;color:#f87171}
+
+  /* SEARCH */
+  .search-row{position:sticky;top:0;background:var(--surface);padding-bottom:12px;z-index:1}
+  .search-input{width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);font-weight:500}
+  .search-input:focus{border-color:var(--red)}
+
+  /* SET LIST BUILDER */
+  .setlist-builder{display:flex;flex-direction:column;gap:10px}
+  .setlist-item{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:12px}
+  .setlist-item .drag{color:var(--text-dim);cursor:grab;font-size:18px}
+  .setlist-item .pos{color:var(--text-muted);font-weight:700;min-width:24px}
+  .setlist-item .title{flex:1;font-weight:600}
+  .setlist-item .section-tag{padding:3px 8px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+  .section-tag.praise{background:rgba(245,158,11,0.15);color:#F59E0B}
+  .section-tag.worship{background:var(--red-glow);color:#ff6b74}
+  .section-tag.offering{background:rgba(34,197,94,0.15);color:var(--green)}
+  .section-tag.end{background:rgba(139,92,246,0.15);color:#a78bfa}
+  .setlist-item .remove{color:var(--text-dim);font-size:18px;cursor:pointer;padding:0 4px}
+  .setlist-item .remove:hover{color:#f87171}
+
+  .empty-state{padding:40px 20px;text-align:center;border:1px dashed var(--border-strong);border-radius:var(--radius);color:var(--text-muted)}
+  .empty-state .serif{font-size:22px;margin-bottom:6px;display:block;color:var(--text)}
+
+  /* LOGIN */
+  #login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:32px 24px;max-width:420px;margin:0 auto}
+  .brand{text-align:center;margin-bottom:48px}
+  .brand-badge{display:inline-block;padding:4px 10px;border-radius:100px;background:var(--red);color:white;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+  .brand h1{font-family:'Instrument Serif',serif;font-size:42px;font-weight:400}
+  .brand p{color:var(--text-muted);margin-top:8px;font-size:15px}
+  .pin-input{width:100%;padding:18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);font-size:24px;font-weight:700;text-align:center;letter-spacing:12px;margin-bottom:12px}
+  .pin-input:focus{border-color:var(--red)}
+  .pin-error{color:#f87171;font-size:14px;text-align:center;min-height:20px}
+  .user-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:left;display:flex;justify-content:space-between;align-items:center;width:100%;margin-bottom:8px;transition:all 0.15s}
+  .user-btn:hover{border-color:var(--red);background:var(--surface-2)}
+  .user-btn .name{font-weight:600}
+  .user-btn .role{color:var(--text-muted);font-size:13px;text-transform:uppercase;letter-spacing:0.5px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="brand">
+    <span class="brand-badge">Calvary</span>
+    <h1>Admin</h1>
+    <p>Songs · Set lists · Users</p>
+  </div>
+  <div id="user-picker"></div>
+  <div id="pin-entry" class="hidden">
+    <h2 class="serif" style="font-size:28px;margin-bottom:4px">Enter PIN</h2>
+    <p class="muted" style="margin-bottom:20px">for <span id="pin-for"></span></p>
+    <input id="pin-input" class="pin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="• • • •">
+    <div id="pin-error" class="pin-error"></div>
+    <button class="btn" onclick="resetLogin()" style="margin-top:12px">← Back</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <div class="shell">
+    <div class="topbar">
+      <div>
+        <a href="index.html" class="back">← Back to Control Room</a>
+        <h1>Admin</h1>
+      </div>
+      <div class="muted" style="font-size:13px">
+        <span id="user-display">—</span> · <button class="btn" onclick="logout()" style="padding:6px 12px;font-size:12px">Sign out</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('songs')" data-tab="songs">Song library</button>
+      <button class="tab" onclick="switchTab('setlist')" data-tab="setlist">Today's set list</button>
+    </div>
+
+    <!-- SONGS PANEL -->
+    <div id="panel-songs" class="panel active">
+      <div class="two-col">
+        <div class="card">
+          <h2>Library</h2>
+          <div class="search-row">
+            <input id="song-search" class="search-input" placeholder="Search songs…">
+          </div>
+          <div id="song-list" class="song-list"></div>
+          <button class="btn primary" style="width:100%;margin-top:14px" onclick="newSong()">+ New song</button>
+        </div>
+
+        <div class="card">
+          <h2 id="editor-title">New song</h2>
+          <p class="muted" style="font-size:13px;margin-bottom:16px">Paste lyrics in pairs of lines. Leave a blank line between each slide.</p>
+
+          <label>Title</label>
+          <input id="song-title" class="input" placeholder="e.g. Lord You Are Good">
+
+          <label>Default section</label>
+          <select id="song-section" class="input" style="margin-bottom:14px">
+            <option value="">— none —</option>
+            <option value="praise">Praise</option>
+            <option value="worship">Worship</option>
+            <option value="offering">Offering</option>
+            <option value="end">End of service</option>
+          </select>
+
+          <label>Artist (optional)</label>
+          <input id="song-artist" class="input" placeholder="e.g. Don Moen">
+
+          <label>Lyrics (2 lines per slide, blank line between slides)</label>
+          <textarea id="song-lyrics" class="textarea" placeholder="Lord you are good&#10;and your mercy endureth forever&#10;&#10;Lord you are good&#10;and your mercy endureth forever&#10;&#10;People from every nation and tongue&#10;from generation to generation"></textarea>
+
+          <div class="btn-row" style="margin-top:6px">
+            <button class="btn primary" onclick="saveSong()">Save</button>
+            <button class="btn" onclick="previewSlides()">Preview slides</button>
+            <button class="btn danger" id="delete-btn" onclick="deleteSong()" style="margin-left:auto;display:none">Delete</button>
+          </div>
+
+          <div id="slides-preview" class="slides-preview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SET LIST PANEL -->
+    <div id="panel-setlist" class="panel">
+      <div class="two-col">
+        <div class="card">
+          <h2>Add from library</h2>
+          <p class="muted" style="font-size:13px;margin-bottom:14px">Click a song to add it to today's set list.</p>
+          <div class="search-row">
+            <input id="setlist-search" class="search-input" placeholder="Search songs…">
+          </div>
+          <div id="setlist-songs" class="song-list"></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <h2 style="margin:0">Today's set list</h2>
+            <input id="plan-date" type="date" class="input" style="width:auto;margin-bottom:0;padding:8px 10px">
+          </div>
+
+          <label style="margin-top:14px">Notes (e.g. "Easter Sunday")</label>
+          <input id="plan-notes" class="input" placeholder="e.g. Easter Sunday — The Case for the Resurrection">
+
+          <h3 style="margin-top:14px">Running order</h3>
+          <div id="setlist-builder" class="setlist-builder"></div>
+
+          <div class="btn-row" style="margin-top:20px">
+            <button class="btn primary" onclick="savePlan()">Save set list</button>
+            <button class="btn danger" onclick="clearPlan()" style="margin-left:auto">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
+const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+function hashPin(p) {
+  let h = 5381;
+  for (let i = 0; i < p.length; i++) h = ((h << 5) + h) ^ p.charCodeAt(i);
+  return 'bp_' + (h >>> 0).toString(36);
+}
+
+// STATE
+let currentUser = null;
+let allUsers = [];
+let songs = [];
+let selectedSongId = null;
+let planItems = [];  // { song_id, title, section, slides }
+
+// ============ LOGIN ============
+async function loadUsers() {
+  const { data, error } = await client
+    .from('control_room_users')
+    .select('id, name, pin_hash, role, active')
+    .eq('active', true)
+    .eq('role', 'admin')
+    .order('name');
+  if (error) { toast('error', 'Failed to load users: ' + error.message); return; }
+  allUsers = data || [];
+  const picker = document.getElementById('user-picker');
+  if (!allUsers.length) {
+    picker.innerHTML = '<div class="empty-state"><span class="serif">No admin users found</span><p style="font-size:14px;margin-top:6px">Run the control_room_users schema migration.</p></div>';
+    return;
+  }
+  picker.innerHTML = allUsers.map(u => `
+    <button class="user-btn" onclick="window.pickUser('${u.id}')">
+      <span class="name">${u.name}</span>
+      <span class="role">${u.role}</span>
+    </button>`).join('');
+}
+
+window.pickUser = (id) => {
+  const u = allUsers.find(x => x.id === id);
+  if (!u) return;
+  document.getElementById('user-picker').classList.add('hidden');
+  document.getElementById('pin-entry').classList.remove('hidden');
+  document.getElementById('pin-for').textContent = u.name;
+  document.getElementById('pin-input').dataset.uid = id;
+  document.getElementById('pin-input').focus();
+};
+
+window.resetLogin = () => {
+  document.getElementById('user-picker').classList.remove('hidden');
+  document.getElementById('pin-entry').classList.add('hidden');
+  document.getElementById('pin-input').value = '';
+  document.getElementById('pin-error').textContent = '';
+};
+
+document.getElementById('pin-input').addEventListener('input', (e) => {
+  if (e.target.value.length !== 4) return;
+  const uid = e.target.dataset.uid;
+  const u = allUsers.find(x => x.id === uid);
+  if (!u) return;
+  if (hashPin(e.target.value) === u.pin_hash) {
+    currentUser = u;
+    sessionStorage.setItem('cr_admin_user', JSON.stringify(u));
+    enterApp();
+  } else {
+    document.getElementById('pin-error').textContent = 'Wrong PIN.';
+    e.target.value = '';
+  }
+});
+
+window.logout = () => {
+  sessionStorage.removeItem('cr_admin_user');
+  location.reload();
+};
+
+// ============ APP ============
+async function enterApp() {
+  document.getElementById('login').classList.add('hidden');
+  document.getElementById('app').classList.remove('hidden');
+  document.getElementById('user-display').textContent = currentUser.name;
+  document.getElementById('plan-date').value = new Date().toISOString().slice(0, 10);
+  await loadSongs();
+  await loadTodayPlan();
+  newSong();
+}
+
+// ============ TABS ============
+window.switchTab = (name) => {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
+  if (name === 'setlist') renderSetlistSongs();
+};
+
+// ============ SONGS: LOAD ============
+async function loadSongs() {
+  const { data, error } = await client
+    .from('control_room_songs')
+    .select('*')
+    .order('title');
+  if (error) { toast('error', 'Load songs: ' + error.message); return; }
+  songs = data || [];
+  renderSongList();
+  renderSetlistSongs();
+}
+
+function renderSongList() {
+  const q = document.getElementById('song-search').value.toLowerCase();
+  const filtered = songs.filter(s => s.title.toLowerCase().includes(q));
+  const list = document.getElementById('song-list');
+  if (!filtered.length) {
+    list.innerHTML = '<div style="padding:16px;color:var(--text-muted);font-size:13px;text-align:center">No songs yet. Create one →</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(s => {
+    const slideCount = (s.slides || []).length;
+    return `
+      <div class="song-item ${s.id === selectedSongId ? 'selected' : ''}" onclick="window.selectSong('${s.id}')">
+        <div class="meta">
+          <div class="title">${escapeHtml(s.title)}</div>
+          <div class="sub">${s.section_default || 'no section'} · ${slideCount} slides</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+document.getElementById('song-search').addEventListener('input', renderSongList);
+
+// ============ SONGS: EDITOR ============
+window.newSong = () => {
+  selectedSongId = null;
+  document.getElementById('editor-title').textContent = 'New song';
+  document.getElementById('song-title').value = '';
+  document.getElementById('song-section').value = '';
+  document.getElementById('song-artist').value = '';
+  document.getElementById('song-lyrics').value = '';
+  document.getElementById('slides-preview').innerHTML = '';
+  document.getElementById('delete-btn').style.display = 'none';
+  renderSongList();
+};
+
+window.selectSong = (id) => {
+  const s = songs.find(x => x.id === id);
+  if (!s) return;
+  selectedSongId = id;
+  document.getElementById('editor-title').textContent = 'Edit song';
+  document.getElementById('song-title').value = s.title;
+  document.getElementById('song-section').value = s.section_default || '';
+  document.getElementById('song-artist').value = s.artist || '';
+  document.getElementById('song-lyrics').value = slidesToText(s.slides || []);
+  document.getElementById('delete-btn').style.display = 'inline-flex';
+  previewSlides();
+  renderSongList();
+};
+
+function slidesToText(slides) {
+  return slides.map(s => [s.line1 || '', s.line2 || ''].filter(Boolean).join('\n')).join('\n\n');
+}
+
+function textToSlides(text) {
+  return text.split(/\n\s*\n/)                    // split on blank lines
+    .map(block => block.split('\n').slice(0, 2))  // take first 2 lines of each block
+    .filter(lines => lines.length > 0 && lines[0].trim())
+    .map(lines => ({ line1: (lines[0] || '').trim(), line2: (lines[1] || '').trim() }));
+}
+
+window.previewSlides = () => {
+  const slides = textToSlides(document.getElementById('song-lyrics').value);
+  const preview = document.getElementById('slides-preview');
+  if (!slides.length) { preview.innerHTML = ''; return; }
+  preview.innerHTML = slides.map((s, i) => `
+    <div class="slide-chip">
+      <div class="num">${i + 1}</div>
+      <div class="text">
+        <div>${escapeHtml(s.line1 || '')}</div>
+        ${s.line2 ? `<div class="l2">${escapeHtml(s.line2)}</div>` : ''}
+      </div>
+    </div>`).join('');
+};
+
+document.getElementById('song-lyrics').addEventListener('input', previewSlides);
+
+window.saveSong = async () => {
+  const title = document.getElementById('song-title').value.trim();
+  if (!title) { toast('error', 'Title is required'); return; }
+  const slides = textToSlides(document.getElementById('song-lyrics').value);
+  const payload = {
+    title,
+    slides,
+    section_default: document.getElementById('song-section').value || null,
+    artist: document.getElementById('song-artist').value.trim() || null,
+    updated_at: new Date().toISOString()
+  };
+  let result;
+  if (selectedSongId) {
+    result = await client.from('control_room_songs').update(payload).eq('id', selectedSongId);
+  } else {
+    result = await client.from('control_room_songs').insert(payload).select().single();
+  }
+  if (result.error) { toast('error', 'Save failed: ' + result.error.message); return; }
+  toast('success', 'Saved ' + title);
+  if (!selectedSongId && result.data) selectedSongId = result.data.id;
+  await loadSongs();
+};
+
+window.deleteSong = async () => {
+  if (!selectedSongId) return;
+  if (!confirm('Delete this song from the library? This does not affect any saved set lists.')) return;
+  const { error } = await client.from('control_room_songs').delete().eq('id', selectedSongId);
+  if (error) { toast('error', 'Delete failed: ' + error.message); return; }
+  toast('success', 'Deleted');
+  newSong();
+  await loadSongs();
+};
+
+// ============ SET LIST ============
+async function loadTodayPlan() {
+  const date = document.getElementById('plan-date').value;
+  const { data: plans } = await client
+    .from('control_room_plans')
+    .select('id, notes')
+    .eq('service_date', date)
+    .limit(1);
+
+  planItems = [];
+  document.getElementById('plan-notes').value = '';
+
+  if (plans && plans.length) {
+    document.getElementById('plan-notes').value = plans[0].notes || '';
+    const { data: items } = await client
+      .from('control_room_plan_items')
+      .select('position, kind, title, section, slides')
+      .eq('plan_id', plans[0].id)
+      .order('position');
+    if (items) {
+      planItems = items.map(i => ({
+        title: i.title,
+        section: i.section,
+        slides: i.slides || [],
+        kind: i.kind || 'song'
+      }));
+    }
+  }
+  renderSetlistBuilder();
+}
+
+document.getElementById('plan-date').addEventListener('change', loadTodayPlan);
+
+function renderSetlistSongs() {
+  const q = document.getElementById('setlist-search').value.toLowerCase();
+  const filtered = songs.filter(s => s.title.toLowerCase().includes(q));
+  const list = document.getElementById('setlist-songs');
+  if (!filtered.length) {
+    list.innerHTML = '<div style="padding:16px;color:var(--text-muted);font-size:13px;text-align:center">No songs in library yet.</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(s => `
+    <div class="song-item" onclick="window.addToSetlist('${s.id}')">
+      <div class="meta">
+        <div class="title">${escapeHtml(s.title)}</div>
+        <div class="sub">${s.section_default || 'no section'} · ${(s.slides || []).length} slides</div>
+      </div>
+      <div style="color:var(--text-muted);font-size:20px">+</div>
+    </div>`).join('');
+}
+
+document.getElementById('setlist-search').addEventListener('input', renderSetlistSongs);
+
+window.addToSetlist = (songId) => {
+  const s = songs.find(x => x.id === songId);
+  if (!s) return;
+  planItems.push({
+    title: s.title,
+    section: s.section_default || 'praise',
+    slides: s.slides || [],
+    kind: 'song'
+  });
+  renderSetlistBuilder();
+  switchTab('setlist');
+};
+
+function renderSetlistBuilder() {
+  const el = document.getElementById('setlist-builder');
+  if (!planItems.length) {
+    el.innerHTML = '<div class="empty-state"><span class="serif">No songs yet</span><p style="font-size:14px;margin-top:6px">Add songs from the library on the left.</p></div>';
+    return;
+  }
+  el.innerHTML = planItems.map((item, i) => `
+    <div class="setlist-item">
+      <span class="drag">⋮⋮</span>
+      <span class="pos">${i + 1}</span>
+      <span class="title">${escapeHtml(item.title)}</span>
+      <select onchange="window.changeSection(${i}, this.value)" style="padding:6px 10px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-muted)">
+        <option value="praise" ${item.section === 'praise' ? 'selected' : ''}>Praise</option>
+        <option value="worship" ${item.section === 'worship' ? 'selected' : ''}>Worship</option>
+        <option value="offering" ${item.section === 'offering' ? 'selected' : ''}>Offering</option>
+        <option value="end" ${item.section === 'end' ? 'selected' : ''}>End</option>
+      </select>
+      <button class="drag" onclick="window.moveItem(${i}, -1)" ${i === 0 ? 'disabled style="opacity:0.3"' : ''}>↑</button>
+      <button class="drag" onclick="window.moveItem(${i}, 1)" ${i === planItems.length - 1 ? 'disabled style="opacity:0.3"' : ''}>↓</button>
+      <span class="remove" onclick="window.removeItem(${i})">×</span>
+    </div>`).join('');
+}
+
+window.changeSection = (idx, section) => {
+  planItems[idx].section = section;
+};
+
+window.moveItem = (idx, delta) => {
+  const newIdx = idx + delta;
+  if (newIdx < 0 || newIdx >= planItems.length) return;
+  [planItems[idx], planItems[newIdx]] = [planItems[newIdx], planItems[idx]];
+  renderSetlistBuilder();
+};
+
+window.removeItem = (idx) => {
+  planItems.splice(idx, 1);
+  renderSetlistBuilder();
+};
+
+window.clearPlan = () => {
+  if (!confirm('Clear today\'s set list? This will not save yet.')) return;
+  planItems = [];
+  renderSetlistBuilder();
+};
+
+window.savePlan = async () => {
+  const date = document.getElementById('plan-date').value;
+  const notes = document.getElementById('plan-notes').value.trim() || null;
+
+  // Delete existing plan for date (cascade removes items)
+  await client.from('control_room_plans').delete().eq('service_date', date);
+
+  if (!planItems.length) {
+    toast('success', 'Set list cleared for ' + date);
+    return;
+  }
+
+  // Create plan
+  const { data: plan, error: pErr } = await client
+    .from('control_room_plans')
+    .insert({ service_date: date, notes })
+    .select().single();
+  if (pErr) { toast('error', 'Create plan: ' + pErr.message); return; }
+
+  // Insert items
+  const rows = planItems.map((item, i) => ({
+    plan_id: plan.id,
+    position: i + 1,
+    kind: item.kind,
+    title: item.title,
+    section: item.section,
+    slides: item.slides
+  }));
+  const { error: iErr } = await client.from('control_room_plan_items').insert(rows);
+  if (iErr) { toast('error', 'Save items: ' + iErr.message); return; }
+
+  toast('success', `Saved ${planItems.length} songs for ${date}`);
+};
+
+// ============ UTIL ============
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function toast(kind, msg) {
+  const t = document.getElementById('toast');
+  t.className = 'toast show ' + kind;
+  t.textContent = msg;
+  setTimeout(() => t.className = 'toast', 2500);
+}
+
+// ============ BOOT ============
+(async () => {
+  const saved = sessionStorage.getItem('cr_admin_user');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    if (currentUser.role === 'admin') return enterApp();
+  }
+  await loadUsers();
+})();
+</script>
+</body>
+</html>
