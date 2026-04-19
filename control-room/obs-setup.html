@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0A">
+<title>OBS Setup — Calvary Control Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1c1c1c;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.16);
+    --text: #FFFFFF;
+    --text-muted: rgba(255,255,255,0.6);
+    --text-dim: rgba(255,255,255,0.4);
+    --red: #C41E2A;
+    --red-glow: rgba(196,30,42,0.25);
+    --green: #22c55e;
+    --amber: #F59E0B;
+    --blue: #3B82F6;
+    --radius: 14px;
+    --radius-lg: 20px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,sans-serif;font-size:16px;line-height:1.65;min-height:100vh}
+  .shell{max-width:760px;margin:0 auto;padding:32px 24px 80px}
+  @media (min-width:700px){.shell{padding:48px}}
+
+  /* HERO */
+  .hero{text-align:center;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border)}
+  .eyebrow{display:inline-block;padding:4px 12px;border-radius:100px;background:var(--red);color:white;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px}
+  .hero h1{font-family:'Instrument Serif',serif;font-size:clamp(36px,7vw,56px);font-weight:400;line-height:1.05;letter-spacing:-0.02em;margin-bottom:12px}
+  .hero p{color:var(--text-muted);font-size:17px;max-width:480px;margin:0 auto}
+
+  /* SECTIONS */
+  .section{margin-top:48px}
+  .section h2{font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;margin-bottom:8px;line-height:1.15}
+  .section .lede{color:var(--text-muted);margin-bottom:24px;font-size:16px}
+
+  h3{font-family:'Instrument Serif',serif;font-size:22px;font-weight:400;margin:24px 0 10px}
+  p{margin-bottom:14px}
+
+  /* STEPS */
+  .step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 22px;margin-bottom:14px;display:flex;gap:18px;align-items:flex-start}
+  .step-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--red);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px}
+  .step-body{flex:1}
+  .step-body h4{font-size:17px;font-weight:600;margin-bottom:6px;line-height:1.3}
+  .step-body p{color:var(--text-muted);font-size:15px;margin-bottom:0}
+  .step-body p + p{margin-top:10px}
+  .step-body ul{list-style:none;margin-top:10px}
+  .step-body li{position:relative;padding-left:16px;color:var(--text-muted);font-size:14px;margin-bottom:4px}
+  .step-body li::before{content:"—";position:absolute;left:0;color:var(--text-dim)}
+
+  /* UI MOCK — fake OBS settings panel */
+  .mock{background:#2a2a2a;border:1px solid #3a3a3a;border-radius:8px;padding:14px;margin-top:12px;font-size:13px;font-family:'DM Sans',sans-serif}
+  .mock-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #333;align-items:center}
+  .mock-row:last-child{border-bottom:none}
+  .mock-label{color:#aaa}
+  .mock-value{color:#fff;font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-all;text-align:right;margin-left:12px}
+  .mock-value.on{color:var(--green);font-family:'DM Sans',sans-serif}
+  .mock-value.off{color:var(--text-dim);font-family:'DM Sans',sans-serif}
+
+  /* CODE BLOCKS */
+  .url-box{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;font-family:'JetBrains Mono',monospace;font-size:13px;word-break:break-all;margin:14px 0;color:var(--text);line-height:1.5}
+  .url-box .label{display:block;color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600}
+  .copy-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;font-family:inherit;transition:all 0.12s}
+  .copy-btn:hover{background:var(--surface);border-color:var(--border-strong)}
+  .copy-btn:active{transform:scale(0.97)}
+  .copy-btn.copied{background:var(--green);color:#0A0A0A;border-color:var(--green)}
+
+  /* CALLOUTS */
+  .callout{border-radius:var(--radius);padding:16px 18px;margin:18px 0;font-size:14px;line-height:1.55;border:1px solid var(--border)}
+  .callout strong{font-weight:600;color:var(--text)}
+  .callout.info{background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.25);color:#93c5fd}
+  .callout.info strong{color:#bfdbfe}
+  .callout.warn{background:rgba(245,158,11,0.08);border-color:rgba(245,158,11,0.25);color:#fbbf24}
+  .callout.warn strong{color:#fde68a}
+  .callout.tip{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.25);color:#86efac}
+  .callout.tip strong{color:#bbf7d0}
+
+  /* QUICK REFERENCE */
+  .qref{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+  @media(min-width:600px){.qref{grid-template-columns:repeat(2,1fr)}}
+  .qref-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .qref-card h4{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px}
+  .qref-card .val{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text);word-break:break-all;line-height:1.5}
+
+  /* TROUBLESHOOT */
+  .problem{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:0 var(--radius) var(--radius) 0;padding:16px 20px;margin-bottom:12px}
+  .problem h4{font-size:15px;font-weight:600;margin-bottom:6px}
+  .problem p{color:var(--text-muted);font-size:14px;margin:0}
+  .problem p + p{margin-top:8px}
+
+  /* LINKS */
+  a{color:#93c5fd;text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px}
+  a:hover{color:#bfdbfe}
+
+  /* FOOTER */
+  .footer{margin-top:72px;padding-top:32px;border-top:1px solid var(--border);text-align:center;color:var(--text-dim);font-size:13px}
+
+  /* TOC */
+  .toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:40px}
+  .toc h3{font-family:'Instrument Serif',serif;font-size:18px;margin:0 0 12px}
+  .toc ol{list-style:none;counter-reset:toc;padding:0}
+  .toc li{counter-increment:toc;padding:6px 0;color:var(--text-muted);font-size:14px;display:flex;gap:12px}
+  .toc li::before{content:counter(toc,decimal-leading-zero);color:var(--text-dim);font-family:'JetBrains Mono',monospace;font-size:12px;min-width:24px}
+  .toc a{color:var(--text);text-decoration:none}
+  .toc a:hover{color:var(--red)}
+
+  kbd{display:inline-block;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<div class="hero">
+  <span class="eyebrow">For the media team</span>
+  <h1>OBS Setup Guide</h1>
+  <p>A 10-minute walkthrough to get the Calvary Control Room overlay working in OBS. No coding — just copy, paste, click.</p>
+</div>
+
+<div class="toc">
+  <h3>What's in this guide</h3>
+  <ol>
+    <li><a href="#what">What is the overlay</a></li>
+    <li><a href="#setup">Setting it up in OBS (one-time)</a></li>
+    <li><a href="#testing">Testing before service</a></li>
+    <li><a href="#sunday">What to do on Sunday morning</a></li>
+    <li><a href="#refs">Quick reference — URLs and PINs</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+  </ol>
+</div>
+
+<section class="section" id="what">
+  <h2>What is the overlay</h2>
+  <p class="lede">Before you touch OBS, understand what we're plugging in.</p>
+
+  <p>The overlay is a transparent web page that shows <strong>lyrics</strong>, <strong>Bible verses</strong>, and (soon) <strong>graphics</strong> on top of your camera feed. Someone — you, Bolaji, or any team member with a PIN — opens the operator app on their phone, taps through slides, and the overlay updates live in under a second.</p>
+
+  <p>Your job in OBS is just to add the overlay as a layer. Once it's set up, you don't touch it again. The operator drives it from elsewhere.</p>
+
+  <div class="callout info">
+    <strong>Think of it like this:</strong> OBS handles the camera, audio, and the stream going out to YouTube. The overlay sits on top of the camera as a second layer — same as a lower-third graphic would. Someone else controls what appears; OBS just shows it.
+  </div>
+</section>
+
+<section class="section" id="setup">
+  <h2>Setting up in OBS</h2>
+  <p class="lede">One-time setup. Takes about 5 minutes.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Open OBS and pick your scene</h4>
+      <p>In OBS, choose the scene you use for Sunday service — the one with the camera feed already set up. You'll be adding the overlay as a new source on top of the camera.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Add a new Browser Source</h4>
+      <p>In the <strong>Sources</strong> panel (usually bottom-left), click the <strong>+</strong> button and choose <strong>Browser</strong>.</p>
+      <p>When prompted for a name, type <strong>Calvary Overlay</strong>. Click OK.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Paste the overlay URL</h4>
+      <p>A settings panel will open. In the <strong>URL</strong> field, paste this exact link:</p>
+      <div class="url-box">
+        <span class="label">Overlay URL</span>
+        <span id="overlay-url">https://calvaryhfgc.github.io/calvaryhephzibah/control-room/overlay.html?hud=off</span>
+        <br><button class="copy-btn" onclick="copyText('overlay-url', this)">Copy URL</button>
+      </div>
+      <div class="callout tip">
+        <strong>Why <code>?hud=off</code>:</strong> that tiny bit at the end hides the green "live" status pill in the corner. Without it, viewers on the stream would see a small status badge. Always include <code>?hud=off</code> for the live service. Drop it when testing.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Set the width and height</h4>
+      <p>Set these to match your stream resolution — for YouTube that's almost always:</p>
+      <div class="mock">
+        <div class="mock-row"><span class="mock-label">Width</span><span class="mock-value">1920</span></div>
+        <div class="mock-row"><span class="mock-label">Height</span><span class="mock-value">1080</span></div>
+      </div>
+      <p>If you stream in 720p, use 1280 × 720 instead. The overlay scales automatically — what matters is that the width and height match whatever your scene is set to.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h4>Tick the right checkboxes</h4>
+      <p>Further down in the same panel, find these options and set them exactly like this:</p>
+      <div class="mock">
+        <div class="mock-row"><span class="mock-label">Control audio via OBS</span><span class="mock-value off">Off</span></div>
+        <div class="mock-row"><span class="mock-label">Shutdown source when not visible</span><span class="mock-value off">Off</span></div>
+        <div class="mock-row"><span class="mock-label">Refresh browser when scene becomes active</span><span class="mock-value on">On</span></div>
+      </div>
+      <div class="callout warn">
+        <strong>Why these matter:</strong><br>
+        — <strong>Shutdown when not visible OFF</strong>: if on, the overlay disconnects from Supabase between uses. When someone pushes a new slide, it takes 2-3 seconds to reconnect. Off = always connected, instant updates.<br>
+        — <strong>Refresh when scene becomes active ON</strong>: means if you switch to a different scene and come back, the overlay refreshes. Good safety net if anything ever freezes.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <h4>Click OK and position it</h4>
+      <p>Click <strong>OK</strong> to close the settings. The overlay now exists in your scene.</p>
+      <p>In the canvas (the preview window), drag the corners of the Calvary Overlay source so it covers the whole screen — exactly the same size as your camera feed. It should be invisible right now (transparent background), but that's correct.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <h4>Check the layer order</h4>
+      <p>In the Sources panel, <strong>Calvary Overlay must be above your camera source</strong>. Drag it up if it's not.</p>
+      <p>Order matters: sources at the top of the list render on top of sources below them. Camera at the bottom, overlay on top. Anything that should appear above the overlay (like a permanent church logo bug) goes above it.</p>
+    </div>
+  </div>
+
+  <div class="callout tip" style="margin-top:32px">
+    <strong>Save your scene collection.</strong> In OBS, go to <strong>Scene Collection → Export</strong> and save a backup. If anything ever gets messed up, you can reimport and be back to working in seconds.
+  </div>
+</section>
+
+<section class="section" id="testing">
+  <h2>Testing before service</h2>
+  <p class="lede">Always test the overlay before going live. Takes 60 seconds.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Open the operator app on your phone</h4>
+      <p>Go to:</p>
+      <div class="url-box">
+        <span class="label">Operator app</span>
+        <span id="operator-url">https://calvaryhfgc.github.io/calvaryhephzibah/control-room/</span>
+        <br><button class="copy-btn" onclick="copyText('operator-url', this)">Copy URL</button>
+      </div>
+      <p>Sign in with your PIN. You'll land in the app with today's set list pre-loaded.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Temporarily show the status pill</h4>
+      <p>For testing only, change the OBS Browser Source URL to drop the <code>?hud=off</code> bit. Just for now — so you can see the status indicator.</p>
+      <div class="url-box" style="font-size:12px">
+        <span class="label">Testing URL (with HUD visible)</span>
+        <span id="test-url">https://calvaryhfgc.github.io/calvaryhephzibah/control-room/overlay.html</span>
+      </div>
+      <p>In OBS, right-click the Calvary Overlay source → <strong>Properties</strong> → change the URL → OK.</p>
+      <p>In the top-right corner of the OBS canvas you should now see a small green dot with the word <strong>LIVE</strong>. That's the overlay confirming it's talking to the database.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Push a slide from your phone</h4>
+      <p>On your phone, tap any song in the set list → tap slide 1. Within about a second, the lyric should appear on the OBS preview.</p>
+      <p>Tap <strong>Next</strong> a few times. OBS updates each time.</p>
+      <p>Tap <strong>Blank</strong>. OBS goes transparent.</p>
+      <p>If all three work — the overlay is ready for service.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Switch back to the production URL</h4>
+      <p>Before you go live, change the URL back to the one with <code>?hud=off</code>. Otherwise the status pill will appear in the livestream.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="sunday">
+  <h2>What to do on Sunday morning</h2>
+  <p class="lede">Your pre-service routine for the overlay.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h4>Boot OBS and verify the overlay source is in the scene</h4>
+      <p>Check the Sources panel — Calvary Overlay should be there, above the camera. If someone accidentally deleted it, follow the Setup section again.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h4>Right-click the Calvary Overlay source and hit Refresh</h4>
+      <p>This makes sure it loads fresh when you start the service. OBS Browser Sources sometimes go stale if the computer has been on for a long time.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h4>Confirm the operator has signed in</h4>
+      <p>Whoever is driving the overlay from their phone should open the operator app and confirm today's set list appears. If they see "No set list loaded" — that's a problem for Bolaji, not OBS.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h4>Push one test slide before going live</h4>
+      <p>Ask the operator to push any slide. Confirm it appears on your OBS preview. Then ask them to tap Blank.</p>
+      <p>If that loop works, you're good to start the stream.</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <strong>During the service:</strong> you don't need to do anything with the overlay. The operator drives it. Your job is the camera, audio, and the stream. If the overlay ever freezes or misbehaves, right-click Calvary Overlay in Sources → Refresh. It'll be back in 2 seconds.
+  </div>
+</section>
+
+<section class="section" id="refs">
+  <h2>Quick reference</h2>
+  <p class="lede">Bookmark this. Everything you need in one place.</p>
+
+  <div class="qref">
+    <div class="qref-card">
+      <h4>Overlay URL (live)</h4>
+      <div class="val">https://calvaryhfgc.github.io/calvaryhephzibah/control-room/overlay.html?hud=off</div>
+    </div>
+    <div class="qref-card">
+      <h4>Overlay URL (testing, shows HUD)</h4>
+      <div class="val">https://calvaryhfgc.github.io/calvaryhephzibah/control-room/overlay.html</div>
+    </div>
+    <div class="qref-card">
+      <h4>Operator app</h4>
+      <div class="val">https://calvaryhfgc.github.io/calvaryhephzibah/control-room/</div>
+    </div>
+    <div class="qref-card">
+      <h4>Admin (Bolaji only)</h4>
+      <div class="val">https://calvaryhfgc.github.io/calvaryhephzibah/control-room/admin.html</div>
+    </div>
+    <div class="qref-card">
+      <h4>Stream resolution</h4>
+      <div class="val">1920 × 1080 (standard) or 1280 × 720 (720p)</div>
+    </div>
+    <div class="qref-card">
+      <h4>Source name in OBS</h4>
+      <div class="val">Calvary Overlay</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="trouble">
+  <h2>Troubleshooting</h2>
+  <p class="lede">Things that might go wrong, in order of likelihood.</p>
+
+  <div class="problem">
+    <h4>Lyrics appear but text is tiny</h4>
+    <p>Your Browser Source width and height don't match your scene resolution. Open the source properties and set Width to match your canvas (usually 1920), Height to match (usually 1080). The overlay scales with its canvas.</p>
+  </div>
+
+  <div class="problem">
+    <h4>Operator pushes a slide but OBS doesn't update</h4>
+    <p>Right-click Calvary Overlay in Sources → <strong>Refresh</strong>. Nine times out of ten, that fixes it. The overlay has probably lost its realtime connection to the database (internet blip, computer sleep, OBS was minimised for too long).</p>
+    <p>If refresh doesn't fix it, ask the operator to sign out of the operator app and sign back in. That forces a fresh connection from their end.</p>
+  </div>
+
+  <div class="problem">
+    <h4>I see a small green pill in the corner of the stream</h4>
+    <p>Your overlay URL is missing <code>?hud=off</code>. Right-click source → Properties → add <code>?hud=off</code> to the end of the URL → OK.</p>
+  </div>
+
+  <div class="problem">
+    <h4>The overlay is showing but it's a solid colour, not transparent</h4>
+    <p>Unusual but possible — some older OBS versions had issues with transparent backgrounds. Check: OBS version 28 or higher is required. Help → About should tell you. If older, update OBS (free, from <a href="https://obsproject.com" target="_blank">obsproject.com</a>).</p>
+  </div>
+
+  <div class="problem">
+    <h4>"Browser" isn't an option when I add a source</h4>
+    <p>You're on a very old OBS or a build that was installed without browser support. The fix is to reinstall OBS from the official site. Always choose the Browser Source plugin during install — it's included by default in current versions.</p>
+  </div>
+
+  <div class="problem">
+    <h4>Text appears but looks blurry or pixelated</h4>
+    <p>Check that your Browser Source dimensions match your scene resolution exactly. 1920 × 1080 in a 1920 × 1080 scene is crisp. 1280 × 720 stretched into 1920 × 1080 looks blurry.</p>
+  </div>
+
+  <div class="problem">
+    <h4>Everything worked yesterday but it's broken today</h4>
+    <p>First: right-click the source → Refresh. Second: ask Bolaji whether the operator app is working on his end — if it isn't, the issue is at the database, not OBS. Third: if nothing else works, delete the Calvary Overlay source and add it again from scratch using this guide. Takes 3 minutes.</p>
+  </div>
+
+  <div class="callout info" style="margin-top:32px">
+    <strong>Still stuck?</strong> Screenshot what you're seeing and send it to Bolaji on WhatsApp. Describing the problem in words is always harder than showing it.
+  </div>
+</section>
+
+<div class="footer">
+  <p>Calvary Hephzibah Full Gospel Church · Control Room v1</p>
+  <p style="margin-top:6px">Questions? Bolaji Olatoye · media@calvaryhephzibah.co.uk</p>
+</div>
+
+</div>
+
+<script>
+function copyText(id, btn) {
+  const text = document.getElementById(id).textContent.trim();
+  navigator.clipboard.writeText(text).then(() => {
+    const original = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1800);
+  });
+}
+</script>
+
+</body>
+</html>
