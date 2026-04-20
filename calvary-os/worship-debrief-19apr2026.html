@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Worship Debrief — Sunday 19th April 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<title>Worship Debrief — 19th April 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
 :root{
@@ -16,86 +16,94 @@
   --blue:#2563EB;--blue-light:#EFF6FF;
   --purple:#7C3AED;--purple-light:#F3E8FF;
 }
-body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;}
-.container{max-width:780px;margin:0 auto;padding:32px 20px 80px;}
+html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;}
+.page{max-width:680px;margin:0 auto;padding:24px 16px 80px;}
 
-.header{background:var(--ink);border-radius:20px;padding:32px 28px;margin-bottom:24px;position:relative;overflow:hidden;}
-.header::before{content:'';position:absolute;top:-60px;right:-40px;width:200px;height:200px;background:rgba(255,255,255,0.04);border-radius:50%;}
-.header-eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:8px;}
-.header-title{font-family:'Lora',serif;font-size:28px;font-weight:600;color:white;line-height:1.2;margin-bottom:6px;}
-.header-sub{font-size:14px;color:rgba(255,255,255,0.6);}
-.header-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
-.chip{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);font-size:12px;font-weight:500;padding:5px 12px;border-radius:100px;}
-.chip-green{background:rgba(22,163,74,0.2);color:#86EFAC;}
-.chip-amber{background:rgba(217,119,6,0.2);color:#FCD34D;}
+/* ── HEADER ── */
+.hdr{background:var(--ink);border-radius:20px;padding:28px 24px;margin-bottom:16px;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:-50px;right:-30px;width:160px;height:160px;background:rgba(255,255,255,0.04);border-radius:50%;}
+.hdr-eye{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;}
+.hdr-title{font-family:'Lora',serif;font-size:26px;font-weight:600;color:white;line-height:1.2;margin-bottom:6px;}
+.hdr-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:16px;}
+.hdr-chips{display:flex;gap:6px;flex-wrap:wrap;}
+.hchip{font-size:11px;font-weight:600;padding:4px 11px;border-radius:100px;}
+.hc-green{background:rgba(22,163,74,0.2);color:#86EFAC;}
+.hc-amber{background:rgba(217,119,6,0.25);color:#FCD34D;}
+.hc-grey{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);}
 
-/* Verdict */
-.verdict{background:var(--green);border-radius:16px;padding:22px 24px;margin-bottom:20px;display:flex;gap:16px;align-items:flex-start;}
-.verdict-icon{font-size:32px;flex-shrink:0;}
-.verdict-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:4px;}
-.verdict-text{font-family:'Lora',serif;font-size:19px;color:white;line-height:1.4;}
+/* ── VERDICT ── */
+.verdict{background:var(--green);border-radius:16px;padding:20px 22px;margin-bottom:16px;display:flex;gap:14px;align-items:flex-start;}
+.verdict-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
+.verdict-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:4px;}
+.verdict-text{font-family:'Lora',serif;font-size:17px;color:white;line-height:1.45;}
 
-/* Section */
-.section{margin-bottom:28px;}
-.section-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+/* ── SECTION HEADING ── */
+.sh{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin:28px 0 12px;padding-left:2px;}
 
-/* Review card */
-.review-card{background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:18px 20px;margin-bottom:10px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
-.review-card.went-well{border-left:4px solid var(--green);}
-.review-card.improve{border-left:4px solid var(--amber);}
-.review-card.action{border-left:4px solid var(--red);}
-.rc-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
-.rc-label-green{color:var(--green);}
-.rc-label-amber{color:var(--amber);}
-.rc-label-red{color:var(--red);}
-.rc-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
-.rc-body{font-size:14px;color:var(--ink-3);line-height:1.6;}
+/* ── BRIEF SCORECARD ── */
+.scorecard{background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(17,24,39,0.05);}
+.sc-intro{font-family:'Lora',serif;font-size:14px;font-style:italic;color:var(--ink-3);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--ink-5);}
+.sc-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--ink-5);}
+.sc-row:last-child{border-bottom:none;padding-bottom:0;}
+.sc-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.sc-text{font-size:14px;color:var(--ink-2);line-height:1.5;}
+.sc-text strong{color:var(--ink);font-weight:600;display:block;margin-bottom:1px;}
+.sc-verdict{background:var(--ink);border-radius:10px;padding:13px 16px;margin-top:14px;display:flex;gap:10px;align-items:center;}
+.sc-verdict-text{font-size:13px;font-weight:600;color:white;line-height:1.4;}
 
-/* Quote */
-.quote{background:var(--ink-6);border-left:3px solid var(--ink-4);border-radius:0 10px 10px 0;padding:12px 16px;margin:8px 0;font-size:13px;color:var(--ink-3);font-style:italic;line-height:1.6;}
-.quote cite{display:block;font-size:11px;color:var(--ink-4);margin-top:4px;font-style:normal;font-weight:600;}
+/* ── ONE WORD ── */
+.words{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.word{font-size:14px;font-weight:700;padding:9px 16px;border-radius:100px;}
+.w-dark{background:var(--ink);color:white;}
+.w-red{background:var(--red-light);color:var(--red);}
+.w-amber{background:var(--amber-light);color:var(--amber);}
+.w-green{background:var(--green-light);color:var(--green);}
 
-/* Individual shoutouts */
-.person-card{background:var(--white);border:1px solid var(--ink-5);border-radius:14px;padding:16px 18px;margin-bottom:8px;display:flex;gap:12px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
-.person-av{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
-.person-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;}
-.person-role{font-size:11px;color:var(--ink-4);margin-bottom:6px;}
-.person-body{font-size:13px;color:var(--ink-3);line-height:1.6;}
+/* ── WENT WELL CARDS ── */
+.ww-card{background:var(--white);border:1px solid var(--ink-5);border-left:4px solid var(--green);border-radius:0 14px 14px 0;padding:16px 18px;margin-bottom:10px;box-shadow:0 1px 3px rgba(17,24,39,0.04);}
+.imp-card{background:var(--white);border:1px solid var(--ink-5);border-left:4px solid var(--amber);border-radius:0 14px 14px 0;padding:16px 18px;margin-bottom:10px;box-shadow:0 1px 3px rgba(17,24,39,0.04);}
+.card-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.card-body{font-size:14px;color:var(--ink-3);line-height:1.6;}
 
-/* Action items */
-.action-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--white);border:1.5px solid var(--ink-5);border-radius:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
-.action-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+/* ── PERSON CARDS ── */
+.person{background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:16px 18px;margin-bottom:10px;display:flex;gap:13px;box-shadow:0 1px 3px rgba(17,24,39,0.04);}
+.av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0;}
+.person-name{font-size:15px;font-weight:700;color:var(--ink);}
+.person-role{font-size:11px;color:var(--ink-4);margin-bottom:7px;font-weight:500;}
+.person-body{font-size:14px;color:var(--ink-3);line-height:1.6;}
+
+/* ── ACTION ITEMS ── */
+.action{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:var(--white);border:1.5px solid var(--ink-5);border-radius:13px;margin-bottom:8px;box-shadow:0 1px 2px rgba(17,24,39,0.04);}
+.action-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;margin-top:5px;}
 .action-body{font-size:14px;color:var(--ink-2);line-height:1.5;}
-.action-owner{font-size:11px;font-weight:600;color:var(--ink-4);margin-top:3px;}
+.action-owner{font-size:11px;font-weight:600;color:var(--ink-4);margin-top:4px;}
 
-/* Sources */
-.source-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:100px;background:var(--ink-6);color:var(--ink-4);border:1px solid var(--ink-5);margin-bottom:8px;}
+/* ── AHEAD CARDS ── */
+.ahead-card{background:var(--white);border:1px solid var(--ink-5);border-left:4px solid var(--purple);border-radius:0 14px 14px 0;padding:16px 18px;margin-bottom:10px;box-shadow:0 1px 3px rgba(17,24,39,0.04);}
 
-@media(max-width:600px){
-  .container{padding:16px 14px 60px;}
-  .header{padding:24px 20px;}
-  .header-title{font-size:22px;}
-}
-
-/* Video embeds */
+/* ── VIDEO SECTION ── */
+.videos{display:flex;flex-direction:column;gap:14px;margin-bottom:4px;}
+.video-item{}
+.video-label{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;gap:7px;}
 .video-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:14px;background:var(--ink);}
 .video-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:14px;}
-.video-section{margin-bottom:28px;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;font-size:12px;color:var(--ink-4);line-height:1.9;margin-top:32px;padding-top:24px;border-top:1px solid var(--ink-5);}
 </style>
 </head>
 <body>
-<div class="container">
+<div class="page">
 
   <!-- Header -->
-  <div class="header">
-    <div class="header-eyebrow">Worship debrief</div>
-    <div class="header-title">We did that. 🙌</div>
-    <div class="header-sub">Sunday 19th April 2026 · Calvary Hephzibah · First Sunday of the new season</div>
-    <div class="header-chips">
-      <span class="chip chip-green">✅ Objectives largely achieved</span>
-      <span class="chip chip-amber">⚠️ Transitions need work</span>
-      <span class="chip">Sources: worship debrief + private debrief</span>
-      <span class="chip">Present: Vanessa · Esther · Eddie · Laolu · Morayo · Uncle Michael · Uncle B</span>
+  <div class="hdr">
+    <div class="hdr-eye">Worship debrief</div>
+    <div class="hdr-title">We did that. 🙌</div>
+    <div class="hdr-sub">Sunday 19th April 2026 · Calvary Hephzibah · First Sunday of the new season</div>
+    <div class="hdr-chips">
+      <span class="hchip hc-green">✅ Objectives largely achieved</span>
+      <span class="hchip hc-amber">⚠️ Transitions need work</span>
+      <span class="hchip hc-grey">Present: Vanessa · Esther · Eddie · Laolu · Morayo · Bolaji A · Uncle Michael · Uncle B</span>
     </div>
   </div>
 
@@ -109,306 +117,251 @@ body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font
   </div>
 
   <!-- Brief scorecard -->
-  <div style="background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:20px 22px;margin-bottom:20px;box-shadow:0 1px 2px rgba(17,24,39,0.05);">
-    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:4px;">Did we hit the brief?</div>
-    <div style="font-family:'Lora',serif;font-size:16px;font-style:italic;color:var(--ink-3);margin-bottom:16px;">"Familiar but fresh. Traditional but tight and tidy."</div>
+  <div class="sh">Did we hit the brief?</div>
+  <div class="scorecard">
+    <div class="sc-intro">"Familiar but fresh. Traditional but tight and tidy."</div>
 
-    <div style="display:flex;flex-direction:column;gap:8px;">
-
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:12px;">
-        <span style="font-size:16px;flex-shrink:0;">✅</span>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:2px;">Greatest hits energy — play the parts everyone knows</div>
-          <div style="font-size:13px;color:var(--ink-3);">Achieved. Nobody missed the sections we cut. Congregation sang loud without needing the screen.</div>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:12px;">
-        <span style="font-size:16px;flex-shrink:0;">✅</span>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:2px;">If the lyrics weren't on screen, people should still know where they are</div>
-          <div style="font-size:13px;color:var(--ink-3);">Achieved. Congregation was audibly singing throughout — didn't need to look at the screen.</div>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:12px;">
-        <span style="font-size:16px;flex-shrink:0;">✅</span>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:2px;">Start with a bang and keep the energy high — but with dynamics</div>
-          <div style="font-size:13px;color:var(--ink-3);">Largely achieved. Energy stayed high throughout. Dynamics worked well — communion was pitched correctly. Some drum entries came in too full too early on worship songs.</div>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--amber-light);border:1.5px solid var(--amber-mid);border-radius:12px;">
-        <span style="font-size:16px;flex-shrink:0;">⚠️</span>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--amber);margin-bottom:2px;">Tight transitions — don't let the energy drop between songs</div>
-          <div style="font-size:13px;color:var(--ink-3);">Partially achieved. Within-section transitions (worship songs) were seamless. The B → E key change into Friend of God was acknowledged as awkward — they got there but it wasn't tight. This is the main thing to fix.</div>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:var(--green-light);border:1.5px solid var(--green-mid);border-radius:12px;">
-        <span style="font-size:16px;flex-shrink:0;">✅</span>
-        <div>
-          <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:2px;">This is the congregation's first Sunday in the new season — make it feel like home</div>
-          <div style="font-size:13px;color:var(--ink-3);">Achieved. The traditional song selection meant familiar ground for everyone. It felt like a lift, not a reset. The room was with it.</div>
-        </div>
-      </div>
-
+    <div class="sc-row">
+      <div class="sc-icon">✅</div>
+      <div class="sc-text"><strong>Greatest hits energy — play the parts everyone knows</strong>Nobody missed the sections we cut. Congregation sang loud without needing the screen.</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-icon">✅</div>
+      <div class="sc-text"><strong>If the lyrics weren't on screen, people should still know where they are</strong>Achieved. The whole church was audibly singing throughout.</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-icon">✅</div>
+      <div class="sc-text"><strong>Start with a bang and keep the energy high — but with dynamics</strong>Largely achieved. Energy stayed high throughout. Communion dynamic was perfectly pitched. Room to grow on the finer dynamics as a team.</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-icon">⚠️</div>
+      <div class="sc-text"><strong>Tight transitions — don't let the energy drop between songs</strong>Within-section transitions were seamless. The B → E key change into Friend of God was the one awkward moment. They got there — but this is the specific thing to fix next week.</div>
+    </div>
+    <div class="sc-row">
+      <div class="sc-icon">✅</div>
+      <div class="sc-text"><strong>Make it feel like home — first Sunday of the new season</strong>The traditional song selection meant familiar ground for everyone. It felt like a lift. The room was with it.</div>
     </div>
 
-    <!-- Summary verdict -->
-    <div style="background:var(--ink);border-radius:10px;padding:14px 16px;margin-top:14px;display:flex;gap:10px;align-items:center;">
-      <span style="font-size:22px;">🎯</span>
-      <div>
-        <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">Verdict</div>
-        <div style="font-size:14px;font-weight:600;color:white;">4 out of 5 objectives hit. The one miss — the B→E transition — is the specific, solvable thing to take into next week.</div>
-      </div>
+    <div class="sc-verdict">
+      <span style="font-size:20px;">🎯</span>
+      <div class="sc-verdict-text">4 out of 5 objectives hit. The one miss is specific and solvable — and we fix it next week.</div>
     </div>
   </div>
 
   <!-- One word -->
-  <div class="section">
-    <div class="section-title">The team described today in one word</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <span style="background:var(--ink);color:white;font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">New beginning</span>
-      <span style="background:var(--red-light);color:var(--red);font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">Reset</span>
-      <span style="background:var(--amber-light);color:var(--amber);font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">Transition</span>
-      <span style="background:var(--green-light);color:var(--green);font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">Historically</span>
-    </div>
+  <div class="sh">The team described today in one word</div>
+  <div class="words">
+    <span class="word w-dark">New beginning</span>
+    <span class="word w-red">Reset</span>
+    <span class="word w-amber">Transition</span>
+    <span class="word w-green">Historically</span>
   </div>
 
   <!-- What went well -->
-  <div class="section">
-    <div class="section-title">What went well</div>
+  <div class="sh">What went well</div>
 
-    <div class="review-card went-well">
-      <div class="rc-label rc-label-green">Greatest hits strategy worked</div>
-      <div class="rc-title">Congregation didn't need the screen</div>
-      <div class="rc-body">The "greatest hits" approach landed exactly as we hoped. We stripped back to the parts everyone knows — and people just sang. Loud. Nobody missed the sections we cut. That's the brief done right there.</div>
-    </div>
+  <div class="ww-card">
+    <div class="card-title">Congregation didn't need the screen</div>
+    <div class="card-body">The greatest hits approach landed exactly as we hoped. We stripped back to the parts everyone knows — and people just sang. Loud. Nobody missed the sections we cut. That's the brief done right there.</div>
+  </div>
 
-    <div class="review-card went-well">
-      <div class="rc-label rc-label-green">Energy and cadence</div>
-      <div class="rc-title">High energy maintained throughout</div>
-      <div class="rc-body">From Trading My Sorrows to the close — the energy never really dropped. It felt like a lift the whole way through. Even the quieter worship moments felt intentional, not flat. That's a hard thing to pull off and we did it.</div>
-    </div>
+  <div class="ww-card">
+    <div class="card-title">High energy maintained throughout</div>
+    <div class="card-body">From Trading My Sorrows to the close — the energy never really dropped. It felt like a lift the whole way through. Even the quieter worship moments felt intentional, not flat. That's a hard thing to pull off and we did it.</div>
+  </div>
 
-    <div class="review-card went-well">
-      <div class="rc-label rc-label-green">Communion atmosphere</div>
-      <div class="rc-title">Communion moment was pitched perfectly</div>
-      <div class="rc-body">This one doesn't happen by accident. The worship pulled back at exactly the right moment — soft enough to hold space for communion without losing the room. Really well read.</div>
-    </div>
+  <div class="ww-card">
+    <div class="card-title">Communion moment was pitched perfectly</div>
+    <div class="card-body">The worship pulled back at exactly the right moment — soft enough to hold space for communion without losing the room. Really well read by everyone.</div>
+  </div>
 
-    <div class="review-card went-well">
-      <div class="rc-label rc-label-green">Song selection</div>
-      <div class="rc-title">Traditional but current — everyone sang</div>
-      <div class="rc-body">The song choices were intentional — familiar enough for everyone in the room, regardless of age. You could hear it. The whole church was singing together. That doesn't always happen and it's a really good sign.</div>
-    </div>
+  <div class="ww-card">
+    <div class="card-title">Everyone was singing</div>
+    <div class="card-body">The whole church was singing together. Older members, younger members — everyone knew where they were. That doesn't always happen and it's a really good sign.</div>
+  </div>
 
-    <div class="review-card went-well">
-      <div class="rc-label rc-label-green">Worship transitions (within the set)</div>
-      <div class="rc-title">Worship section flowed beautifully</div>
-      <div class="rc-body">The transitions between Here I Am to Worship, What a Beautiful Name and I Exalt Thee were smooth and connected. The worship section felt like one continuous moment rather than separate songs. That's exactly what we want.</div>
+  <div class="ww-card">
+    <div class="card-title">Worship section flowed beautifully</div>
+    <div class="card-body">The transitions between Here I Am to Worship, What a Beautiful Name and I Exalt Thee were smooth and connected. The worship section felt like one continuous moment rather than separate songs. That's exactly what we want.</div>
+  </div>
+
+  <div class="ww-card">
+    <div class="card-title">The stream was the best it's been in a long time</div>
+    <div class="card-body">For everyone watching online — the recording quality was noticeably better than we've had recently. That's a real win and it matters.</div>
+  </div>
+
+  <!-- Individual recognition -->
+  <div class="sh">Individual recognition</div>
+
+  <div class="person">
+    <div class="av" style="background:var(--red);">V</div>
+    <div>
+      <div class="person-name">Vanessa</div>
+      <div class="person-role">Lead Vocalist</div>
+      <div class="person-body">We knew this was a big ask going in — and you came through. You led the room with warmth and the congregation responded. What you're building here matters. This is just the beginning.</div>
     </div>
   </div>
 
-  <!-- Individual shoutouts -->
-  <div class="section">
-    <div class="section-title">Individual recognition</div>
-
-    <div class="person-card">
-      <div class="person-av">La</div>
-      <div>
-        <div class="person-name">Laolu</div>
-        <div class="person-role">Drums</div>
-        <div class="person-body">You held the groove well. You showed flair and really owned it — your creativity came through in the best way. The fact that you apparently hadn't played in a while wasn't obvious at all. You played like a pro. 🔥</div>
-      </div>
-    </div>
-
-    <div class="person-card">
-      <div class="person-av">Mo</div>
-      <div>
-        <div class="person-name">Morayo</div>
-        <div class="person-role">Guitar</div>
-        <div class="person-body">Quick thinking and adapting was very evident. The ability to roll with it like that is a skill not many have. Your sharpness and natural leadership came through — I could see you pointing fellow band members on parts of the set. Every team needs someone like you.</div>
-      </div>
-    </div>
-
-    <div class="person-card">
-      <div class="person-av">V</div>
-      <div>
-        <div class="person-name">Vanessa</div>
-        <div class="person-role">Lead Vocalist</div>
-        <div class="person-body">We knew this was a big ask going in — and you came through. You led the room with warmth and the congregation responded. What you're building here matters. This is just the beginning.</div>
-      </div>
+  <div class="person">
+    <div class="av" style="background:var(--purple);">Es</div>
+    <div>
+      <div class="person-name">Esther</div>
+      <div class="person-role">Backing vocals</div>
+      <div class="person-body">You showed up and held court — confidently 💪🏾 You gave Vanessa a solid backdrop of strong vocals that meant she could navigate freely. She was able to go there because you held it down. Really proud of you.</div>
     </div>
   </div>
 
-    <div class="person-card">
-      <div class="person-av" style="background:var(--blue);">BA</div>
-      <div>
-        <div class="person-name">Bolaji A</div>
-        <div class="person-role">Bass</div>
-        <div class="person-body">You showed real leadership, calm under pressure, strong resolve and mission focus in the way you helped pull strings in the background to facilitate everything that needed to happen before Sunday. That work doesn't always get seen — but it matters. I salute you 🫡</div>
-      </div>
-    </div>
-
-    <div class="person-card">
-      <div class="person-av" style="background:var(--purple);">Es</div>
-      <div>
-        <div class="person-name">Esther</div>
-        <div class="person-role">Backing vocals</div>
-        <div class="person-body">You showed up and held court — confidently 💪🏾 You gave Vanessa a solid backdrop of strong vocals that meant she could navigate freely. She was able to go there because you held it down. Really proud of you.</div>
-      </div>
-    </div>
-
-    <div class="person-card">
-      <div class="person-av" style="background:var(--green);">DC</div>
-      <div>
-        <div class="person-name">Dr Caster</div>
-        <div class="person-role">Worship — in spirit 💐</div>
-        <div class="person-body">Not here in person but very much here in spirit. Thank you for allowing Esther to support the team. We heard that it's your influence that got her into singing in the first place — so in a real way, you were on that stage too. Well done Dad 💐</div>
-      </div>
-    </div>
-
-    <div class="person-card">
-      <div class="person-av" style="background:var(--ink);">UM</div>
-      <div>
-        <div class="person-name">Uncle Michael</div>
-        <div class="person-role">Long-standing worship team member · Present at debrief</div>
-        <div class="person-body">As always, your presence and leadership provides strong covering. The things others don't observe — you observe, and you act. Thank you for being a source of strength and a north star for this group.</div>
-      </div>
+  <div class="person">
+    <div class="av" style="background:var(--ink);">La</div>
+    <div>
+      <div class="person-name">Laolu</div>
+      <div class="person-role">Drums</div>
+      <div class="person-body">You held the groove well. You showed flair and really owned it — your creativity came through in the best way. The fact that you apparently hadn't played in a while wasn't obvious at all. You played like a pro. 🔥</div>
     </div>
   </div>
 
-  <!-- What to improve -->
-  <div class="section">
-    <div class="section-title">What we're working on</div>
-
-    <div class="review-card improve">
-      <div class="rc-label rc-label-amber">Key transition</div>
-      <div class="rc-title">Lord You Are Good → Friend of God (B to E)</div>
-      <div class="rc-body">We got there — and fair play for making it work on the day — but this is the one thing to specifically rehearse before next Sunday. The B to E key change needs a deliberate plan: a walkdown through the circle of fifths is the move. Once we practise it properly it'll feel natural. It's very solvable.</div>
+  <div class="person">
+    <div class="av" style="background:var(--red);">Mo</div>
+    <div>
+      <div class="person-name">Morayo</div>
+      <div class="person-role">Guitar</div>
+      <div class="person-body">Quick thinking and adapting was very evident. The ability to roll with it like that is a skill not many have. Your sharpness and natural leadership came through — I could see you pointing fellow band members on parts of the set. Every team needs someone like you.</div>
     </div>
+  </div>
 
-    <div class="review-card improve">
-      <div class="rc-label rc-label-amber">Dynamics</div>
-      <div class="rc-title">There's room to develop our dynamics as a team</div>
-      <div class="rc-body">Overall the energy was great — but there are moments where letting the song breathe a little longer before building would add even more impact. The principle: give the congregation time to settle into a song, then build. When the full band comes in they'll feel it more. This is something we grow into together as we rehearse more.</div>
+  <div class="person">
+    <div class="av" style="background:var(--blue);">BA</div>
+    <div>
+      <div class="person-name">Bolaji A</div>
+      <div class="person-role">Bass</div>
+      <div class="person-body">You showed real leadership, calm under pressure, strong resolve and mission focus in the way you helped pull strings in the background to facilitate everything that needed to happen before Sunday. That work doesn't always get seen — but it matters. I salute you 🫡</div>
     </div>
+  </div>
 
-    <div class="review-card improve">
-      <div class="rc-label rc-label-amber">The mix</div>
-      <div class="rc-title">Room to improve the overall sound mix — but the stream was the best it's been in a long time</div>
-      <div class="rc-body">There's always room to tighten the mix and we'll keep working on that. But it's worth noting — the stream recording was the best we've had in a long time. That's a real win and it matters for everyone watching online.</div>
+  <div class="person">
+    <div class="av" style="background:var(--ink);">UM</div>
+    <div>
+      <div class="person-name">Uncle Michael</div>
+      <div class="person-role">Long-standing worship team · present at debrief</div>
+      <div class="person-body">As always, your presence and leadership provides strong covering. The things others don't observe — you observe, and you act. Thank you for being a source of strength and a north star for this group.</div>
     </div>
+  </div>
 
-    <div class="review-card improve">
-      <div class="rc-label rc-label-amber">Guitar vs Keys distinction</div>
-      <div class="rc-title">Guitar and keys sounding too similar in the mix</div>
-      <div class="rc-body">At times the guitar and keys were blending into each other — hard to tell them apart. Eddie and Morayo, let's talk tones before next Sunday so each instrument has its own space in the mix. Again, very fixable.</div>
+  <div class="person">
+    <div class="av" style="background:var(--green);">DC</div>
+    <div>
+      <div class="person-name">Dr Caster</div>
+      <div class="person-role">In spirit 💐</div>
+      <div class="person-body">Not here in person but very much here in spirit. Thank you for allowing Esther to support the team. We heard it's your influence that got her into singing in the first place — so in a real way, you were on that stage too. Well done Dad 💐</div>
     </div>
+  </div>
+
+  <!-- What we're working on -->
+  <div class="sh">What we're working on</div>
+
+  <div class="imp-card">
+    <div class="card-title">The B → E transition (Lord You Are Good → Friend of God)</div>
+    <div class="card-body">We got there on the day — and fair play for making it work — but this is the one thing to specifically rehearse before next Sunday. Walking the bass down through the circle of fifths is the move. Once we practise it properly it'll feel natural. Very solvable.</div>
+  </div>
+
+  <div class="imp-card">
+    <div class="card-title">Dynamics as a team</div>
+    <div class="card-body">There are moments where letting a song breathe a little longer before building would add even more impact. Give the congregation time to settle in, then build. When the full band comes in they'll feel it even more. This is something we grow into together.</div>
+  </div>
+
+  <div class="imp-card">
+    <div class="card-title">The mix</div>
+    <div class="card-body">There's always room to tighten the overall mix and we'll keep working on that — but as mentioned above, the stream was the best it's been in a long time. Good foundation to build from.</div>
   </div>
 
   <!-- Looking ahead -->
-  <div class="section">
-    <div class="section-title">Looking ahead</div>
+  <div class="sh">Looking ahead</div>
 
-    <div class="review-card" style="border-left:4px solid var(--purple);">
-      <div class="rc-label" style="color:var(--purple);">Next Sunday lineup</div>
-      <div class="rc-title">We're considering the same band setup for next week</div>
-      <div class="rc-body">The intention is to keep the same lineup and build on what we started — to be confirmed early this week. Keep an eye out for the message.</div>
-    </div>
+  <div class="ahead-card">
+    <div class="card-title">Next Sunday lineup</div>
+    <div class="card-body">We're considering the same band setup for next week — to be confirmed early this week. Keep an eye out for the message.</div>
+  </div>
 
-    <div class="review-card" style="border-left:4px solid var(--purple);">
-      <div class="rc-label" style="color:var(--purple);">Rehearsals</div>
-      <div class="rc-title">We need to rehearse more regularly</div>
-      <div class="rc-body">What we pulled off this Sunday with one rehearsal was impressive — but to keep growing and tightening as a team, we need to be meeting more regularly, not just before Sundays. More on this soon.</div>
-    </div>
+  <div class="ahead-card">
+    <div class="card-title">Regular rehearsals</div>
+    <div class="card-body">What we pulled off with one rehearsal was impressive — but to keep growing as a team we need to be meeting more regularly, not just before Sundays. More on this soon.</div>
+  </div>
 
-    <div class="review-card" style="border-left:4px solid var(--purple);">
-      <div class="rc-label" style="color:var(--purple);">Singers</div>
-      <div class="rc-title">Building out the vocal team is a priority</div>
-      <div class="rc-body">We want more vocal options and flexibility in the set. This is something Uncle B is actively working on — watch this space.</div>
-    </div>
+  <div class="ahead-card">
+    <div class="card-title">Building out the vocal team</div>
+    <div class="card-body">We want more vocal options and flexibility in the set. Uncle B is actively working on this — watch this space.</div>
   </div>
 
   <!-- Actions -->
-  <div class="section">
-    <div class="section-title">Actions for next Sunday</div>
+  <div class="sh">Actions this week</div>
 
-    <div class="action-item">
-      <div class="action-dot" style="background:var(--red);"></div>
-      <div>
-        <div class="action-body">Practise the B → E transition before next Sunday — walk it down through the circle of fifths so it flows. Everyone needs to know their part in it. Uncle B will organise a time.</div>
-        <div class="action-owner">Uncle B will organise · Eddie + Laolu</div>
-      </div>
+  <div class="action">
+    <div class="action-dot" style="background:var(--red);"></div>
+    <div>
+      <div class="action-body">Practise the B → E transition before next Sunday — walk it down through the circle of fifths so it flows. Uncle B will organise a time.</div>
+      <div class="action-owner">Uncle B · Eddie · Laolu</div>
     </div>
+  </div>
 
-    <div class="action-item">
-      <div class="action-dot" style="background:var(--amber);"></div>
-      <div>
-        <div class="action-body">Laolu — let's agree the dynamic map before Sunday. When to come in, how much to give on verse vs chorus. We'll keep it simple.</div>
-        <div class="action-owner">Uncle B will reach out to Laolu</div>
-      </div>
+  <div class="action">
+    <div class="action-dot" style="background:var(--amber);"></div>
+    <div>
+      <div class="action-body">Agree the dynamic map before Sunday — when to come in, how much to give on verse vs chorus.</div>
+      <div class="action-owner">Uncle B will reach out to Laolu</div>
     </div>
+  </div>
 
-    <div class="action-item">
-      <div class="action-dot" style="background:var(--amber);"></div>
-      <div>
-        <div class="action-body">Confirm the lineup for next Sunday — we're aiming for the same setup, to be confirmed early this week. Watch for the message.</div>
-        <div class="action-owner">Uncle B</div>
-      </div>
+  <div class="action">
+    <div class="action-dot" style="background:var(--amber);"></div>
+    <div>
+      <div class="action-body">Confirm the lineup for next Sunday — aiming for the same setup. Watch for the message this week.</div>
+      <div class="action-owner">Uncle B — confirm by Tuesday</div>
     </div>
+  </div>
 
-    <div class="action-item">
-      <div class="action-dot" style="background:var(--amber);"></div>
-      <div>
-        <div class="action-body">Find the right key for My Jesus or find an alternative — we want it back in the set.</div>
-        <div class="action-owner">Uncle B + Vanessa — let's chat this week</div>
-      </div>
+  <div class="action">
+    <div class="action-dot" style="background:var(--amber);"></div>
+    <div>
+      <div class="action-body">Find the right key for My Jesus or find an alternative — we want it back in the set.</div>
+      <div class="action-owner">Uncle B + Vanessa</div>
     </div>
+  </div>
 
-    <div class="action-item">
-      <div class="action-dot" style="background:var(--blue);"></div>
-      <div>
-        <div class="action-body">Start planning regular mid-week rehearsals. More details coming soon.</div>
-        <div class="action-owner">Uncle B</div>
-      </div>
+  <div class="action">
+    <div class="action-dot" style="background:var(--blue);"></div>
+    <div>
+      <div class="action-body">Start planning regular mid-week rehearsals. More details coming soon.</div>
+      <div class="action-owner">Uncle B</div>
     </div>
   </div>
 
   <!-- Service recordings -->
-  <div class="section video-section">
-    <div class="section-title">Service recordings — Sunday 19th April 2026</div>
-
-    <div style="margin-bottom:16px;">
-      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;">🎵 Praise &amp; Worship Set</div>
+  <div class="sh">Service recordings</div>
+  <div class="videos">
+    <div class="video-item">
+      <div class="video-label">🎵 Praise &amp; Worship Set</div>
       <div class="video-wrap">
         <iframe src="https://www.youtube.com/embed/9hXglApTYBY" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
       </div>
     </div>
-
-    <div style="margin-bottom:16px;">
-      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;">🙏 Offering</div>
+    <div class="video-item">
+      <div class="video-label">🙏 Offering</div>
       <div class="video-wrap">
         <iframe src="https://www.youtube.com/embed/RfGoDSr2QNs" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
       </div>
     </div>
-
-    <div style="margin-bottom:16px;">
-      <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px;">✨ End of Service</div>
+    <div class="video-item">
+      <div class="video-label">✨ End of Service</div>
       <div class="video-wrap">
         <iframe src="https://www.youtube.com/embed/lDgeSFswL8M" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
       </div>
     </div>
   </div>
 
-  <div style="margin-top:20px;text-align:center;font-size:12px;color:var(--ink-4);line-height:1.8;">
-    Calvary Hephzibah Full Gospel Church · Worship Debrief 19th April 2026<br>
-    Sources: Worship team debrief + private debrief with Pastor Shade<br>
-    Prepared by Uncle B (Bolaji Olatoye)
+  <div class="footer">
+    Calvary Hephzibah Full Gospel Church<br>
+    Worship Debrief · Sunday 19th April 2026<br>
+    Prepared by Uncle B
   </div>
 
 </div>
