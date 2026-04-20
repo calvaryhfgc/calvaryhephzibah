@@ -14,112 +14,121 @@
   body { background: #0A0A0A; }
   #app.visible { background: #0A0A0A; }
 
-  .pv-wrap{max-width:720px;margin:0 auto;padding:16px;color:white;}
+  .pv-wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px;color:white;}
 
   /* Header */
-  .pv-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
-  .pv-back{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;}
+  .pv-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
+  .pv-back{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;font-size:18px;}
   .pv-back:hover{background:rgba(255,255,255,0.1);}
   .pv-hdr-body{flex:1;min-width:0;}
   .pv-song-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);}
-  .pv-arr-name{font-family:'Lora',serif;font-size:20px;font-weight:600;color:white;line-height:1.2;margin-top:2px;}
-  .pv-meta{font-size:11px;color:rgba(255,255,255,0.55);margin-top:4px;font-variant-numeric:tabular-nums;}
+  .pv-arr-name{font-family:'Lora',serif;font-size:22px;font-weight:600;color:white;line-height:1.2;margin-top:2px;}
+  .pv-meta{font-size:12px;color:rgba(255,255,255,0.55);margin-top:4px;font-variant-numeric:tabular-nums;}
+
+  /* Horizontal-scrollers with a subtle fade on the right to hint there's more */
+  .pv-scroll-mask{position:relative;}
+  .pv-scroll-mask::after{content:'';position:absolute;top:0;right:0;bottom:0;width:24px;background:linear-gradient(to right, rgba(10,10,10,0), #0A0A0A);pointer-events:none;}
 
   /* Part selector */
-  .pv-parts{display:flex;gap:6px;overflow-x:auto;padding:2px 0;margin-bottom:16px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+  .pv-parts{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;margin-bottom:20px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
   .pv-parts::-webkit-scrollbar{display:none;}
-  .pv-part{flex:0 0 auto;padding:10px 14px;border-radius:100px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all 0.15s;}
+  .pv-part{flex:0 0 auto;padding:11px 16px;min-height:44px;border-radius:100px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:all 0.15s;}
   .pv-part:hover{background:rgba(255,255,255,0.08);color:white;}
   .pv-part.active{background:var(--red);border-color:var(--red);color:white;}
-  .pv-part-icon{font-size:14px;}
+  .pv-part-icon{font-size:16px;}
 
   /* Direction card */
-  .pv-direction{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+  .pv-direction{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:14px;}
   .pv-direction-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px;}
-  .pv-direction-text{font-size:13px;line-height:1.55;color:rgba(255,255,255,0.85);white-space:pre-wrap;}
-  .pv-direction-empty{font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;}
-  .pv-direction + .pv-direction{margin-top:-8px;}
+  .pv-direction-text{font-size:14px;line-height:1.55;color:rgba(255,255,255,0.85);white-space:pre-wrap;}
+  .pv-direction-empty{font-size:13px;color:rgba(255,255,255,0.35);font-style:italic;}
 
   /* Section ribbon */
-  .pv-ribbon{display:flex;gap:4px;overflow-x:auto;padding:4px 0;margin-bottom:18px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+  .pv-ribbon{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;margin-bottom:20px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
   .pv-ribbon::-webkit-scrollbar{display:none;}
-  .pv-slot{flex:0 0 auto;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);min-width:80px;cursor:pointer;transition:all 0.15s;text-align:center;}
+  .pv-slot{flex:0 0 auto;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);min-width:84px;min-height:60px;cursor:pointer;transition:all 0.15s;text-align:center;}
   .pv-slot:hover{background:rgba(255,255,255,0.1);}
   .pv-slot.current{background:rgba(196,30,42,0.25);border-color:var(--red);}
   .pv-slot.looping{background:rgba(251,191,36,0.2);border-color:#FBBF24;}
-  .pv-slot-label{font-size:12px;font-weight:600;color:white;white-space:nowrap;}
-  .pv-slot-num{font-size:9px;color:rgba(255,255,255,0.45);font-weight:700;letter-spacing:0.5px;margin-bottom:2px;}
-  .pv-slot-dur{font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;font-variant-numeric:tabular-nums;}
+  .pv-slot-label{font-size:13px;font-weight:600;color:white;white-space:nowrap;}
+  .pv-slot-num{font-size:10px;color:rgba(255,255,255,0.45);font-weight:700;letter-spacing:0.5px;margin-bottom:3px;}
+  .pv-slot-dur{font-size:11px;color:rgba(255,255,255,0.55);margin-top:3px;font-variant-numeric:tabular-nums;}
   .pv-ribbon-empty{padding:24px 16px;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);border-radius:14px;text-align:center;color:rgba(255,255,255,0.55);font-size:13px;line-height:1.5;}
   .pv-ribbon-empty a{color:var(--red);font-weight:600;text-decoration:none;}
 
   /* Transport */
   .pv-transport{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:16px;}
-  .pv-transport-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
-  .pv-play{width:52px;height:52px;border-radius:50%;border:none;background:var(--red);color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;}
+  /* Top row: play in the centre with skip buttons flanking it. Time on its own below. */
+  .pv-transport-top{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:10px;}
+  .pv-play{width:60px;height:60px;border-radius:50%;border:none;background:var(--red);color:white;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;}
   .pv-play:hover:not(:disabled){background:var(--red-d);}
   .pv-play:disabled{opacity:0.4;cursor:not-allowed;}
   .pv-play:active{transform:scale(0.95);}
-  .pv-time{font-family:monospace;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.9);min-width:90px;}
-  .pv-time-sep{color:rgba(255,255,255,0.35);margin:0 4px;}
-  .pv-skip{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;}
+  .pv-skip{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.85);cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .pv-skip:hover{background:rgba(255,255,255,0.1);color:white;}
+  .pv-time{font-family:monospace;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.9);text-align:center;padding:4px 0 8px;}
+  .pv-time-sep{color:rgba(255,255,255,0.35);margin:0 6px;}
 
-  .pv-scrub{width:100%;accent-color:var(--red);margin:8px 0 10px;}
+  .pv-scrub{width:100%;accent-color:var(--red);margin:4px 0 14px;height:28px;}
 
   .pv-transport-bottom{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-  .pv-speed{display:flex;align-items:center;gap:4px;}
-  .pv-speed-label{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.45);font-weight:600;margin-right:4px;}
-  .pv-speed-chip{padding:4px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .pv-speed{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+  .pv-speed-label{font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.5);font-weight:600;margin-right:4px;}
+  .pv-speed-chip{padding:8px 12px;min-height:36px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
   .pv-speed-chip.active{background:var(--red);border-color:var(--red);color:white;}
-  .pv-loop-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.7);cursor:pointer;margin-left:auto;}
-  .pv-loop-toggle input{accent-color:var(--red);cursor:pointer;}
-  .pv-loop-toggle .dot{width:6px;height:6px;border-radius:50%;background:#FBBF24;display:none;animation:pv-pulse 1s ease-in-out infinite;}
+  .pv-loop-toggle{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,0.75);cursor:pointer;margin-left:auto;padding:6px 10px;border-radius:8px;}
+  .pv-loop-toggle input{accent-color:var(--red);cursor:pointer;width:18px;height:18px;}
+  .pv-loop-toggle .dot{width:8px;height:8px;border-radius:50%;background:#FBBF24;display:none;animation:pv-pulse 1s ease-in-out infinite;}
   .pv-loop-toggle.looping .dot{display:inline-block;}
   @keyframes pv-pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-  /* Stem mixer */
+  /* Stem mixer — two-line row for proper slider + button sizes on mobile */
   .pv-mixer{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
-  .pv-mixer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
-  .pv-mixer-title{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:rgba(255,255,255,0.7);}
-  .pv-mixer-reset{background:none;border:none;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer;font-family:inherit;text-decoration:underline;}
+  .pv-mixer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .pv-mixer-title{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:rgba(255,255,255,0.7);}
+  .pv-mixer-reset{background:none;border:none;color:rgba(255,255,255,0.55);font-size:12px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:8px 4px;}
   .pv-mixer-reset:hover{color:white;}
-  .pv-stem-row{display:grid;grid-template-columns:auto 80px 1fr auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid rgba(255,255,255,0.05);}
-  .pv-stem-row:first-of-type{border-top:none;}
-  .pv-stem-icon{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
-  .pv-stem-name{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);}
-  .pv-stem-slider{width:100%;accent-color:var(--red);cursor:pointer;}
-  .pv-stem-btns{display:flex;gap:4px;}
-  .pv-stem-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.6);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;}
+  .pv-stem-row{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid rgba(255,255,255,0.06);}
+  .pv-stem-row:first-of-type{border-top:none;padding-top:4px;}
+  .pv-stem-row:last-of-type{padding-bottom:4px;}
+  .pv-stem-head{display:flex;align-items:center;gap:10px;}
+  .pv-stem-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+  .pv-stem-name{font-size:14px;font-weight:600;color:rgba(255,255,255,0.9);flex:1;min-width:0;}
+  .pv-stem-btns{display:flex;gap:6px;flex-shrink:0;}
+  .pv-stem-btn{width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.7);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;}
   .pv-stem-btn:hover{background:rgba(255,255,255,0.08);}
   .pv-stem-btn.active{background:var(--red);border-color:var(--red);color:white;}
   .pv-stem-btn.mute.active{background:#6B7280;border-color:#6B7280;}
-  .pv-stem-loading{width:14px;height:14px;border:2px solid rgba(255,255,255,0.15);border-top-color:var(--red);border-radius:50%;animation:pv-spin 0.8s linear infinite;}
+  .pv-stem-slider{width:100%;accent-color:var(--red);cursor:pointer;height:32px;}
+  .pv-stem-loading{width:14px;height:14px;border:2px solid rgba(255,255,255,0.15);border-top-color:var(--red);border-radius:50%;animation:pv-spin 0.8s linear infinite;flex-shrink:0;}
   @keyframes pv-spin{to{transform:rotate(360deg);}}
-  .pv-stem-missing{font-size:10px;color:rgba(255,255,255,0.3);font-style:italic;}
+  .pv-stem-missing{font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;}
 
   /* Footer */
-  .pv-footer{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;text-align:center;}
-  .pv-practise-btn{padding:10px 20px;border-radius:10px;border:1.5px solid var(--red);background:transparent;color:var(--red);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .pv-footer{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;text-align:center;}
+  .pv-practise-btn{padding:13px 24px;min-height:48px;border-radius:10px;border:1.5px solid var(--red);background:transparent;color:var(--red);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
   .pv-practise-btn:hover{background:var(--red);color:white;}
   .pv-practise-btn.done{background:var(--green);border-color:var(--green);color:white;}
-  .pv-practise-count{font-size:11px;color:rgba(255,255,255,0.5);margin-top:8px;}
+  .pv-practise-count{font-size:12px;color:rgba(255,255,255,0.5);margin-top:10px;}
 
   /* Loading / error states */
   .pv-loading-splash{padding:48px 24px;text-align:center;color:rgba(255,255,255,0.75);}
   .pv-loading-title{font-family:'Lora',serif;font-size:20px;margin-bottom:8px;}
   .pv-loading-bar{width:200px;height:4px;background:rgba(255,255,255,0.1);border-radius:100px;margin:16px auto;overflow:hidden;}
   .pv-loading-fill{height:100%;background:var(--red);border-radius:100px;transition:width 0.2s;width:0;}
-  .pv-loading-sub{font-size:12px;color:rgba(255,255,255,0.45);margin-top:10px;}
+  .pv-loading-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-top:10px;}
 
   .pv-error{padding:32px 24px;text-align:center;color:rgba(255,255,255,0.75);background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:14px;}
 
   /* Responsive */
   @media(max-width:480px){
-    .pv-wrap{padding:12px;}
-    .pv-arr-name{font-size:18px;}
-    .pv-play{width:48px;height:48px;}
-    .pv-stem-row{grid-template-columns:auto 60px 1fr auto;gap:8px;}
+    .pv-wrap{padding:16px 14px 32px;}
+    .pv-header{gap:12px;margin-bottom:18px;}
+    .pv-arr-name{font-size:20px;}
+    .pv-song-title{font-size:10px;}
+    /* Make the bottom transport row stack cleanly on very narrow screens */
+    .pv-transport-bottom{gap:8px;}
+    .pv-loop-toggle{margin-left:0;margin-top:4px;width:100%;justify-content:flex-end;}
   }
 
   /* Hide the main app chrome on practice view — this is a dedicated playback UI */
@@ -206,15 +215,14 @@
           <!-- Transport -->
           <div class="pv-transport">
             <div class="pv-transport-top">
-              <button class="pv-play" id="pv-play" onclick="togglePlay()" disabled>▶</button>
-              <div class="pv-time">
-                <span id="pv-cur">0:00</span>
-                <span class="pv-time-sep">/</span>
-                <span id="pv-dur">0:00</span>
-              </div>
-              <div style="flex:1;"></div>
               <button class="pv-skip" onclick="skipBy(-5)" title="Back 5s">−5s</button>
+              <button class="pv-play" id="pv-play" onclick="togglePlay()" disabled>▶</button>
               <button class="pv-skip" onclick="skipBy(5)" title="Forward 5s">+5s</button>
+            </div>
+            <div class="pv-time">
+              <span id="pv-cur">0:00</span>
+              <span class="pv-time-sep">/</span>
+              <span id="pv-dur">0:00</span>
             </div>
             <input type="range" class="pv-scrub" id="pv-scrub" min="0" max="100" step="0.1" value="0" oninput="onScrub(this.value)">
             <div class="pv-transport-bottom">
@@ -562,27 +570,28 @@ function renderStems(){
     if(!stem.exists){
       return `
         <div class="pv-stem-row" style="opacity:0.4;">
-          <div class="pv-stem-icon">${s.icon}</div>
-          <div class="pv-stem-name">${s.label}</div>
-          <div class="pv-stem-missing">not uploaded</div>
-          <div></div>
+          <div class="pv-stem-head">
+            <div class="pv-stem-icon">${s.icon}</div>
+            <div class="pv-stem-name">${s.label}</div>
+            <div class="pv-stem-missing">not uploaded</div>
+          </div>
         </div>`;
     }
     return `
       <div class="pv-stem-row" id="stem-row-${s.key}">
-        <div class="pv-stem-icon">${s.icon}</div>
-        <div class="pv-stem-name">${s.label}</div>
-        <div>
-          <input type="range" class="pv-stem-slider" id="stem-vol-${s.key}"
-                 min="0" max="1" step="0.01" value="${stem.volume}"
-                 oninput="setStemVolume('${s.key}', parseFloat(this.value))">
+        <div class="pv-stem-head">
+          <div class="pv-stem-icon">${s.icon}</div>
+          <div class="pv-stem-name">${s.label}</div>
+          <div class="pv-stem-btns">
+            <button class="pv-stem-btn solo ${stem.solo?'active':''}" id="stem-solo-${s.key}"
+                    onclick="toggleStemSolo('${s.key}')" title="Solo">S</button>
+            <button class="pv-stem-btn mute ${stem.muted?'active':''}" id="stem-mute-${s.key}"
+                    onclick="toggleStemMute('${s.key}')" title="Mute">M</button>
+          </div>
         </div>
-        <div class="pv-stem-btns">
-          <button class="pv-stem-btn solo ${stem.solo?'active':''}" id="stem-solo-${s.key}"
-                  onclick="toggleStemSolo('${s.key}')" title="Solo">S</button>
-          <button class="pv-stem-btn mute ${stem.muted?'active':''}" id="stem-mute-${s.key}"
-                  onclick="toggleStemMute('${s.key}')" title="Mute">M</button>
-        </div>
+        <input type="range" class="pv-stem-slider" id="stem-vol-${s.key}"
+               min="0" max="1" step="0.01" value="${stem.volume}"
+               oninput="setStemVolume('${s.key}', parseFloat(this.value))">
       </div>`;
   }).join('');
 }
@@ -688,15 +697,21 @@ async function ensureStemLoaded(stemKey){
   if(stem.loading) return null;
 
   stem.loading = true;
-  // Show spinner
+  // Show spinner — insert into the head row next to the S/M buttons
   const row = document.getElementById('stem-row-' + stemKey);
   if(row){
-    const slot = row.querySelector('.pv-stem-slider');
-    if(slot) slot.style.opacity = '0.5';
+    const slider = row.querySelector('.pv-stem-slider');
+    if(slider) slider.style.opacity = '0.5';
     const loader = document.createElement('div');
     loader.className = 'pv-stem-loading';
     loader.id = 'stem-loader-' + stemKey;
-    row.insertBefore(loader, row.children[2]);
+    const head = row.querySelector('.pv-stem-head');
+    const btns = row.querySelector('.pv-stem-btns');
+    if(head && btns){
+      head.insertBefore(loader, btns);
+    } else if(head){
+      head.appendChild(loader);
+    }
   }
 
   try {
@@ -721,8 +736,8 @@ async function ensureStemLoaded(stemKey){
   } finally {
     stem.loading = false;
     if(row){
-      const slot = row.querySelector('.pv-stem-slider');
-      if(slot) slot.style.opacity = '';
+      const slider = row.querySelector('.pv-stem-slider');
+      if(slider) slider.style.opacity = '';
       const loader = document.getElementById('stem-loader-' + stemKey);
       if(loader) loader.remove();
     }
