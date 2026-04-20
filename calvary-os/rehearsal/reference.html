@@ -234,13 +234,56 @@
 
         <!-- Sections -->
         <div class="ref-panel">
-          <h3>Sections</h3>
-          <div class="ref-panel-sub">The song structure, as detected by Moises. You'll rearrange these in the Arrangement Builder (Phase 4) to build Calvary's version.</div>
-          <div class="sec-list" id="sections-list"></div>
-          <button class="add-sec-btn" onclick="addSection()">+ Add section</button>
-          <div class="helper-note">
-            <strong>Tip:</strong> In Moises, open the Sections view to see timestamps for each section. Enter them here as <code>MM:SS</code> format (e.g. <code>0:32</code>) or just seconds (e.g. <code>32</code>). The builder will use these as the building blocks for your arrangement.
+          <h3>Sections <span style="font-size:12px;font-weight:400;color:var(--ink-4);margin-left:8px;">Optional — you can add these later</span></h3>
+          <div class="ref-panel-sub">Play through the track and mark the boundaries as you listen. Labels like <em>Intro</em>, <em>Verse 1</em>, <em>Chorus</em> become the building blocks your team will use to assemble Calvary's version of the song.</div>
+
+          <!-- Play-to-mark player (appears once reference is uploaded) -->
+          <div id="sec-player" style="display:none;">
+            <div style="background:#0A0A0A;border-radius:var(--r12);padding:16px;color:white;margin-bottom:14px;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+                <button id="sec-play-btn" onclick="toggleSecPlay()" style="width:44px;height:44px;border-radius:50%;border:none;background:var(--red);color:white;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">▶</button>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Reference playback</div>
+                  <div style="font-family:monospace;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;">
+                    <span id="sec-cur-time">0:00</span>
+                    <span style="color:rgba(255,255,255,0.4);"> / </span>
+                    <span id="sec-dur-time">0:00</span>
+                  </div>
+                </div>
+                <button onclick="skipSec(-5)" title="Back 5s" style="background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:11px;">−5s</button>
+                <button onclick="skipSec(5)" title="Forward 5s" style="background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:11px;">+5s</button>
+              </div>
+              <!-- Scrubber -->
+              <input type="range" id="sec-scrubber" min="0" max="100" value="0" step="0.1"
+                     style="width:100%;accent-color:var(--red);" oninput="seekSecTo(this.value)">
+            </div>
+
+            <!-- Mark controls -->
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+              <button class="rs-btn rs-btn-primary" onclick="markSectionStart()" style="flex:1;min-width:160px;">
+                ⭘ Mark section start
+              </button>
+              <button class="rs-btn" id="btn-mark-end" onclick="markSectionEnd()" disabled style="flex:1;min-width:160px;">
+                ⬛ Mark section end
+              </button>
+              <button class="rs-btn" id="btn-mark-cancel" onclick="cancelActiveSection()" disabled style="min-width:80px;">Cancel</button>
+            </div>
+            <div id="active-section-banner" style="display:none;padding:10px 14px;background:var(--red-light);border:1px solid var(--red-mid);border-radius:var(--r10);font-size:12px;color:var(--red);margin-bottom:14px;">
+              <strong>Marking section</strong> — started at <span id="active-start-time">0:00</span>. Let it play, then click "Mark section end" when the section finishes.
+            </div>
+
+            <div style="font-size:11px;color:var(--ink-4);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+              <span>Keyboard: <code>Space</code> play/pause · <code>[</code> mark start · <code>]</code> mark end</span>
+              <button onclick="toggleManualEntry()" style="background:none;border:none;color:var(--ink-3);font-size:11px;cursor:pointer;text-decoration:underline;">Type manually instead</button>
+            </div>
           </div>
+
+          <div id="sec-no-player" style="padding:16px;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);font-size:13px;color:var(--ink-3);text-align:center;margin-bottom:14px;">
+            Upload the reference track above to start marking sections.
+          </div>
+
+          <div class="sec-list" id="sections-list"></div>
+          <button class="add-sec-btn" onclick="addSection()" id="btn-add-manual" style="display:none;">+ Add section manually</button>
         </div>
 
       </div>
@@ -303,8 +346,7 @@ const state = {
 function pageInit(){
   buildSidebar();
   buildStemGrid();
-  addSection(); // start with one blank row
-  addSection();
+  renderSections();  // render an empty list — user adds via player or manual
   loadContext();
 }
 
@@ -408,14 +450,9 @@ function handleFile(key, file){
   if(el) el.classList.add('has-file');
   if(fn) fn.textContent = '✓ ' + file.name;
 
-  // If it's the reference, try to auto-detect duration
-  if(key === 'reference' && !document.getElementById('meta-duration').value){
-    const audio = document.createElement('audio');
-    audio.src = URL.createObjectURL(file);
-    audio.addEventListener('loadedmetadata', () => {
-      document.getElementById('meta-duration').value = Math.round(audio.duration);
-      URL.revokeObjectURL(audio.src);
-    });
+  // If it's the reference: auto-detect duration AND load it into the section-marking player
+  if(key === 'reference'){
+    setupSectionPlayer(file);
   }
   updateSummary();
 }
@@ -478,11 +515,148 @@ function updateSummary(){
   parts.push(`<strong>${validSections.length}</strong> section${validSections.length===1?'':'s'}`);
   document.getElementById('summary').innerHTML = parts.join(' · ');
 
-  // Save button: reference + at least 1 stem + at least 1 valid section required.
-  // We're lenient on stem count so a partial upload is possible (e.g. if Moises only gave 4 stems).
-  const canSave = hasRef && stemsCount > 0 && validSections.length > 0 && !!state.song;
+  // Save button: reference + at least 1 stem required. Sections optional —
+  // they can be added later, or via the play-to-mark player on this page.
+  const canSave = hasRef && stemsCount > 0 && !!state.song;
   document.getElementById('btn-save').disabled = !canSave;
 }
+
+// ── SECTION PLAYER (play-to-mark) ────────────────────────────
+let secAudio = null;        // HTMLAudioElement for the reference
+let secActive = null;       // { start: seconds } — a section in the middle of being marked
+let secRAF = null;          // requestAnimationFrame id for time updates
+
+function setupSectionPlayer(file){
+  // Swap the "upload to start" card for the player
+  document.getElementById('sec-no-player').style.display = 'none';
+  document.getElementById('sec-player').style.display = 'block';
+  document.getElementById('btn-add-manual').style.display = 'block';
+
+  // Tear down any previous audio element
+  if(secAudio){ secAudio.pause(); secAudio.src = ''; }
+  secAudio = new Audio();
+  secAudio.preload = 'metadata';
+  secAudio.src = URL.createObjectURL(file);
+
+  secAudio.addEventListener('loadedmetadata', () => {
+    document.getElementById('sec-dur-time').textContent = fmtTime(secAudio.duration);
+    document.getElementById('sec-scrubber').max = secAudio.duration;
+    // Auto-fill the duration metadata field
+    if(!document.getElementById('meta-duration').value){
+      document.getElementById('meta-duration').value = Math.round(secAudio.duration);
+    }
+  });
+  secAudio.addEventListener('play',  () => { document.getElementById('sec-play-btn').textContent = '❚❚'; updateSecTime(); });
+  secAudio.addEventListener('pause', () => { document.getElementById('sec-play-btn').textContent = '▶'; });
+  secAudio.addEventListener('ended', () => {
+    document.getElementById('sec-play-btn').textContent = '▶';
+    if(secActive){ markSectionEnd(); }
+  });
+}
+
+function updateSecTime(){
+  if(!secAudio) return;
+  document.getElementById('sec-cur-time').textContent = fmtTime(secAudio.currentTime);
+  document.getElementById('sec-scrubber').value = secAudio.currentTime;
+  if(!secAudio.paused){
+    secRAF = requestAnimationFrame(updateSecTime);
+  }
+}
+
+function toggleSecPlay(){
+  if(!secAudio) return;
+  if(secAudio.paused) secAudio.play(); else secAudio.pause();
+}
+
+function seekSecTo(s){
+  if(!secAudio) return;
+  secAudio.currentTime = parseFloat(s);
+  updateSecTime();
+}
+
+function skipSec(delta){
+  if(!secAudio) return;
+  secAudio.currentTime = Math.max(0, Math.min(secAudio.duration || 0, secAudio.currentTime + delta));
+  updateSecTime();
+}
+
+function markSectionStart(){
+  if(!secAudio){ COS.toast('Upload a reference first'); return; }
+  // If a previous section was active, silently close it at current time
+  if(secActive){
+    state.sections.push({ label:'', start: fmtTime(secActive.start), end: fmtTime(secAudio.currentTime) });
+  }
+  secActive = { start: secAudio.currentTime };
+  document.getElementById('btn-mark-end').disabled = false;
+  document.getElementById('btn-mark-cancel').disabled = false;
+  document.getElementById('active-section-banner').style.display = 'block';
+  document.getElementById('active-start-time').textContent = fmtTime(secActive.start);
+  renderSections();
+  updateSummary();
+}
+
+function markSectionEnd(){
+  if(!secActive || !secAudio) return;
+  const end = secAudio.currentTime;
+  // Guard against zero/negative duration (double-tap)
+  if(end <= secActive.start){
+    COS.toast('End must be after start — let the track play a bit more');
+    return;
+  }
+  state.sections.push({
+    label: '',
+    start: fmtTime(secActive.start),
+    end:   fmtTime(end)
+  });
+  secActive = null;
+  document.getElementById('btn-mark-end').disabled = true;
+  document.getElementById('btn-mark-cancel').disabled = true;
+  document.getElementById('active-section-banner').style.display = 'none';
+  renderSections();
+  updateSummary();
+  // Auto-focus the label field on the section we just added
+  setTimeout(() => {
+    const inputs = document.querySelectorAll('#sections-list .sec-row input[list]');
+    const last = inputs[inputs.length - 1];
+    if(last) last.focus();
+  }, 50);
+}
+
+function cancelActiveSection(){
+  secActive = null;
+  document.getElementById('btn-mark-end').disabled = true;
+  document.getElementById('btn-mark-cancel').disabled = true;
+  document.getElementById('active-section-banner').style.display = 'none';
+}
+
+function toggleManualEntry(){
+  const btn = document.getElementById('btn-add-manual');
+  if(btn.style.display === 'none' || !btn.style.display){
+    btn.style.display = 'block';
+  }
+  addSection();
+}
+
+// Format a seconds number as M:SS (always two-digit seconds)
+function fmtTime(s){
+  if(s === null || s === undefined || isNaN(s)) return '0:00';
+  const n = Math.max(0, s);
+  const m = Math.floor(n / 60);
+  const r = Math.floor(n % 60);
+  return `${m}:${r.toString().padStart(2,'0')}`;
+}
+
+// Keyboard shortcuts while the section player is visible
+document.addEventListener('keydown', e => {
+  const player = document.getElementById('sec-player');
+  if(!player || player.style.display === 'none') return;
+  // Ignore if user is typing in an input
+  const t = e.target;
+  if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
+  if(e.key === ' '){ e.preventDefault(); toggleSecPlay(); }
+  else if(e.key === '['){ e.preventDefault(); markSectionStart(); }
+  else if(e.key === ']'){ e.preventDefault(); markSectionEnd(); }
+});
 
 // ── STORAGE HELPERS ──────────────────────────────────────────
 const SUPA_URL2 = 'https://pfycvgbrsbecznkcikwt.supabase.co';
