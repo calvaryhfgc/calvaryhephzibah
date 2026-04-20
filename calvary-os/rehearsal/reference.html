@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Reference Importer</title>
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" href="../shell.css">
+<style>
+  /* ── REFERENCE PAGE LOCAL STYLES ──────────────────────────────── */
+  .ref-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-4);margin-bottom:8px;}
+  .ref-crumb a{color:var(--ink-3);text-decoration:none;}
+  .ref-crumb a:hover{color:var(--ink);}
+
+  .ref-panel{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);padding:24px 28px;margin-bottom:16px;}
+  .ref-panel h3{font-family:'Lora',serif;font-size:18px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+  .ref-panel-sub{font-size:13px;color:var(--ink-3);margin-bottom:18px;line-height:1.5;}
+
+  .ref-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:8px;}
+  .ref-step-num{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--red-light);color:var(--red);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+  .ref-step-num.done{background:var(--green-light);color:var(--green);}
+  .ref-step-body{font-size:13px;color:var(--ink-2);line-height:1.6;}
+  .ref-step-body code{background:var(--bg-2);padding:2px 6px;border-radius:4px;font-size:12px;}
+
+  /* Drop zone */
+  .drop{border:2px dashed var(--ink-5);background:var(--ink-6);border-radius:var(--r12);padding:18px;text-align:center;cursor:pointer;transition:all 0.15s;position:relative;}
+  .drop:hover{border-color:var(--red-mid);background:var(--red-light);}
+  .drop.has-file{border-color:var(--green);background:var(--green-light);border-style:solid;}
+  .drop.dragging{border-color:var(--red);background:var(--red-light);}
+  .drop-icon{font-size:18px;margin-bottom:4px;opacity:0.5;}
+  .drop-label{font-size:12px;font-weight:600;color:var(--ink-2);}
+  .drop-sub{font-size:11px;color:var(--ink-4);margin-top:2px;}
+  .drop-filename{font-size:11px;color:var(--green);font-weight:600;margin-top:4px;word-break:break-all;}
+  .drop input[type=file]{display:none;}
+
+  .stems-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;}
+
+  /* Metadata fields */
+  .meta-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .meta-field label{display:block;font-size:11px;font-weight:600;color:var(--ink-3);margin-bottom:6px;letter-spacing:0.5px;text-transform:uppercase;}
+  .meta-field input{width:100%;padding:10px 12px;border:1.5px solid var(--ink-5);background:var(--white);border-radius:var(--r10);font-family:inherit;font-size:14px;color:var(--ink);}
+  .meta-field input:focus{outline:none;border-color:var(--red);}
+
+  /* Sections editor */
+  .sec-list{display:flex;flex-direction:column;gap:6px;}
+  .sec-row{display:grid;grid-template-columns:30px 2fr 1fr 1fr auto;gap:8px;align-items:center;padding:8px;background:var(--ink-6);border:1px solid var(--ink-5);border-radius:var(--r10);}
+  .sec-row input,.sec-row select{padding:8px 10px;border:1px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:13px;color:var(--ink);}
+  .sec-row input:focus,.sec-row select:focus{outline:none;border-color:var(--red);}
+  .sec-pos{font-size:11px;font-weight:700;color:var(--ink-4);text-align:center;}
+  .sec-del{background:none;border:none;color:var(--ink-4);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:var(--r8);}
+  .sec-del:hover{background:var(--red-light);color:var(--red);}
+
+  .add-sec-btn{margin-top:10px;padding:10px 14px;background:var(--ink-6);border:1.5px dashed var(--ink-5);border-radius:var(--r10);color:var(--ink-3);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;width:100%;}
+  .add-sec-btn:hover{border-color:var(--red-mid);color:var(--red);background:var(--red-light);}
+
+  /* Progress */
+  .progress-overlay{position:fixed;inset:0;background:rgba(255,255,255,0.97);display:none;align-items:center;justify-content:center;z-index:200;}
+  .progress-overlay.active{display:flex;}
+  .progress-card{max-width:480px;width:calc(100% - 40px);padding:32px;background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r20);box-shadow:var(--shadow-lg);text-align:center;}
+  .progress-card h2{font-family:'Lora',serif;font-size:20px;color:var(--ink);margin-bottom:10px;}
+  .progress-bar{height:6px;background:var(--ink-6);border-radius:100px;overflow:hidden;margin:18px 0 12px;}
+  .progress-fill{height:100%;background:var(--red);border-radius:100px;transition:width 0.3s;width:0;}
+  .progress-steps{list-style:none;text-align:left;margin-top:18px;}
+  .progress-steps li{font-size:12px;color:var(--ink-3);padding:4px 0;display:flex;align-items:center;gap:8px;}
+  .progress-steps li.done{color:var(--green);}
+  .progress-steps li.active{color:var(--ink);font-weight:600;}
+  .progress-steps li::before{content:'○';color:var(--ink-4);}
+  .progress-steps li.done::before{content:'✓';color:var(--green);}
+  .progress-steps li.active::before{content:'●';color:var(--red);}
+
+  /* Actions bar */
+  .actions-bar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:16px 20px;background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);position:sticky;bottom:16px;box-shadow:var(--shadow);}
+  .actions-summary{font-size:12px;color:var(--ink-3);}
+  .actions-summary strong{color:var(--ink);}
+  .actions-btns{display:flex;gap:8px;}
+
+  .rs-btn{padding:10px 18px;border-radius:var(--r10);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--ink-5);background:var(--white);color:var(--ink-2);}
+  .rs-btn:hover{border-color:var(--ink-4);}
+  .rs-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .rs-btn-primary{background:var(--red);border-color:var(--red);color:white;}
+  .rs-btn-primary:hover:not(:disabled){background:var(--red-d);border-color:var(--red-d);}
+  .rs-btn-primary:disabled{background:var(--ink-5);border-color:var(--ink-5);}
+
+  .helper-note{background:var(--amber-light);border-left:3px solid var(--amber);padding:10px 14px;border-radius:var(--r8);font-size:12px;color:var(--ink-2);line-height:1.5;margin-top:12px;}
+  .helper-note strong{color:var(--amber);}
+
+  @media (max-width:640px){
+    .meta-row{grid-template-columns:1fr 1fr;}
+    .sec-row{grid-template-columns:24px 2fr auto;row-gap:6px;}
+    .sec-row input[type=number]{grid-column:span 1;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared pattern) ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <div class="topbar">
+    <a href="../dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">Reference Importer</div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <div class="main">
+      <div class="page-body" style="max-width:920px;">
+
+        <!-- Breadcrumb -->
+        <div class="ref-crumb">
+          <a href="index.html">Rehearsal Studio</a>
+          <span>›</span>
+          <span id="crumb-song">Song</span>
+          <span>›</span>
+          <span>Add reference</span>
+        </div>
+
+        <!-- Header -->
+        <div style="margin-bottom:20px;">
+          <div class="page-eyebrow" id="hdr-eyebrow">🎵 Song</div>
+          <div class="page-title" id="hdr-title">Add a reference</div>
+          <div class="page-sub" id="hdr-sub">Upload the reference track and its 7 stems from Moises, then mark the sections.</div>
+        </div>
+
+        <!-- Moises workflow guide -->
+        <div class="ref-panel" id="panel-guide" style="background:linear-gradient(180deg, #FFFFFF 0%, #FEF2F2 100%);">
+          <h3>Before you upload</h3>
+          <div class="ref-panel-sub">Use Moises to separate the track into stems, then bring everything here. Takes about 3 minutes per song.</div>
+
+          <div class="ref-step">
+            <div class="ref-step-num">1</div>
+            <div class="ref-step-body">Go to <a href="https://moises.ai" target="_blank" style="color:var(--red);font-weight:600;">moises.ai</a> and sign in as <code>calvaryhfgc@gmail.com</code></div>
+          </div>
+          <div class="ref-step">
+            <div class="ref-step-num">2</div>
+            <div class="ref-step-body">Upload your reference MP3 (from YouTube or wherever) to Moises</div>
+          </div>
+          <div class="ref-step">
+            <div class="ref-step-num">3</div>
+            <div class="ref-step-body">Choose the <strong>7-stem separation</strong> option (Vocals · Drums · Bass · Keys · Guitar · Strings · Other)</div>
+          </div>
+          <div class="ref-step">
+            <div class="ref-step-num">4</div>
+            <div class="ref-step-body">Once processed, download each stem individually as MP3. Also note the detected <strong>key</strong>, <strong>BPM</strong>, and song <strong>sections</strong> Moises identified.</div>
+          </div>
+          <div class="ref-step">
+            <div class="ref-step-num">5</div>
+            <div class="ref-step-body">Come back here and drop in the 8 files (reference + 7 stems), fill in the metadata, and list the sections.</div>
+          </div>
+        </div>
+
+        <!-- Audio files -->
+        <div class="ref-panel">
+          <h3>Audio files</h3>
+          <div class="ref-panel-sub">The full reference track plus each of the 7 separated stems. All as MP3.</div>
+
+          <div style="margin-bottom:16px;">
+            <label style="font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Reference track (full mix) *</label>
+            <div class="drop" id="drop-reference" onclick="document.getElementById('file-reference').click()">
+              <div class="drop-icon">🎵</div>
+              <div class="drop-label">Drop or click to upload reference MP3</div>
+              <div class="drop-sub">The unaltered original, as you uploaded to Moises</div>
+              <div class="drop-filename" id="fn-reference"></div>
+              <input type="file" id="file-reference" accept="audio/*" onchange="handleFile('reference', this.files[0])">
+            </div>
+          </div>
+
+          <label style="font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Stems from Moises (all 7) *</label>
+          <div class="stems-grid">
+            <!-- Populated by JS -->
+          </div>
+          <div id="stems-grid" class="stems-grid"></div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="ref-panel">
+          <h3>Detected metadata</h3>
+          <div class="ref-panel-sub">What Moises detected about the track. Check and adjust if anything looks off.</div>
+          <div class="meta-row">
+            <div class="meta-field">
+              <label>Key</label>
+              <input type="text" id="meta-key" placeholder="e.g. E">
+            </div>
+            <div class="meta-field">
+              <label>BPM</label>
+              <input type="number" id="meta-bpm" placeholder="e.g. 132">
+            </div>
+            <div class="meta-field">
+              <label>Duration (seconds)</label>
+              <input type="number" id="meta-duration" placeholder="auto-detected on upload">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sections -->
+        <div class="ref-panel">
+          <h3>Sections</h3>
+          <div class="ref-panel-sub">The song structure, as detected by Moises. You'll rearrange these in the Arrangement Builder (Phase 4) to build Calvary's version.</div>
+          <div class="sec-list" id="sections-list"></div>
+          <button class="add-sec-btn" onclick="addSection()">+ Add section</button>
+          <div class="helper-note">
+            <strong>Tip:</strong> In Moises, open the Sections view to see timestamps for each section. Enter them here as <code>MM:SS</code> format (e.g. <code>0:32</code>) or just seconds (e.g. <code>32</code>). The builder will use these as the building blocks for your arrangement.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sticky actions bar -->
+      <div style="position:sticky;bottom:16px;padding:0 20px 16px;max-width:920px;margin:0 auto;">
+        <div class="actions-bar">
+          <div class="actions-summary" id="summary">Waiting for files…</div>
+          <div class="actions-btns">
+            <a href="index.html" class="rs-btn" style="text-decoration:none;">Cancel</a>
+            <button class="rs-btn rs-btn-primary" id="btn-save" onclick="saveReference()" disabled>Save reference</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="mob-nav-items" id="mob-nav"></div>
+  </nav>
+</div>
+
+<!-- Progress overlay -->
+<div class="progress-overlay" id="progress-overlay">
+  <div class="progress-card">
+    <h2 id="progress-title">Saving reference…</h2>
+    <div id="progress-msg" style="font-size:13px;color:var(--ink-3);">This will take a minute or two as stems upload.</div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <ul class="progress-steps" id="progress-steps"></ul>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../shell.js"></script>
+<script>
+
+// ── STEM DEFINITIONS ──────────────────────────────────────────
+const STEM_TYPES = [
+  { key:'vocals',  label:'Vocals',  icon:'🎤' },
+  { key:'drums',   label:'Drums',   icon:'🥁' },
+  { key:'bass',    label:'Bass',    icon:'🎸' },
+  { key:'keys',    label:'Keys',    icon:'🎹' },
+  { key:'guitar',  label:'Guitar',  icon:'🎸' },
+  { key:'strings', label:'Strings', icon:'🎻' },
+  { key:'other',   label:'Other',   icon:'🎶' }
+];
+
+// ── STATE ────────────────────────────────────────────────────
+const state = {
+  song: null,
+  arrangement: null,       // if came from an arrangement
+  files: {},               // { reference: File, vocals: File, ... }
+  sections: [],            // [{label, start, end}]
+  uploadedPaths: {}        // filled in during save
+};
+
+// ── BOOT ─────────────────────────────────────────────────────
+function pageInit(){
+  buildSidebar();
+  buildStemGrid();
+  addSection(); // start with one blank row
+  addSection();
+  loadContext();
+}
+
+async function loadContext(){
+  const params = new URLSearchParams(location.search);
+  const songId = params.get('song_id');
+  const arrId  = params.get('arrangement_id');
+
+  if(arrId){
+    const arrs = await sbFetch(`rs_arrangements?id=eq.${arrId}`);
+    if(arrs && arrs[0]){
+      state.arrangement = arrs[0];
+      const songs = await sbFetch(`rs_songs?id=eq.${state.arrangement.song_id}`);
+      if(songs && songs[0]) state.song = songs[0];
+    }
+  } else if(songId){
+    const songs = await sbFetch(`rs_songs?id=eq.${songId}`);
+    if(songs && songs[0]) state.song = songs[0];
+  }
+
+  if(state.song){
+    document.getElementById('crumb-song').textContent = state.song.title;
+    document.getElementById('hdr-eyebrow').textContent = '🎵 ' + state.song.title;
+    document.getElementById('hdr-title').textContent = state.arrangement
+      ? `Add reference for "${state.arrangement.name}"`
+      : `Add reference for ${state.song.title}`;
+    // Pre-fill metadata with song defaults
+    if(state.song.default_key) document.getElementById('meta-key').value = state.song.default_key;
+    if(state.song.default_bpm) document.getElementById('meta-bpm').value = state.song.default_bpm;
+  } else {
+    document.getElementById('hdr-title').textContent = 'Select a song first';
+    document.getElementById('hdr-sub').textContent = 'This page needs a song_id or arrangement_id in the URL. Go back to the Rehearsal Studio and pick a song.';
+    document.querySelectorAll('.ref-panel').forEach(p=>p.style.display='none');
+    document.getElementById('btn-save').disabled = true;
+    document.querySelector('.actions-bar').style.display = 'none';
+  }
+}
+
+function buildSidebar(){
+  const sb = document.getElementById('sidebar');
+  const modules = [
+    { id:'dashboard',  label:'Dashboard',         href:'../dashboard.html',   icon:'🏠' },
+    { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
+    { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
+    { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
+    { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
+    { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
+    { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
+    { id:'admin',      label:'Admin',             href:'../admin.html',       icon:'⚙️' }
+  ];
+  const accessible = modules.filter(m =>
+    m.id === 'rehearsal' ? COS.hasAccess('worship') : (m.id === 'dashboard' || COS.hasAccess(m.id))
+  );
+  sb.innerHTML = `
+    <div class="nav-section">
+      <div class="nav-section-label">Modules</div>
+      ${accessible.map(m=>`
+        <a href="${m.href}" class="nav-item${m.active?' active':''}" style="text-decoration:none;">
+          <span style="font-size:13px;">${m.icon}</span>
+          ${m.label}
+        </a>`).join('')}
+    </div>`;
+  const mob = document.getElementById('mob-nav');
+  mob.innerHTML = accessible.slice(0,5).map(m=>`
+    <a href="${m.href}" class="mob-nav-btn${m.active?' active':''}" style="text-decoration:none;">
+      <span style="font-size:18px;">${m.icon}</span>
+      <span>${m.label.split(' ')[0]}</span>
+    </a>`).join('');
+}
+
+// ── STEM GRID ────────────────────────────────────────────────
+function buildStemGrid(){
+  const grid = document.getElementById('stems-grid');
+  grid.innerHTML = STEM_TYPES.map(s => `
+    <div class="drop" id="drop-${s.key}" onclick="document.getElementById('file-${s.key}').click()">
+      <div class="drop-icon">${s.icon}</div>
+      <div class="drop-label">${s.label}</div>
+      <div class="drop-filename" id="fn-${s.key}"></div>
+      <input type="file" id="file-${s.key}" accept="audio/*" onchange="handleFile('${s.key}', this.files[0])">
+    </div>`).join('');
+
+  // Drag-and-drop listeners
+  ['reference', ...STEM_TYPES.map(s=>s.key)].forEach(key => {
+    const el = document.getElementById('drop-' + key);
+    if(!el) return;
+    el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragging'); });
+    el.addEventListener('dragleave', () => el.classList.remove('dragging'));
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      el.classList.remove('dragging');
+      if(e.dataTransfer.files[0]) handleFile(key, e.dataTransfer.files[0]);
+    });
+  });
+}
+
+function handleFile(key, file){
+  if(!file) return;
+  state.files[key] = file;
+  const el = document.getElementById('drop-' + key);
+  const fn = document.getElementById('fn-' + key);
+  if(el) el.classList.add('has-file');
+  if(fn) fn.textContent = '✓ ' + file.name;
+
+  // If it's the reference, try to auto-detect duration
+  if(key === 'reference' && !document.getElementById('meta-duration').value){
+    const audio = document.createElement('audio');
+    audio.src = URL.createObjectURL(file);
+    audio.addEventListener('loadedmetadata', () => {
+      document.getElementById('meta-duration').value = Math.round(audio.duration);
+      URL.revokeObjectURL(audio.src);
+    });
+  }
+  updateSummary();
+}
+
+// ── SECTIONS ─────────────────────────────────────────────────
+function addSection(){
+  state.sections.push({ label:'', start:'', end:'' });
+  renderSections();
+}
+
+function removeSection(idx){
+  state.sections.splice(idx, 1);
+  if(state.sections.length === 0) addSection();
+  renderSections();
+}
+
+function updateSection(idx, field, value){
+  state.sections[idx][field] = value;
+  updateSummary();
+}
+
+function renderSections(){
+  const list = document.getElementById('sections-list');
+  const labelOptions = ['Intro','Verse 1','Verse 2','Verse 3','Pre-Chorus','Chorus','Bridge','Tag','Vamp','Instrumental','Outro'];
+  list.innerHTML = state.sections.map((s, i) => `
+    <div class="sec-row">
+      <div class="sec-pos">${i+1}</div>
+      <input list="section-labels" value="${escapeAttr(s.label)}"
+             placeholder="Section label" oninput="updateSection(${i},'label',this.value)">
+      <input type="text" value="${escapeAttr(s.start)}" placeholder="Start (e.g. 0:00)"
+             oninput="updateSection(${i},'start',this.value)">
+      <input type="text" value="${escapeAttr(s.end)}" placeholder="End (e.g. 0:32)"
+             oninput="updateSection(${i},'end',this.value)">
+      <button class="sec-del" onclick="removeSection(${i})" title="Remove">×</button>
+    </div>`).join('') +
+    `<datalist id="section-labels">${labelOptions.map(l=>`<option value="${l}">`).join('')}</datalist>`;
+  updateSummary();
+}
+
+// Parse MM:SS or plain seconds into a number
+function parseTime(str){
+  if(str === null || str === undefined || str === '') return null;
+  const s = String(str).trim();
+  if(/^\d+(\.\d+)?$/.test(s)) return parseFloat(s);
+  const m = s.match(/^(\d+):([0-5]?\d(?:\.\d+)?)$/);
+  if(m) return parseInt(m[1]) * 60 + parseFloat(m[2]);
+  return null;
+}
+
+// ── SUMMARY + VALIDATION ─────────────────────────────────────
+function updateSummary(){
+  const hasRef = !!state.files.reference;
+  const stemsCount = STEM_TYPES.filter(s => state.files[s.key]).length;
+  const validSections = state.sections.filter(s =>
+    s.label && parseTime(s.start) !== null && parseTime(s.end) !== null
+  );
+  const parts = [];
+  parts.push(hasRef ? '<strong>Reference ✓</strong>' : 'Reference missing');
+  parts.push(`<strong>${stemsCount}/7</strong> stems`);
+  parts.push(`<strong>${validSections.length}</strong> section${validSections.length===1?'':'s'}`);
+  document.getElementById('summary').innerHTML = parts.join(' · ');
+
+  // Save button: reference + at least 1 stem + at least 1 valid section required.
+  // We're lenient on stem count so a partial upload is possible (e.g. if Moises only gave 4 stems).
+  const canSave = hasRef && stemsCount > 0 && validSections.length > 0 && !!state.song;
+  document.getElementById('btn-save').disabled = !canSave;
+}
+
+// ── STORAGE HELPERS ──────────────────────────────────────────
+const SUPA_URL2 = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const SUPA_KEY2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
+const STORAGE_BUCKET = 'rehearsal-studio';
+
+async function uploadToStorage(path, file){
+  const url = `${SUPA_URL2}/storage/v1/object/${STORAGE_BUCKET}/${path}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'apikey': SUPA_KEY2,
+      'Authorization': `Bearer ${SUPA_KEY2}`,
+      'Content-Type': file.type || 'audio/mpeg',
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if(!res.ok){
+    const body = await res.text();
+    throw new Error(`Upload failed (${res.status}): ${body}`);
+  }
+  return path;
+}
+
+function publicUrl(path){
+  return `${SUPA_URL2}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+}
+
+// ── SAVE FLOW ────────────────────────────────────────────────
+async function saveReference(){
+  if(!state.song){ COS.toast('No song loaded — go back and pick one'); return; }
+
+  const validSections = state.sections.filter(s =>
+    s.label && parseTime(s.start) !== null && parseTime(s.end) !== null
+  );
+
+  // Show progress
+  showProgress([
+    { id:'create', label:'Create reference record' },
+    { id:'upload-ref', label:'Upload reference audio' },
+    ...STEM_TYPES.filter(s=>state.files[s.key]).map(s => ({ id:'upload-'+s.key, label:`Upload ${s.label} stem` })),
+    { id:'stems-rows', label:'Save stem records' },
+    { id:'sections', label:'Save section markers' },
+    { id:'link', label:'Link to arrangement' },
+    { id:'done', label:'Done' }
+  ]);
+
+  try {
+    // 1. Create the rs_references row to get an ID
+    advanceStep('create');
+    const refRow = {
+      song_id: state.song.id,
+      source_type: 'upload',
+      source_url: state.files.reference.name,
+      duration_seconds: parseFloat(document.getElementById('meta-duration').value) || null,
+      detected_key: document.getElementById('meta-key').value.trim() || null,
+      detected_bpm: parseInt(document.getElementById('meta-bpm').value) || null,
+      status: 'processing',
+      created_by: COS.currentUser.name
+    };
+    const refRes = await sbPost('rs_references', refRow);
+    if(!refRes || !refRes[0]) throw new Error('Failed to create reference record');
+    const refId = refRes[0].id;
+
+    // 2. Upload reference
+    advanceStep('upload-ref');
+    const refPath = `references/${refId}/reference.mp3`;
+    await uploadToStorage(refPath, state.files.reference);
+
+    // 3. Upload each stem (sequentially to be kind to bandwidth)
+    const stemRows = [];
+    for(const stem of STEM_TYPES){
+      const file = state.files[stem.key];
+      if(!file) continue;
+      advanceStep('upload-' + stem.key);
+      const path = `references/${refId}/stems/${stem.key}.mp3`;
+      await uploadToStorage(path, file);
+      stemRows.push({ reference_id: refId, stem_type: stem.key, audio_path: path });
+    }
+
+    // 4. Save stems
+    advanceStep('stems-rows');
+    const stemsRes = await sbPost('rs_stems', stemRows);
+    if(!stemsRes) throw new Error('Failed to save stem records');
+
+    // 5. Save sections
+    advanceStep('sections');
+    const sectionRows = validSections.map((s, idx) => ({
+      reference_id: refId,
+      label: s.label.trim(),
+      start_seconds: parseTime(s.start),
+      end_seconds: parseTime(s.end),
+      position: idx,
+      notes: null
+    }));
+    if(sectionRows.length > 0){
+      const secRes = await sbPost('rs_sections', sectionRows);
+      if(!secRes) throw new Error('Failed to save sections');
+    }
+
+    // 6. Update reference: mark as ready, set audio_path
+    await sbPatch('rs_references', `id=eq.${refId}`, {
+      status: 'ready',
+      audio_path: refPath
+    });
+
+    // 7. If we came from an arrangement, link the reference to it
+    advanceStep('link');
+    if(state.arrangement){
+      await sbPatch('rs_arrangements', `id=eq.${state.arrangement.id}`, {
+        reference_id: refId,
+        updated_at: new Date().toISOString()
+      });
+    }
+
+    advanceStep('done');
+    setTimeout(() => {
+      location.href = `index.html`;
+    }, 1200);
+
+  } catch(err){
+    hideProgress();
+    COS.toast('Error: ' + err.message);
+    console.error('saveReference failed:', err);
+  }
+}
+
+// ── PROGRESS UI ──────────────────────────────────────────────
+let _progSteps = [];
+function showProgress(steps){
+  _progSteps = steps;
+  const list = document.getElementById('progress-steps');
+  list.innerHTML = steps.map(s => `<li data-step="${s.id}">${s.label}</li>`).join('');
+  document.getElementById('progress-overlay').classList.add('active');
+}
+function advanceStep(id){
+  const idx = _progSteps.findIndex(s => s.id === id);
+  if(idx < 0) return;
+  document.querySelectorAll('#progress-steps li').forEach((li, i) => {
+    li.classList.remove('active', 'done');
+    if(i < idx) li.classList.add('done');
+    else if(i === idx) li.classList.add('active');
+  });
+  const pct = Math.round((idx / Math.max(_progSteps.length - 1, 1)) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+function hideProgress(){
+  document.getElementById('progress-overlay').classList.remove('active');
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function escapeAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+
+COS.init('rehearsal');
+</script>
+
+</body>
+</html>

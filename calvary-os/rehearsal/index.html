@@ -467,8 +467,13 @@ function renderArrangements(){
   container.innerHTML = `<div class="rs-grid">${filtered.map(a => {
     const song = state.songs.find(s => s.id === a.song_id) || { title: '—', original_artist: '' };
     const statusClass = 'rs-status-' + a.status;
+    // Route: if no reference yet, go straight to reference importer; otherwise arrangement builder (Phase 4)
+    const href = a.reference_id
+      ? `arrangement.html?id=${a.id}`
+      : `reference.html?arrangement_id=${a.id}`;
+    const needsReference = !a.reference_id;
     return `
-      <a href="arrangement.html?id=${a.id}" class="rs-card">
+      <a href="${href}" class="rs-card">
         <div class="rs-card-top">
           <div class="rs-card-date">${escapeHtml(song.title.toUpperCase())}</div>
           <span class="rs-status ${statusClass}">${a.status}</span>
@@ -479,6 +484,7 @@ function renderArrangements(){
           ${a.key ? `<span>🎵 ${escapeHtml(a.key)}</span>` : ''}
           ${a.bpm ? `<span>⏱ ${a.bpm} bpm</span>` : ''}
           <span>v${a.version || 1}</span>
+          ${needsReference ? '<span style="color:var(--amber);font-weight:600;">+ add reference</span>' : ''}
         </div>
       </a>`;
   }).join('')}</div>`;
@@ -509,7 +515,10 @@ function renderSongs(){
       <div class="rs-song-meta">${(s.tags||[]).map(t=>`<span class="rs-song-tag">${escapeHtml(t)}</span>`).join('')}</div>
       <div class="rs-song-meta">${countArrangementsForSong(s.id)} arr.</div>
       ${(COS.currentUser.level==='admin'||COS.currentUser.level==='lead')
-        ? `<button class="rs-song-action" onclick="newArrangementFor('${s.id}')">+ Arrangement</button>`
+        ? `<div style="display:flex;gap:4px;">
+             <a href="reference.html?song_id=${s.id}" class="rs-song-action" style="text-decoration:none;">+ Reference</a>
+             <button class="rs-song-action" onclick="newArrangementFor('${s.id}')">+ Arrangement</button>
+           </div>`
         : `<span class="rs-song-meta">—</span>`}
     </div>
   `).join('');
