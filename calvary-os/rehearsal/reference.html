@@ -313,6 +313,9 @@
     <div id="progress-msg" style="font-size:13px;color:var(--ink-3);">This will take a minute or two as stems upload.</div>
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     <ul class="progress-steps" id="progress-steps"></ul>
+    <div id="progress-actions" style="display:none;margin-top:20px;">
+      <a href="index.html" class="rs-btn rs-btn-primary" style="text-decoration:none;display:inline-block;">Back to Rehearsal Studio →</a>
+    </div>
   </div>
 </div>
 
@@ -687,8 +690,12 @@ function publicUrl(path){
 }
 
 // ── SAVE FLOW ────────────────────────────────────────────────
+let _saving = false;
 async function saveReference(){
+  if(_saving) return;  // guard against duplicate clicks
   if(!state.song){ COS.toast('No song loaded — go back and pick one'); return; }
+  _saving = true;
+  document.getElementById('btn-save').disabled = true;
 
   const validSections = state.sections.filter(s =>
     s.label && parseTime(s.start) !== null && parseTime(s.end) !== null
@@ -774,14 +781,14 @@ async function saveReference(){
     }
 
     advanceStep('done');
-    setTimeout(() => {
-      location.href = `index.html`;
-    }, 1200);
+    showSuccess();
 
   } catch(err){
     hideProgress();
     COS.toast('Error: ' + err.message);
     console.error('saveReference failed:', err);
+    _saving = false;
+    document.getElementById('btn-save').disabled = false;
   }
 }
 
@@ -796,16 +803,24 @@ function showProgress(steps){
 function advanceStep(id){
   const idx = _progSteps.findIndex(s => s.id === id);
   if(idx < 0) return;
+  const isFinal = idx === _progSteps.length - 1;
   document.querySelectorAll('#progress-steps li').forEach((li, i) => {
     li.classList.remove('active', 'done');
-    if(i < idx) li.classList.add('done');
+    // If we're on the final step, mark ALL as done (including this one)
+    if(isFinal || i < idx) li.classList.add('done');
     else if(i === idx) li.classList.add('active');
   });
-  const pct = Math.round((idx / Math.max(_progSteps.length - 1, 1)) * 100);
+  const pct = isFinal ? 100 : Math.round((idx / Math.max(_progSteps.length - 1, 1)) * 100);
   document.getElementById('progress-fill').style.width = pct + '%';
 }
 function hideProgress(){
   document.getElementById('progress-overlay').classList.remove('active');
+  document.getElementById('progress-actions').style.display = 'none';
+}
+function showSuccess(){
+  document.getElementById('progress-title').textContent = '✓ Reference saved';
+  document.getElementById('progress-msg').textContent = 'The stems are uploaded and your arrangement is linked. You can now build the arrangement or come back to this song anytime.';
+  document.getElementById('progress-actions').style.display = 'block';
 }
 
 // ── UTILS ────────────────────────────────────────────────────
