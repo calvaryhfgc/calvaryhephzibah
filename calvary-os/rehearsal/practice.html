@@ -69,6 +69,15 @@
   .pv-play:hover:not(:disabled){background:var(--red-d);}
   .pv-play:disabled{opacity:0.4;cursor:not-allowed;}
   .pv-play:active{transform:scale(0.95);}
+  .pv-play.pv-play-loading{opacity:0.8;}
+  .pv-play-spin{display:inline-block;width:22px;height:22px;border:2.5px solid rgba(255,255,255,0.25);border-top-color:white;border-radius:50%;animation:pv-spin 0.8s linear infinite;}
+
+  /* Header stem-loading progress bar */
+  .pv-load-bar{margin:-6px 0 18px;padding:10px 14px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px;transition:opacity 0.3s;}
+  .pv-load-bar.hidden{display:none;}
+  .pv-load-bar-text{font-size:12px;font-weight:600;color:#FCD34D;margin-bottom:6px;font-variant-numeric:tabular-nums;}
+  .pv-load-bar-track{width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;}
+  .pv-load-bar-fill{height:100%;background:#FBBF24;border-radius:100px;transition:width 0.15s;width:0;}
   .pv-skip{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.85);cursor:pointer;font-size:11px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .pv-skip:hover{background:rgba(255,255,255,0.1);color:white;}
   .pv-time{font-family:monospace;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.9);text-align:center;padding:4px 0 8px;}
@@ -197,6 +206,13 @@
               <div class="pv-arr-name" id="pv-arr-name">Arrangement</div>
               <div class="pv-meta" id="pv-meta"></div>
             </div>
+          </div>
+
+          <!-- Stem loading progress bar — shown while audio is downloading.
+               Hides itself automatically once all stems are loaded. -->
+          <div class="pv-load-bar hidden" id="pv-load-bar">
+            <div class="pv-load-bar-text" id="pv-load-text">Loading stems…</div>
+            <div class="pv-load-bar-track"><div class="pv-load-bar-fill" id="pv-load-fill"></div></div>
           </div>
 
           <!-- Part selector -->
@@ -398,7 +414,7 @@ async function loadArrangement(){
   state.parts = {};
   (parts || []).forEach(p => { state.parts[p.part] = p.notes || ''; });
 
-  // Stems (metadata only — audio is loaded lazily)
+  // Stems (metadata only — audio is loaded lazily in the background)
   STEMS.forEach(s => {
     const stemRow = (stems || []).find(x => x.stem_type === s.key);
     state.stems[s.key] = {
@@ -412,7 +428,9 @@ async function loadArrangement(){
       muted: false,
       solo: false,
       loaded: false,
-      loading: false
+      loading: false,
+      failed: false,
+      progress: 0  // 0..1 byte-level download progress
     };
   });
 
@@ -431,6 +449,8 @@ async function loadArrangement(){
   setTimeout(() => {
     document.getElementById('pv-loading').style.display = 'none';
     document.getElementById('pv-main').style.display = 'block';
+    // Start downloading all stems in parallel (priority stems get first queue slot)
+    startParallelStemLoading();
   }, 300);
 
   loadPracticeCount();
@@ -609,13 +629,16 @@ function selectPart(partKey){
   renderParts();
   renderDirection();
   renderStems();
-  // Kick off downloads for the stems this part needs
+  // Kick off downloads for the stems this part needs — no-op if already loaded
   const partStem = PARTS.find(p => p.key === partKey)?.stem;
   if(partStem) ensureStemLoaded(partStem);
-  // Always keep vocals loaded as a guide
   ensureStemLoaded('vocals');
   // Apply volumes to any currently-loaded gain nodes
   applyVolumesToLiveNodes();
+  // Re-sync loading UI now that priority stems may have changed
+  recalcLoadProgress();
+  // Re-draw loading indicators on each stem row (renderStems wiped them)
+  STEMS.forEach(s => renderStemLoadingUI(s.key));
 }
 
 function applyAutoMix(partKey){
@@ -695,17 +718,115 @@ function ensureAudioContext(){
   return state.audioCtx;
 }
 
-async function ensureStemLoaded(stemKey){
+// Load a single stem: fetch with progress streaming, decode, cache in memory.
+// Retries once on failure with a 1s delay. Updates state.stems[].progress (0-1)
+// as bytes stream in, and fires recalcLoadProgress() after each state change
+// so the header progress bar and play button stay in sync.
+async function ensureStemLoaded(stemKey, {isRetry = false} = {}){
   const stem = state.stems[stemKey];
   if(!stem || !stem.exists) return null;
   if(stem.loaded) return stem.buffer;
-  if(stem.loading) return null;
+  if(stem.loading) {
+    // Already in progress elsewhere — return a promise that resolves when it completes
+    return new Promise((resolve) => {
+      const check = () => {
+        if(stem.loaded) resolve(stem.buffer);
+        else if(!stem.loading) resolve(null);
+        else setTimeout(check, 100);
+      };
+      check();
+    });
+  }
+  if(stem.failed && !isRetry) return null;
 
   stem.loading = true;
-  // Show spinner — insert into the head row next to the S/M buttons
+  stem.failed = false;
+  stem.progress = 0;
+  renderStemLoadingUI(stemKey);
+  recalcLoadProgress();
+
+  try {
+    const ctx = ensureAudioContext();
+    const url = publicUrl(stem.path);
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+
+    // Stream the response to track progress. If content-length is missing
+    // (some CDNs), we fall back to indeterminate progress.
+    const contentLength = parseInt(res.headers.get('content-length') || '0', 10);
+    let arrayBuffer;
+
+    if(contentLength > 0 && res.body && res.body.getReader){
+      const reader = res.body.getReader();
+      const chunks = [];
+      let received = 0;
+      while(true){
+        const { done, value } = await reader.read();
+        if(done) break;
+        chunks.push(value);
+        received += value.length;
+        stem.progress = Math.min(1, received / contentLength);
+        recalcLoadProgress();  // updates header bar in real time
+      }
+      // Concatenate chunks into one ArrayBuffer
+      const buf = new Uint8Array(received);
+      let offset = 0;
+      for(const chunk of chunks){
+        buf.set(chunk, offset);
+        offset += chunk.length;
+      }
+      arrayBuffer = buf.buffer;
+    } else {
+      arrayBuffer = await res.arrayBuffer();
+      stem.progress = 0.9;  // show almost-done; decode is still pending
+      recalcLoadProgress();
+    }
+
+    // Decode is async and can take 500ms+ for a 6MB MP3
+    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+    stem.buffer = audioBuffer;
+    stem.loaded = true;
+    stem.progress = 1;
+
+    // Create a GainNode for this stem (persists across plays)
+    if(!stem.gain){
+      stem.gain = ctx.createGain();
+      stem.gain.connect(ctx.destination);
+      stem.gain.gain.value = effectiveGain(stemKey);
+    }
+  } catch(err){
+    console.error('Failed to load stem ' + stemKey + ':', err);
+    stem.loading = false;
+    stem.progress = 0;
+    if(!isRetry){
+      // Retry once after a short delay
+      renderStemLoadingUI(stemKey);
+      recalcLoadProgress();
+      await new Promise(r => setTimeout(r, 1000));
+      return ensureStemLoaded(stemKey, {isRetry: true});
+    }
+    stem.failed = true;
+    renderStemLoadingUI(stemKey);
+    recalcLoadProgress();
+    return null;
+  }
+
+  stem.loading = false;
+  renderStemLoadingUI(stemKey);
+  recalcLoadProgress();
+  return stem.buffer;
+}
+
+// Update just the loading indicator for one stem row.
+function renderStemLoadingUI(stemKey){
+  const stem = state.stems[stemKey];
   const row = document.getElementById('stem-row-' + stemKey);
-  if(row){
-    const slider = row.querySelector('.pv-stem-slider');
+  if(!row) return;
+  const slider = row.querySelector('.pv-stem-slider');
+  const existing = document.getElementById('stem-loader-' + stemKey);
+  if(existing) existing.remove();
+
+  if(stem.loading){
     if(slider) slider.style.opacity = '0.5';
     const loader = document.createElement('div');
     loader.className = 'pv-stem-loading';
@@ -717,37 +838,129 @@ async function ensureStemLoaded(stemKey){
     } else if(head){
       head.appendChild(loader);
     }
-  }
-
-  try {
-    const ctx = ensureAudioContext();
-    const url = publicUrl(stem.path);
-    const res = await fetch(url);
-    if(!res.ok) throw new Error('HTTP ' + res.status);
-    const arrayBuffer = await res.arrayBuffer();
-    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
-    stem.buffer = audioBuffer;
-    stem.loaded = true;
-
-    // Create a GainNode for this stem (persists across plays)
-    if(!stem.gain){
-      stem.gain = ctx.createGain();
-      stem.gain.connect(ctx.destination);
-      stem.gain.gain.value = effectiveGain(stemKey);
+  } else if(stem.failed){
+    if(slider) slider.style.opacity = '0.4';
+    const warn = document.createElement('div');
+    warn.className = 'pv-stem-failed';
+    warn.id = 'stem-loader-' + stemKey;
+    warn.textContent = '⚠';
+    warn.title = 'Failed to load — tap to retry';
+    warn.style.cssText = 'color:#FBBF24;font-size:16px;cursor:pointer;padding:6px;';
+    warn.onclick = () => ensureStemLoaded(stemKey);
+    const head = row.querySelector('.pv-stem-head');
+    const btns = row.querySelector('.pv-stem-btns');
+    if(head && btns){
+      head.insertBefore(warn, btns);
+    } else if(head){
+      head.appendChild(warn);
     }
-  } catch(err){
-    console.error('Failed to load stem ' + stemKey + ':', err);
-    COS.toast('Failed to load ' + stemKey + ' stem');
-  } finally {
-    stem.loading = false;
-    if(row){
-      const slider = row.querySelector('.pv-stem-slider');
-      if(slider) slider.style.opacity = '';
-      const loader = document.getElementById('stem-loader-' + stemKey);
-      if(loader) loader.remove();
-    }
+  } else if(stem.loaded){
+    if(slider) slider.style.opacity = '';
   }
-  return stem.buffer;
+}
+
+// Recalculate overall load progress and update the header bar + play button.
+// Called after every stem state change.
+function recalcLoadProgress(){
+  const existingStems = STEMS.filter(s => state.stems[s.key].exists);
+  if(existingStems.length === 0) return;
+
+  // Priority stems: selected part + vocals (drive play-readiness)
+  const partStemKey = PARTS.find(p => p.key === state.currentPart)?.stem;
+  const priorityKeys = [partStemKey, 'vocals'].filter(Boolean);
+  const priorityStems = priorityKeys
+    .map(k => state.stems[k])
+    .filter(s => s && s.exists);
+
+  // Overall progress (all stems, average of their progress values)
+  const total = existingStems.reduce((sum, s) => sum + (state.stems[s.key].progress || 0), 0);
+  const avgPct = total / existingStems.length;
+
+  // Priority progress (separate calc for the header bar)
+  const priorityTotal = priorityStems.reduce((sum, s) => sum + (s.progress || 0), 0);
+  const priorityPct = priorityStems.length ? (priorityTotal / priorityStems.length) : 1;
+
+  // Play-ready when every priority stem is fully loaded
+  const playReady = priorityStems.length > 0 && priorityStems.every(s => s.loaded);
+  updatePlayButtonState(playReady);
+
+  // Header load bar
+  updateHeaderLoadBar(priorityPct, avgPct, playReady);
+}
+
+// Update play button: spinner if not ready, ▶/❚❚ otherwise.
+function updatePlayButtonState(playReady){
+  const btn = document.getElementById('pv-play');
+  if(!btn) return;
+  if(state.playing){
+    btn.disabled = false;
+    btn.innerHTML = '❚❚';
+    btn.classList.remove('pv-play-loading');
+    return;
+  }
+  if(playReady){
+    btn.disabled = false;
+    btn.innerHTML = '▶';
+    btn.classList.remove('pv-play-loading');
+  } else if(state.slots.length === 0){
+    btn.disabled = true;
+    btn.innerHTML = '▶';
+    btn.classList.remove('pv-play-loading');
+  } else {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="pv-play-spin"></span>';
+    btn.classList.add('pv-play-loading');
+  }
+}
+
+// Update the load-progress bar in the header.
+function updateHeaderLoadBar(priorityPct, overallPct, playReady){
+  const bar = document.getElementById('pv-load-bar');
+  const fill = document.getElementById('pv-load-fill');
+  const text = document.getElementById('pv-load-text');
+  if(!bar || !fill || !text) return;
+
+  if(overallPct >= 0.999){
+    // All stems loaded — fade out the bar
+    bar.classList.add('hidden');
+    return;
+  }
+  bar.classList.remove('hidden');
+  fill.style.width = Math.round(overallPct * 100) + '%';
+  if(!playReady){
+    text.textContent = 'Loading your part… ' + Math.round(priorityPct * 100) + '%';
+  } else {
+    const others = Math.round(overallPct * 100);
+    text.textContent = 'Ready ✓  ·  other stems ' + others + '%';
+  }
+}
+
+// Called once after arrangement data is loaded. Kicks off all stem
+// downloads in parallel — priority stems started first in the same tick
+// so they tend to get the earliest network slots, others follow.
+function startParallelStemLoading(){
+  const partStemKey = PARTS.find(p => p.key === state.currentPart)?.stem;
+  const priorityKeys = [partStemKey, 'vocals'].filter(Boolean);
+  const priority = new Set(priorityKeys);
+
+  const priorityStems = [];
+  const secondary = [];
+  STEMS.forEach(s => {
+    if(!state.stems[s.key].exists) return;
+    if(priority.has(s.key)) priorityStems.push(s.key);
+    else secondary.push(s.key);
+  });
+
+  // Kick off priority first (they get to the fetch queue first)
+  priorityStems.forEach(k => ensureStemLoaded(k));
+  // Secondary stems: tiny stagger so the browser's HTTP2/fetch prioritisation
+  // has already settled on the priority requests before these pile in.
+  setTimeout(() => {
+    secondary.forEach(k => ensureStemLoaded(k));
+  }, 50);
+
+  // Initial progress recalc so the UI shows the loading state right away
+  recalcLoadProgress();
 }
 
 // Convert arrangement time (0..totalDuration) to reference time (seconds in the MP3)
