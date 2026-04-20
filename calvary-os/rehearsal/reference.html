@@ -6,6 +6,9 @@
 <title>Calvary OS — Reference Importer</title>
 <meta name="theme-color" content="#FFFFFF">
 <link rel="stylesheet" href="../shell.css">
+<!-- Wavesurfer.js v7 (pinned) + Regions plugin -->
+<script src="https://unpkg.com/wavesurfer.js@7.8.6/dist/wavesurfer.min.js"></script>
+<script src="https://unpkg.com/wavesurfer.js@7.8.6/dist/plugins/regions.min.js"></script>
 <style>
   /* ── REFERENCE PAGE LOCAL STYLES ──────────────────────────────── */
   .ref-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-4);margin-bottom:8px;}
@@ -85,6 +88,35 @@
 
   .helper-note{background:var(--amber-light);border-left:3px solid var(--amber);padding:10px 14px;border-radius:var(--r8);font-size:12px;color:var(--ink-2);line-height:1.5;margin-top:12px;}
   .helper-note strong{color:var(--amber);}
+
+  /* ── WAVEFORM EDITOR ─────────────────────────────────────────── */
+  .wave-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;background:#0A0A0A;border-radius:var(--r12) var(--r12) 0 0;color:white;}
+  .wave-toolbar button#wave-play{width:36px;height:36px;border-radius:50%;border:none;background:var(--red);color:white;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .wave-toolbar button#wave-play:hover{background:var(--red-d);}
+  .wave-time{font-family:monospace;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.9);min-width:90px;}
+  .wave-time-sep{color:rgba(255,255,255,0.4);margin:0 4px;}
+  .wave-sep{width:1px;height:22px;background:rgba(255,255,255,0.12);}
+  .wave-meta-field{display:flex;flex-direction:column;gap:2px;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.55);font-weight:600;}
+  .wave-meta-field input,.wave-meta-field select{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:white;padding:4px 8px;border-radius:6px;font-size:12px;font-family:inherit;min-width:62px;}
+  .wave-meta-field input:focus,.wave-meta-field select:focus{outline:none;border-color:var(--red);}
+  .wave-meta-field select option{background:#0A0A0A;color:white;}
+  .wave-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.75);cursor:pointer;user-select:none;}
+  .wave-toggle input{accent-color:var(--red);cursor:pointer;}
+  .wave-zoom{display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,0.55);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-left:auto;}
+  .wave-zoom input{accent-color:var(--red);width:100px;}
+
+  .wave-stack{position:relative;background:#0A0A0A;}
+  #waveform{width:100%;min-height:120px;overflow-x:auto;}
+  #wave-grid-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+
+  .wave-actions{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#0A0A0A;border-radius:0 0 var(--r12) var(--r12);color:rgba(255,255,255,0.7);margin-bottom:14px;flex-wrap:wrap;}
+  .wave-hint{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5;}
+  .wave-hint code{background:rgba(255,255,255,0.1);padding:1px 6px;border-radius:4px;font-size:10px;color:rgba(255,255,255,0.7);}
+
+  /* Region styling via v7 Shadow DOM part selectors */
+  #waveform ::part(region){background:rgba(196,30,42,0.3);border-left:2px solid var(--red);border-right:2px solid var(--red);color:white;font-size:11px;font-weight:600;padding:4px 6px;}
+  #waveform ::part(region-handle){background:var(--red);width:4px;}
+  #waveform ::part(region-content){padding:2px 6px;}
 
   @media (max-width:640px){
     .meta-row{grid-template-columns:1fr 1fr;}
@@ -233,56 +265,76 @@
 
         <!-- Sections -->
         <div class="ref-panel">
-          <h3>Sections <span style="font-size:12px;font-weight:400;color:var(--ink-4);margin-left:8px;">Optional — you can add these later</span></h3>
-          <div class="ref-panel-sub">Play through the track and mark the boundaries as you listen. Labels like <em>Intro</em>, <em>Verse 1</em>, <em>Chorus</em> become the building blocks your team will use to assemble Calvary's version of the song.</div>
+          <h3>Sections <span style="font-size:12px;font-weight:400;color:var(--ink-4);margin-left:8px;">Mark the structure of the song</span></h3>
+          <div class="ref-panel-sub">Drop a region onto the waveform at each boundary — intro, verse, chorus, bridge, outro. These will be the material your arrangement is built from. Snap is on by default so regions fall on bar lines.</div>
 
-          <!-- Play-to-mark player (appears once reference is uploaded) -->
-          <div id="sec-player" style="display:none;">
-            <div style="background:#0A0A0A;border-radius:var(--r12);padding:16px;color:white;margin-bottom:14px;">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-                <button id="sec-play-btn" onclick="toggleSecPlay()" style="width:44px;height:44px;border-radius:50%;border:none;background:var(--red);color:white;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;">▶</button>
-                <div style="flex:1;min-width:0;">
-                  <div style="font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Reference playback</div>
-                  <div style="font-family:monospace;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;">
-                    <span id="sec-cur-time">0:00</span>
-                    <span style="color:rgba(255,255,255,0.4);"> / </span>
-                    <span id="sec-dur-time">0:00</span>
-                  </div>
-                </div>
-                <button onclick="skipSec(-5)" title="Back 5s" style="background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:11px;">−5s</button>
-                <button onclick="skipSec(5)" title="Forward 5s" style="background:rgba(255,255,255,0.1);border:none;color:white;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:11px;">+5s</button>
+          <!-- Waveform editor (hidden until a reference is loaded) -->
+          <div id="wave-editor" style="display:none;">
+
+            <!-- Toolbar: transport, zoom, snap, grid -->
+            <div class="wave-toolbar">
+              <button id="wave-play" onclick="wavePlayPause()" title="Play/pause · Space"><span id="wave-play-icon">▶</span></button>
+              <div class="wave-time">
+                <span id="wave-cur">0:00</span>
+                <span class="wave-time-sep">/</span>
+                <span id="wave-dur">0:00</span>
               </div>
-              <!-- Scrubber -->
-              <input type="range" id="sec-scrubber" min="0" max="100" value="0" step="0.1"
-                     style="width:100%;accent-color:var(--red);" oninput="seekSecTo(this.value)">
+              <div class="wave-sep"></div>
+              <label class="wave-meta-field">
+                <span>BPM</span>
+                <input type="number" id="wave-bpm" min="40" max="240" step="1" onchange="onGridChange()">
+              </label>
+              <label class="wave-meta-field">
+                <span>Time sig</span>
+                <select id="wave-timesig" onchange="onGridChange()">
+                  <option value="4/4">4/4</option>
+                  <option value="3/4">3/4</option>
+                  <option value="6/8">6/8</option>
+                  <option value="2/4">2/4</option>
+                  <option value="12/8">12/8</option>
+                </select>
+              </label>
+              <div class="wave-sep"></div>
+              <label class="wave-toggle" title="Snap region edges to bar lines">
+                <input type="checkbox" id="wave-snap" checked onchange="state.snap = this.checked;">
+                <span>Snap to bars</span>
+              </label>
+              <label class="wave-toggle" title="Show bar grid over the waveform">
+                <input type="checkbox" id="wave-grid-toggle" checked onchange="toggleBarGrid()">
+                <span>Show grid</span>
+              </label>
+              <div class="wave-sep"></div>
+              <label class="wave-zoom">
+                <span>Zoom</span>
+                <input type="range" id="wave-zoom" min="10" max="400" value="40" step="10" oninput="onZoomChange(this.value)">
+              </label>
             </div>
 
-            <!-- Mark controls -->
-            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-              <button class="rs-btn rs-btn-primary" onclick="markSectionStart()" style="flex:1;min-width:160px;">
-                ⭘ Mark section start
-              </button>
-              <button class="rs-btn" id="btn-mark-end" onclick="markSectionEnd()" disabled style="flex:1;min-width:160px;">
-                ⬛ Mark section end
-              </button>
-              <button class="rs-btn" id="btn-mark-cancel" onclick="cancelActiveSection()" disabled style="min-width:80px;">Cancel</button>
-            </div>
-            <div id="active-section-banner" style="display:none;padding:10px 14px;background:var(--red-light);border:1px solid var(--red-mid);border-radius:var(--r10);font-size:12px;color:var(--red);margin-bottom:14px;">
-              <strong>Marking section</strong> — started at <span id="active-start-time">0:00</span>. Let it play, then click "Mark section end" when the section finishes.
+            <!-- Waveform + overlay -->
+            <div class="wave-stack">
+              <div id="waveform"></div>
+              <canvas id="wave-grid-canvas"></canvas>
             </div>
 
-            <div style="font-size:11px;color:var(--ink-4);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
-              <span>Keyboard: <code>Space</code> play/pause · <code>[</code> mark start · <code>]</code> mark end</span>
-              <button onclick="toggleManualEntry()" style="background:none;border:none;color:var(--ink-3);font-size:11px;cursor:pointer;text-decoration:underline;">Type manually instead</button>
+            <!-- Region-add toolbar -->
+            <div class="wave-actions">
+              <button class="rs-btn rs-btn-primary" onclick="addRegionAtPlayhead()">+ Add section at playhead</button>
+              <span class="wave-hint">
+                Drag edges to resize · drag body to move · click a region to select · <code>Space</code> play/pause · <code>[</code> start here · <code>]</code> end here
+              </span>
             </div>
           </div>
 
-          <div id="sec-no-player" style="padding:16px;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);font-size:13px;color:var(--ink-3);text-align:center;margin-bottom:14px;">
-            Upload the reference track above to start marking sections.
+          <!-- Empty state before a reference is loaded -->
+          <div id="wave-empty" style="padding:16px;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);font-size:13px;color:var(--ink-3);text-align:center;margin-bottom:14px;">
+            Upload the reference track above to start marking sections on the waveform.
           </div>
 
-          <div class="sec-list" id="sections-list"></div>
-          <button class="add-sec-btn" onclick="addSection()" id="btn-add-manual" style="display:none;">+ Add section manually</button>
+          <!-- Compact list of current sections (also editable; stays in sync with regions) -->
+          <div id="sections-list-wrap" style="display:none;margin-top:16px;">
+            <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Current sections</div>
+            <div class="sec-list" id="sections-list"></div>
+          </div>
         </div>
 
       </div>
@@ -346,7 +398,8 @@ const state = {
   editMode: false,           // true when editing an existing reference
   existingReference: null,   // rs_references row when editMode
   existingStems: [],         // rs_stems rows when editMode
-  existingSections: []       // rs_sections rows when editMode (used as initial state.sections)
+  existingSections: [],      // rs_sections rows when editMode (used as initial state.sections)
+  snap: true                 // snap region edges to bar lines (wave editor)
 };
 
 // ── BOOT ─────────────────────────────────────────────────────
@@ -489,37 +542,6 @@ function renderExistingReferencePanel(){
       Need to replace the audio entirely? Contact Bolaji to delete the old reference and start fresh.
     </div>
   `;
-}
-
-// Load a URL (already-saved public Supabase Storage URL) into the section player
-function setupSectionPlayerFromUrl(url, displayName){
-  document.getElementById('sec-no-player').style.display = 'none';
-  document.getElementById('sec-player').style.display = 'block';
-  document.getElementById('btn-add-manual').style.display = 'block';
-
-  if(secAudio){ secAudio.pause(); secAudio.src = ''; }
-  secAudio = new Audio();
-  secAudio.preload = 'metadata';
-  secAudio.crossOrigin = 'anonymous';
-  secAudio.src = url;
-
-  secAudio.addEventListener('loadedmetadata', () => {
-    document.getElementById('sec-dur-time').textContent = fmtTime(secAudio.duration);
-    document.getElementById('sec-scrubber').max = secAudio.duration;
-    if(!document.getElementById('meta-duration').value){
-      document.getElementById('meta-duration').value = Math.round(secAudio.duration);
-    }
-  });
-  secAudio.addEventListener('play',  () => { document.getElementById('sec-play-btn').textContent = '❚❚'; updateSecTime(); });
-  secAudio.addEventListener('pause', () => { document.getElementById('sec-play-btn').textContent = '▶'; });
-  secAudio.addEventListener('ended', () => {
-    document.getElementById('sec-play-btn').textContent = '▶';
-    if(secActive){ markSectionEnd(); }
-  });
-  secAudio.addEventListener('error', (e) => {
-    console.error('Audio load error:', e);
-    COS.toast('Could not load reference audio for playback');
-  });
 }
 
 function buildSidebar(){
@@ -673,120 +695,286 @@ function updateSummary(){
   document.getElementById('btn-save').disabled = !canSave;
 }
 
-// ── SECTION PLAYER (play-to-mark) ────────────────────────────
-let secAudio = null;        // HTMLAudioElement for the reference
-let secActive = null;       // { start: seconds } — a section in the middle of being marked
-let secRAF = null;          // requestAnimationFrame id for time updates
+// ── WAVE EDITOR ──────────────────────────────────────────────
+// Wavesurfer-based section editor: waveform with draggable regions,
+// bar grid overlay, snap-to-bars, zoom. Replaces the old play-to-mark
+// timestamp marker.
+let ws = null;              // WaveSurfer instance
+let wsRegions = null;       // Regions plugin instance
+let wsRegionMap = new Map(); // regionId → { label }
+let wsSuppressSync = false; // prevent sync loop when redrawing from state
 
-function setupSectionPlayer(file){
-  // Swap the "upload to start" card for the player
-  document.getElementById('sec-no-player').style.display = 'none';
-  document.getElementById('sec-player').style.display = 'block';
-  document.getElementById('btn-add-manual').style.display = 'block';
+// Setup the editor. `source` is either a File or a URL string.
+function setupWaveEditor(source){
+  // Swap empty-state → editor
+  document.getElementById('wave-empty').style.display = 'none';
+  document.getElementById('wave-editor').style.display = 'block';
+  document.getElementById('sections-list-wrap').style.display = 'block';
 
-  // Tear down any previous audio element
-  if(secAudio){ secAudio.pause(); secAudio.src = ''; }
-  secAudio = new Audio();
-  secAudio.preload = 'metadata';
-  secAudio.src = URL.createObjectURL(file);
+  // Tear down any existing instance
+  if(ws){ try { ws.destroy(); } catch(e){} ws = null; wsRegions = null; wsRegionMap.clear(); }
 
-  secAudio.addEventListener('loadedmetadata', () => {
-    document.getElementById('sec-dur-time').textContent = fmtTime(secAudio.duration);
-    document.getElementById('sec-scrubber').max = secAudio.duration;
-    // Auto-fill the duration metadata field
-    if(!document.getElementById('meta-duration').value){
-      document.getElementById('meta-duration').value = Math.round(secAudio.duration);
-    }
-  });
-  secAudio.addEventListener('play',  () => { document.getElementById('sec-play-btn').textContent = '❚❚'; updateSecTime(); });
-  secAudio.addEventListener('pause', () => { document.getElementById('sec-play-btn').textContent = '▶'; });
-  secAudio.addEventListener('ended', () => {
-    document.getElementById('sec-play-btn').textContent = '▶';
-    if(secActive){ markSectionEnd(); }
-  });
-}
-
-function updateSecTime(){
-  if(!secAudio) return;
-  document.getElementById('sec-cur-time').textContent = fmtTime(secAudio.currentTime);
-  document.getElementById('sec-scrubber').value = secAudio.currentTime;
-  if(!secAudio.paused){
-    secRAF = requestAnimationFrame(updateSecTime);
-  }
-}
-
-function toggleSecPlay(){
-  if(!secAudio) return;
-  if(secAudio.paused) secAudio.play(); else secAudio.pause();
-}
-
-function seekSecTo(s){
-  if(!secAudio) return;
-  secAudio.currentTime = parseFloat(s);
-  updateSecTime();
-}
-
-function skipSec(delta){
-  if(!secAudio) return;
-  secAudio.currentTime = Math.max(0, Math.min(secAudio.duration || 0, secAudio.currentTime + delta));
-  updateSecTime();
-}
-
-function markSectionStart(){
-  if(!secAudio){ COS.toast('Upload a reference first'); return; }
-  // If a previous section was active, silently close it at current time
-  if(secActive){
-    state.sections.push({ label:'', start: fmtTime(secActive.start), end: fmtTime(secAudio.currentTime) });
-  }
-  secActive = { start: secAudio.currentTime };
-  document.getElementById('btn-mark-end').disabled = false;
-  document.getElementById('btn-mark-cancel').disabled = false;
-  document.getElementById('active-section-banner').style.display = 'block';
-  document.getElementById('active-start-time').textContent = fmtTime(secActive.start);
-  renderSections();
-  updateSummary();
-}
-
-function markSectionEnd(){
-  if(!secActive || !secAudio) return;
-  const end = secAudio.currentTime;
-  // Guard against zero/negative duration (double-tap)
-  if(end <= secActive.start){
-    COS.toast('End must be after start — let the track play a bit more');
+  if(typeof WaveSurfer === 'undefined'){
+    COS.toast('Waveform library failed to load — check your connection');
     return;
   }
-  state.sections.push({
-    label: '',
-    start: fmtTime(secActive.start),
-    end:   fmtTime(end)
+
+  // Initialize regions plugin first so we can register it at creation time
+  wsRegions = WaveSurfer.Regions.create();
+
+  ws = WaveSurfer.create({
+    container: '#waveform',
+    waveColor: 'rgba(255,255,255,0.35)',
+    progressColor: '#C41E2A',
+    cursorColor: 'rgba(255,255,255,0.6)',
+    cursorWidth: 2,
+    height: 120,
+    barWidth: 2,
+    barGap: 1,
+    barRadius: 1,
+    minPxPerSec: parseInt(document.getElementById('wave-zoom').value) || 40,
+    normalize: true,
+    fillParent: true,
+    autoCenter: true,
+    plugins: [wsRegions]
   });
-  secActive = null;
-  document.getElementById('btn-mark-end').disabled = true;
-  document.getElementById('btn-mark-cancel').disabled = true;
-  document.getElementById('active-section-banner').style.display = 'none';
+
+  // Load the audio
+  if(source instanceof File){
+    const url = URL.createObjectURL(source);
+    ws.load(url);
+  } else if(typeof source === 'string'){
+    ws.load(source);
+  }
+
+  // Event wiring
+  ws.on('ready', () => {
+    const dur = ws.getDuration();
+    document.getElementById('wave-dur').textContent = fmtTime(dur);
+    if(!document.getElementById('meta-duration').value){
+      document.getElementById('meta-duration').value = Math.round(dur);
+    }
+    // Seed BPM/time-sig inputs from detected metadata if present
+    const bpmInput = document.getElementById('wave-bpm');
+    if(!bpmInput.value){
+      const metaBpm = document.getElementById('meta-bpm').value;
+      if(metaBpm) bpmInput.value = metaBpm;
+    }
+    // Render existing sections from state.sections as regions
+    redrawRegionsFromState();
+    // Draw bar grid
+    drawBarGrid();
+  });
+
+  ws.on('timeupdate', (t) => {
+    document.getElementById('wave-cur').textContent = fmtTime(t);
+  });
+  ws.on('play',  () => { document.getElementById('wave-play-icon').textContent = '❚❚'; });
+  ws.on('pause', () => { document.getElementById('wave-play-icon').textContent = '▶'; });
+  ws.on('finish', () => { document.getElementById('wave-play-icon').textContent = '▶'; });
+  ws.on('zoom', () => { drawBarGrid(); });
+  ws.on('scroll', () => { drawBarGrid(); });
+  ws.on('error', (err) => {
+    console.error('Wavesurfer error:', err);
+    COS.toast('Could not load reference audio for playback');
+  });
+
+  // Region interaction
+  wsRegions.on('region-created', r => onRegionChanged(r, 'created'));
+  wsRegions.on('region-updated', r => onRegionChanged(r, 'updated'));
+  wsRegions.on('region-removed', r => onRegionChanged(r, 'removed'));
+  wsRegions.on('region-clicked', (r, e) => {
+    e.stopPropagation();
+    // Clicking a region plays it in loop preview mode for 1 cycle
+    r.play();
+  });
+  wsRegions.on('region-double-clicked', (r, e) => {
+    e.stopPropagation();
+    const next = prompt('Section label:', wsRegionMap.get(r.id)?.label || '');
+    if(next !== null){
+      wsRegionMap.set(r.id, { label: next });
+      r.setOptions({ content: next });
+      syncStateFromRegions();
+    }
+  });
+}
+
+// Backwards-compatible aliases used elsewhere on the page
+function setupSectionPlayer(file){ setupWaveEditor(file); }
+function setupSectionPlayerFromUrl(url, _displayName){ setupWaveEditor(url); }
+
+// ── TRANSPORT ────────────────────────────────────────────────
+function wavePlayPause(){
+  if(!ws) return;
+  ws.playPause();
+}
+
+function onZoomChange(val){
+  if(!ws) return;
+  ws.zoom(parseInt(val));
+}
+
+// ── REGION ↔ STATE SYNC ──────────────────────────────────────
+function onRegionChanged(r, kind){
+  if(wsSuppressSync) return;
+  if(state.snap && kind !== 'removed'){
+    const {start, end} = snapRegionToBars(r.start, r.end);
+    if(start !== r.start || end !== r.end){
+      wsSuppressSync = true;
+      r.setOptions({ start, end });
+      wsSuppressSync = false;
+    }
+  }
+  syncStateFromRegions();
+}
+
+function syncStateFromRegions(){
+  if(!wsRegions) return;
+  const regions = wsRegions.getRegions();
+  // Sort by start
+  regions.sort((a,b) => a.start - b.start);
+  state.sections = regions.map(r => ({
+    label: wsRegionMap.get(r.id)?.label || '',
+    start: fmtTime(r.start),
+    end: fmtTime(r.end)
+  }));
   renderSections();
   updateSummary();
-  // Auto-focus the label field on the section we just added
+}
+
+function redrawRegionsFromState(){
+  if(!wsRegions) return;
+  wsSuppressSync = true;
+  wsRegions.clearRegions();
+  wsRegionMap.clear();
+  state.sections.forEach(s => {
+    const start = parseTime(s.start);
+    const end = parseTime(s.end);
+    if(start === null || end === null) return;
+    const r = wsRegions.addRegion({
+      start, end,
+      content: s.label || '',
+      color: 'rgba(196,30,42,0.25)',
+      drag: true,
+      resize: true
+    });
+    wsRegionMap.set(r.id, { label: s.label || '' });
+  });
+  wsSuppressSync = false;
+}
+
+function addRegionAtPlayhead(){
+  if(!ws || !wsRegions){ COS.toast('Upload a reference first'); return; }
+  const t = ws.getCurrentTime();
+  const dur = ws.getDuration();
+  // Default new region = 4 bars at the current BPM/time-sig, or 8 seconds if no BPM
+  const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
+  const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
+  const secPerBar = bpm ? (60 / bpm) * beatsPerBar : 2;
+  const len = Math.min(secPerBar * 4, Math.max(1, dur - t));
+  const start = state.snap ? snapToBar(t) : t;
+  const end = Math.min(dur, start + len);
+  const r = wsRegions.addRegion({
+    start, end,
+    content: '',
+    color: 'rgba(196,30,42,0.25)',
+    drag: true,
+    resize: true
+  });
+  wsRegionMap.set(r.id, { label: '' });
+  syncStateFromRegions();
+  // Prompt for label immediately
   setTimeout(() => {
-    const inputs = document.querySelectorAll('#sections-list .sec-row input[list]');
-    const last = inputs[inputs.length - 1];
-    if(last) last.focus();
-  }, 50);
+    const next = prompt('Section label:', '');
+    if(next){
+      wsRegionMap.set(r.id, { label: next });
+      r.setOptions({ content: next });
+      syncStateFromRegions();
+    }
+  }, 30);
 }
 
-function cancelActiveSection(){
-  secActive = null;
-  document.getElementById('btn-mark-end').disabled = true;
-  document.getElementById('btn-mark-cancel').disabled = true;
-  document.getElementById('active-section-banner').style.display = 'none';
+// ── BAR GRID ─────────────────────────────────────────────────
+function onGridChange(){
+  // BPM/time-sig changed in the toolbar → update meta-bpm and redraw grid
+  const bpm = document.getElementById('wave-bpm').value;
+  if(bpm) document.getElementById('meta-bpm').value = bpm;
+  drawBarGrid();
 }
 
-function toggleManualEntry(){
-  const btn = document.getElementById('btn-add-manual');
-  if(btn.style.display === 'none' || !btn.style.display){
-    btn.style.display = 'block';
+function toggleBarGrid(){
+  const show = document.getElementById('wave-grid-toggle').checked;
+  document.getElementById('wave-grid-canvas').style.display = show ? 'block' : 'none';
+  if(show) drawBarGrid();
+}
+
+function drawBarGrid(){
+  const canvas = document.getElementById('wave-grid-canvas');
+  if(!canvas || !ws) return;
+  if(!document.getElementById('wave-grid-toggle').checked) return;
+  const stack = canvas.parentElement;
+  const w = stack.clientWidth;
+  const h = stack.clientHeight;
+  canvas.width = w * (window.devicePixelRatio || 1);
+  canvas.height = h * (window.devicePixelRatio || 1);
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+  ctx.clearRect(0, 0, w, h);
+
+  const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
+  if(!bpm) return;
+  const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
+  const secPerBeat = 60 / bpm;
+  const secPerBar = secPerBeat * beatsPerBar;
+  const pxPerSec = ws.options.minPxPerSec || 40;
+  const scrollLeft = ws.getScroll ? ws.getScroll() : 0;
+  const dur = ws.getDuration();
+  if(!dur) return;
+
+  // Draw bar lines (strong) and beat lines (subtle)
+  for(let t = 0; t <= dur; t += secPerBeat){
+    const x = (t * pxPerSec) - scrollLeft;
+    if(x < 0 || x > w) continue;
+    const isBar = Math.abs((t / secPerBar) - Math.round(t / secPerBar)) < 0.01;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.strokeStyle = isBar ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.07)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    if(isBar){
+      const barNum = Math.round(t / secPerBar) + 1;
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.font = '10px monospace';
+      ctx.fillText(barNum, x + 3, 12);
+    }
   }
-  addSection();
+}
+
+// Snap a time (in seconds) to the nearest bar boundary, given current BPM
+function snapToBar(t){
+  const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
+  if(!bpm) return t;
+  const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
+  const secPerBar = (60 / bpm) * beatsPerBar;
+  return Math.round(t / secPerBar) * secPerBar;
+}
+
+// Snap both edges of a region to bar boundaries, keeping minimum 1-bar size
+function snapRegionToBars(start, end){
+  const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
+  if(!bpm) return { start, end };
+  const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
+  const secPerBar = (60 / bpm) * beatsPerBar;
+  const snappedStart = Math.round(start / secPerBar) * secPerBar;
+  const snappedEnd = Math.round(end / secPerBar) * secPerBar;
+  // Guard: minimum 1 bar size
+  if(snappedEnd - snappedStart < secPerBar){
+    return { start: snappedStart, end: snappedStart + secPerBar };
+  }
+  return { start: snappedStart, end: snappedEnd };
 }
 
 // Format a seconds number as M:SS (always two-digit seconds)
@@ -798,16 +986,34 @@ function fmtTime(s){
   return `${m}:${r.toString().padStart(2,'0')}`;
 }
 
-// Keyboard shortcuts while the section player is visible
+// Keyboard shortcuts while the wave editor is visible
 document.addEventListener('keydown', e => {
-  const player = document.getElementById('sec-player');
-  if(!player || player.style.display === 'none') return;
+  const editor = document.getElementById('wave-editor');
+  if(!editor || editor.style.display === 'none') return;
   // Ignore if user is typing in an input
   const t = e.target;
   if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
-  if(e.key === ' '){ e.preventDefault(); toggleSecPlay(); }
-  else if(e.key === '['){ e.preventDefault(); markSectionStart(); }
-  else if(e.key === ']'){ e.preventDefault(); markSectionEnd(); }
+  if(e.key === ' '){ e.preventDefault(); wavePlayPause(); }
+  else if(e.key === '['){
+    e.preventDefault();
+    // Set selected region's start to playhead, or create one
+    if(ws) addRegionAtPlayhead();
+  }
+  else if(e.key === ']'){
+    e.preventDefault();
+    // End the last region at playhead if there is one to close
+    if(ws && wsRegions){
+      const regions = wsRegions.getRegions();
+      if(regions.length){
+        const last = regions[regions.length - 1];
+        const newEnd = ws.getCurrentTime();
+        if(newEnd > last.start){
+          last.setOptions({ end: state.snap ? snapToBar(newEnd) : newEnd });
+          syncStateFromRegions();
+        }
+      }
+    }
+  }
 });
 
 // ── STORAGE HELPERS ──────────────────────────────────────────
