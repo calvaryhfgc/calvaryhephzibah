@@ -337,14 +337,16 @@ function pageInit(){
 }
 
 async function loadAll(){
-  const [songs, sets, arrs] = await Promise.all([
+  const [songs, sets, arrs, refs] = await Promise.all([
     sbFetch('rs_songs?status=eq.active&order=title.asc'),
     sbFetch('rs_sets?order=service_date.desc'),
-    sbFetch('rs_arrangements?status=in.(draft,ready)&order=updated_at.desc')
+    sbFetch('rs_arrangements?status=in.(draft,ready)&order=updated_at.desc'),
+    sbFetch('rs_references?select=id,song_id,status')
   ]);
   state.songs        = songs || [];
   state.sets         = sets  || [];
   state.arrangements = arrs  || [];
+  state.references   = refs  || [];
   renderSets();
   renderArrangements();
   renderSongs();
@@ -505,23 +507,27 @@ function renderSongs(){
     return;
   }
 
-  container.innerHTML = state.songs.map(s => `
-    <div class="rs-song-row">
-      <div>
-        <div class="rs-song-title-cell">${escapeHtml(s.title)}</div>
-        ${s.original_artist ? `<div class="rs-song-artist">${escapeHtml(s.original_artist)}</div>` : ''}
+  container.innerHTML = state.songs.map(s => {
+    const refCount = state.references ? state.references.filter(r => r.song_id === s.id).length : 0;
+    const arrCount = countArrangementsForSong(s.id);
+    return `
+      <div class="rs-song-row" style="cursor:pointer;" onclick="location.href='song.html?id=${s.id}'">
+        <div>
+          <div class="rs-song-title-cell">${escapeHtml(s.title)}</div>
+          ${s.original_artist ? `<div class="rs-song-artist">${escapeHtml(s.original_artist)}</div>` : ''}
+        </div>
+        <div class="rs-song-meta">${s.default_key || '—'} · ${s.default_bpm || '—'} bpm</div>
+        <div class="rs-song-meta">${(s.tags||[]).map(t=>`<span class="rs-song-tag">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="rs-song-meta">${refCount} ref${refCount===1?'':'s'} · ${arrCount} arr.</div>
+        ${(COS.currentUser.level==='admin'||COS.currentUser.level==='lead')
+          ? `<div style="display:flex;gap:4px;" onclick="event.stopPropagation();">
+               <a href="reference.html?song_id=${s.id}" class="rs-song-action" style="text-decoration:none;">+ Reference</a>
+               <button class="rs-song-action" onclick="event.stopPropagation();newArrangementFor('${s.id}')">+ Arrangement</button>
+             </div>`
+          : `<span class="rs-song-meta">—</span>`}
       </div>
-      <div class="rs-song-meta">${s.default_key || '—'} · ${s.default_bpm || '—'} bpm</div>
-      <div class="rs-song-meta">${(s.tags||[]).map(t=>`<span class="rs-song-tag">${escapeHtml(t)}</span>`).join('')}</div>
-      <div class="rs-song-meta">${countArrangementsForSong(s.id)} arr.</div>
-      ${(COS.currentUser.level==='admin'||COS.currentUser.level==='lead')
-        ? `<div style="display:flex;gap:4px;">
-             <a href="reference.html?song_id=${s.id}" class="rs-song-action" style="text-decoration:none;">+ Reference</a>
-             <button class="rs-song-action" onclick="newArrangementFor('${s.id}')">+ Arrangement</button>
-           </div>`
-        : `<span class="rs-song-meta">—</span>`}
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function countArrangementsForSong(songId){

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Song</title>
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" href="../shell.css">
+<style>
+  /* ── SONG PAGE LOCAL STYLES ─────────────────────────────────── */
+  .sg-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-4);margin-bottom:8px;}
+  .sg-crumb a{color:var(--ink-3);text-decoration:none;}
+  .sg-crumb a:hover{color:var(--ink);}
+
+  /* Hero */
+  .sg-hero{background:linear-gradient(135deg, var(--white) 0%, #FEF2F2 100%);border:1px solid var(--ink-5);border-radius:var(--r20);padding:24px 28px;margin-bottom:16px;}
+  .sg-hero-eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--red);font-weight:700;margin-bottom:6px;}
+  .sg-hero-title{font-family:'Lora',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:4px;}
+  .sg-hero-title-input{font-family:'Lora',serif;font-size:28px;font-weight:700;color:var(--ink);line-height:1.2;width:100%;border:none;background:transparent;padding:2px 0;border-bottom:1.5px dashed transparent;transition:border-color 0.1s;}
+  .sg-hero-title-input:focus{outline:none;border-bottom-color:var(--red);}
+  .sg-hero-artist{font-size:14px;color:var(--ink-3);margin-bottom:12px;}
+  .sg-hero-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink-3);}
+  .sg-hero-meta-item{display:flex;align-items:center;gap:4px;}
+  .sg-hero-meta-item strong{color:var(--ink);font-weight:600;}
+  .sg-hero-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:10px;}
+  .sg-tag{padding:3px 10px;background:rgba(196,30,42,0.08);color:var(--red);border-radius:100px;font-size:11px;font-weight:600;}
+
+  .sg-hero-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+
+  /* Sections grid */
+  .sg-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start;}
+  @media(max-width:860px){ .sg-grid{grid-template-columns:1fr;} }
+
+  .sg-panel{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);padding:20px 24px;margin-bottom:16px;}
+  .sg-panel h3{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+  .sg-panel-sub{font-size:12px;color:var(--ink-3);margin-bottom:14px;line-height:1.5;}
+  .sg-panel-count{font-size:11px;font-weight:400;color:var(--ink-4);margin-left:auto;}
+
+  /* Field rows for inline-edit */
+  .sg-field{margin-bottom:12px;}
+  .sg-field:last-child{margin-bottom:0;}
+  .sg-field label{display:block;font-size:10px;font-weight:600;color:var(--ink-4);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
+  .sg-field input, .sg-field select, .sg-field textarea{
+    width:100%;padding:8px 10px;border:1px solid var(--ink-5);background:var(--white);
+    border-radius:var(--r8);font-family:inherit;font-size:13px;color:var(--ink);transition:border-color 0.1s;
+  }
+  .sg-field input:focus, .sg-field select:focus, .sg-field textarea:focus{outline:none;border-color:var(--red);}
+  .sg-field textarea{resize:vertical;min-height:60px;line-height:1.5;}
+  .sg-field .hint{font-size:10px;color:var(--ink-4);margin-top:2px;}
+
+  .sg-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .sg-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+  /* Reference + arrangement cards */
+  .sg-item{background:var(--ink-6);border:1px solid var(--ink-5);border-radius:var(--r10);padding:12px 14px;margin-bottom:8px;transition:border-color 0.1s;}
+  .sg-item:hover{border-color:var(--red-mid);}
+  .sg-item:last-child{margin-bottom:0;}
+  .sg-item-row{display:flex;align-items:center;gap:12px;}
+  .sg-item-icon{width:32px;height:32px;border-radius:8px;background:var(--white);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;border:1px solid var(--ink-5);}
+  .sg-item-body{flex:1;min-width:0;}
+  .sg-item-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .sg-item-meta{font-size:11px;color:var(--ink-4);}
+  .sg-item-meta strong{color:var(--ink-3);font-weight:600;}
+  .sg-item-actions{display:flex;gap:4px;flex-shrink:0;}
+
+  .sg-empty{padding:20px 16px;text-align:center;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);color:var(--ink-3);font-size:12px;line-height:1.5;}
+  .sg-empty a{color:var(--red);font-weight:600;text-decoration:none;}
+  .sg-empty a:hover{text-decoration:underline;}
+
+  /* Placeholders for future-phase sections */
+  .sg-coming-soon{padding:14px 16px;background:#FFFBEB;border:1px dashed #F59E0B;border-radius:var(--r10);font-size:12px;color:#92400E;line-height:1.5;}
+  .sg-coming-soon strong{font-weight:700;}
+
+  /* Buttons */
+  .rs-btn{padding:8px 14px;border-radius:var(--r8);font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--ink-5);background:var(--white);color:var(--ink-2);text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+  .rs-btn:hover{border-color:var(--ink-4);}
+  .rs-btn-primary{background:var(--red);border-color:var(--red);color:white;}
+  .rs-btn-primary:hover{background:var(--red-d);border-color:var(--red-d);}
+  .rs-btn-sm{padding:5px 10px;font-size:11px;border-radius:6px;}
+
+  .status-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+  .status-draft{background:#FEF3C7;color:#92400E;}
+  .status-ready{background:#D1FAE5;color:#065F46;}
+  .status-archived{background:var(--ink-6);color:var(--ink-4);}
+
+  /* Preferred badge */
+  .preferred-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;background:var(--red-light);color:var(--red);border-radius:100px;font-size:10px;font-weight:700;}
+
+  /* Save status chip */
+  .save-chip{position:fixed;bottom:24px;right:24px;padding:8px 14px;background:var(--white);border:1px solid var(--ink-5);border-radius:100px;font-size:12px;color:var(--ink-3);box-shadow:var(--shadow-md);transform:translateY(60px);transition:transform 0.2s;z-index:50;}
+  .save-chip.visible{transform:translateY(0);}
+  .save-chip.saved{color:var(--green);}
+  .save-chip.saving{color:var(--amber);}
+  .save-chip.error{color:var(--red);}
+
+  @media(max-width:640px){
+    .sg-row-2, .sg-row-3{grid-template-columns:1fr;}
+    .sg-hero{padding:18px 20px;}
+    .sg-hero-title, .sg-hero-title-input{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared pattern) ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <div class="topbar">
+    <a href="../dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">Song</div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <div class="main">
+      <div class="page-body" style="max-width:1100px;">
+
+        <!-- Breadcrumb -->
+        <div class="sg-crumb">
+          <a href="index.html">Rehearsal Studio</a>
+          <span>›</span>
+          <span>Song library</span>
+          <span>›</span>
+          <span id="crumb-song">Loading…</span>
+        </div>
+
+        <!-- Hero -->
+        <div class="sg-hero">
+          <div class="sg-hero-eyebrow" id="hero-eyebrow">Song</div>
+          <input type="text" class="sg-hero-title-input" id="hero-title" placeholder="Song title" oninput="markDirty()">
+          <input type="text" class="sg-hero-artist" id="hero-artist" placeholder="Original artist" style="width:100%;border:none;background:transparent;padding:2px 0;font-size:14px;color:var(--ink-3);" oninput="markDirty()">
+
+          <div class="sg-hero-meta" id="hero-meta">
+            <!-- Populated by renderHero() -->
+          </div>
+
+          <div class="sg-hero-tags" id="hero-tags">
+            <!-- Populated by renderHero() -->
+          </div>
+
+          <div class="sg-hero-actions">
+            <a href="#" id="btn-add-reference" class="rs-btn">➕ Add reference</a>
+            <a href="#" id="btn-new-arrangement" class="rs-btn rs-btn-primary">＋ Create arrangement</a>
+          </div>
+        </div>
+
+        <!-- Two-column grid: song details + content -->
+        <div class="sg-grid">
+
+          <!-- LEFT column -->
+          <div>
+
+            <!-- Song details panel -->
+            <div class="sg-panel">
+              <h3>🎵 Song details</h3>
+              <div class="sg-panel-sub">The core information about this song. Changes save automatically.</div>
+
+              <div class="sg-row-3">
+                <div class="sg-field">
+                  <label>Default key</label>
+                  <input type="text" id="f-default_key" placeholder="e.g. E" oninput="markDirty()">
+                </div>
+                <div class="sg-field">
+                  <label>Default BPM</label>
+                  <input type="number" id="f-default_bpm" placeholder="132" min="40" max="240" oninput="markDirty()">
+                </div>
+                <div class="sg-field">
+                  <label>Time signature</label>
+                  <select id="f-default_time_sig" onchange="markDirty()">
+                    <option value="">—</option>
+                    <option value="4/4">4/4</option>
+                    <option value="3/4">3/4</option>
+                    <option value="6/8">6/8</option>
+                    <option value="2/4">2/4</option>
+                    <option value="12/8">12/8</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="sg-field">
+                <label>Tags</label>
+                <input type="text" id="f-tags" placeholder="praise, worship, afro (comma-separated)" oninput="markDirty()">
+                <div class="hint">Used for filtering in the Song Library</div>
+              </div>
+
+              <div class="sg-field">
+                <label>CCLI number</label>
+                <input type="text" id="f-ccli_number" placeholder="e.g. 2574653" oninput="markDirty()">
+                <div class="hint">For copyright / Gift Aid reporting</div>
+              </div>
+            </div>
+
+            <!-- Calvary context panel -->
+            <div class="sg-panel">
+              <h3>✨ Calvary context</h3>
+              <div class="sg-panel-sub">How <em>we</em> do this song — not how the original artist recorded it.</div>
+
+              <div class="sg-row-2">
+                <div class="sg-field">
+                  <label>Calvary keys</label>
+                  <input type="text" id="f-calvary_keys" placeholder="e.g. D, E, F (comma-separated)" oninput="markDirty()">
+                  <div class="hint">Keys we actually play it in (can differ from original)</div>
+                </div>
+                <div class="sg-field">
+                  <label>Calvary tempo range</label>
+                  <input type="text" id="f-calvary_bpm_range" placeholder="e.g. 125-132" oninput="markDirty()">
+                  <div class="hint">The BPM range we tend to settle into</div>
+                </div>
+              </div>
+
+              <div class="sg-field">
+                <label>First used at Calvary</label>
+                <input type="date" id="f-first_used_at" oninput="markDirty()">
+              </div>
+
+              <div class="sg-field">
+                <label>Pastoral notes</label>
+                <textarea id="f-pastoral_notes" rows="4" placeholder="The story of this song at Calvary. When we introduced it, why it matters, any direction on how it should be used (e.g. 'We use this song for corporate breakthrough moments — lean into the bridge')." oninput="markDirty()"></textarea>
+              </div>
+            </div>
+
+            <!-- Resources panel -->
+            <div class="sg-panel">
+              <h3>🔗 Resources</h3>
+              <div class="sg-panel-sub">External links so the team can listen, learn, and read on their own.</div>
+
+              <div class="sg-field">
+                <label>YouTube URL</label>
+                <input type="url" id="f-youtube_url" placeholder="https://youtu.be/…" oninput="markDirty()">
+              </div>
+              <div class="sg-field">
+                <label>Spotify URL</label>
+                <input type="url" id="f-spotify_url" placeholder="https://open.spotify.com/track/…" oninput="markDirty()">
+              </div>
+              <div class="sg-field">
+                <label>Chord chart URL</label>
+                <input type="url" id="f-chord_chart_url" placeholder="PDF link (Drive, PraiseCharts, etc.)" oninput="markDirty()">
+              </div>
+
+              <div class="sg-field">
+                <label>Lyrics</label>
+                <textarea id="f-lyrics" rows="8" placeholder="Paste the full lyrics here for quick reference." oninput="markDirty()"></textarea>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT column -->
+          <div>
+
+            <!-- References panel -->
+            <div class="sg-panel">
+              <h3>🎚️ References <span class="sg-panel-count" id="refs-count"></span></h3>
+              <div class="sg-panel-sub">Source recordings (Transformation Church, Hillsong, etc.) that we're drawing material from.</div>
+              <div id="refs-list"></div>
+            </div>
+
+            <!-- Arrangements panel -->
+            <div class="sg-panel">
+              <h3>🎶 Arrangements <span class="sg-panel-count" id="arrs-count"></span></h3>
+              <div class="sg-panel-sub">Calvary's versions of this song. The ★ preferred one is the canonical arrangement the team defaults to.</div>
+              <div id="arrs-list"></div>
+            </div>
+
+            <!-- Placeholders for later phases -->
+            <div class="sg-panel">
+              <h3>📅 Used in sets</h3>
+              <div class="sg-coming-soon">
+                <strong>Coming in Phase 6.</strong> Once we ship Sets, this will show every Sunday service or event where we've used this song.
+              </div>
+            </div>
+
+            <div class="sg-panel">
+              <h3>📊 Practice activity</h3>
+              <div class="sg-coming-soon">
+                <strong>Coming in Phase 5.</strong> Once the team is rehearsing in Practice View, this will show who's been practising and when.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="mob-nav-items" id="mob-nav"></div>
+  </nav>
+</div>
+
+<!-- Floating autosave chip -->
+<div class="save-chip" id="save-chip">●</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../shell.js"></script>
+<script>
+
+// ── STATE ────────────────────────────────────────────────────
+const state = {
+  song: null,           // rs_songs row
+  references: [],       // rs_references where song_id = this
+  arrangements: [],     // rs_arrangements where song_id = this
+  refChopCounts: {},    // { reference_id: N }  — for the reference cards
+  arrSlotCounts: {},    // { arrangement_id: N } — for the arrangement cards
+  dirty: false,         // user has unsaved edits
+  saveTimer: null,      // debounced save
+};
+
+const EDITABLE_FIELDS = [
+  'default_key', 'default_bpm', 'default_time_sig',
+  'ccli_number',
+  'calvary_bpm_range',
+  'first_used_at',
+  'pastoral_notes',
+  'youtube_url', 'spotify_url', 'chord_chart_url',
+  'lyrics'
+];
+
+// ── BOOT ─────────────────────────────────────────────────────
+function pageInit(){
+  buildSidebar();
+  loadSong();
+}
+
+function buildSidebar(){
+  const sb = document.getElementById('sidebar');
+  const modules = [
+    { id:'dashboard',  label:'Dashboard',         href:'../dashboard.html',   icon:'🏠' },
+    { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
+    { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
+    { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
+    { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
+    { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
+    { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
+  ];
+  if(COS.currentUser && COS.currentUser.level === 'admin'){
+    modules.push({ id:'admin', label:'Admin', href:'../admin.html', icon:'⚙️' });
+  }
+  const accessible = modules.filter(m => COS.hasAccess(m.id));
+  sb.innerHTML = `
+    <div class="nav-section">
+      <div class="nav-section-label">Modules</div>
+      ${accessible.map(m => `
+        <a href="${m.href}" class="nav-item${m.active?' active':''}" style="text-decoration:none;">
+          <span style="font-size:13px;">${m.icon}</span>
+          ${m.label}
+        </a>`).join('')}
+    </div>`;
+  const mob = document.getElementById('mob-nav');
+  if(mob){
+    mob.innerHTML = accessible.slice(0, 5).map(m => `
+      <a href="${m.href}" class="mob-nav-btn${m.active?' active':''}" style="text-decoration:none;">
+        <span>${m.icon}</span>
+        <span>${m.label.split(' ')[0]}</span>
+      </a>`).join('');
+  }
+}
+
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadSong(){
+  const params = new URLSearchParams(location.search);
+  const songId = params.get('id');
+  if(!songId){
+    showError('No song ID in the URL.', 'Go back to the Rehearsal Studio and pick a song.');
+    return;
+  }
+
+  // Song
+  const songs = await sbFetch(`rs_songs?id=eq.${songId}`);
+  if(!songs || !songs[0]){
+    showError('Song not found', 'It may have been deleted. Go back to the Rehearsal Studio.');
+    return;
+  }
+  state.song = songs[0];
+
+  // References + arrangements in parallel
+  const [refs, arrs] = await Promise.all([
+    sbFetch(`rs_references?song_id=eq.${songId}&order=created_at.desc`),
+    sbFetch(`rs_arrangements?song_id=eq.${songId}&order=created_at.desc`)
+  ]);
+  state.references = refs || [];
+  state.arrangements = arrs || [];
+
+  // Fetch chop counts for each reference (one query with IN filter)
+  if(state.references.length > 0){
+    const ids = state.references.map(r => r.id).join(',');
+    const chops = await sbFetch(`rs_sections?reference_id=in.(${ids})&select=reference_id`);
+    (chops || []).forEach(c => {
+      state.refChopCounts[c.reference_id] = (state.refChopCounts[c.reference_id] || 0) + 1;
+    });
+  }
+  // Fetch slot counts for each arrangement
+  if(state.arrangements.length > 0){
+    const ids = state.arrangements.map(a => a.id).join(',');
+    const slots = await sbFetch(`rs_arrangement_sections?arrangement_id=in.(${ids})&select=arrangement_id`);
+    (slots || []).forEach(s => {
+      state.arrSlotCounts[s.arrangement_id] = (state.arrSlotCounts[s.arrangement_id] || 0) + 1;
+    });
+  }
+
+  renderAll();
+}
+
+function showError(title, sub){
+  document.getElementById('crumb-song').textContent = title;
+  document.querySelector('.sg-hero-title-input').style.display = 'none';
+  document.querySelector('.sg-hero-artist').style.display = 'none';
+  document.getElementById('hero-eyebrow').textContent = title;
+  document.querySelectorAll('.sg-panel').forEach(p => p.style.display = 'none');
+  const hero = document.querySelector('.sg-hero');
+  if(hero) hero.innerHTML = `
+    <div class="sg-hero-eyebrow" style="color:var(--red);">Not found</div>
+    <h2 style="font-family:'Lora',serif;font-size:22px;margin-bottom:6px;">${title}</h2>
+    <p style="color:var(--ink-3);font-size:13px;margin-bottom:12px;">${sub}</p>
+    <a href="index.html" class="rs-btn rs-btn-primary">← Back to Rehearsal Studio</a>
+  `;
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function renderAll(){
+  if(!state.song) return;
+  renderHero();
+  renderFormFields();
+  renderReferences();
+  renderArrangements();
+  wireHeroActions();
+}
+
+function renderHero(){
+  const s = state.song;
+  document.getElementById('crumb-song').textContent = s.title;
+  document.getElementById('hero-eyebrow').textContent = 'Song';
+  document.getElementById('hero-title').value = s.title || '';
+  document.getElementById('hero-artist').value = s.original_artist || '';
+
+  // Hero meta row
+  const meta = [];
+  if(s.default_key) meta.push(`<div class="sg-hero-meta-item"><strong>${escapeHtml(s.default_key)}</strong> · key</div>`);
+  if(s.default_bpm) meta.push(`<div class="sg-hero-meta-item"><strong>${s.default_bpm}</strong> BPM</div>`);
+  if(s.default_time_sig) meta.push(`<div class="sg-hero-meta-item"><strong>${escapeHtml(s.default_time_sig)}</strong></div>`);
+  meta.push(`<div class="sg-hero-meta-item"><strong>${state.references.length}</strong> reference${state.references.length===1?'':'s'}</div>`);
+  meta.push(`<div class="sg-hero-meta-item"><strong>${state.arrangements.length}</strong> arrangement${state.arrangements.length===1?'':'s'}</div>`);
+  document.getElementById('hero-meta').innerHTML = meta.join('');
+
+  // Tags
+  const tags = s.tags || [];
+  document.getElementById('hero-tags').innerHTML = tags.length
+    ? tags.map(t => `<span class="sg-tag">${escapeHtml(t)}</span>`).join('')
+    : '';
+}
+
+function renderFormFields(){
+  const s = state.song;
+  EDITABLE_FIELDS.forEach(field => {
+    const el = document.getElementById('f-' + field);
+    if(!el) return;
+    let value = s[field];
+    if(value === null || value === undefined) value = '';
+    el.value = value;
+  });
+  // Tags (stored as text[])
+  const tagsInput = document.getElementById('f-tags');
+  if(tagsInput){
+    tagsInput.value = (s.tags || []).join(', ');
+  }
+  // Calvary keys (stored as text[])
+  const ckInput = document.getElementById('f-calvary_keys');
+  if(ckInput){
+    ckInput.value = (s.calvary_keys || []).join(', ');
+  }
+}
+
+function wireHeroActions(){
+  document.getElementById('btn-add-reference').href = `reference.html?song_id=${state.song.id}`;
+  // "+ Create arrangement" behaviour: kick off a modal-free create by posting
+  // a new rs_arrangement and routing to its detail page.
+  const newArrBtn = document.getElementById('btn-new-arrangement');
+  newArrBtn.removeAttribute('href');
+  newArrBtn.onclick = (e) => { e.preventDefault(); createArrangement(); };
+}
+
+function renderReferences(){
+  const list = document.getElementById('refs-list');
+  const count = document.getElementById('refs-count');
+  count.textContent = state.references.length ? `· ${state.references.length}` : '';
+
+  if(state.references.length === 0){
+    list.innerHTML = `
+      <div class="sg-empty">
+        No references yet. <a href="reference.html?song_id=${state.song.id}">Add one →</a><br>
+        <span style="font-size:11px;color:var(--ink-4);">Upload a Moises-separated MP3 so you can chop sections out of it.</span>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = state.references.map(r => {
+    const chopCount = state.refChopCounts[r.id] || 0;
+    const arrsUsing = state.arrangements.filter(a => a.reference_id === r.id).length;
+    const dur = r.duration_seconds ? formatDuration(r.duration_seconds) : '—';
+    const statusPill = r.status === 'ready'
+      ? '<span class="status-pill status-ready">ready</span>'
+      : r.status === 'processing'
+        ? '<span class="status-pill status-draft">processing</span>'
+        : '<span class="status-pill status-draft">' + escapeHtml(r.status || 'pending') + '</span>';
+
+    // Route: prefer an arrangement using this reference (so edit mode fires);
+    // fall back to song-level edit
+    const arrUsing = state.arrangements.find(a => a.reference_id === r.id);
+    const editHref = arrUsing
+      ? `reference.html?arrangement_id=${arrUsing.id}`
+      : `reference.html?song_id=${state.song.id}`;
+
+    return `
+      <div class="sg-item">
+        <div class="sg-item-row">
+          <div class="sg-item-icon">🎚️</div>
+          <div class="sg-item-body">
+            <div class="sg-item-title">${escapeHtml(r.source_url || 'Reference')}</div>
+            <div class="sg-item-meta">
+              ${dur} · <strong>${escapeHtml(r.detected_key || '—')}</strong> · <strong>${r.detected_bpm || '—'}</strong> BPM ·
+              ${chopCount} chop${chopCount===1?'':'s'} · ${arrsUsing} arrangement${arrsUsing===1?'':'s'} using · ${statusPill}
+            </div>
+          </div>
+          <div class="sg-item-actions">
+            <a href="${editHref}" class="rs-btn rs-btn-sm">Edit</a>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderArrangements(){
+  const list = document.getElementById('arrs-list');
+  const count = document.getElementById('arrs-count');
+  count.textContent = state.arrangements.length ? `· ${state.arrangements.length}` : '';
+
+  if(state.arrangements.length === 0){
+    list.innerHTML = `
+      <div class="sg-empty">
+        No arrangements yet. <a href="#" onclick="createArrangement();return false;">Create the first one →</a><br>
+        <span style="font-size:11px;color:var(--ink-4);">This is how you compose Calvary's version using chops from a reference.</span>
+      </div>`;
+    return;
+  }
+
+  const preferredId = state.song.preferred_arrangement_id;
+  list.innerHTML = state.arrangements.map(a => {
+    const slotCount = state.arrSlotCounts[a.id] || 0;
+    const hasRef = !!a.reference_id;
+    const isPreferred = a.id === preferredId;
+    const href = hasRef ? `arrangement.html?id=${a.id}` : `reference.html?arrangement_id=${a.id}`;
+    const updated = a.updated_at
+      ? new Date(a.updated_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+      : '';
+    const statusClass = 'status-' + (a.status || 'draft');
+    const preferBtn = isPreferred
+      ? `<button class="rs-btn rs-btn-sm" disabled title="This is the preferred arrangement" style="color:var(--red);border-color:var(--red-mid);background:var(--red-light);">★ Preferred</button>`
+      : `<button class="rs-btn rs-btn-sm" onclick="setPreferredArrangement('${a.id}')" title="Mark as preferred">☆ Prefer</button>`;
+
+    return `
+      <div class="sg-item">
+        <div class="sg-item-row">
+          <div class="sg-item-icon">🎶</div>
+          <div class="sg-item-body">
+            <div class="sg-item-title">${escapeHtml(a.name || 'Untitled arrangement')} ${isPreferred ? '<span class="preferred-badge">★ Preferred</span>' : ''}</div>
+            <div class="sg-item-meta">
+              <span class="status-pill ${statusClass}">${escapeHtml(a.status || 'draft')}</span> ·
+              ${slotCount} slot${slotCount===1?'':'s'} ·
+              ${hasRef ? '<span style="color:var(--green);">✓ reference linked</span>' : '<span style="color:var(--amber);">⚠ needs reference</span>'} ·
+              updated ${updated}
+            </div>
+          </div>
+          <div class="sg-item-actions">
+            ${preferBtn}
+            <a href="${href}" class="rs-btn rs-btn-sm rs-btn-primary">Open</a>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── CREATE ARRANGEMENT ───────────────────────────────────────
+async function createArrangement(){
+  const defaultName = `${state.song.title} — v${state.arrangements.length + 1}`;
+  const name = prompt('Name this arrangement:', defaultName);
+  if(!name || !name.trim()) return;
+  const row = {
+    song_id: state.song.id,
+    name: name.trim(),
+    status: 'draft',
+    key: state.song.default_key || null,
+    bpm: state.song.default_bpm || null,
+    created_by: COS.currentUser ? COS.currentUser.name : null
+  };
+  // If there's exactly one reference, auto-link it (most common case)
+  if(state.references.length === 1){
+    row.reference_id = state.references[0].id;
+  }
+  const res = await sbPost('rs_arrangements', row);
+  if(!res || !res[0]){
+    COS.toast('Failed to create arrangement');
+    return;
+  }
+  // If it has a reference, jump to the builder; else to the reference importer
+  const newId = res[0].id;
+  location.href = row.reference_id
+    ? `arrangement.html?id=${newId}`
+    : `reference.html?arrangement_id=${newId}`;
+}
+
+// ── SET PREFERRED ────────────────────────────────────────────
+async function setPreferredArrangement(arrId){
+  const res = await sbPatch('rs_songs', `id=eq.${state.song.id}`, {
+    preferred_arrangement_id: arrId
+  });
+  if(!res){
+    COS.toast('Failed to set preferred');
+    return;
+  }
+  state.song.preferred_arrangement_id = arrId;
+  renderArrangements();
+  COS.toast('★ Preferred arrangement updated');
+}
+
+// ── AUTOSAVE ─────────────────────────────────────────────────
+// Debounced — save 800ms after last edit.
+function markDirty(){
+  state.dirty = true;
+  showSaveChip('saving', '● Saving…');
+  clearTimeout(state.saveTimer);
+  state.saveTimer = setTimeout(() => { persistChanges(); }, 800);
+}
+
+async function persistChanges(){
+  if(!state.song) return;
+
+  // Build patch object from form
+  const patch = {};
+
+  const title = document.getElementById('hero-title').value.trim();
+  const artist = document.getElementById('hero-artist').value.trim();
+  if(title && title !== state.song.title) patch.title = title;
+  if(artist !== (state.song.original_artist || '')) patch.original_artist = artist || null;
+
+  EDITABLE_FIELDS.forEach(field => {
+    const el = document.getElementById('f-' + field);
+    if(!el) return;
+    let value = el.value.trim();
+    if(value === '') value = null;
+    // Numeric fields
+    if(field === 'default_bpm' && value !== null) value = parseInt(value) || null;
+    // Comparison with current value
+    const current = state.song[field] === undefined ? null : state.song[field];
+    if((value || null) !== (current || null)){
+      patch[field] = value;
+    }
+  });
+
+  // Tags
+  const tagsRaw = document.getElementById('f-tags').value.trim();
+  const tagsArr = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+  if(JSON.stringify(tagsArr) !== JSON.stringify(state.song.tags || [])){
+    patch.tags = tagsArr;
+  }
+  // Calvary keys
+  const ckRaw = document.getElementById('f-calvary_keys').value.trim();
+  const ckArr = ckRaw ? ckRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+  if(JSON.stringify(ckArr) !== JSON.stringify(state.song.calvary_keys || [])){
+    patch.calvary_keys = ckArr;
+  }
+
+  if(Object.keys(patch).length === 0){
+    // Nothing changed — mark saved anyway
+    state.dirty = false;
+    showSaveChip('saved', '✓ Saved');
+    setTimeout(() => hideSaveChip(), 1200);
+    return;
+  }
+
+  try {
+    const res = await sbPatch('rs_songs', `id=eq.${state.song.id}`, patch);
+    if(!res) throw new Error('Save failed');
+    // Update local state
+    state.song = { ...state.song, ...patch };
+    state.dirty = false;
+    showSaveChip('saved', '✓ Saved');
+    // Re-render hero (title, tags, counts)
+    renderHero();
+    setTimeout(() => hideSaveChip(), 1200);
+  } catch(err){
+    console.error('persistChanges failed:', err);
+    showSaveChip('error', '⚠ Save failed — retrying…');
+    // Retry once after 2s
+    setTimeout(() => persistChanges(), 2000);
+  }
+}
+
+function showSaveChip(cls, text){
+  const chip = document.getElementById('save-chip');
+  chip.className = 'save-chip visible ' + cls;
+  chip.textContent = text;
+}
+function hideSaveChip(){
+  const chip = document.getElementById('save-chip');
+  chip.className = 'save-chip';
+}
+
+// Warn before unload if dirty
+window.addEventListener('beforeunload', (e) => {
+  if(state.dirty){
+    e.preventDefault();
+    e.returnValue = 'You have unsaved changes.';
+  }
+});
+
+// ── UTILS ────────────────────────────────────────────────────
+function formatDuration(s){
+  const n = Math.max(0, parseFloat(s) || 0);
+  if(n < 60) return `${Math.round(n)}s`;
+  const m = Math.floor(n / 60);
+  const r = Math.round(n % 60);
+  return r === 0 ? `${m}m` : `${m}m ${r.toString().padStart(2,'0')}s`;
+}
+function escapeHtml(s){
+  return (s || '').toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+COS.init('rehearsal');
+</script>
+
+</body>
+</html>
