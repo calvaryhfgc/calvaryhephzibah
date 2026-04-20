@@ -124,6 +124,9 @@
         <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;">Quick actions</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="quick-actions"></div>
 
+        <!-- Admin: impersonation panel (populated only if logged-in user is admin) -->
+        <div id="admin-impersonate" style="display:none;margin-top:32px;"></div>
+
       </div>
     </div>
   </div>
@@ -185,6 +188,52 @@ function pageInit(){
   if(COS.hasAccess('worship')) actions.push({label:'Worship set', href:'worship.html'});
   if(COS.hasAccess('media')) actions.push({label:'Media checklist', href:'media.html'});
   qa.innerHTML = actions.map(a=>`<a href="${a.href}" class="btn btn-ghost btn-sm" style="text-decoration:none;">${a.label} →</a>`).join('');
+
+  // Admin impersonation panel — shown only if the real (pre-impersonation) user is admin
+  renderImpersonationPanel();
+}
+
+function renderImpersonationPanel(){
+  const actor = COS.originalUser || COS.currentUser;
+  const panel = document.getElementById('admin-impersonate');
+  if(!actor || actor.level !== 'admin' || !panel) return;
+
+  // Pool = everyone except admins (don't impersonate fellow admins) and the actor themself
+  const candidates = COS.users.filter(u =>
+    u.active && u.level !== 'admin' && u.id !== actor.id
+  );
+  const sorted = candidates.slice().sort((a,b) => {
+    const levels = { lead: 0, team: 1 };
+    if(levels[a.level] !== levels[b.level]) return levels[a.level] - levels[b.level];
+    return a.name.localeCompare(b.name);
+  });
+
+  const rows = sorted.map(u => {
+    const isCurrent = COS.currentUser.id === u.id;
+    const btnLabel = isCurrent ? 'Currently viewing' : 'View as';
+    const btnAttr = isCurrent
+      ? 'disabled style="opacity:0.5;cursor:default;"'
+      : `onclick="COS.impersonate(${u.id})"`;
+    return `
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:var(--r10);">
+        <div style="width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;">${u.name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);">${u.name}</div>
+          <div style="font-size:11px;color:var(--ink-4);">${u.role} · <span style="text-transform:uppercase;letter-spacing:0.5px;">${u.level}</span></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" ${btnAttr}>${btnLabel}</button>
+      </div>`;
+  }).join('');
+
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);">Admin · view as another user</div>
+      <div style="font-size:11px;color:var(--ink-4);font-weight:500;">Log in as another team member to see exactly what they see. A banner at the top of the screen lets you exit at any time.</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:8px;">
+      ${rows}
+    </div>`;
 }
 
 function buildSidebar(){

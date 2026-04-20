@@ -78,6 +78,23 @@ html,body{height:100%;font-family:'Poppins',sans-serif;background:var(--bg);colo
 .topbar-signout{background:none;border:1.5px solid var(--ink-5);border-radius:var(--r8);padding:6px 12px;font-size:12px;color:var(--ink-3);cursor:pointer;font-family:'Poppins',sans-serif;font-weight:500;transition:all 0.1s;}
 .topbar-signout:hover{border-color:var(--red);color:var(--red);}
 
+/* Impersonation banner — shown when an admin is viewing-as another user */
+#imp-banner{position:fixed;top:0;left:0;right:0;height:44px;background:linear-gradient(90deg,#7C2D12 0%,#9A3412 100%);color:white;display:flex;align-items:center;padding:0 16px;gap:12px;z-index:9999;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+#imp-banner .imp-dot{color:#FBBF24;font-size:10px;animation:imp-pulse 1.6s ease-in-out infinite;}
+#imp-banner .imp-msg{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#imp-banner .imp-msg strong{font-weight:700;}
+#imp-banner .imp-sub{opacity:0.7;font-weight:400;margin-left:4px;}
+#imp-banner .imp-btn{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.25);color:white;padding:6px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Poppins',sans-serif;transition:background 0.1s;white-space:nowrap;}
+#imp-banner .imp-btn:hover{background:rgba(255,255,255,0.28);}
+#imp-banner .imp-btn-ghost{background:transparent;border-color:rgba(255,255,255,0.3);}
+body.has-imp-banner{padding-top:44px;}
+@keyframes imp-pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+@media(max-width:600px){
+  #imp-banner{font-size:12px;padding:0 10px;gap:8px;}
+  #imp-banner .imp-sub{display:none;}
+  #imp-banner .imp-btn{padding:5px 8px;font-size:11px;}
+}
+
 .app-body{flex:1;display:flex;overflow:hidden;}
 .sidebar{width:220px;background:var(--white);border-right:1px solid var(--ink-5);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto;padding:12px 0 24px;}
 .sidebar::-webkit-scrollbar{display:none;}

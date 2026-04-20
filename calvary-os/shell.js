@@ -76,6 +76,7 @@ const COS = {
 
   // ── AUTH ──────────────────────────────────────────────────────────────────
   currentUser: null,
+  originalUser: null,        // when impersonating, this is the real admin
   _pinEntry: '',
   _pinTarget: null,
 
@@ -86,6 +87,8 @@ const COS = {
     try {
       const s = sessionStorage.getItem('cos_session');
       if(s){ this.currentUser = JSON.parse(s); }
+      const orig = sessionStorage.getItem('cos_original');
+      if(orig){ this.originalUser = JSON.parse(orig); }
     } catch(e){}
 
     if(this.currentUser){
@@ -185,6 +188,8 @@ const COS = {
     if(nm) nm.textContent = this.currentUser.name.split(' ')[0];
     // Apply nav visibility
     this._applyNav();
+    // Render impersonation banner if active
+    this._renderImpersonationBanner();
     // Call page init if defined
     if(typeof pageInit === 'function') pageInit();
   },
@@ -197,9 +202,75 @@ const COS = {
     });
   },
 
+  // ── IMPERSONATION ─────────────────────────────────────────────────────────
+  // Admins can view the app as another user to see what they see. The real
+  // admin identity is preserved in originalUser so they can exit cleanly.
+  impersonate(userId){
+    // Guard: only real admins can impersonate, and only non-admins
+    const actor = this.originalUser || this.currentUser;
+    if(!actor || actor.level !== 'admin'){
+      this.toast('Only admins can do that');
+      return;
+    }
+    const target = this.users.find(u => u.id === userId && u.active);
+    if(!target){ this.toast('User not found'); return; }
+    if(target.level === 'admin'){
+      this.toast("Can't impersonate another admin");
+      return;
+    }
+    if(target.id === actor.id){
+      this.toast("That's you");
+      return;
+    }
+    // Save original (only if not already impersonating — we don't overwrite it)
+    if(!this.originalUser){
+      this.originalUser = this.currentUser;
+      sessionStorage.setItem('cos_original', JSON.stringify(this.originalUser));
+    }
+    this.currentUser = target;
+    sessionStorage.setItem('cos_session', JSON.stringify(target));
+    // Full page reload so all access-gated UI re-renders cleanly
+    window.location.reload();
+  },
+
+  exitImpersonation(){
+    if(!this.originalUser) return;
+    this.currentUser = this.originalUser;
+    sessionStorage.setItem('cos_session', JSON.stringify(this.originalUser));
+    sessionStorage.removeItem('cos_original');
+    this.originalUser = null;
+    window.location.reload();
+  },
+
+  _renderImpersonationBanner(){
+    // Remove any existing banner
+    const existing = document.getElementById('imp-banner');
+    if(existing) existing.remove();
+    document.body.classList.remove('has-imp-banner');
+
+    if(!this.originalUser) return;  // not impersonating — no banner
+
+    // Inject banner at top of body
+    const bar = document.createElement('div');
+    bar.id = 'imp-banner';
+    bar.innerHTML = `
+      <span class="imp-dot">●</span>
+      <span class="imp-msg">
+        Viewing as <strong>${this.currentUser.name}</strong>
+        <span class="imp-sub">· You are logged in as ${this.originalUser.name}</span>
+      </span>
+      <button class="imp-btn" onclick="COS.exitImpersonation()">← Exit view</button>
+      <button class="imp-btn imp-btn-ghost" onclick="COS.signOut()">Log out</button>
+    `;
+    document.body.insertBefore(bar, document.body.firstChild);
+    document.body.classList.add('has-imp-banner');
+  },
+
   signOut(){
     sessionStorage.removeItem('cos_session');
+    sessionStorage.removeItem('cos_original');
     this.currentUser = null;
+    this.originalUser = null;
     window.location.href = 'index.html';
   },
 
