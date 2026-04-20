@@ -56,22 +56,25 @@ async function sbDelete(table, match) {
 const COS = {
 
   // ── USERS ─────────────────────────────────────────────────────────────────
+  // Users log in with username + PIN. Display names (`name`) are used in the
+  // UI for admins/leads but never shown on the login screen itself — so team
+  // members don't see who else is on the platform.
   users: [
-    { id:1,  name:'Bolaji Olatoye',        role:'Operations Lead',      level:'admin', pin:'bp_yhwbc0',  sections:['sunday','worship','media','midweek','departments','admin'], active:true },
-    { id:2,  name:'Pastor Shade Olatoye',  role:'General Overseer',     level:'admin', pin:'bp_yhvw22',  sections:['sunday','worship','media','midweek','departments','admin'], active:true },
-    { id:3,  name:'Scott Shokoya',         role:'Media Lead',           level:'lead',  pin:'bp_yhx751',  sections:['sunday','media'], active:true },
-    { id:4,  name:'Caster Martins',        role:'Worship Lead',         level:'lead',  pin:'bp_yhsq3p',  sections:['sunday','worship'], active:true },
-    { id:5,  name:'Morayo Ogungbenro',     role:'Worship',              level:'team',  pin:'bp_yhu1z9',  sections:['sunday','worship'], active:true },
-    { id:6,  name:'Laolu Ogungbenro',      role:'Worship',              level:'team',  pin:'bp_yhu4ed',  sections:['sunday','worship'], active:true },
-    { id:7,  name:'Bolaji Adebanjo',       role:'Worship',              level:'team',  pin:'bp_yhrx9h',  sections:['sunday','worship'], active:true },
-    { id:8,  name:'Auntie Pauline Tulloch',role:'Operations Lead',      level:'lead',  pin:'bp_yhwnt1',  sections:['sunday','departments'], active:true },
-    { id:9,  name:'Pastor Gbenga Adebanjo',role:'Leadership',           level:'lead',  pin:'bp_yhtdhh',  sections:['sunday','departments','midweek'], active:true },
-    { id:10, name:'Pastor Kayode Ogungbenro',role:'Leadership',         level:'lead',  pin:'bp_yhruv9',  sections:['sunday','departments'], active:true },
-    { id:11, name:'Sister Petty',          role:'Operations',           level:'team',  pin:'bp_yhxd39',  sections:['sunday','departments'], active:true },
-    { id:12, name:'Chinedu',               role:'Media',                level:'team',  pin:'bp_yi1slh',  sections:['sunday','media'], active:true },
-    { id:13, name:'Terrel',                role:'Media',                level:'team',  pin:'bp_yi1v0l',  sections:['sunday','media'], active:true },
-    { id:14, name:'Tavoy',                 role:'Media',                level:'team',  pin:'bp_yi1u9x',  sections:['sunday','media'], active:true },
-    { id:15, name:'Noah',                  role:'Media',                level:'team',  pin:'bp_yi1wp1',  sections:['sunday','media'], active:true },
+    { id:1,  name:'Bolaji Olatoye',          username:'bolatoye',  role:'Operations Lead',  level:'admin', pin:'bp_yhwbc0',  sections:['sunday','worship','media','midweek','departments','admin'], active:true },
+    { id:2,  name:'Pastor Shade Olatoye',    username:'pshade',    role:'General Overseer', level:'admin', pin:'bp_yhvw22',  sections:['sunday','worship','media','midweek','departments','admin'], active:true },
+    { id:3,  name:'Scott Shokoya',           username:'sshokoya',  role:'Media Lead',       level:'lead',  pin:'bp_yhx751',  sections:['sunday','media'], active:true },
+    { id:4,  name:'Caster Martins',          username:'cmartins',  role:'Worship Lead',     level:'lead',  pin:'bp_yhsq3p',  sections:['sunday','worship'], active:true },
+    { id:5,  name:'Morayo Ogungbenro',       username:'morayo',    role:'Worship',          level:'team',  pin:'bp_yhu1z9',  sections:['sunday','worship'], active:true },
+    { id:6,  name:'Laolu Ogungbenro',        username:'laolu',     role:'Worship',          level:'team',  pin:'bp_yhu4ed',  sections:['sunday','worship'], active:true },
+    { id:7,  name:'Bolaji Adebanjo',         username:'badebanjo', role:'Worship',          level:'team',  pin:'bp_yhrx9h',  sections:['sunday','worship'], active:true },
+    { id:8,  name:'Auntie Pauline Tulloch',  username:'pauline',   role:'Operations Lead',  level:'lead',  pin:'bp_yhwnt1',  sections:['sunday','departments'], active:true },
+    { id:9,  name:'Pastor Gbenga Adebanjo',  username:'pgbenga',   role:'Leadership',       level:'lead',  pin:'bp_yhtdhh',  sections:['sunday','departments','midweek'], active:true },
+    { id:10, name:'Pastor Kayode Ogungbenro',username:'pkayode',   role:'Leadership',       level:'lead',  pin:'bp_yhruv9',  sections:['sunday','departments'], active:true },
+    { id:11, name:'Sister Petty',            username:'petty',     role:'Operations',       level:'team',  pin:'bp_yhxd39',  sections:['sunday','departments'], active:true },
+    { id:12, name:'Chinedu',                 username:'chinedu',   role:'Media',            level:'team',  pin:'bp_yi1slh',  sections:['sunday','media'], active:true },
+    { id:13, name:'Terrel',                  username:'terrel',    role:'Media',            level:'team',  pin:'bp_yi1v0l',  sections:['sunday','media'], active:true },
+    { id:14, name:'Tavoy',                   username:'tavoy',     role:'Media',            level:'team',  pin:'bp_yi1u9x',  sections:['sunday','media'], active:true },
+    { id:15, name:'Noah',                    username:'noah',      role:'Media',            level:'team',  pin:'bp_yi1wp1',  sections:['sunday','media'], active:true },
   ],
 
   // ── AUTH ──────────────────────────────────────────────────────────────────
@@ -99,8 +102,10 @@ const COS = {
       this._launchApp();
       return;
     }
-    this._renderUsers();
-    this._showAuthStep('step-who');
+    // No session — render the login form. This replaces the inline auth-screen
+    // HTML in every page with a username+PIN form, so team members never see
+    // the list of users on the platform.
+    this._renderLoginForm();
   },
 
   hasAccess(section){
@@ -111,69 +116,103 @@ const COS = {
     return (this.currentUser.sections||[]).includes(section);
   },
 
-  _renderUsers(){
-    const list = document.getElementById('user-grid');
-    if(!list) return;
-    const active = this.users.filter(u=>u.active);
-    list.innerHTML = active.map(u=>`
-      <button class="u-btn" onclick="COS._selectUser(${u.id})">
-        <div class="u-av">${this._initials(u.name)}</div>
-        <div>
-          <div class="u-name">${u.name}</div>
+  // ── LOGIN FORM ─────────────────────────────────────────────────
+  // Single screen: Username + PIN + Sign in. Replaces the old user gallery
+  // so no user sees a directory of other users. Admins can still see the
+  // full list on the admin page.
+  _renderLoginForm(){
+    const auth = document.getElementById('auth-screen');
+    if(!auth) return;
+    auth.innerHTML = `
+      <div class="auth-wrap">
+        <div class="auth-logo-block">
+          <div class="auth-logo-icon">
+            <svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg>
+          </div>
+          <div>
+            <div class="auth-logo-name">Calvary OS</div>
+            <div class="auth-logo-sub">Calvary Hephzibah Full Gospel Church</div>
+          </div>
         </div>
-        <span class="u-badge ${u.level==='admin'?'ub-admin':u.level==='lead'?'ub-lead':'ub-team'}">${u.level}</span>
-      </button>`).join('');
+        <div class="auth-step active" style="padding-top:8px;">
+          <div class="auth-eyebrow">Sign in</div>
+          <div class="auth-heading">Welcome back</div>
+          <div class="auth-sub" style="margin-bottom:20px;">Enter your username and PIN to continue.</div>
+
+          <div style="display:flex;flex-direction:column;gap:12px;max-width:320px;">
+            <label style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.55);letter-spacing:0.5px;text-transform:uppercase;">Username</span>
+              <input type="text" id="login-username" autocomplete="username"
+                     placeholder="yourname" autocapitalize="none" autocorrect="off" spellcheck="false"
+                     style="padding:12px 14px;border:1px solid var(--ink-5,rgba(0,0,0,0.1));border-radius:10px;font-family:inherit;font-size:15px;background:var(--white,white);color:var(--ink,#0A0A0A);"
+                     onkeydown="if(event.key==='Enter'){document.getElementById('login-pin').focus();}">
+            </label>
+            <label style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.55);letter-spacing:0.5px;text-transform:uppercase;">PIN</span>
+              <input type="password" id="login-pin" autocomplete="current-password"
+                     inputmode="numeric" pattern="[0-9]*" maxlength="4"
+                     placeholder="••••"
+                     style="padding:12px 14px;border:1px solid var(--ink-5,rgba(0,0,0,0.1));border-radius:10px;font-family:inherit;font-size:15px;letter-spacing:4px;background:var(--white,white);color:var(--ink,#0A0A0A);"
+                     onkeydown="if(event.key==='Enter'){COS._submitLogin();}"
+                     oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value.length===4){setTimeout(()=>COS._submitLogin(),100);}">
+            </label>
+            <button onclick="COS._submitLogin()"
+                    style="padding:12px 14px;border:none;background:var(--red,#C41E2A);color:white;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;">
+              Sign in
+            </button>
+            <div id="login-msg" style="font-size:12px;color:var(--red,#C41E2A);min-height:16px;text-align:center;margin-top:4px;"></div>
+          </div>
+        </div>
+      </div>`;
+    // Focus username on load
+    setTimeout(() => {
+      const u = document.getElementById('login-username');
+      if(u) u.focus();
+    }, 50);
   },
 
-  _selectUser(id){
-    this._pinTarget = this.users.find(u=>u.id===id);
-    if(!this._pinTarget) return;
-    this._pinEntry = '';
-    this._updateDots();
-    const sub = document.getElementById('pin-user-name');
-    if(sub) sub.textContent = `Hello ${this._pinTarget.name.split(' ')[0]} — enter your PIN`;
-    document.getElementById('pin-msg').textContent='';
-    this._showAuthStep('step-pin');
-  },
-
-  _goBack(){
-    this._pinTarget = null;
-    this._pinEntry = '';
-    this._updateDots();
-    this._showAuthStep('step-who');
-  },
-
-  pk(d){
-    if(this._pinEntry.length>=4) return;
-    this._pinEntry+=d;
-    this._updateDots();
-    if(this._pinEntry.length===4) setTimeout(()=>this._checkPin(),150);
-  },
-
-  pdel(){
-    this._pinEntry=this._pinEntry.slice(0,-1);
-    this._updateDots();
-    document.getElementById('pin-msg').textContent='';
-  },
-
-  _updateDots(){
-    for(let i=0;i<4;i++){
-      const d = document.getElementById('pd'+i);
-      if(d) d.classList.toggle('on', i<this._pinEntry.length);
-    }
-  },
-
-  _checkPin(){
-    if(!this._pinTarget) return;
-    if(this.hashPin(this._pinEntry) !== this._pinTarget.pin){
-      document.getElementById('pin-msg').textContent='Incorrect PIN — try again';
-      this._pinEntry='';
-      this._updateDots();
+  _submitLogin(){
+    const userInput = document.getElementById('login-username');
+    const pinInput = document.getElementById('login-pin');
+    const msg = document.getElementById('login-msg');
+    if(!userInput || !pinInput) return;
+    const username = userInput.value.trim().toLowerCase();
+    const pin = pinInput.value.trim();
+    if(!username || !pin){
+      msg.textContent = 'Enter both username and PIN';
       return;
     }
-    this.currentUser = this._pinTarget;
+    // Look up user by username. Never reveal whether the username exists —
+    // show the same error for 'wrong username' and 'wrong PIN'.
+    const target = this.users.find(u => u.active && u.username.toLowerCase() === username);
+    if(!target || this.hashPin(pin) !== target.pin){
+      msg.textContent = 'Invalid username or PIN';
+      pinInput.value = '';
+      pinInput.focus();
+      return;
+    }
+    msg.textContent = '';
+    this.currentUser = target;
     sessionStorage.setItem('cos_session', JSON.stringify(this.currentUser));
     this._launchApp();
+  },
+
+  // ── LEGACY AUTH HELPERS (retained for backwards compat) ────────
+  // These are kept so any inline onclick calls in old HTML stubs don't throw,
+  // but they're effectively no-ops now since the login form replaces the stub.
+  _renderUsers(){ /* superseded by _renderLoginForm */ },
+  _selectUser(id){ /* superseded */ },
+  _goBack(){ /* superseded */ },
+  pk(d){ /* superseded */ },
+  pdel(){ /* superseded */ },
+  _updateDots(){ /* superseded */ },
+  _checkPin(){ /* superseded */ },
+
+  _showAuthStep(stepId){
+    // Only used by legacy HTML stubs. The new login form manages its own DOM.
+    document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(stepId);
+    if(el) el.classList.add('active');
   },
 
   _launchApp(){
@@ -272,12 +311,6 @@ const COS = {
     this.currentUser = null;
     this.originalUser = null;
     window.location.href = 'index.html';
-  },
-
-  _showAuthStep(id){
-    document.querySelectorAll('.auth-step').forEach(s=>s.classList.remove('active'));
-    const el = document.getElementById(id);
-    if(el) el.classList.add('active');
   },
 
   // ── NAVIGATION ────────────────────────────────────────────────────────────

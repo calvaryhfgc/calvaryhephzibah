@@ -124,7 +124,7 @@ function pageInit(){
       <div class="li-bar" style="background:${u.level==='admin'?'var(--red)':u.level==='lead'?'var(--blue)':'var(--ink-4)'};"></div>
       <div style="width:32px;height:32px;border-radius:50%;background:var(--bg-3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--ink-4);flex-shrink:0;">${u.name.split(' ').slice(0,2).map(n=>n[0]).join('')}</div>
       <div class="li-content">
-        <div class="li-title">${u.name}</div>
+        <div class="li-title">${u.name} <code style="font-size:11px;color:var(--ink-4);font-family:monospace;font-weight:500;margin-left:6px;">${u.username || ''}</code></div>
         <div class="li-sub">${u.role}</div>
         <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">${u.sections.map(s=>`<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:var(--ink-5);color:var(--ink-4);">${s}</span>`).join('')}</div>
       </div>
@@ -135,10 +135,11 @@ function pageInit(){
   document.getElementById('pin-table').innerHTML = `
     <div class="card" style="padding:0;overflow:hidden;">
       <table class="data-table" style="width:100%;">
-        <thead><tr><th>Name</th><th>Role</th><th>Default PIN</th></tr></thead>
+        <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>PIN</th></tr></thead>
         <tbody>${COS.users.map(u=>`
           <tr>
             <td style="font-weight:600;">${u.name}</td>
+            <td><code style="font-family:monospace;font-size:13px;color:var(--ink-2);">${u.username || '—'}</code></td>
             <td style="color:var(--ink-4);">${u.role}</td>
             <td><code style="font-family:monospace;font-size:14px;letter-spacing:3px;color:var(--red);">${DEFAULT_PINS[u.id]||'----'}</code></td>
           </tr>`).join('')}
