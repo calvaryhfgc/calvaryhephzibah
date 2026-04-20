@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Arrangement Builder</title>
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" href="../shell.css">
+<style>
+  /* ── ARRANGEMENT PAGE LOCAL STYLES ────────────────────────────── */
+  .arr-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-4);margin-bottom:8px;}
+  .arr-crumb a{color:var(--ink-3);text-decoration:none;}
+  .arr-crumb a:hover{color:var(--ink);}
+
+  .arr-panel{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);padding:20px 24px;margin-bottom:16px;}
+  .arr-panel h3{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+  .arr-panel-sub{font-size:12px;color:var(--ink-3);margin-bottom:14px;line-height:1.5;}
+
+  /* Metadata row */
+  .arr-meta{display:grid;grid-template-columns:3fr 1fr 1fr 1.2fr;gap:10px;}
+  .arr-meta label{display:block;font-size:10px;font-weight:600;color:var(--ink-4);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
+  .arr-meta input,.arr-meta select{width:100%;padding:9px 11px;border:1.5px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:13px;color:var(--ink);}
+  .arr-meta input:focus,.arr-meta select:focus{outline:none;border-color:var(--red);}
+
+  /* Two-column builder layout */
+  .arr-workspace{display:grid;grid-template-columns:minmax(280px, 0.9fr) 1.2fr;gap:16px;align-items:start;}
+  @media(max-width:860px){ .arr-workspace{grid-template-columns:1fr;} }
+
+  /* Chops library (left) */
+  .chops-list{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow-y:auto;padding-right:4px;}
+  .chop-card{background:var(--ink-6);border:1px solid var(--ink-5);border-radius:var(--r10);padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color 0.1s;}
+  .chop-card:hover{border-color:var(--red-mid);}
+  .chop-card-icon{width:26px;height:26px;border-radius:6px;background:var(--red-light);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+  .chop-card-body{flex:1;min-width:0;}
+  .chop-card-label{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chop-card-meta{font-size:10px;color:var(--ink-4);font-variant-numeric:tabular-nums;}
+  .chop-card-btns{display:flex;gap:4px;flex-shrink:0;}
+  .chop-preview-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--ink-5);background:var(--white);color:var(--ink-3);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;}
+  .chop-preview-btn:hover{border-color:var(--red);color:var(--red);}
+  .chop-add-btn{padding:5px 10px;border-radius:var(--r8);background:var(--red);color:white;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:inherit;}
+  .chop-add-btn:hover{background:var(--red-d);}
+
+  .chops-empty{padding:24px 16px;text-align:center;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);color:var(--ink-3);font-size:12px;line-height:1.5;}
+  .chops-empty a{color:var(--red);font-weight:600;text-decoration:none;}
+  .chops-empty a:hover{text-decoration:underline;}
+
+  /* Slots (right) */
+  .slots-list{display:flex;flex-direction:column;gap:8px;min-height:120px;}
+  .slot-card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r10);padding:10px 12px;display:flex;align-items:flex-start;gap:10px;}
+  .slot-card.dragging{opacity:0.5;}
+  .slot-num{width:22px;height:22px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .slot-body{flex:1;min-width:0;}
+  .slot-title{font-size:13px;font-weight:600;color:var(--ink);}
+  .slot-meta{font-size:11px;color:var(--ink-4);margin-top:1px;}
+  .slot-notes{margin-top:6px;width:100%;padding:6px 8px;border:1px solid var(--ink-5);background:var(--ink-6);border-radius:var(--r8);font-family:inherit;font-size:12px;color:var(--ink-2);resize:vertical;min-height:28px;}
+  .slot-notes:focus{outline:none;border-color:var(--red);background:var(--white);}
+  .slot-actions{display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
+  .slot-btn{width:24px;height:20px;border:none;background:none;color:var(--ink-4);cursor:pointer;font-size:11px;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:0;}
+  .slot-btn:hover{background:var(--ink-6);color:var(--ink-2);}
+  .slot-btn-del:hover{background:var(--red-light);color:var(--red);}
+
+  .slots-empty{padding:32px 16px;text-align:center;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);color:var(--ink-3);font-size:12px;line-height:1.6;}
+
+  /* Parts notes section */
+  .parts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;}
+  .part-field label{display:block;font-size:10px;font-weight:600;color:var(--ink-3);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;display:flex;align-items:center;gap:4px;}
+  .part-field textarea{width:100%;padding:8px 10px;border:1px solid var(--ink-5);background:var(--ink-6);border-radius:var(--r8);font-family:inherit;font-size:12px;color:var(--ink);resize:vertical;min-height:56px;line-height:1.5;}
+  .part-field textarea:focus{outline:none;border-color:var(--red);background:var(--white);}
+
+  .wl-notes{width:100%;padding:10px 12px;border:1px solid var(--ink-5);background:var(--ink-6);border-radius:var(--r10);font-family:inherit;font-size:13px;color:var(--ink);resize:vertical;min-height:72px;line-height:1.5;}
+  .wl-notes:focus{outline:none;border-color:var(--red);background:var(--white);}
+
+  /* Actions bar */
+  .actions-bar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 18px;background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);position:sticky;bottom:16px;box-shadow:var(--shadow);}
+  .actions-summary{font-size:12px;color:var(--ink-3);}
+  .actions-summary strong{color:var(--ink);}
+  .actions-btns{display:flex;gap:8px;}
+  .rs-btn{padding:9px 16px;border-radius:var(--r10);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--ink-5);background:var(--white);color:var(--ink-2);}
+  .rs-btn:hover{border-color:var(--ink-4);}
+  .rs-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .rs-btn-primary{background:var(--red);border-color:var(--red);color:white;}
+  .rs-btn-primary:hover:not(:disabled){background:var(--red-d);border-color:var(--red-d);}
+  .rs-btn-primary:disabled{background:var(--ink-5);border-color:var(--ink-5);}
+
+  .status-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;}
+  .status-draft{background:#FEF3C7;color:#92400E;}
+  .status-ready{background:#D1FAE5;color:#065F46;}
+  .status-archived{background:var(--ink-6);color:var(--ink-4);}
+
+  @media (max-width:640px){
+    .arr-meta{grid-template-columns:1fr 1fr;}
+    .arr-meta > :first-child{grid-column:1/-1;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared pattern) ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <div class="topbar">
+    <a href="../dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">Arrangement Builder</div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <div class="main">
+      <div class="page-body" style="max-width:1100px;">
+
+        <!-- Breadcrumb -->
+        <div class="arr-crumb">
+          <a href="index.html">Rehearsal Studio</a>
+          <span>›</span>
+          <span id="crumb-song">Song</span>
+          <span>›</span>
+          <span id="crumb-arr">Arrangement</span>
+        </div>
+
+        <!-- Header -->
+        <div style="margin-bottom:18px;">
+          <div class="page-eyebrow" id="hdr-eyebrow">🎶 Arrangement</div>
+          <div class="page-title" id="hdr-title">Loading…</div>
+          <div class="page-sub" id="hdr-sub">Compose Calvary's version by dragging chops from the library into the slot list.</div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="arr-panel">
+          <h3>Arrangement details</h3>
+          <div class="arr-panel-sub">These travel with the arrangement and show up in the team's rehearsal view.</div>
+          <div class="arr-meta">
+            <div class="arr-meta-field">
+              <label>Arrangement name</label>
+              <input type="text" id="arr-name" placeholder="e.g. Sunday 26 April 2026">
+            </div>
+            <div class="arr-meta-field">
+              <label>Key</label>
+              <input type="text" id="arr-key" placeholder="E">
+            </div>
+            <div class="arr-meta-field">
+              <label>BPM</label>
+              <input type="number" id="arr-bpm" placeholder="129" min="40" max="240" step="1">
+            </div>
+            <div class="arr-meta-field">
+              <label>Status</label>
+              <select id="arr-status">
+                <option value="draft">Draft</option>
+                <option value="ready">Ready</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Workspace: chops | slots -->
+        <div class="arr-workspace">
+
+          <!-- Left: chops library -->
+          <div class="arr-panel" style="margin-bottom:0;">
+            <h3>Chops library <span style="font-size:11px;font-weight:400;color:var(--ink-4);margin-left:6px;" id="chops-count"></span></h3>
+            <div class="arr-panel-sub">Pieces cut from the reference. Click <strong>+ Add</strong> to drop one into the arrangement.</div>
+            <div id="chops-container">
+              <div class="chops-empty" id="chops-empty" style="display:none;">
+                No chops yet. <a href="#" id="chops-empty-link">Open the reference editor →</a> to mark sections first.
+              </div>
+              <div class="chops-list" id="chops-list"></div>
+            </div>
+          </div>
+
+          <!-- Right: slots -->
+          <div class="arr-panel" style="margin-bottom:0;">
+            <h3>Your arrangement <span style="font-size:11px;font-weight:400;color:var(--ink-4);margin-left:6px;" id="slots-count"></span></h3>
+            <div class="arr-panel-sub">The order Calvary will play this song. Reorder with the ↑↓ arrows. Per-slot notes are for direction at that moment ("drop to kick only", "half-time", "MC interlude").</div>
+            <div id="slots-container">
+              <div class="slots-empty" id="slots-empty">
+                No slots yet. Tap <strong>+ Add</strong> on a chop to start building the arrangement.
+              </div>
+              <div class="slots-list" id="slots-list"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Arrangement-level notes -->
+        <div class="arr-panel" style="margin-top:16px;">
+          <h3>Worship leader notes</h3>
+          <div class="arr-panel-sub">Anything the team should know overall — mood, spiritual intent, tempo feel, how to handle transitions.</div>
+          <textarea class="wl-notes" id="wl-notes" placeholder="e.g. Feel is celebratory. Keep tempo steady through the bridge — don't let it drag. Build into final chorus."></textarea>
+        </div>
+
+        <!-- Parts notes -->
+        <div class="arr-panel">
+          <h3>Part notes</h3>
+          <div class="arr-panel-sub">Direction for each instrument across the arrangement. Per-slot adjustments go in the notes on each slot above.</div>
+          <div class="parts-grid" id="parts-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sticky actions bar -->
+      <div style="position:sticky;bottom:16px;padding:0 20px 16px;max-width:1100px;margin:0 auto;">
+        <div class="actions-bar">
+          <div class="actions-summary" id="arr-summary">Loading…</div>
+          <div class="actions-btns">
+            <button class="rs-btn" onclick="window.location.href='index.html'">Cancel</button>
+            <button class="rs-btn" id="btn-save-draft" onclick="saveArrangement('draft')">Save draft</button>
+            <button class="rs-btn rs-btn-primary" id="btn-save-ready" onclick="saveArrangement('ready')">Save &amp; publish</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="mob-nav-items" id="mob-nav"></div>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../shell.js"></script>
+<script>
+
+// ── CONFIG ───────────────────────────────────────────────────
+const PARTS = [
+  { key:'drums',       label:'Drums',       icon:'🥁' },
+  { key:'bass',        label:'Bass',        icon:'🎸' },
+  { key:'keys',        label:'Keys',        icon:'🎹' },
+  { key:'electric',    label:'Electric guitar', icon:'⚡' },
+  { key:'acoustic',    label:'Acoustic guitar', icon:'🎵' },
+  { key:'lead_vocal',  label:'Lead vocal',  icon:'🎤' },
+  { key:'bv',          label:'Backing vocals', icon:'👥' }
+];
+
+// ── STATE ────────────────────────────────────────────────────
+const state = {
+  arrangement: null,     // rs_arrangements row
+  song: null,            // rs_songs row
+  reference: null,       // rs_references row (linked to arrangement)
+  chops: [],             // rs_sections rows belonging to the reference
+  slots: [],             // ordered: [{ section_id, notes, position }]
+  parts: {},             // { drums: 'notes...', bass: '...', ... }
+};
+
+// ── BOOT ─────────────────────────────────────────────────────
+function pageInit(){
+  buildSidebar();
+  buildPartsGrid();
+  loadArrangement();
+}
+
+function buildSidebar(){
+  const sb = document.getElementById('sidebar');
+  const modules = [
+    { id:'dashboard',  label:'Dashboard',         href:'../dashboard.html',   icon:'🏠' },
+    { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
+    { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
+    { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
+    { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
+    { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
+    { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
+  ];
+  if(COS.currentUser && COS.currentUser.level === 'admin'){
+    modules.push({ id:'admin', label:'Admin', href:'../admin.html', icon:'⚙️' });
+  }
+  const accessible = modules.filter(m => COS.hasAccess(m.id));
+  sb.innerHTML = `
+    <div class="nav-section">
+      <div class="nav-section-label">Modules</div>
+      ${accessible.map(m => `
+        <a href="${m.href}" class="nav-item${m.active?' active':''}" style="text-decoration:none;">
+          <span style="font-size:13px;">${m.icon}</span>
+          ${m.label}
+        </a>`).join('')}
+    </div>`;
+  // Mobile nav
+  const mob = document.getElementById('mob-nav');
+  if(mob){
+    mob.innerHTML = accessible.slice(0, 5).map(m => `
+      <a href="${m.href}" class="mob-nav-btn${m.active?' active':''}" style="text-decoration:none;">
+        <span>${m.icon}</span>
+        <span>${m.label.split(' ')[0]}</span>
+      </a>`).join('');
+  }
+}
+
+function buildPartsGrid(){
+  const grid = document.getElementById('parts-grid');
+  grid.innerHTML = PARTS.map(p => `
+    <div class="part-field">
+      <label>${p.icon} ${p.label}</label>
+      <textarea id="part-${p.key}" placeholder="Notes for ${p.label.toLowerCase()}…" oninput="state.parts['${p.key}'] = this.value; updateSummary();"></textarea>
+    </div>`).join('');
+}
+
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadArrangement(){
+  const params = new URLSearchParams(location.search);
+  const arrId = params.get('id');
+  if(!arrId){
+    showError('No arrangement ID in the URL.', 'Go back to the Rehearsal Studio and pick an arrangement.');
+    return;
+  }
+
+  // 1. Fetch arrangement
+  const arrs = await sbFetch(`rs_arrangements?id=eq.${arrId}`);
+  if(!arrs || !arrs[0]){
+    showError('Arrangement not found', 'It may have been deleted. Go back to the Rehearsal Studio.');
+    return;
+  }
+  state.arrangement = arrs[0];
+
+  // 2. Fetch song
+  const songs = await sbFetch(`rs_songs?id=eq.${state.arrangement.song_id}`);
+  state.song = (songs && songs[0]) || null;
+
+  // 3. Fetch reference (if linked) — we need its chops
+  if(state.arrangement.reference_id){
+    const refs = await sbFetch(`rs_references?id=eq.${state.arrangement.reference_id}`);
+    state.reference = (refs && refs[0]) || null;
+    if(state.reference){
+      const chops = await sbFetch(`rs_sections?reference_id=eq.${state.reference.id}&order=position.asc`);
+      state.chops = chops || [];
+    }
+  }
+
+  // 4. Fetch existing slots + parts for this arrangement
+  const [slots, parts] = await Promise.all([
+    sbFetch(`rs_arrangement_sections?arrangement_id=eq.${arrId}&order=position.asc`),
+    sbFetch(`rs_arrangement_parts?arrangement_id=eq.${arrId}`)
+  ]);
+  state.slots = (slots || []).map(s => ({
+    section_id: s.section_id,
+    notes: s.notes || '',
+    position: s.position
+  }));
+  state.parts = {};
+  (parts || []).forEach(p => { state.parts[p.part] = p.notes || ''; });
+
+  renderAll();
+}
+
+function showError(title, sub){
+  document.getElementById('hdr-title').textContent = title;
+  document.getElementById('hdr-sub').textContent = sub;
+  document.querySelectorAll('.arr-panel').forEach(p => p.style.display='none');
+  document.querySelector('.actions-bar').style.display = 'none';
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function renderAll(){
+  if(!state.arrangement) return;
+
+  // Header + breadcrumbs
+  const songTitle = state.song ? state.song.title : 'Song';
+  document.getElementById('crumb-song').textContent = songTitle;
+  document.getElementById('crumb-arr').textContent = state.arrangement.name || 'Arrangement';
+  document.getElementById('hdr-eyebrow').textContent = '🎶 ' + songTitle;
+  document.getElementById('hdr-title').textContent = state.arrangement.name || 'Untitled arrangement';
+
+  // Metadata form
+  document.getElementById('arr-name').value = state.arrangement.name || '';
+  document.getElementById('arr-key').value = state.arrangement.key || '';
+  document.getElementById('arr-bpm').value = state.arrangement.bpm || '';
+  document.getElementById('arr-status').value = state.arrangement.status || 'draft';
+
+  // Worship leader notes
+  document.getElementById('wl-notes').value = state.arrangement.worship_leader_notes || '';
+
+  // Part notes
+  PARTS.forEach(p => {
+    const ta = document.getElementById('part-' + p.key);
+    if(ta) ta.value = state.parts[p.key] || '';
+  });
+
+  renderChops();
+  renderSlots();
+  updateSummary();
+}
+
+function renderChops(){
+  const container = document.getElementById('chops-list');
+  const empty = document.getElementById('chops-empty');
+  const count = document.getElementById('chops-count');
+
+  if(!state.reference){
+    container.style.display = 'none';
+    empty.style.display = 'block';
+    empty.innerHTML = 'This arrangement has no reference linked. <a href="reference.html?arrangement_id=' + state.arrangement.id + '">Add a reference →</a>';
+    count.textContent = '';
+    return;
+  }
+  if(state.chops.length === 0){
+    container.style.display = 'none';
+    empty.style.display = 'block';
+    document.getElementById('chops-empty-link').href = 'reference.html?arrangement_id=' + state.arrangement.id;
+    count.textContent = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  container.style.display = 'flex';
+  count.textContent = `· ${state.chops.length} chop${state.chops.length===1?'':'s'}`;
+  container.innerHTML = state.chops.map((c, i) => {
+    const dur = formatDuration(c.end_seconds - c.start_seconds);
+    return `
+      <div class="chop-card" data-chop-id="${c.id}">
+        <div class="chop-card-icon">${i + 1}</div>
+        <div class="chop-card-body">
+          <div class="chop-card-label">${escapeHtml(c.label || 'Unnamed')}</div>
+          <div class="chop-card-meta">${formatTime(c.start_seconds)}–${formatTime(c.end_seconds)} · ${dur}</div>
+        </div>
+        <div class="chop-card-btns">
+          <button class="chop-add-btn" onclick="addChopToSlots('${c.id}')">+ Add</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderSlots(){
+  const container = document.getElementById('slots-list');
+  const empty = document.getElementById('slots-empty');
+  const count = document.getElementById('slots-count');
+
+  if(state.slots.length === 0){
+    container.style.display = 'none';
+    empty.style.display = 'block';
+    count.textContent = '';
+    return;
+  }
+
+  empty.style.display = 'none';
+  container.style.display = 'flex';
+  count.textContent = `· ${state.slots.length} slot${state.slots.length===1?'':'s'}`;
+
+  container.innerHTML = state.slots.map((slot, i) => {
+    const chop = state.chops.find(c => c.id === slot.section_id);
+    const label = chop ? (chop.label || 'Unnamed') : '(chop not found)';
+    const dur = chop ? formatDuration(chop.end_seconds - chop.start_seconds) : '—';
+    return `
+      <div class="slot-card" data-slot-idx="${i}">
+        <div class="slot-num">${i + 1}</div>
+        <div class="slot-body">
+          <div class="slot-title">${escapeHtml(label)}</div>
+          <div class="slot-meta">${dur}${chop ? ` · ${formatTime(chop.start_seconds)}–${formatTime(chop.end_seconds)}` : ''}</div>
+          <textarea class="slot-notes" placeholder="Notes for this slot (optional) — e.g. 'drop to kick only', 'half-time', 'MC bridges here'" oninput="updateSlotNotes(${i}, this.value)">${escapeHtml(slot.notes || '')}</textarea>
+        </div>
+        <div class="slot-actions">
+          <button class="slot-btn" onclick="moveSlot(${i}, -1)" title="Move up" ${i === 0 ? 'disabled' : ''}>↑</button>
+          <button class="slot-btn" onclick="moveSlot(${i}, 1)" title="Move down" ${i === state.slots.length - 1 ? 'disabled' : ''}>↓</button>
+          <button class="slot-btn slot-btn-del" onclick="removeSlot(${i})" title="Remove">×</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function updateSummary(){
+  const el = document.getElementById('arr-summary');
+  const slotsDuration = state.slots.reduce((sum, slot) => {
+    const chop = state.chops.find(c => c.id === slot.section_id);
+    return sum + (chop ? (chop.end_seconds - chop.start_seconds) : 0);
+  }, 0);
+  const partsCount = Object.values(state.parts).filter(v => v && v.trim()).length;
+
+  el.innerHTML = `
+    <strong>${state.slots.length}</strong> slot${state.slots.length===1?'':'s'} ·
+    <strong>${formatDuration(slotsDuration)}</strong> total ·
+    <strong>${partsCount}/${PARTS.length}</strong> parts with notes
+  `;
+}
+
+// ── SLOT OPERATIONS ──────────────────────────────────────────
+function addChopToSlots(chopId){
+  state.slots.push({
+    section_id: chopId,
+    notes: '',
+    position: state.slots.length
+  });
+  renderSlots();
+  updateSummary();
+  // Scroll the new slot into view (a nice touch for long lists)
+  setTimeout(() => {
+    const cards = document.querySelectorAll('#slots-list .slot-card');
+    const last = cards[cards.length - 1];
+    if(last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 50);
+}
+
+function removeSlot(idx){
+  state.slots.splice(idx, 1);
+  // Re-index positions
+  state.slots.forEach((s, i) => { s.position = i; });
+  renderSlots();
+  updateSummary();
+}
+
+function moveSlot(idx, delta){
+  const target = idx + delta;
+  if(target < 0 || target >= state.slots.length) return;
+  const [slot] = state.slots.splice(idx, 1);
+  state.slots.splice(target, 0, slot);
+  state.slots.forEach((s, i) => { s.position = i; });
+  renderSlots();
+  updateSummary();
+}
+
+function updateSlotNotes(idx, value){
+  if(state.slots[idx]) state.slots[idx].notes = value;
+}
+
+// ── SAVE ─────────────────────────────────────────────────────
+let _saving = false;
+async function saveArrangement(status){
+  if(_saving) return;
+  _saving = true;
+  const btnDraft = document.getElementById('btn-save-draft');
+  const btnReady = document.getElementById('btn-save-ready');
+  btnDraft.disabled = true;
+  btnReady.disabled = true;
+  btnDraft.textContent = 'Saving…';
+  btnReady.textContent = 'Saving…';
+
+  try {
+    const arrId = state.arrangement.id;
+
+    // 1. Update arrangement metadata
+    const meta = {
+      name: document.getElementById('arr-name').value.trim() || state.arrangement.name,
+      key: document.getElementById('arr-key').value.trim() || null,
+      bpm: parseInt(document.getElementById('arr-bpm').value) || null,
+      status: status,
+      worship_leader_notes: document.getElementById('wl-notes').value.trim() || null,
+      updated_at: new Date().toISOString()
+    };
+    const updRes = await sbPatch('rs_arrangements', `id=eq.${arrId}`, meta);
+    if(!updRes) throw new Error('Failed to update arrangement');
+
+    // 2. Replace slots atomically
+    await sbDelete('rs_arrangement_sections', `arrangement_id=eq.${arrId}`);
+    if(state.slots.length > 0){
+      const slotRows = state.slots.map((s, i) => ({
+        arrangement_id: arrId,
+        section_id: s.section_id,
+        position: i,
+        notes: s.notes && s.notes.trim() ? s.notes.trim() : null
+      }));
+      const slotRes = await sbPost('rs_arrangement_sections', slotRows);
+      if(!slotRes) throw new Error('Failed to save slots');
+    }
+
+    // 3. Replace parts atomically
+    await sbDelete('rs_arrangement_parts', `arrangement_id=eq.${arrId}`);
+    const partRows = PARTS
+      .map(p => ({ part: p.key, notes: (state.parts[p.key] || '').trim() }))
+      .filter(p => p.notes)
+      .map(p => ({ arrangement_id: arrId, part: p.part, notes: p.notes }));
+    if(partRows.length > 0){
+      const partRes = await sbPost('rs_arrangement_parts', partRows);
+      if(!partRes) throw new Error('Failed to save part notes');
+    }
+
+    // Update local state + UI
+    state.arrangement = { ...state.arrangement, ...meta };
+    COS.toast(status === 'ready' ? '✓ Arrangement published' : '✓ Draft saved');
+    setTimeout(() => { window.location.href = 'index.html'; }, 900);
+
+  } catch(err){
+    console.error('saveArrangement failed:', err);
+    COS.toast('Error: ' + err.message);
+    _saving = false;
+    btnDraft.disabled = false;
+    btnReady.disabled = false;
+    btnDraft.textContent = 'Save draft';
+    btnReady.textContent = 'Save & publish';
+  }
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function formatTime(s){
+  if(s === null || s === undefined || isNaN(s)) return '0:00';
+  const n = Math.max(0, parseFloat(s));
+  const m = Math.floor(n / 60);
+  const r = Math.floor(n % 60);
+  return `${m}:${r.toString().padStart(2,'0')}`;
+}
+function formatDuration(s){
+  const n = Math.max(0, parseFloat(s) || 0);
+  if(n < 60) return `${Math.round(n)}s`;
+  const m = Math.floor(n / 60);
+  const r = Math.round(n % 60);
+  return r === 0 ? `${m}m` : `${m}m ${r}s`;
+}
+function escapeHtml(s){
+  return (s || '').toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+COS.init('rehearsal');
+</script>
+
+</body>
+</html>
