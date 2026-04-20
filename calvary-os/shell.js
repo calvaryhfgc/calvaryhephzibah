@@ -93,6 +93,8 @@ const COS = {
   hasAccess(section){
     if(!this.currentUser) return false;
     if(this.currentUser.level === 'admin') return true;
+    // Rehearsal Studio is available to anyone with worship access
+    if(section === 'rehearsal') return (this.currentUser.sections||[]).includes('worship');
     return (this.currentUser.sections||[]).includes(section);
   },
 
