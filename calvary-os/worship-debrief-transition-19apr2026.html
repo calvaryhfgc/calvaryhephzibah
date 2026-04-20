@@ -3,28 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Worship — Transition Team Debrief | 19th April 2026</title>
-<meta property="og:title" content="Worship Debrief — Transition Team | 19th April 2026">
-<meta property="og:description" content="Leadership debrief covering service feedback, expenses and financial implications going forward.">
+<title>Worship — Finance Debrief | 19th April 2026</title>
+<meta property="og:title" content="Worship Finance Debrief | 19th April 2026">
+<meta property="og:description" content="Financial debrief for the worship setup — expenses, outstanding payments and forecast going forward.">
 <meta property="og:image" content="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/ufTeOHywYxLPaG9TDWPG/media/68319627522e13a702426868.png">
 <meta property="og:type" content="website">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Lora:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
 :root{
-  --red:#C41E2A;--red-light:#FEF2F2;--red-mid:#FECACA;
+  --red:#C41E2A;--red-light:#FEF2F2;
   --ink:#111827;--ink-2:#374151;--ink-3:#6B7280;--ink-4:#9CA3AF;--ink-5:#E5E7EB;--ink-6:#F9FAFB;
   --white:#FFFFFF;--bg:#F5F6FA;
   --green:#16A34A;--green-light:#F0FDF4;--green-mid:#BBF7D0;
   --amber:#D97706;--amber-light:#FFFBEB;--amber-mid:#FDE68A;
   --blue:#2563EB;--blue-light:#EFF6FF;
-  --purple:#7C3AED;--purple-light:#F3E8FF;
+  --purple:#7C3AED;
 }
 html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;}
 .page{max-width:680px;margin:0 auto;padding:24px 16px 80px;}
 
-/* Header */
-.hdr{background:var(--ink);border-radius:20px;padding:28px 24px;margin-bottom:16px;position:relative;overflow:hidden;}
+.hdr{background:var(--ink);border-radius:20px;padding:28px 24px;margin-bottom:20px;position:relative;overflow:hidden;}
 .hdr::before{content:'';position:absolute;top:-50px;right:-30px;width:160px;height:160px;background:rgba(255,255,255,0.04);border-radius:50%;}
 .hdr-eye{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:8px;}
 .hdr-title{font-family:'Lora',serif;font-size:24px;font-weight:600;color:white;line-height:1.2;margin-bottom:6px;}
@@ -33,52 +32,51 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
 .hchip{font-size:11px;font-weight:600;padding:4px 11px;border-radius:100px;}
 .hc-green{background:rgba(22,163,74,0.2);color:#86EFAC;}
 .hc-amber{background:rgba(217,119,6,0.25);color:#FCD34D;}
-.hc-grey{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);}
 .hc-red{background:rgba(196,30,42,0.3);color:#FCA5A5;}
 
-/* Section heading */
-.sh{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin:28px 0 12px;padding-left:2px;}
-
-/* Cards */
-.card{background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:18px 20px;margin-bottom:10px;box-shadow:0 1px 3px rgba(17,24,39,0.05);}
-.card-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:6px;}
-.card-body{font-size:14px;color:var(--ink-3);line-height:1.6;}
-.green-card{border-left:4px solid var(--green);border-radius:0 14px 14px 0;}
-.amber-card{border-left:4px solid var(--amber);border-radius:0 14px 14px 0;}
-.red-card{border-left:4px solid var(--red);border-radius:0 14px 14px 0;}
-.purple-card{border-left:4px solid var(--purple);border-radius:0 14px 14px 0;}
-
-/* Verdict */
-.verdict{background:var(--green);border-radius:16px;padding:20px 22px;margin-bottom:16px;display:flex;gap:14px;align-items:flex-start;}
-.verdict-icon{font-size:28px;flex-shrink:0;margin-top:2px;}
-.verdict-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:4px;}
-.verdict-text{font-family:'Lora',serif;font-size:17px;color:white;line-height:1.45;}
+.sh{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin:28px 0 12px;}
 
 /* Pastor Shade block */
-.shade-card{background:var(--red);border-radius:16px;padding:20px 22px;margin-bottom:10px;}
+.shade-card{background:var(--red);border-radius:16px;padding:20px 22px;margin-bottom:16px;}
 .shade-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-bottom:14px;}
 .shade-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;}
 .shade-row:last-child{margin-bottom:0;}
 .shade-arrow{color:rgba(255,255,255,0.4);flex-shrink:0;font-size:14px;margin-top:2px;}
 .shade-text{font-size:14px;color:white;line-height:1.55;}
 
-/* Expenses table */
+/* Expenses */
+.exp-wrap{background:var(--white);border:1px solid var(--ink-5);border-radius:16px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 3px rgba(17,24,39,0.05);}
 .exp-table{width:100%;border-collapse:separate;border-spacing:0;}
-.exp-table th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink-4);padding:10px 14px;text-align:left;background:var(--bg);border-bottom:1px solid var(--ink-5);}
-.exp-table td{padding:13px 14px;border-bottom:1px solid var(--ink-5);font-size:14px;color:var(--ink-2);vertical-align:top;}
+.exp-table th{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink-4);padding:11px 16px;text-align:left;background:var(--bg);border-bottom:1px solid var(--ink-5);}
+.exp-table td{padding:13px 16px;border-bottom:1px solid var(--ink-5);font-size:14px;color:var(--ink-2);vertical-align:top;}
 .exp-table tr:last-child td{border-bottom:none;}
-.exp-table .total td{font-weight:700;color:var(--ink);background:var(--bg);font-size:15px;}
-.status-paid{background:var(--green-light);color:var(--green);font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;white-space:nowrap;}
-.status-pending{background:var(--amber-light);color:var(--amber);font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;white-space:nowrap;}
-.status-proposed{background:var(--blue-light);color:var(--blue);font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;white-space:nowrap;}
+.exp-title{font-weight:600;color:var(--ink);margin-bottom:2px;}
+.exp-sub{font-size:12px;color:var(--ink-4);}
+.badge{display:inline-flex;font-size:11px;font-weight:600;padding:3px 9px;border-radius:100px;white-space:nowrap;}
+.b-paid{background:var(--green-light);color:var(--green);}
+.b-covered{background:var(--ink-6);color:var(--ink-4);border:1px solid var(--ink-5);}
+.b-pending{background:var(--amber-light);color:var(--amber);}
+.b-invoice{background:var(--blue-light);color:var(--blue);}
+.notice-green{background:var(--green-light);border-top:1px solid var(--green-mid);}
+.notice-green td{color:var(--green);font-size:12px;font-weight:600;padding:10px 16px;}
+.total-row td{background:var(--bg);font-weight:700;color:var(--ink);font-size:15px;border-top:2px solid var(--ink-5) !important;}
+.total-sub td{background:var(--ink-6);font-size:12px;color:var(--ink-4);border-top:none !important;}
 
 /* Bank details */
-.bank-block{background:var(--ink-6);border:1px solid var(--ink-5);border-radius:12px;padding:14px 16px;margin-top:10px;}
-.bank-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;}
-.bank-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--ink-5);font-size:14px;}
+.bank-block{background:var(--ink-6);border:1px solid var(--ink-5);border-radius:12px;padding:14px 16px;margin-top:12px;}
+.bank-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:10px;}
+.bank-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--ink-5);}
 .bank-row:last-child{border-bottom:none;}
-.bank-key{color:var(--ink-4);font-weight:500;}
-.bank-val{color:var(--ink);font-weight:600;font-family:monospace;font-size:15px;}
+.bank-key{font-size:13px;color:var(--ink-4);}
+.bank-val{font-size:14px;font-weight:700;color:var(--ink);font-family:monospace;}
+
+/* Forecast cards */
+.fcard{background:var(--white);border:1px solid var(--ink-5);border-radius:14px;padding:16px 18px;margin-bottom:10px;box-shadow:0 1px 3px rgba(17,24,39,0.04);}
+.fcard.amber{border-left:4px solid var(--amber);border-radius:0 14px 14px 0;}
+.fcard.red{border-left:4px solid var(--red);border-radius:0 14px 14px 0;}
+.fcard.purple{border-left:4px solid var(--purple);border-radius:0 14px 14px 0;}
+.fcard-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:5px;}
+.fcard-body{font-size:14px;color:var(--ink-3);line-height:1.6;}
 
 /* Actions */
 .action{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:var(--white);border:1.5px solid var(--ink-5);border-radius:13px;margin-bottom:8px;box-shadow:0 1px 2px rgba(17,24,39,0.04);}
@@ -86,129 +84,37 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
 .action-body{font-size:14px;color:var(--ink-2);line-height:1.5;}
 .action-owner{font-size:11px;font-weight:600;color:var(--ink-4);margin-top:4px;}
 
-/* Footer */
 .footer{text-align:center;font-size:12px;color:var(--ink-4);line-height:1.9;margin-top:32px;padding-top:24px;border-top:1px solid var(--ink-5);}
-
-/* ── MOBILE NAV ── */
-.top-nav{
-  position:sticky;top:0;z-index:100;
-  background:rgba(255,255,255,0.96);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--ink-5);
-  padding:10px 16px;
-  margin:0 -16px 20px;
-  display:flex;gap:6px;
-  overflow-x:auto;
-  -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
-  box-shadow:0 2px 8px rgba(17,24,39,0.06);
-}
-.top-nav::-webkit-scrollbar{display:none;}
-.tn-btn{
-  display:flex;flex-direction:column;align-items:center;gap:2px;
-  padding:7px 13px;border-radius:10px;
-  border:none;background:var(--bg);
-  cursor:pointer;font-family:'Poppins',sans-serif;
-  white-space:nowrap;flex-shrink:0;
-  transition:all 0.12s;text-decoration:none;
-}
-.tn-btn:active{background:var(--red-light);}
-.tn-btn.active{background:var(--red);}
-.tn-emoji{font-size:15px;line-height:1;}
-.tn-label{font-size:10px;font-weight:600;color:var(--ink-3);}
-.tn-btn.active .tn-label{color:white;}
-
-/* Anchor offset */
-.anchor{display:block;position:relative;top:-70px;visibility:hidden;}
-
-/* Back to top */
-.back-top{
-  position:fixed;bottom:24px;right:16px;
-  width:42px;height:42px;border-radius:50%;
-  background:var(--ink);color:white;
-  border:none;font-size:18px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;box-shadow:0 4px 16px rgba(17,24,39,0.2);
-  opacity:0;transition:opacity 0.2s;z-index:50;
-}
-.back-top.visible{opacity:1;}
-
-/* Mobile: make expense table scrollable */
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:16px;}
-.exp-table{min-width:480px;}
-
-/* Mobile: bank details stack */
-@media(max-width:500px){
-  .bank-row{flex-direction:column;gap:2px;align-items:flex-start;padding:8px 0;}
-  .bank-val{font-size:14px;}
-}
 </style>
 </head>
 <body>
 <div class="page">
-  <!-- Sticky nav -->
-  <nav class="top-nav" id="top-nav">
-    <a href="#s-verdict" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🎯</span><span class="tn-label">Overview</span></a>
-    <a href="#s-shade" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🙏</span><span class="tn-label">Pastor Shade</span></a>
-    <a href="#s-service" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">✅</span><span class="tn-label">Service</span></a>
-    <a href="#s-expenses" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">💷</span><span class="tn-label">Expenses</span></a>
-    <a href="#s-financial" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">📊</span><span class="tn-label">Financial</span></a>
-    <a href="#s-actions" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">📋</span><span class="tn-label">Actions</span></a>
-  </nav>
 
   <!-- Header -->
   <div class="hdr">
-    <div class="hdr-eye">Transition team · Restricted</div>
-    <div class="hdr-title">Worship — Leadership Debrief</div>
-    <div class="hdr-sub">Sunday 19th April 2026 · Calvary Hephzibah · First Sunday of the new season</div>
+    <div class="hdr-eye">Finance · Restricted</div>
+    <div class="hdr-title">Worship Finance Debrief</div>
+    <div class="hdr-sub">Sunday 19th April 2026 · Calvary Hephzibah Full Gospel Church</div>
     <div class="hdr-chips">
-      <span class="hchip hc-green">✅ Strong first Sunday</span>
-      <span class="hchip hc-amber">💷 Expenses to settle</span>
-      <span class="hchip hc-red">⚠️ Lead singer: ongoing need</span>
-    </div>
-  </div>
-
-  <!-- Overall verdict -->
-  <span class="anchor" id="s-verdict"></span>
-  <div class="verdict">
-    <div class="verdict-icon">🎯</div>
-    <div>
-      <div class="verdict-label">Overall</div>
-      <div class="verdict-text">A new set, a new team configuration, one rehearsal — and we delivered a strong first Sunday. The congregation was engaged, the energy was right, and the service held together well.</div>
+      <span class="hchip hc-green">✅ Service delivered successfully</span>
+      <span class="hchip hc-amber">💷 £200 outstanding</span>
+      <span class="hchip hc-red">⚠️ Lead vocalist: ongoing cost</span>
     </div>
   </div>
 
   <!-- Pastor Shade feedback -->
-  <span class="anchor" id="s-shade"></span>
   <div class="sh">Feedback from Pastor Shade</div>
   <div class="shade-card">
     <div class="shade-label">General Overseer · Pastor Shade Olatoye</div>
     <div class="shade-row"><span class="shade-arrow">→</span><div class="shade-text">The worship was good — the energy and dynamic served the service well throughout.</div></div>
-    <div class="shade-row"><span class="shade-arrow">→</span><div class="shade-text">The whole church was singing. The song selection was intentional and it was validated in the room.</div></div>
+    <div class="shade-row"><span class="shade-arrow">→</span><div class="shade-text">The whole church was singing. The song selection was intentional and validated in the room.</div></div>
     <div class="shade-row"><span class="shade-arrow">→</span><div class="shade-text">It felt like a lift from beginning to end. That was the intention and it came through.</div></div>
-    <div class="shade-row"><span class="shade-arrow">→</span><div class="shade-text">Overall — she was proud of what the team delivered given the circumstances. What was pulled off with the time available was not small.</div></div>
-  </div>
-
-  <!-- Service performance -->
-  <span class="anchor" id="s-service"></span>
-  <div class="sh">Service performance</div>
-
-  <div class="card green-card">
-    <div class="card-title">What worked</div>
-    <div class="card-body">The "greatest hits" approach — playing only the parts everyone knows — meant the congregation sang without needing the screen. Energy stayed high throughout. Communion was pitched correctly. The worship section flowed as one continuous movement. The stream recording was the best quality we've had in a long time.</div>
-  </div>
-
-  <div class="card amber-card">
-    <div class="card-title">What needs work</div>
-    <div class="card-body">Transitions between songs need deliberate rehearsal — this will improve naturally as the team plays the same set repeatedly. Overall mix needs ongoing attention. Both are solvable and expected at this stage.</div>
+    <div class="shade-row"><span class="shade-arrow">→</span><div class="shade-text">She was proud of what the team delivered given the circumstances. What was pulled off with the time available was not small.</div></div>
   </div>
 
   <!-- Expenses -->
-  <span class="anchor" id="s-expenses"></span>
   <div class="sh">Expenses — Sunday 19th April 2026</div>
-
-  <div class="card table-wrap" style="padding:0;">
+  <div class="exp-wrap">
     <table class="exp-table">
       <thead>
         <tr>
@@ -219,124 +125,94 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
       </thead>
       <tbody>
         <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Rehearsal space</div>
-            <div style="font-size:12px;color:var(--ink-4);">Saturday 18th April</div>
-          </td>
+          <td><div class="exp-title">Rehearsal space</div><div class="exp-sub">Saturday 18th April</div></td>
           <td><strong>£60.00</strong></td>
-          <td><span class="status-paid">Paid</span></td>
+          <td><span class="badge b-paid">Paid</span></td>
         </tr>
         <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Transport — Keys player (Uber)</div>
-            <div style="font-size:12px;color:var(--ink-4);">Stockport → Manchester · 19 Apr · UberX · Covered by Bolaji O</div>
-          </td>
+          <td><div class="exp-title">Transport — Keys (Uber)</div><div class="exp-sub">Stockport → Manchester · UberX · Covered by Bolaji O</div></td>
           <td><strong>£14.26</strong></td>
-          <td><span class="status-paid">Covered</span></td>
+          <td><span class="badge b-covered">Covered</span></td>
         </tr>
         <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Love gift — Keys player</div>
-            <div style="font-size:12px;color:var(--ink-4);">Agreed at £50 (proposed £75, negotiated down given budget)</div>
-          </td>
-          <td><strong>£50.00</strong></td>
-          <td><span class="status-pending">To pay</span></td>
-        </tr>
-        <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Lead vocalist — Vanessa</div>
-            <div style="font-size:12px;color:var(--ink-4);">Via Voices Beyond (Tosin Akindele). Covers Sunday + rehearsal. Negotiated from £175 to £150. Invoice pending.</div>
-          </td>
-          <td><strong>£150.00</strong></td>
-          <td><span class="status-pending">Awaiting invoice</span></td>
-        </tr>
-        <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Refreshments — drinks</div>
-            <div style="font-size:12px;color:var(--ink-4);">Saturday 18th April rehearsal · Covered by Bolaji O</div>
-          </td>
+          <td><div class="exp-title">Refreshments — drinks</div><div class="exp-sub">Saturday rehearsal · Covered by Bolaji O</div></td>
           <td><strong>£17.49</strong></td>
-          <td><span class="status-paid">Covered</span></td>
+          <td><span class="badge b-covered">Covered</span></td>
         </tr>
         <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Refreshments — KFC</div>
-            <div style="font-size:12px;color:var(--ink-4);">Saturday 18th April rehearsal · Covered by Bolaji O</div>
-          </td>
+          <td><div class="exp-title">Refreshments — KFC</div><div class="exp-sub">Saturday rehearsal · Covered by Bolaji O</div></td>
           <td><strong>£33.63</strong></td>
-          <td><span class="status-paid">Covered</span></td>
+          <td><span class="badge b-covered">Covered</span></td>
         </tr>
         <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Refreshments — pizza</div>
-            <div style="font-size:12px;color:var(--ink-4);">Saturday 18th April rehearsal · Covered by Bolaji O</div>
-          </td>
+          <td><div class="exp-title">Refreshments — pizza</div><div class="exp-sub">Saturday rehearsal · Covered by Bolaji O</div></td>
           <td><strong>£65.21</strong></td>
-          <td><span class="status-paid">Covered</span></td>
+          <td><span class="badge b-covered">Covered</span></td>
         </tr>
         <tr>
-          <td>
-            <div style="font-weight:600;color:var(--ink);margin-bottom:2px;">Train fare</div>
-            <div style="font-size:12px;color:var(--ink-4);">Travel to Manchester · Covered by Bolaji O</div>
-          </td>
+          <td><div class="exp-title">Train fare</div><div class="exp-sub">Travel to Manchester · Covered by Bolaji O</div></td>
           <td><strong>£123.80</strong></td>
-          <td><span class="status-paid">Covered</span></td>
+          <td><span class="badge b-covered">Covered</span></td>
         </tr>
-        <tr style="background:var(--green-light);">
-          <td colspan="3" style="padding:10px 14px;font-size:12px;color:var(--green);font-weight:600;">
-            ✅ Items marked "Covered" have been absorbed personally by Bolaji O and require no church reimbursement.
-          </td>
+        <tr>
+          <td><div class="exp-title">Love gift — Keys player</div><div class="exp-sub">Agreed at £50. Proposed £75, negotiated down given budget.</div></td>
+          <td><strong>£50.00</strong></td>
+          <td><span class="badge b-pending">To pay</span></td>
         </tr>
-        <tr class="total">
+        <tr>
+          <td><div class="exp-title">Lead vocalist — Vanessa</div><div class="exp-sub">Via Voices Beyond (agent: Tosin Akindele). Covers Sunday + rehearsal. Negotiated from £175 → £150. Invoice pending.</div></td>
+          <td><strong>£150.00</strong></td>
+          <td><span class="badge b-invoice">Awaiting invoice</span></td>
+        </tr>
+        <tr class="notice-green">
+          <td colspan="3">✅ Items marked "Covered" absorbed by Bolaji O — no reimbursement required from church.</td>
+        </tr>
+        <tr class="total-row">
           <td><strong>Outstanding — to be paid by church</strong></td>
           <td><strong>£200.00</strong></td>
           <td></td>
         </tr>
-        <tr style="background:var(--ink-6);">
-          <td colspan="3" style="padding:10px 14px;font-size:12px;color:var(--ink-4);">
-            Comprises: Love gift £50 + Vanessa £150 (invoice pending from Voices Beyond)
-          </td>
+        <tr class="total-sub">
+          <td colspan="3">Love gift £50 (to pay) + Vanessa £150 (awaiting invoice from Voices Beyond)</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Bank details for keys player -->
+  <!-- Bank details -->
   <div class="bank-block">
-    <div class="bank-label">Bank details — Keys player reimbursement</div>
+    <div class="bank-label">Payment details — Keys player love gift</div>
     <div class="bank-row"><span class="bank-key">Bank</span><span class="bank-val">Barclays</span></div>
     <div class="bank-row"><span class="bank-key">Name</span><span class="bank-val">E O MENSAH</span></div>
     <div class="bank-row"><span class="bank-key">Account</span><span class="bank-val">33313174</span></div>
     <div class="bank-row"><span class="bank-key">Sort code</span><span class="bank-val">20-26-20</span></div>
   </div>
 
-  <!-- Financial implications -->
-  <span class="anchor" id="s-financial"></span>
+  <!-- Forecast -->
   <div class="sh">Financial implications going forward</div>
 
-  <div class="card purple-card">
-    <div class="card-title">Recommendation: same setup next Sunday</div>
-    <div class="card-body">The most effective next step is to run the same team configuration for at least one more Sunday. This gives the team time to bed in the set, tighten transitions through repetition, and build on what was a strong first showing. The cost would be broadly the same — approximately £200–£275 depending on whether the rehearsal space is used again.</div>
+  <div class="fcard amber">
+    <div class="fcard-title">Next Sunday — same setup recommended</div>
+    <div class="fcard-body">The recommendation is to retain the same team configuration for at least one more Sunday. Projected cost: approximately <strong>£200–£225</strong> — love gift for keys player (£50) plus Vanessa via Voices Beyond (£150–£175 depending on negotiation). Rehearsal space to be confirmed.</div>
   </div>
 
-  <div class="card red-card">
-    <div class="card-title">Ongoing need: Lead vocalist</div>
-    <div class="card-body">The lead vocalist position is currently covered on a session basis via an agency. This is not a sustainable long-term arrangement financially or operationally. We need a long-term solution — whether that is developing internal talent, a longer-term retainer arrangement, or a different model entirely. This is the most pressing strategic gap in the worship setup and needs a decision in the coming weeks.</div>
+  <div class="fcard red">
+    <div class="fcard-title">Lead vocalist — primary ongoing cost</div>
+    <div class="fcard-body">The lead vocalist is currently engaged on a session basis via an agency at £150 per Sunday (inclusive of rehearsal). This is not a sustainable long-term model. A decision is needed on how the church intends to resource this role — whether through developing internal talent, a longer-term arrangement, or an alternative model. Until that decision is made, budget should anticipate approximately <strong>£150 per Sunday</strong> for this role.</div>
   </div>
 
-  <div class="card amber-card">
-    <div class="card-title">Budget context</div>
-    <div class="card-body">Spending is being managed within a monthly envelope broadly equivalent to what was previously paid to the prior arrangement. This budget is shared between the worship team and media team. For this Sunday, the worship needs took priority. The Vanessa invoice — once received from Voices Beyond — will need to be settled promptly.</div>
+  <div class="fcard purple">
+    <div class="fcard-title">Budget context</div>
+    <div class="fcard-body">Spending is being managed within a monthly envelope broadly equivalent to what was previously allocated to the prior arrangement. This budget is shared between worship and media. Worship needs are currently taking priority. As the team develops internally, session costs should reduce over time.</div>
   </div>
 
   <!-- Actions -->
-  <span class="anchor" id="s-actions"></span>
-  <div class="sh">Actions for the transition team</div>
+  <div class="sh">Actions</div>
 
   <div class="action">
     <div class="action-dot" style="background:var(--red);"></div>
     <div>
-      <div class="action-body">Settle keys player reimbursement — Uber £14.26 + love gift £50 = <strong>£64.26 total</strong>. Bank details above.</div>
+      <div class="action-body">Pay keys player love gift — <strong>£50</strong> to E O MENSAH, Barclays, 33313174, sort 20-26-20.</div>
       <div class="action-owner">Pastor Kayode · Finance</div>
     </div>
   </div>
@@ -344,62 +220,33 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   <div class="action">
     <div class="action-dot" style="background:var(--red);"></div>
     <div>
-      <div class="action-body">Settle Vanessa's fee of <strong>£150</strong> once invoice received from Voices Beyond (Tosin Akindele). Invoice currently awaited.</div>
-      <div class="action-owner">Pastor Kayode · Finance · Bolaji O to follow up on invoice</div>
+      <div class="action-body">Settle Vanessa's fee — <strong>£150</strong> once invoice received from Voices Beyond (Tosin Akindele). Bolaji O to follow up on invoice.</div>
+      <div class="action-owner">Pastor Kayode · Finance</div>
     </div>
   </div>
 
   <div class="action">
     <div class="action-dot" style="background:var(--amber);"></div>
     <div>
-      <div class="action-body">Confirm whether same team configuration can be retained for next Sunday. Decision needed early this week.</div>
-      <div class="action-owner">Bolaji O — confirm by Tuesday</div>
+      <div class="action-body">Confirm budget approval for same setup next Sunday. Decision needed early this week.</div>
+      <div class="action-owner">Pastor Kayode · Bolaji O</div>
     </div>
   </div>
 
   <div class="action">
     <div class="action-dot" style="background:var(--purple);"></div>
     <div>
-      <div class="action-body">Begin discussion on long-term lead vocalist strategy. This is the primary gap to resolve over the coming weeks.</div>
+      <div class="action-body">Begin discussion on long-term lead vocalist strategy and sustainable resourcing model.</div>
       <div class="action-owner">Transition team</div>
     </div>
   </div>
 
   <div class="footer">
     Calvary Hephzibah Full Gospel Church · Global Harvest International<br>
-    Transition Team Debrief · Sunday 19th April 2026<br>
+    Worship Finance Debrief · Sunday 19th April 2026<br>
     Prepared by Bolaji O · Restricted circulation
   </div>
 
 </div>
-
-<button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
-<script>
-function tnActive(el){
-  document.querySelectorAll('.tn-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-}
-const backTop = document.getElementById('back-top');
-window.addEventListener('scroll',()=>{
-  backTop.classList.toggle('visible', window.scrollY > 300);
-});
-const anchors = document.querySelectorAll('.anchor');
-const navBtns = document.querySelectorAll('.tn-btn');
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      const id = entry.target.id;
-      navBtns.forEach(b=>{
-        const match = b.getAttribute('href')==='#'+id;
-        b.classList.toggle('active', match);
-        if(match) b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-      });
-    }
-  });
-},{rootMargin:'-20% 0px -70% 0px'});
-anchors.forEach(a=>io.observe(a));
-</script>
-
 </body>
 </html>
