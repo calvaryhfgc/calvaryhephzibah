@@ -789,7 +789,10 @@ async function registerSoundTouchWorklet(ctx){
     // The worklet file is served from our own origin (GitHub Pages)
     // because AudioWorklet.addModule has strict same-origin rules and
     // most CDN options tripped CORS. Path resolved relative to page.
-    await ctx.audioWorklet.addModule('lib/soundtouch-worklet.js');
+    // Using @soundtouchjs/audio-worklet@1.0.10 — the older 0.2.x
+    // worklet had a broken output-sample accounting that made
+    // pitchSemitones also change tempo. 1.0.x fixes that.
+    await ctx.audioWorklet.addModule('lib/soundtouch-processor.js');
     state.workletReady = true;
     state.workletSupported = true;
     // Now that the worklet is available, re-render the transpose UI
@@ -1295,6 +1298,11 @@ function startAllSources(arrT){
     // Route through pitchNode if present (vocals only in Phase 1)
     if(stem.pitchNode){
       try {
+        // Tell the pitchNode what source playback rate is — 1.0.10 uses this
+        // to compensate so pitch shift stays independent of any source rate
+        // changes (e.g. if the user's also using the 0.75× speed control).
+        const prParam = stem.pitchNode.parameters.get('playbackRate');
+        if(prParam) prParam.setValueAtTime(state.playbackRate, ctx.currentTime);
         stem.source.connect(stem.pitchNode);
         // Connect pitchNode → gain once (idempotent reconnect is fine)
         stem.pitchNode.connect(stem.gain);
@@ -1480,6 +1488,14 @@ function setSpeed(rate){
     const stem = state.stems[s.key];
     if(stem.source){
       try { stem.source.playbackRate.value = rate; } catch(e){}
+    }
+    if(stem.pitchNode){
+      try {
+        const prParam = stem.pitchNode.parameters.get('playbackRate');
+        if(prParam && state.audioCtx){
+          prParam.setValueAtTime(rate, state.audioCtx.currentTime);
+        }
+      } catch(e){}
     }
   });
 }
