@@ -1283,8 +1283,19 @@ function pause(){
 function startAllSources(arrT){
   const ctx = ensureAudioContext();
   const { refTime } = arrangementToReferenceTime(arrT);
-  const startAt = ctx.currentTime + 0.02; // tiny lead so all sources share the same start
-  state.startedAt = startAt;
+
+  // SoundTouch's AudioWorklet buffers audio internally before producing
+  // output — roughly half its auto-sequence length (125ms @ tempo 1.0),
+  // plus one process quantum. Measured experimentally at ~60-70ms.
+  // To keep vocals in sync with un-shifted stems, we start the vocal
+  // source earlier by this amount so it emerges from the pitchNode
+  // aligned with the other stems' first output.
+  // Tunable if it turns out to need adjustment on real audio.
+  const VOCAL_LATENCY = 0.07;
+
+  // Everyone lands at this wall-clock time
+  const syncAt = ctx.currentTime + VOCAL_LATENCY + 0.02;
+  state.startedAt = syncAt;
   state.startOffset = arrT;
 
   STEMS.forEach(s => {
@@ -1295,6 +1306,13 @@ function startAllSources(arrT){
     stem.source = ctx.createBufferSource();
     stem.source.buffer = stem.buffer;
     stem.source.playbackRate.value = state.playbackRate;
+
+    // Pick this source's start time:
+    //   - Stems WITH a pitchNode: start earlier by VOCAL_LATENCY so
+    //     audio emerges from the pitchNode at syncAt
+    //   - Stems WITHOUT: start at syncAt directly
+    let startAt;
+
     // Route through pitchNode if present (vocals only in Phase 1)
     if(stem.pitchNode){
       try {
@@ -1306,14 +1324,19 @@ function startAllSources(arrT){
         stem.source.connect(stem.pitchNode);
         // Connect pitchNode → gain once (idempotent reconnect is fine)
         stem.pitchNode.connect(stem.gain);
+        startAt = syncAt - VOCAL_LATENCY;
       } catch(e){
-        // If routing fails, fall back to direct connection
+        // If routing fails, fall back to direct connection — and start at
+        // syncAt like the other stems so at least they stay aligned.
         console.warn('Pitch node routing failed, falling back:', e);
         stem.source.connect(stem.gain);
+        startAt = syncAt;
       }
     } else {
       stem.source.connect(stem.gain);
+      startAt = syncAt;
     }
+
     // Guard against refTime exceeding buffer length (shouldn't happen but safe)
     const offset = Math.min(refTime, stem.buffer.duration - 0.01);
     stem.source.start(startAt, Math.max(0, offset));
