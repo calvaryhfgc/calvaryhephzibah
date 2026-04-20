@@ -823,15 +823,15 @@ function setupWaveEditor(source){
     COS.toast('Could not load reference audio for playback');
   });
 
-  // Clicking the waveform background (not on a region) deactivates the active chunk
+  // Clicking the waveform background (not on a region) deactivates the active chunk.
+  // 'interaction' fires on bare-waveform clicks AND on region clicks (before region-clicked).
+  // We guard with a timestamp — if region-clicked fired within 150ms, this is a region click,
+  // not a bare-waveform click. More reliable than microtask ordering.
   ws.on('interaction', () => {
-    // Wavesurfer fires 'interaction' on bare-waveform clicks. If we're looping
-    // and the user clicked outside any region, that's the 'exit loop' signal.
-    // We defer with a microtask so region-clicked (if it fires) can set its flag first.
-    queueMicrotask(() => {
-      if(_regionClickGuard){ _regionClickGuard = false; return; }
-      deactivateRegion();
-    });
+    const now = performance.now();
+    if(now - _lastRegionClickAt < 150) return;
+    // Genuine bare-waveform click
+    if(_activeRegionId) deactivateRegion();
   });
 
   // Region interaction
@@ -839,14 +839,13 @@ function setupWaveEditor(source){
   wsRegions.on('region-updated', r => onRegionChanged(r, 'updated'));
   wsRegions.on('region-removed', r => onRegionChanged(r, 'removed'));
   wsRegions.on('region-clicked', (r, e) => {
-    e.stopPropagation();
-    _regionClickGuard = true;  // tell the 'interaction' handler this wasn't a bare click
+    if(e && e.stopPropagation) e.stopPropagation();
+    _lastRegionClickAt = performance.now();
     activateRegion(r.id);
   });
   wsRegions.on('region-double-clicked', (r, e) => {
-    e.stopPropagation();
-    _regionClickGuard = true;
-    // Focus the label input for this region in the sections list (cleaner than prompt)
+    if(e && e.stopPropagation) e.stopPropagation();
+    _lastRegionClickAt = performance.now();
     activateRegion(r.id);
     focusLabelInputFor(r.id);
   });
@@ -921,7 +920,7 @@ function redrawRegionsFromState(){
 // it becomes the "active chunk" and playback loops between its
 // boundaries so the user can adjust edges while hearing the result.
 let _activeRegionId = null;
-let _regionClickGuard = false;  // set true when a region handler fires, read by 'interaction' handler
+let _lastRegionClickAt = 0;     // ms timestamp of last region click, for interaction disambiguation
 let _loopSeekGuard = 0;         // debounce for seeking on loop wrap-around
 
 function createChunk(){
@@ -953,30 +952,42 @@ function createChunk(){
 // Make a region the "active chunk" (and start looping if the global loop is on)
 function activateRegion(regionId){
   _activeRegionId = regionId;
-  // Update visual state
+  // Update visual state across all regions
   if(wsRegions){
     wsRegions.getRegions().forEach(r => {
       const isActive = r.id === regionId;
-      r.setOptions({
-        color: isActive ? 'rgba(196,30,42,0.55)' : 'rgba(196,30,42,0.25)'
-      });
+      try {
+        r.setOptions({
+          color: isActive ? 'rgba(196,30,42,0.55)' : 'rgba(196,30,42,0.25)'
+        });
+      } catch(e){}
       // Toggle the 'active' part attribute via element access (v7 exposes .element)
       try {
         if(r.element) r.element.part = isActive ? 'region active' : 'region';
       } catch(e){}
     });
   }
-  // If loop is on, seek to the region start and play
+  // Seek to the region start and play. Web Audio's play() is idempotent —
+  // calling it while already playing is fine.
   const loopOn = document.getElementById('wave-loop-toggle').checked;
-  if(loopOn){
+  if(loopOn && wsRegions){
     const r = wsRegions.getRegions().find(x => x.id === regionId);
-    if(r){
-      ws.setTime(r.start);
-      if(ws.isPlaying && !ws.isPlaying()){
-        ws.play();
-      } else if(ws.paused === true || (typeof ws.isPlaying === 'function' && !ws.isPlaying())){
-        ws.play();
-      }
+    if(r && ws){
+      try {
+        ws.setTime(r.start);
+      } catch(e){ console.warn('setTime failed:', e); }
+      // Call play() unconditionally. The maintainLoop timeupdate handler will
+      // keep looping between r.start and r.end as long as _activeRegionId is set.
+      try {
+        const result = ws.play();
+        if(result && typeof result.catch === 'function'){
+          // play() returns a promise; catch autoplay-policy rejections
+          result.catch(err => {
+            console.warn('Playback blocked by browser — user must interact first:', err);
+            COS.toast('Tap the play button once to enable playback');
+          });
+        }
+      } catch(e){ console.warn('play() failed:', e); }
     }
   }
   updateLoopStatusUI();
