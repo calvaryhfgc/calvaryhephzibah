@@ -96,6 +96,27 @@
   .pv-loop-toggle.looping .dot{display:inline-block;}
   @keyframes pv-pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
+  /* Transpose card */
+  .pv-transpose-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+  .pv-transpose-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;}
+  .pv-transpose-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-bottom:4px;}
+  .pv-transpose-value{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+  .pv-tx-orig{font-family:'Lora',serif;font-size:18px;font-weight:600;color:rgba(255,255,255,0.55);}
+  .pv-tx-arrow{color:rgba(255,255,255,0.35);font-size:14px;}
+  .pv-tx-target{font-family:'Lora',serif;font-size:22px;font-weight:700;color:#FBBF24;}
+  .pv-tx-st{font-size:11px;color:rgba(255,255,255,0.5);font-variant-numeric:tabular-nums;}
+  .pv-tx-reset{background:none;border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;padding:6px 10px;border-radius:6px;flex-shrink:0;min-height:32px;}
+  .pv-tx-reset:hover:not(:disabled){background:rgba(255,255,255,0.08);color:white;}
+  .pv-tx-reset:disabled{opacity:0.4;cursor:not-allowed;}
+  .pv-tx-slider{width:100%;max-width:100%;min-width:0;display:block;accent-color:#FBBF24;cursor:pointer;height:28px;box-sizing:border-box;margin:0 0 12px;}
+  .pv-tx-chips{display:flex;gap:4px;overflow-x:auto;overflow-y:hidden;padding:2px 0 6px;-webkit-overflow-scrolling:touch;width:100%;max-width:100%;margin-bottom:10px;}
+  .pv-tx-chips::-webkit-scrollbar{display:none;}
+  .pv-tx-chip{flex:0 0 auto;padding:8px 12px;min-height:36px;min-width:44px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);font-size:13px;font-weight:600;cursor:pointer;font-family:'Lora',serif;white-space:nowrap;}
+  .pv-tx-chip:hover{background:rgba(255,255,255,0.1);}
+  .pv-tx-chip.active{background:#FBBF24;border-color:#FBBF24;color:#1a1a1a;}
+  .pv-tx-hint{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.4;}
+  .pv-tx-hint strong{color:rgba(255,255,255,0.7);font-weight:600;}
+
   /* Stem mixer — two-line row for proper slider + button sizes on mobile */
   .pv-mixer{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
   .pv-mixer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
@@ -262,6 +283,9 @@
             </div>
           </div>
 
+          <!-- Transpose (Phase 1: vocals only) -->
+          <div class="pv-transpose-card" id="pv-transpose"></div>
+
           <!-- Stem mixer -->
           <div class="pv-mixer">
             <div class="pv-mixer-header">
@@ -335,6 +359,12 @@ const state = {
   audioCtx: null,
   stems: {},          // { vocals: {buffer, gain, source, volume, muted, solo, loading, loaded, path}, ... }
   currentPart: null,
+
+  // SoundTouch worklet state (for transpose)
+  workletPromise: null,     // promise from registerSoundTouchWorklet()
+  workletReady: false,      // true once worklet processor is registered
+  workletSupported: true,   // false if browser doesn't support AudioWorklet or registration failed
+  transposeSemitones: 0,    // -7..+7 semitones (affects vocals in Phase 1 only)
 
   // Playback state — all in "arrangement time" (0..totalDuration)
   arrTime: 0,         // current position in arrangement time
@@ -441,6 +471,15 @@ async function loadArrangement(){
   // Apply initial auto-mix for the saved/default part
   applyAutoMix(state.currentPart);
 
+  // Restore saved transpose for this arrangement (if any)
+  try {
+    const savedTp = localStorage.getItem('pv_transpose_' + state.arrangement.id);
+    if(savedTp !== null){
+      const n = parseFloat(savedTp);
+      if(!isNaN(n)) state.transposeSemitones = Math.max(-7, Math.min(7, n));
+    }
+  } catch(e){}
+
   setLoadingProgress(0.7, 'Preparing audio…');
 
   renderUI();
@@ -501,6 +540,9 @@ function renderUI(){
 
   // Stems (mixer rows)
   renderStems();
+
+  // Transpose controls (hidden until worklet ready)
+  renderTransposeUI();
 
   // Duration display
   document.getElementById('pv-dur').textContent = fmtTime(state.totalDuration);
@@ -712,10 +754,189 @@ function applyVolumesToLiveNodes(){
 }
 
 // ── AUDIO ENGINE ─────────────────────────────────────────────
+//
+// Phase 1: Transpose (pitch-shift without tempo change) for VOCALS ONLY.
+// We route the vocals stem through a SoundTouch AudioWorkletNode. Other
+// stems play at native pitch. If the worklet fails to load for any
+// reason (browser, CSP, network), we fall back silently to the original
+// path — vocals play at native pitch, and the transpose UI is hidden.
+//
+// Chain for vocals:  BufferSource → SoundTouchNode → GainNode → destination
+// Chain for others:  BufferSource →                  GainNode → destination
+//
+// When transpose is adjusted, we update vocalsSoundTouchNode's
+// 'pitchSemitones' parameter with the new semitone value. That's it —
+// the worklet shifts pitch in real-time without touching tempo.
+
 function ensureAudioContext(){
   if(state.audioCtx) return state.audioCtx;
   state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // Kick off worklet registration in the background. Not awaited here —
+  // stem loading (ensureStemLoaded) awaits it where needed.
+  state.workletPromise = registerSoundTouchWorklet(state.audioCtx);
   return state.audioCtx;
+}
+
+// Register the SoundTouch AudioWorklet processor. Cached by state.workletReady flag.
+async function registerSoundTouchWorklet(ctx){
+  if(state.workletReady) return true;
+  if(!ctx.audioWorklet){
+    console.warn('AudioWorklet not supported — transpose disabled');
+    state.workletSupported = false;
+    return false;
+  }
+  try {
+    // The worklet file is served from our own origin (GitHub Pages)
+    // because AudioWorklet.addModule has strict same-origin rules and
+    // most CDN options tripped CORS. Path resolved relative to page.
+    await ctx.audioWorklet.addModule('lib/soundtouch-worklet.js');
+    state.workletReady = true;
+    state.workletSupported = true;
+    // Now that the worklet is available, re-render the transpose UI
+    // in case we were showing a 'loading' state.
+    renderTransposeUI();
+    return true;
+  } catch(err){
+    console.error('Failed to register SoundTouch worklet:', err);
+    state.workletSupported = false;
+    return false;
+  }
+}
+
+// Create a SoundTouchNode for a stem, with current transpose value applied.
+// Returns null if the worklet isn't ready (caller should fall back).
+function createSoundTouchNode(ctx){
+  if(!state.workletReady) return null;
+  try {
+    const node = new AudioWorkletNode(ctx, 'soundtouch-processor', {
+      numberOfInputs: 1,
+      numberOfOutputs: 1,
+      channelCount: 2,
+      outputChannelCount: [2]
+    });
+    // Apply current transpose
+    const param = node.parameters.get('pitchSemitones');
+    if(param) param.value = state.transposeSemitones || 0;
+    return node;
+  } catch(err){
+    console.error('Failed to create SoundTouchNode:', err);
+    return null;
+  }
+}
+
+// ── TRANSPOSE ────────────────────────────────────────────────
+// Set the transpose value (in semitones, -7..+7) and push it to every
+// stem's pitchNode. In Phase 1 only the vocals stem has a pitchNode,
+// so only vocals actually shift — other stems keep playing at native
+// pitch. The UI makes this clear.
+function setTranspose(semitones){
+  const n = Math.max(-7, Math.min(7, parseFloat(semitones) || 0));
+  state.transposeSemitones = n;
+  // Push to every existing pitchNode
+  STEMS.forEach(s => {
+    const stem = state.stems[s.key];
+    if(stem && stem.pitchNode){
+      const param = stem.pitchNode.parameters.get('pitchSemitones');
+      if(param){
+        // Use setValueAtTime for clean transitions without clicks
+        param.setValueAtTime(n, state.audioCtx ? state.audioCtx.currentTime : 0);
+      }
+    }
+  });
+  // Persist per-arrangement preference
+  if(state.arrangement && state.arrangement.id){
+    try {
+      localStorage.setItem('pv_transpose_' + state.arrangement.id, String(n));
+    } catch(e){}
+  }
+  renderTransposeUI();
+}
+
+// Compute the resulting key when the original is transposed by N semitones.
+// originalKey: string like 'E', 'Bb', 'F#', etc. Returns a string.
+// If originalKey can't be parsed, returns null (UI will hide the target-key display).
+const NOTES_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const NOTES_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+function transposeKey(originalKey, semitones){
+  if(!originalKey) return null;
+  const key = originalKey.trim();
+  // Separate major/minor if present (e.g. "Em", "F#m")
+  const minor = /m$/i.test(key) && !/maj/i.test(key);
+  const root = key.replace(/m$|maj$|min$/i, '').trim();
+  // Find index
+  let idx = NOTES_SHARP.indexOf(root);
+  if(idx < 0) idx = NOTES_FLAT.indexOf(root);
+  if(idx < 0) return null;
+  const newIdx = ((idx + Math.round(semitones)) % 12 + 12) % 12;
+  // Prefer flats if original used flats, else sharps
+  const usesFlats = NOTES_FLAT.indexOf(root) >= 0 && NOTES_SHARP.indexOf(root) < 0;
+  const newNote = usesFlats ? NOTES_FLAT[newIdx] : NOTES_SHARP[newIdx];
+  return newNote + (minor ? 'm' : '');
+}
+
+// Preset keys to show as tappable chips. Generated from the original
+// key ± whole semitones within the ±7 range. Reduces to unique keys
+// and keeps them ordered by semitones ascending.
+function getKeyChips(originalKey){
+  if(!originalKey) return [];
+  const chips = [];
+  for(let st = -7; st <= 7; st++){
+    const k = transposeKey(originalKey, st);
+    if(k) chips.push({ semitones: st, key: k });
+  }
+  return chips;
+}
+
+// Render / update the transpose UI block. Hides itself if worklet failed.
+function renderTransposeUI(){
+  const container = document.getElementById('pv-transpose');
+  if(!container) return;
+
+  // If the worklet isn't supported, hide the control entirely
+  if(!state.workletSupported){
+    container.style.display = 'none';
+    return;
+  }
+  container.style.display = '';
+
+  const originalKey = state.arrangement ? state.arrangement.key : null;
+  const targetKey = transposeKey(originalKey, state.transposeSemitones);
+  const chips = getKeyChips(originalKey);
+  const st = state.transposeSemitones;
+  const stLabel = st > 0 ? `+${st}` : String(st);
+
+  // Ready state: if worklet still loading, show a subtle hint
+  const readyNote = state.workletReady ? '' : ' · loading…';
+
+  container.innerHTML = `
+    <div class="pv-transpose-head">
+      <div>
+        <div class="pv-transpose-label">Transpose${readyNote}</div>
+        <div class="pv-transpose-value">
+          ${originalKey ? `<span class="pv-tx-orig">${escapeHtml(originalKey)}</span>` : ''}
+          ${originalKey && targetKey ? `<span class="pv-tx-arrow">→</span>` : ''}
+          ${targetKey ? `<span class="pv-tx-target">${escapeHtml(targetKey)}</span>` : ''}
+          <span class="pv-tx-st">(${stLabel} st)</span>
+        </div>
+      </div>
+      <button class="pv-tx-reset" onclick="setTranspose(0)" ${st === 0 ? 'disabled' : ''}>Reset</button>
+    </div>
+    <input type="range" class="pv-tx-slider" id="pv-tx-slider"
+           min="-7" max="7" step="0.5" value="${st}"
+           oninput="setTranspose(parseFloat(this.value))">
+    ${chips.length ? `
+      <div class="pv-tx-chips">
+        ${chips.map(c => `
+          <button class="pv-tx-chip ${Math.round(c.semitones) === Math.round(st) ? 'active' : ''}"
+                  onclick="setTranspose(${c.semitones})" title="${c.semitones > 0 ? '+' : ''}${c.semitones} semitones">
+            ${escapeHtml(c.key)}
+          </button>
+        `).join('')}
+      </div>` : ''}
+    <div class="pv-tx-hint">
+      Phase 1 preview — shifts the <strong>vocals</strong> stem only. Other stems stay at original pitch.
+    </div>
+  `;
 }
 
 // Load a single stem: fetch with progress streaming, decode, cache in memory.
@@ -793,6 +1014,23 @@ async function ensureStemLoaded(stemKey, {isRetry = false} = {}){
       stem.gain = ctx.createGain();
       stem.gain.connect(ctx.destination);
       stem.gain.gain.value = effectiveGain(stemKey);
+    }
+
+    // Phase 1: For the vocals stem only, create a SoundTouchNode
+    // between the source and gain. Wait for worklet registration if
+    // still pending (it started in ensureAudioContext).
+    if(stemKey === 'vocals' && !stem.pitchNode && state.workletPromise){
+      try {
+        await state.workletPromise;
+      } catch(e){}
+      if(state.workletReady){
+        const pitchNode = createSoundTouchNode(ctx);
+        if(pitchNode){
+          // Disconnect gain from destination and re-route through pitchNode
+          // (we connect source→pitchNode→gain→destination on each play)
+          stem.pitchNode = pitchNode;
+        }
+      }
     }
   } catch(err){
     console.error('Failed to load stem ' + stemKey + ':', err);
@@ -1054,7 +1292,20 @@ function startAllSources(arrT){
     stem.source = ctx.createBufferSource();
     stem.source.buffer = stem.buffer;
     stem.source.playbackRate.value = state.playbackRate;
-    stem.source.connect(stem.gain);
+    // Route through pitchNode if present (vocals only in Phase 1)
+    if(stem.pitchNode){
+      try {
+        stem.source.connect(stem.pitchNode);
+        // Connect pitchNode → gain once (idempotent reconnect is fine)
+        stem.pitchNode.connect(stem.gain);
+      } catch(e){
+        // If routing fails, fall back to direct connection
+        console.warn('Pitch node routing failed, falling back:', e);
+        stem.source.connect(stem.gain);
+      }
+    } else {
+      stem.source.connect(stem.gain);
+    }
     // Guard against refTime exceeding buffer length (shouldn't happen but safe)
     const offset = Math.min(refTime, stem.buffer.duration - 0.01);
     stem.source.start(startAt, Math.max(0, offset));
