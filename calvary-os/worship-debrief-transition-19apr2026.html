@@ -88,10 +88,74 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
 
 /* Footer */
 .footer{text-align:center;font-size:12px;color:var(--ink-4);line-height:1.9;margin-top:32px;padding-top:24px;border-top:1px solid var(--ink-5);}
+
+/* ── MOBILE NAV ── */
+.top-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--ink-5);
+  padding:10px 16px;
+  margin:0 -16px 20px;
+  display:flex;gap:6px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  box-shadow:0 2px 8px rgba(17,24,39,0.06);
+}
+.top-nav::-webkit-scrollbar{display:none;}
+.tn-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:7px 13px;border-radius:10px;
+  border:none;background:var(--bg);
+  cursor:pointer;font-family:'Poppins',sans-serif;
+  white-space:nowrap;flex-shrink:0;
+  transition:all 0.12s;text-decoration:none;
+}
+.tn-btn:active{background:var(--red-light);}
+.tn-btn.active{background:var(--red);}
+.tn-emoji{font-size:15px;line-height:1;}
+.tn-label{font-size:10px;font-weight:600;color:var(--ink-3);}
+.tn-btn.active .tn-label{color:white;}
+
+/* Anchor offset */
+.anchor{display:block;position:relative;top:-70px;visibility:hidden;}
+
+/* Back to top */
+.back-top{
+  position:fixed;bottom:24px;right:16px;
+  width:42px;height:42px;border-radius:50%;
+  background:var(--ink);color:white;
+  border:none;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 16px rgba(17,24,39,0.2);
+  opacity:0;transition:opacity 0.2s;z-index:50;
+}
+.back-top.visible{opacity:1;}
+
+/* Mobile: make expense table scrollable */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:16px;}
+.exp-table{min-width:480px;}
+
+/* Mobile: bank details stack */
+@media(max-width:500px){
+  .bank-row{flex-direction:column;gap:2px;align-items:flex-start;padding:8px 0;}
+  .bank-val{font-size:14px;}
+}
 </style>
 </head>
 <body>
 <div class="page">
+  <!-- Sticky nav -->
+  <nav class="top-nav" id="top-nav">
+    <a href="#s-verdict" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🎯</span><span class="tn-label">Overview</span></a>
+    <a href="#s-shade" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🙏</span><span class="tn-label">Pastor Shade</span></a>
+    <a href="#s-service" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">✅</span><span class="tn-label">Service</span></a>
+    <a href="#s-expenses" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">💷</span><span class="tn-label">Expenses</span></a>
+    <a href="#s-financial" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">📊</span><span class="tn-label">Financial</span></a>
+    <a href="#s-actions" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">📋</span><span class="tn-label">Actions</span></a>
+  </nav>
 
   <!-- Header -->
   <div class="hdr">
@@ -106,6 +170,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Overall verdict -->
+  <span class="anchor" id="s-verdict"></span>
   <div class="verdict">
     <div class="verdict-icon">🎯</div>
     <div>
@@ -115,6 +180,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Pastor Shade feedback -->
+  <span class="anchor" id="s-shade"></span>
   <div class="sh">Feedback from Pastor Shade</div>
   <div class="shade-card">
     <div class="shade-label">General Overseer · Pastor Shade Olatoye</div>
@@ -125,6 +191,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Service performance -->
+  <span class="anchor" id="s-service"></span>
   <div class="sh">Service performance</div>
 
   <div class="card green-card">
@@ -138,9 +205,10 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Expenses -->
+  <span class="anchor" id="s-expenses"></span>
   <div class="sh">Expenses — Sunday 19th April 2026</div>
 
-  <div class="card" style="padding:0;overflow:hidden;">
+  <div class="card table-wrap" style="padding:0;">
     <table class="exp-table">
       <thead>
         <tr>
@@ -243,6 +311,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Financial implications -->
+  <span class="anchor" id="s-financial"></span>
   <div class="sh">Financial implications going forward</div>
 
   <div class="card purple-card">
@@ -261,6 +330,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Actions -->
+  <span class="anchor" id="s-actions"></span>
   <div class="sh">Actions for the transition team</div>
 
   <div class="action">
@@ -302,5 +372,34 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
 </div>
+
+<button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<script>
+function tnActive(el){
+  document.querySelectorAll('.tn-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll',()=>{
+  backTop.classList.toggle('visible', window.scrollY > 300);
+});
+const anchors = document.querySelectorAll('.anchor');
+const navBtns = document.querySelectorAll('.tn-btn');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const id = entry.target.id;
+      navBtns.forEach(b=>{
+        const match = b.getAttribute('href')==='#'+id;
+        b.classList.toggle('active', match);
+        if(match) b.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+      });
+    }
+  });
+},{rootMargin:'-20% 0px -70% 0px'});
+anchors.forEach(a=>io.observe(a));
+</script>
+
 </body>
 </html>
