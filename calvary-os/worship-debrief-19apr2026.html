@@ -90,10 +90,69 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
 
 /* ── FOOTER ── */
 .footer{text-align:center;font-size:12px;color:var(--ink-4);line-height:1.9;margin-top:32px;padding-top:24px;border-top:1px solid var(--ink-5);}
+
+/* ── MOBILE NAV ── */
+.top-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(255,255,255,0.95);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--ink-5);
+  padding:10px 16px;
+  margin:0 -16px 20px;
+  display:flex;gap:6px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  box-shadow:0 2px 8px rgba(17,24,39,0.06);
+}
+.top-nav::-webkit-scrollbar{display:none;}
+.tn-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:7px 13px;border-radius:10px;
+  border:none;background:var(--bg);
+  cursor:pointer;font-family:'Poppins',sans-serif;
+  white-space:nowrap;flex-shrink:0;
+  transition:all 0.12s;text-decoration:none;
+}
+.tn-btn:hover,.tn-btn:active{background:var(--red-light);}
+.tn-btn.active{background:var(--red);}
+.tn-emoji{font-size:15px;line-height:1;}
+.tn-label{font-size:10px;font-weight:600;color:var(--ink-3);}
+.tn-btn.active .tn-label{color:white;}
+
+/* Back to top */
+.back-top{
+  position:fixed;bottom:24px;right:16px;
+  width:42px;height:42px;border-radius:50%;
+  background:var(--ink);color:white;
+  border:none;font-size:18px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 16px rgba(17,24,39,0.2);
+  opacity:0;transition:opacity 0.2s;
+  z-index:50;
+  padding-bottom:2px;
+}
+.back-top.visible{opacity:1;}
+
+/* Section anchor offset for sticky nav */
+.anchor{display:block;position:relative;top:-70px;visibility:hidden;}
 </style>
 </head>
 <body>
 <div class="page">
+  <!-- Sticky nav -->
+  <nav class="top-nav" id="top-nav">
+    <a href="#s-brief" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🎯</span><span class="tn-label">Brief</span></a>
+    <a href="#s-well" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">✅</span><span class="tn-label">Went well</span></a>
+    <a href="#s-people" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🙌</span><span class="tn-label">Shoutouts</span></a>
+    <a href="#s-shade" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🙏</span><span class="tn-label">Pastor Shade</span></a>
+    <a href="#s-improve" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">📈</span><span class="tn-label">Working on</span></a>
+    <a href="#s-ahead" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">👀</span><span class="tn-label">Ahead</span></a>
+    <a href="#s-actions" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">✅</span><span class="tn-label">Actions</span></a>
+    <a href="#s-videos" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🎥</span><span class="tn-label">Videos</span></a>
+  </nav>
+
 
   <!-- Header -->
   <div class="hdr">
@@ -117,6 +176,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Brief scorecard -->
+  <span class="anchor" id="s-brief"></span>
   <div class="sh">Did we hit the brief?</div>
   <div class="scorecard">
     <div class="sc-intro">"Familiar but fresh. Traditional but tight and tidy." · <a href="worship-briefing-19apr2026.html" style="color:var(--red);font-weight:600;text-decoration:none;font-style:normal;">View the full brief →</a></div>
@@ -158,6 +218,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- What went well -->
+  <span class="anchor" id="s-well"></span>
   <div class="sh">What went well</div>
 
   <div class="ww-card">
@@ -191,6 +252,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Individual recognition -->
+  <span class="anchor" id="s-people"></span>
   <div class="sh">Individual recognition</div>
 
   <div class="person">
@@ -269,6 +331,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
     <div class="card-body">This is something Uncle B has been discussing with Bolaji A and it's now the direction — rather than changing the set week on week, we're going to aim to <strong style="color:var(--ink);">perfect one set over the next 4 weeks or so.</strong> The Praise section stays largely the same. Worship may have some variation. But the core songs stay consistent.<br><br>The reason is simple: with all the moving parts we have right now, consistency is what builds tightness. It's hard to measure progress if the songs keep changing. Our measure of success going forward is <strong style="color:var(--ink);">how tight did we get the core songs</strong> — not how many new songs we introduced. We want to know this set like the back of our hand.</div>
   </div>
 
+  <span class="anchor" id="s-shade"></span>
   <!-- Pastor Shade feedback -->
   <div class="sh">Feedback from Pastor Shade</div>
 
@@ -298,6 +361,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
     </div>
   </div>
 
+  <span class="anchor" id="s-improve"></span>
   <!-- What we're working on -->
   <div class="sh">What we're working on</div>
 
@@ -317,6 +381,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Looking ahead -->
+  <span class="anchor" id="s-ahead"></span>
   <div class="sh">Looking ahead</div>
 
   <div class="ahead-card">
@@ -335,6 +400,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
   <!-- Actions -->
+  <span class="anchor" id="s-actions"></span>
   <div class="sh">Actions this week</div>
 
   <div class="action">
@@ -377,6 +443,7 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
     </div>
   </div>
 
+  <span class="anchor" id="s-videos"></span>
   <!-- Service recordings -->
   <div class="sh">Service recordings</div>
   <div class="videos">
@@ -407,5 +474,42 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
   </div>
 
 </div>
+
+<button class="back-top" id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+function tnActive(el) {
+  document.querySelectorAll('.tn-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  // scroll nav to show active button
+  el.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+}
+
+// Show/hide back-to-top
+const backTop = document.getElementById('back-top');
+window.addEventListener('scroll', () => {
+  backTop.classList.toggle('visible', window.scrollY > 300);
+});
+
+// Auto-highlight nav on scroll
+const anchors = document.querySelectorAll('.anchor');
+const navBtns = document.querySelectorAll('.tn-btn');
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navBtns.forEach(b => {
+        const isMatch = b.getAttribute('href') === '#' + id;
+        b.classList.toggle('active', isMatch);
+        if (isMatch) b.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+anchors.forEach(a => io.observe(a));
+</script>
+
 </body>
 </html>
