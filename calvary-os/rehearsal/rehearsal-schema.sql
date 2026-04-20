@@ -7,20 +7,35 @@
 -- ── SONGS ────────────────────────────────────────────────────────────────
 -- One row per song title. Immortal — never deleted, only archived.
 CREATE TABLE IF NOT EXISTS public.rs_songs (
-  id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  title            text NOT NULL,
-  original_artist  text,
-  ccli_number      text,
-  default_key      text,
-  default_bpm      integer,
-  tags             text[] DEFAULT '{}',
-  status           text NOT NULL DEFAULT 'active',   -- 'active' | 'archived'
-  created_by       text,                             -- Calvary OS user name
-  created_at       timestamptz NOT NULL DEFAULT now()
+  id                         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  title                      text NOT NULL,
+  original_artist            text,
+  ccli_number                text,
+  default_key                text,
+  default_bpm                integer,
+  default_time_sig           text,                         -- e.g. '4/4'
+  tags                       text[] DEFAULT '{}',
+  status                     text NOT NULL DEFAULT 'active',  -- 'active' | 'archived'
+  -- Discovery / references
+  youtube_url                text,
+  spotify_url                text,
+  chord_chart_url            text,
+  lyrics                     text,
+  -- Calvary-specific context
+  pastoral_notes             text,
+  first_used_at              date,
+  calvary_keys               text[],                       -- keys Calvary plays it in
+  calvary_bpm_range          text,                         -- e.g. '125-132'
+  preferred_arrangement_id   uuid,                         -- canonical arrangement
+  -- Audit
+  created_by                 text,
+  created_at                 timestamptz NOT NULL DEFAULT now()
 );
 
 CREATE INDEX IF NOT EXISTS rs_songs_status_idx ON public.rs_songs (status);
 CREATE INDEX IF NOT EXISTS rs_songs_title_idx  ON public.rs_songs (title);
+
+-- Preferred arrangement FK added after rs_arrangements exists (see bottom of file)
 
 -- ── REFERENCES ───────────────────────────────────────────────────────────
 -- One row per source recording imported for a song.
@@ -219,5 +234,23 @@ SELECT * FROM (VALUES
   ('Praise The Name of Jesus',            'Roy Hicks Jr.',       'D',  108, ARRAY['praise','offering'],      'Bolaji Olatoye')
 ) AS t(title, original_artist, default_key, default_bpm, tags, created_by)
 WHERE NOT EXISTS (SELECT 1 FROM public.rs_songs);
+
+-- ── DEFERRED FK: SONGS → ARRANGEMENTS ────────────────────────────────────
+-- Added after rs_arrangements exists. Deferrable so the chicken-and-egg
+-- case (song has no arrangements yet) doesn't block updates.
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE constraint_name = 'rs_songs_preferred_arrangement_fk'
+  ) THEN
+    ALTER TABLE public.rs_songs
+      ADD CONSTRAINT rs_songs_preferred_arrangement_fk
+      FOREIGN KEY (preferred_arrangement_id)
+      REFERENCES public.rs_arrangements(id)
+      ON DELETE SET NULL
+      DEFERRABLE INITIALLY DEFERRED;
+  END IF;
+END $$;
 
 -- ── DONE ─────────────────────────────────────────────────────────────────
