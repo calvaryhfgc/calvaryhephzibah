@@ -114,9 +114,17 @@
   .wave-hint code{background:rgba(255,255,255,0.1);padding:1px 6px;border-radius:4px;font-size:10px;color:rgba(255,255,255,0.7);}
 
   /* Region styling via v7 Shadow DOM part selectors */
-  #waveform ::part(region){background:rgba(196,30,42,0.3);border-left:2px solid var(--red);border-right:2px solid var(--red);color:white;font-size:11px;font-weight:600;padding:4px 6px;}
+  #waveform ::part(region){background:rgba(196,30,42,0.25);border-left:2px solid var(--red);border-right:2px solid var(--red);color:white;font-size:11px;font-weight:600;padding:4px 6px;transition:background 0.15s, border-color 0.15s;}
   #waveform ::part(region-handle){background:var(--red);width:4px;}
   #waveform ::part(region-content){padding:2px 6px;}
+  /* Active chunk — more saturated red + pulsing edge to mark 'currently editing' */
+  #waveform ::part(region active){background:rgba(196,30,42,0.55);border-left:3px solid #FBBF24;border-right:3px solid #FBBF24;box-shadow:0 0 0 1px rgba(251,191,36,0.4) inset;}
+  #waveform ::part(region-handle active){background:#FBBF24;width:5px;}
+
+  /* Loop status pulse dot in the actions bar */
+  .wave-loop-status{display:inline-flex;align-items:center;gap:6px;}
+  .wave-loop-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#FBBF24;animation:loop-pulse 1s ease-in-out infinite;}
+  @keyframes loop-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}
 
   @media (max-width:640px){
     .meta-row{grid-template-columns:1fr 1fr;}
@@ -265,8 +273,8 @@
 
         <!-- Sections -->
         <div class="ref-panel">
-          <h3>Sections <span style="font-size:12px;font-weight:400;color:var(--ink-4);margin-left:8px;">Mark the structure of the song</span></h3>
-          <div class="ref-panel-sub">Drop a region onto the waveform at each boundary — intro, verse, chorus, bridge, outro. These will be the material your arrangement is built from. Snap is on by default so regions fall on bar lines.</div>
+          <h3>Chunks <span style="font-size:12px;font-weight:400;color:var(--ink-4);margin-left:8px;">Cut reusable pieces out of the reference</span></h3>
+          <div class="ref-panel-sub">Click <strong>Create a chunk</strong> to drop a new chunk at the playhead — it'll loop between its boundaries while you adjust the edges and find the sweet spot. Each chunk (intro, verse, chorus, bridge…) becomes a reusable piece in the arrangement library. Snap-to-bars is on by default so edges land on bar lines.</div>
 
           <!-- Waveform editor (hidden until a reference is loaded) -->
           <div id="wave-editor" style="display:none;">
@@ -303,6 +311,10 @@
                 <input type="checkbox" id="wave-grid-toggle" checked onchange="toggleBarGrid()">
                 <span>Show grid</span>
               </label>
+              <label class="wave-toggle" title="Loop the active chunk while you adjust its boundaries">
+                <input type="checkbox" id="wave-loop-toggle" checked onchange="onLoopToggle()">
+                <span>Loop while editing</span>
+              </label>
               <div class="wave-sep"></div>
               <label class="wave-zoom">
                 <span>Zoom</span>
@@ -318,21 +330,25 @@
 
             <!-- Region-add toolbar -->
             <div class="wave-actions">
-              <button class="rs-btn rs-btn-primary" onclick="addRegionAtPlayhead()">+ Add section at playhead</button>
-              <span class="wave-hint">
-                Drag edges to resize · drag body to move · click a region to select · <code>Space</code> play/pause · <code>[</code> start here · <code>]</code> end here
+              <button class="rs-btn rs-btn-primary" onclick="createChunk()">＋ Create a chunk</button>
+              <button class="rs-btn" id="btn-stop-loop" onclick="deactivateRegion()" style="display:none;">⏹ Stop loop</button>
+              <span class="wave-loop-status" id="wave-loop-status" style="display:none;color:#FBBF24;font-size:11px;font-weight:600;">
+                <span class="wave-loop-dot"></span> Looping <span id="wave-loop-label">chunk</span>
+              </span>
+              <span class="wave-hint" id="wave-default-hint">
+                Drag edges to resize · drag body to move · click a chunk to edit · <code>Space</code> play/pause · <code>[</code> new chunk · <code>]</code> extend end · <code>Esc</code> stop loop
               </span>
             </div>
           </div>
 
           <!-- Empty state before a reference is loaded -->
           <div id="wave-empty" style="padding:16px;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);font-size:13px;color:var(--ink-3);text-align:center;margin-bottom:14px;">
-            Upload the reference track above to start marking sections on the waveform.
+            Upload the reference track above to start creating chunks on the waveform.
           </div>
 
           <!-- Compact list of current sections (also editable; stays in sync with regions) -->
           <div id="sections-list-wrap" style="display:none;margin-top:16px;">
-            <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Current sections</div>
+            <div style="font-size:11px;color:var(--ink-4);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Current chunks</div>
             <div class="sec-list" id="sections-list"></div>
           </div>
         </div>
@@ -623,13 +639,38 @@ function addSection(){
 }
 
 function removeSection(idx){
+  // Also remove the corresponding wavesurfer region
+  if(wsRegions){
+    const regions = wsRegions.getRegions().slice().sort((a,b) => a.start - b.start);
+    const r = regions[idx];
+    if(r){
+      // If the one being removed was the active loop, exit loop first
+      if(_activeRegionId === r.id) deactivateRegion();
+      wsRegionMap.delete(r.id);
+      try { r.remove(); } catch(e){}
+    }
+  }
   state.sections.splice(idx, 1);
-  if(state.sections.length === 0) addSection();
   renderSections();
+  updateSummary();
 }
 
 function updateSection(idx, field, value){
   state.sections[idx][field] = value;
+  // If label changed, sync to region content + label map + loop status
+  if(field === 'label' && wsRegions){
+    // Order of state.sections matches wsRegions sorted by start
+    const regions = wsRegions.getRegions().slice().sort((a,b) => a.start - b.start);
+    const r = regions[idx];
+    if(r){
+      wsRegionMap.set(r.id, { label: value });
+      try { r.setOptions({ content: value || '' }); } catch(e){}
+      // If this was the currently-looping chunk, refresh the status text
+      if(_activeRegionId === r.id){
+        updateLoopStatusUI();
+      }
+    }
+  }
   updateSummary();
 }
 
@@ -768,6 +809,9 @@ function setupWaveEditor(source){
 
   ws.on('timeupdate', (t) => {
     document.getElementById('wave-cur').textContent = fmtTime(t);
+    // Loop mechanism: if an active region is set and loop is on,
+    // seek back to start when we cross the end.
+    maintainLoop(t);
   });
   ws.on('play',  () => { document.getElementById('wave-play-icon').textContent = '❚❚'; });
   ws.on('pause', () => { document.getElementById('wave-play-icon').textContent = '▶'; });
@@ -779,23 +823,32 @@ function setupWaveEditor(source){
     COS.toast('Could not load reference audio for playback');
   });
 
+  // Clicking the waveform background (not on a region) deactivates the active chunk
+  ws.on('interaction', () => {
+    // Wavesurfer fires 'interaction' on bare-waveform clicks. If we're looping
+    // and the user clicked outside any region, that's the 'exit loop' signal.
+    // We defer with a microtask so region-clicked (if it fires) can set its flag first.
+    queueMicrotask(() => {
+      if(_regionClickGuard){ _regionClickGuard = false; return; }
+      deactivateRegion();
+    });
+  });
+
   // Region interaction
   wsRegions.on('region-created', r => onRegionChanged(r, 'created'));
   wsRegions.on('region-updated', r => onRegionChanged(r, 'updated'));
   wsRegions.on('region-removed', r => onRegionChanged(r, 'removed'));
   wsRegions.on('region-clicked', (r, e) => {
     e.stopPropagation();
-    // Clicking a region plays it in loop preview mode for 1 cycle
-    r.play();
+    _regionClickGuard = true;  // tell the 'interaction' handler this wasn't a bare click
+    activateRegion(r.id);
   });
   wsRegions.on('region-double-clicked', (r, e) => {
     e.stopPropagation();
-    const next = prompt('Section label:', wsRegionMap.get(r.id)?.label || '');
-    if(next !== null){
-      wsRegionMap.set(r.id, { label: next });
-      r.setOptions({ content: next });
-      syncStateFromRegions();
-    }
+    _regionClickGuard = true;
+    // Focus the label input for this region in the sections list (cleaner than prompt)
+    activateRegion(r.id);
+    focusLabelInputFor(r.id);
   });
 }
 
@@ -863,11 +916,19 @@ function redrawRegionsFromState(){
   wsSuppressSync = false;
 }
 
-function addRegionAtPlayhead(){
+// ── CHUNK CREATION + LOOP EDIT MODE ──────────────────────────
+// A "chunk" is a region on the waveform. When created or clicked,
+// it becomes the "active chunk" and playback loops between its
+// boundaries so the user can adjust edges while hearing the result.
+let _activeRegionId = null;
+let _regionClickGuard = false;  // set true when a region handler fires, read by 'interaction' handler
+let _loopSeekGuard = 0;         // debounce for seeking on loop wrap-around
+
+function createChunk(){
   if(!ws || !wsRegions){ COS.toast('Upload a reference first'); return; }
   const t = ws.getCurrentTime();
   const dur = ws.getDuration();
-  // Default new region = 4 bars at the current BPM/time-sig, or 8 seconds if no BPM
+  // Default chunk = 4 bars at the current BPM/time-sig, or 8 seconds if no BPM
   const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
   const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
   const secPerBar = bpm ? (60 / bpm) * beatsPerBar : 2;
@@ -883,15 +944,131 @@ function addRegionAtPlayhead(){
   });
   wsRegionMap.set(r.id, { label: '' });
   syncStateFromRegions();
-  // Prompt for label immediately
-  setTimeout(() => {
-    const next = prompt('Section label:', '');
-    if(next){
-      wsRegionMap.set(r.id, { label: next });
-      r.setOptions({ content: next });
-      syncStateFromRegions();
+  // Auto-activate + start looping
+  activateRegion(r.id);
+  // Focus the label input so the user can name it while the loop plays
+  setTimeout(() => focusLabelInputFor(r.id), 80);
+}
+
+// Make a region the "active chunk" (and start looping if the global loop is on)
+function activateRegion(regionId){
+  _activeRegionId = regionId;
+  // Update visual state
+  if(wsRegions){
+    wsRegions.getRegions().forEach(r => {
+      const isActive = r.id === regionId;
+      r.setOptions({
+        color: isActive ? 'rgba(196,30,42,0.55)' : 'rgba(196,30,42,0.25)'
+      });
+      // Toggle the 'active' part attribute via element access (v7 exposes .element)
+      try {
+        if(r.element) r.element.part = isActive ? 'region active' : 'region';
+      } catch(e){}
+    });
+  }
+  // If loop is on, seek to the region start and play
+  const loopOn = document.getElementById('wave-loop-toggle').checked;
+  if(loopOn){
+    const r = wsRegions.getRegions().find(x => x.id === regionId);
+    if(r){
+      ws.setTime(r.start);
+      if(ws.isPlaying && !ws.isPlaying()){
+        ws.play();
+      } else if(ws.paused === true || (typeof ws.isPlaying === 'function' && !ws.isPlaying())){
+        ws.play();
+      }
     }
-  }, 30);
+  }
+  updateLoopStatusUI();
+}
+
+function deactivateRegion(){
+  if(!_activeRegionId) return;
+  if(wsRegions){
+    wsRegions.getRegions().forEach(r => {
+      r.setOptions({ color: 'rgba(196,30,42,0.25)' });
+      try { if(r.element) r.element.part = 'region'; } catch(e){}
+    });
+  }
+  _activeRegionId = null;
+  updateLoopStatusUI();
+}
+
+// Called every timeupdate — if we're looping and past the end, seek to start
+function maintainLoop(currentTime){
+  if(!_activeRegionId) return;
+  const loopOn = document.getElementById('wave-loop-toggle').checked;
+  if(!loopOn) return;
+  const r = wsRegions.getRegions().find(x => x.id === _activeRegionId);
+  if(!r) return;
+  // If playhead has passed the end (allow a small epsilon for audio-frame lag)
+  if(currentTime >= r.end - 0.02){
+    // Debounce: only seek once per loop cycle
+    const now = performance.now();
+    if(now - _loopSeekGuard < 100) return;
+    _loopSeekGuard = now;
+    ws.setTime(r.start);
+  } else if(currentTime < r.start - 0.2){
+    // If user scrubbed well before start, bring them back in
+    ws.setTime(r.start);
+  }
+}
+
+// When the global loop toggle changes
+function onLoopToggle(){
+  const loopOn = document.getElementById('wave-loop-toggle').checked;
+  if(!loopOn){
+    // Turning off — just update UI; don't stop playback
+    updateLoopStatusUI();
+    return;
+  }
+  // Turning on — if there's an active region, seek to its start and play
+  if(_activeRegionId && wsRegions){
+    const r = wsRegions.getRegions().find(x => x.id === _activeRegionId);
+    if(r){
+      ws.setTime(r.start);
+      if(typeof ws.play === 'function' && (typeof ws.isPlaying !== 'function' || !ws.isPlaying())){
+        ws.play();
+      }
+    }
+  }
+  updateLoopStatusUI();
+}
+
+function updateLoopStatusUI(){
+  const statusEl = document.getElementById('wave-loop-status');
+  const stopBtn = document.getElementById('btn-stop-loop');
+  const hintEl = document.getElementById('wave-default-hint');
+  const loopOn = document.getElementById('wave-loop-toggle').checked;
+  const active = _activeRegionId && loopOn;
+  if(active){
+    const label = wsRegionMap.get(_activeRegionId)?.label || 'chunk';
+    document.getElementById('wave-loop-label').textContent = label || 'unnamed';
+    statusEl.style.display = 'inline-flex';
+    stopBtn.style.display = '';
+    if(hintEl) hintEl.style.display = 'none';
+  } else {
+    statusEl.style.display = 'none';
+    stopBtn.style.display = 'none';
+    if(hintEl) hintEl.style.display = '';
+  }
+}
+
+// Focus the label input of a specific region's row in the sections list
+function focusLabelInputFor(regionId){
+  // state.sections is sorted by start time, same order as sections-list rows.
+  // Find the section corresponding to this region id.
+  const regions = wsRegions.getRegions().slice().sort((a,b) => a.start - b.start);
+  const idx = regions.findIndex(r => r.id === regionId);
+  if(idx < 0) return;
+  const rows = document.querySelectorAll('#sections-list .sec-row');
+  const row = rows[idx];
+  if(!row) return;
+  const input = row.querySelector('input[list]');
+  if(input){
+    input.focus();
+    input.select();
+  }
 }
 
 // ── BAR GRID ─────────────────────────────────────────────────
@@ -992,26 +1169,45 @@ document.addEventListener('keydown', e => {
   if(!editor || editor.style.display === 'none') return;
   // Ignore if user is typing in an input
   const t = e.target;
-  if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')) return;
+  if(t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT')){
+    // Exception: Escape should still exit loop even when focused in the label field,
+    // so people can tab out of naming without clicking elsewhere.
+    if(e.key === 'Escape' && _activeRegionId){
+      e.preventDefault();
+      deactivateRegion();
+      t.blur();
+    }
+    return;
+  }
   if(e.key === ' '){ e.preventDefault(); wavePlayPause(); }
   else if(e.key === '['){
     e.preventDefault();
-    // Set selected region's start to playhead, or create one
-    if(ws) addRegionAtPlayhead();
+    if(ws) createChunk();
   }
   else if(e.key === ']'){
     e.preventDefault();
-    // End the last region at playhead if there is one to close
+    // Extend the active chunk's end (or the last chunk's end) to playhead
     if(ws && wsRegions){
       const regions = wsRegions.getRegions();
       if(regions.length){
-        const last = regions[regions.length - 1];
-        const newEnd = ws.getCurrentTime();
-        if(newEnd > last.start){
-          last.setOptions({ end: state.snap ? snapToBar(newEnd) : newEnd });
-          syncStateFromRegions();
+        const target = _activeRegionId
+          ? regions.find(r => r.id === _activeRegionId)
+          : regions[regions.length - 1];
+        if(target){
+          const newEnd = ws.getCurrentTime();
+          if(newEnd > target.start){
+            target.setOptions({ end: state.snap ? snapToBar(newEnd) : newEnd });
+            syncStateFromRegions();
+          }
         }
       }
+    }
+  }
+  else if(e.key === 'Escape'){
+    // Exit active loop
+    if(_activeRegionId){
+      e.preventDefault();
+      deactivateRegion();
     }
   }
 });
