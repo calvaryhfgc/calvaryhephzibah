@@ -339,10 +339,14 @@ const STEM_TYPES = [
 // ── STATE ────────────────────────────────────────────────────
 const state = {
   song: null,
-  arrangement: null,       // if came from an arrangement
-  files: {},               // { reference: File, vocals: File, ... }
-  sections: [],            // [{label, start, end}]
-  uploadedPaths: {}        // filled in during save
+  arrangement: null,         // if came from an arrangement
+  files: {},                 // { reference: File, vocals: File, ... }
+  sections: [],              // [{label, start, end}]
+  uploadedPaths: {},         // filled in during save
+  editMode: false,           // true when editing an existing reference
+  existingReference: null,   // rs_references row when editMode
+  existingStems: [],         // rs_stems rows when editMode
+  existingSections: []       // rs_sections rows when editMode (used as initial state.sections)
 };
 
 // ── BOOT ─────────────────────────────────────────────────────
@@ -364,6 +368,10 @@ async function loadContext(){
       state.arrangement = arrs[0];
       const songs = await sbFetch(`rs_songs?id=eq.${state.arrangement.song_id}`);
       if(songs && songs[0]) state.song = songs[0];
+      // If the arrangement already has a reference, load it in edit mode
+      if(state.arrangement.reference_id){
+        await enterEditMode(state.arrangement.reference_id);
+      }
     }
   } else if(songId){
     const songs = await sbFetch(`rs_songs?id=eq.${songId}`);
@@ -373,12 +381,20 @@ async function loadContext(){
   if(state.song){
     document.getElementById('crumb-song').textContent = state.song.title;
     document.getElementById('hdr-eyebrow').textContent = '🎵 ' + state.song.title;
+    const headerVerb = state.editMode ? 'Edit reference for' : 'Add reference for';
     document.getElementById('hdr-title').textContent = state.arrangement
-      ? `Add reference for "${state.arrangement.name}"`
-      : `Add reference for ${state.song.title}`;
-    // Pre-fill metadata with song defaults
-    if(state.song.default_key) document.getElementById('meta-key').value = state.song.default_key;
-    if(state.song.default_bpm) document.getElementById('meta-bpm').value = state.song.default_bpm;
+      ? `${headerVerb} "${state.arrangement.name}"`
+      : `${headerVerb} ${state.song.title}`;
+    if(state.editMode){
+      document.getElementById('hdr-sub').textContent = "This song already has a reference uploaded. Play through and mark section boundaries, or adjust the detected metadata.";
+    }
+    // Pre-fill metadata with song defaults (only if not already set from edit mode)
+    if(!document.getElementById('meta-key').value && state.song.default_key){
+      document.getElementById('meta-key').value = state.song.default_key;
+    }
+    if(!document.getElementById('meta-bpm').value && state.song.default_bpm){
+      document.getElementById('meta-bpm').value = state.song.default_bpm;
+    }
   } else {
     document.getElementById('hdr-title').textContent = 'Select a song first';
     document.getElementById('hdr-sub').textContent = 'This page needs a song_id or arrangement_id in the URL. Go back to the Rehearsal Studio and pick a song.';
@@ -386,6 +402,124 @@ async function loadContext(){
     document.getElementById('btn-save').disabled = true;
     document.querySelector('.actions-bar').style.display = 'none';
   }
+}
+
+// Switch to edit mode: load existing reference, stems, and sections
+async function enterEditMode(referenceId){
+  const [refs, stems, sections] = await Promise.all([
+    sbFetch(`rs_references?id=eq.${referenceId}`),
+    sbFetch(`rs_stems?reference_id=eq.${referenceId}`),
+    sbFetch(`rs_sections?reference_id=eq.${referenceId}&order=position.asc`)
+  ]);
+  if(!refs || !refs[0]){
+    console.warn('Edit mode requested but reference not found:', referenceId);
+    return;
+  }
+  state.editMode = true;
+  state.existingReference = refs[0];
+  state.existingStems = stems || [];
+  state.existingSections = sections || [];
+
+  // Populate metadata fields from saved reference
+  if(refs[0].detected_key) document.getElementById('meta-key').value = refs[0].detected_key;
+  if(refs[0].detected_bpm) document.getElementById('meta-bpm').value = refs[0].detected_bpm;
+  if(refs[0].duration_seconds) document.getElementById('meta-duration').value = Math.round(refs[0].duration_seconds);
+
+  // Swap Audio Files panel for an "existing reference" summary
+  renderExistingReferencePanel();
+
+  // Load reference audio into the play-to-mark player via public URL
+  if(refs[0].audio_path){
+    setupSectionPlayerFromUrl(publicUrl(refs[0].audio_path), refs[0].source_url || 'reference.mp3');
+  }
+
+  // Load existing sections into the editor (as strings, since player marking stores MM:SS)
+  state.sections = (sections || []).map(s => ({
+    label: s.label || '',
+    start: fmtTime(parseFloat(s.start_seconds)),
+    end:   fmtTime(parseFloat(s.end_seconds))
+  }));
+  renderSections();
+  updateSummary();
+
+  // Label the save button appropriately
+  document.getElementById('btn-save').textContent = 'Save changes';
+}
+
+// Swap the file-upload panel for a read-only summary of the existing reference
+function renderExistingReferencePanel(){
+  const ref = state.existingReference;
+  const stems = state.existingStems;
+  if(!ref) return;
+
+  const panels = document.querySelectorAll('.ref-panel');
+  // The first .ref-panel is the Moises guide; the second is Audio files.
+  // Find the one with the Audio files heading to be safe.
+  let audioPanel = null;
+  panels.forEach(p => {
+    const h = p.querySelector('h3');
+    if(h && h.textContent.trim().startsWith('Audio files')) audioPanel = p;
+  });
+  if(!audioPanel) return;
+
+  // Also hide the Moises guide panel — it's for first-time imports
+  const guide = document.getElementById('panel-guide');
+  if(guide) guide.style.display = 'none';
+
+  const dur = ref.duration_seconds ? fmtTime(parseFloat(ref.duration_seconds)) : '—';
+  const stemPills = stems.map(s => `<span style="display:inline-block;padding:3px 10px;background:var(--green-light);color:var(--green);border-radius:100px;font-size:11px;font-weight:600;">${escapeHtml(s.stem_type)}</span>`).join(' ');
+
+  audioPanel.innerHTML = `
+    <h3>Existing reference</h3>
+    <div class="ref-panel-sub">This reference was uploaded previously. You can play through it below and mark sections. Re-upload is not needed.</div>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:16px;padding:14px;background:var(--green-light);border:1px solid var(--green-mid);border-radius:var(--r12);align-items:center;">
+      <div style="font-size:28px;">🎵</div>
+      <div>
+        <div style="font-weight:600;color:var(--ink);font-size:14px;margin-bottom:2px;">${escapeHtml(ref.source_url || 'reference.mp3')}</div>
+        <div style="font-size:12px;color:var(--ink-3);margin-bottom:8px;">
+          ${dur} · ${escapeHtml(ref.detected_key || '—')} · ${ref.detected_bpm || '—'} BPM · uploaded ${new Date(ref.created_at).toLocaleDateString('en-GB', {day:'numeric',month:'short',year:'numeric'})}
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px;">
+          <span style="font-size:11px;color:var(--ink-3);margin-right:4px;">Stems:</span>
+          ${stemPills || '<span style="font-size:11px;color:var(--ink-4);">none</span>'}
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:11px;color:var(--ink-4);">
+      Need to replace the audio entirely? Contact Bolaji to delete the old reference and start fresh.
+    </div>
+  `;
+}
+
+// Load a URL (already-saved public Supabase Storage URL) into the section player
+function setupSectionPlayerFromUrl(url, displayName){
+  document.getElementById('sec-no-player').style.display = 'none';
+  document.getElementById('sec-player').style.display = 'block';
+  document.getElementById('btn-add-manual').style.display = 'block';
+
+  if(secAudio){ secAudio.pause(); secAudio.src = ''; }
+  secAudio = new Audio();
+  secAudio.preload = 'metadata';
+  secAudio.crossOrigin = 'anonymous';
+  secAudio.src = url;
+
+  secAudio.addEventListener('loadedmetadata', () => {
+    document.getElementById('sec-dur-time').textContent = fmtTime(secAudio.duration);
+    document.getElementById('sec-scrubber').max = secAudio.duration;
+    if(!document.getElementById('meta-duration').value){
+      document.getElementById('meta-duration').value = Math.round(secAudio.duration);
+    }
+  });
+  secAudio.addEventListener('play',  () => { document.getElementById('sec-play-btn').textContent = '❚❚'; updateSecTime(); });
+  secAudio.addEventListener('pause', () => { document.getElementById('sec-play-btn').textContent = '▶'; });
+  secAudio.addEventListener('ended', () => {
+    document.getElementById('sec-play-btn').textContent = '▶';
+    if(secActive){ markSectionEnd(); }
+  });
+  secAudio.addEventListener('error', (e) => {
+    console.error('Audio load error:', e);
+    COS.toast('Could not load reference audio for playback');
+  });
 }
 
 function buildSidebar(){
@@ -507,20 +641,35 @@ function parseTime(str){
 
 // ── SUMMARY + VALIDATION ─────────────────────────────────────
 function updateSummary(){
-  const hasRef = !!state.files.reference;
-  const stemsCount = STEM_TYPES.filter(s => state.files[s.key]).length;
   const validSections = state.sections.filter(s =>
     s.label && parseTime(s.start) !== null && parseTime(s.end) !== null
   );
   const parts = [];
-  parts.push(hasRef ? '<strong>Reference ✓</strong>' : 'Reference missing');
-  parts.push(`<strong>${stemsCount}</strong> stem${stemsCount===1?'':'s'} attached`);
-  parts.push(`<strong>${validSections.length}</strong> section${validSections.length===1?'':'s'}`);
+  if(state.editMode){
+    const existingStemCount = (state.existingStems || []).length;
+    parts.push('<strong>Editing existing reference</strong>');
+    parts.push(`<strong>${existingStemCount}</strong> stem${existingStemCount===1?'':'s'} on file`);
+    parts.push(`<strong>${validSections.length}</strong> section${validSections.length===1?'':'s'}`);
+  } else {
+    const hasRef = !!state.files.reference;
+    const stemsCount = STEM_TYPES.filter(s => state.files[s.key]).length;
+    parts.push(hasRef ? '<strong>Reference ✓</strong>' : 'Reference missing');
+    parts.push(`<strong>${stemsCount}</strong> stem${stemsCount===1?'':'s'} attached`);
+    parts.push(`<strong>${validSections.length}</strong> section${validSections.length===1?'':'s'}`);
+  }
   document.getElementById('summary').innerHTML = parts.join(' · ');
 
-  // Save button: reference + at least 1 stem required. Sections optional —
-  // they can be added later, or via the play-to-mark player on this page.
-  const canSave = hasRef && stemsCount > 0 && !!state.song;
+  // Save button:
+  //   edit mode  — always enabled once a song is loaded (metadata and sections can be blank)
+  //   new mode   — reference + at least 1 stem required (sections optional)
+  let canSave;
+  if(state.editMode){
+    canSave = !!state.song;
+  } else {
+    const hasRef = !!state.files.reference;
+    const stemsCount = STEM_TYPES.filter(s => state.files[s.key]).length;
+    canSave = hasRef && stemsCount > 0 && !!state.song;
+  }
   document.getElementById('btn-save').disabled = !canSave;
 }
 
@@ -701,7 +850,24 @@ async function saveReference(){
     s.label && parseTime(s.start) !== null && parseTime(s.end) !== null
   );
 
-  // Show progress
+  try {
+    if(state.editMode){
+      await saveEditMode(validSections);
+    } else {
+      await saveNewReference(validSections);
+    }
+    showSuccess();
+  } catch(err){
+    hideProgress();
+    COS.toast('Error: ' + err.message);
+    console.error('saveReference failed:', err);
+    _saving = false;
+    document.getElementById('btn-save').disabled = false;
+  }
+}
+
+// ── SAVE FLOW — NEW REFERENCE ────────────────────────────────
+async function saveNewReference(validSections){
   showProgress([
     { id:'create', label:'Create reference record' },
     { id:'upload-ref', label:'Upload reference audio' },
@@ -712,84 +878,125 @@ async function saveReference(){
     { id:'done', label:'Done' }
   ]);
 
-  try {
-    // 1. Create the rs_references row to get an ID
-    advanceStep('create');
-    const refRow = {
-      song_id: state.song.id,
-      source_type: 'upload',
-      source_url: state.files.reference.name,
-      duration_seconds: parseFloat(document.getElementById('meta-duration').value) || null,
-      detected_key: document.getElementById('meta-key').value.trim() || null,
-      detected_bpm: parseInt(document.getElementById('meta-bpm').value) || null,
-      status: 'processing',
-      created_by: COS.currentUser.name
-    };
-    const refRes = await sbPost('rs_references', refRow);
-    if(!refRes || !refRes[0]) throw new Error('Failed to create reference record');
-    const refId = refRes[0].id;
+  // 1. Create the rs_references row to get an ID
+  advanceStep('create');
+  const refRow = {
+    song_id: state.song.id,
+    source_type: 'upload',
+    source_url: state.files.reference.name,
+    duration_seconds: parseFloat(document.getElementById('meta-duration').value) || null,
+    detected_key: document.getElementById('meta-key').value.trim() || null,
+    detected_bpm: parseInt(document.getElementById('meta-bpm').value) || null,
+    status: 'processing',
+    created_by: COS.currentUser.name
+  };
+  const refRes = await sbPost('rs_references', refRow);
+  if(!refRes || !refRes[0]) throw new Error('Failed to create reference record');
+  const refId = refRes[0].id;
 
-    // 2. Upload reference
-    advanceStep('upload-ref');
-    const refPath = `references/${refId}/reference.mp3`;
-    await uploadToStorage(refPath, state.files.reference);
+  // 2. Upload reference
+  advanceStep('upload-ref');
+  const refPath = `references/${refId}/reference.mp3`;
+  await uploadToStorage(refPath, state.files.reference);
 
-    // 3. Upload each stem (sequentially to be kind to bandwidth)
-    const stemRows = [];
-    for(const stem of STEM_TYPES){
-      const file = state.files[stem.key];
-      if(!file) continue;
-      advanceStep('upload-' + stem.key);
-      const path = `references/${refId}/stems/${stem.key}.mp3`;
-      await uploadToStorage(path, file);
-      stemRows.push({ reference_id: refId, stem_type: stem.key, audio_path: path });
-    }
+  // 3. Upload each stem (sequentially to be kind to bandwidth)
+  const stemRows = [];
+  for(const stem of STEM_TYPES){
+    const file = state.files[stem.key];
+    if(!file) continue;
+    advanceStep('upload-' + stem.key);
+    const path = `references/${refId}/stems/${stem.key}.mp3`;
+    await uploadToStorage(path, file);
+    stemRows.push({ reference_id: refId, stem_type: stem.key, audio_path: path });
+  }
 
-    // 4. Save stems
-    advanceStep('stems-rows');
+  // 4. Save stems
+  advanceStep('stems-rows');
+  if(stemRows.length > 0){
     const stemsRes = await sbPost('rs_stems', stemRows);
     if(!stemsRes) throw new Error('Failed to save stem records');
-
-    // 5. Save sections
-    advanceStep('sections');
-    const sectionRows = validSections.map((s, idx) => ({
-      reference_id: refId,
-      label: s.label.trim(),
-      start_seconds: parseTime(s.start),
-      end_seconds: parseTime(s.end),
-      position: idx,
-      notes: null
-    }));
-    if(sectionRows.length > 0){
-      const secRes = await sbPost('rs_sections', sectionRows);
-      if(!secRes) throw new Error('Failed to save sections');
-    }
-
-    // 6. Update reference: mark as ready, set audio_path
-    await sbPatch('rs_references', `id=eq.${refId}`, {
-      status: 'ready',
-      audio_path: refPath
-    });
-
-    // 7. If we came from an arrangement, link the reference to it
-    advanceStep('link');
-    if(state.arrangement){
-      await sbPatch('rs_arrangements', `id=eq.${state.arrangement.id}`, {
-        reference_id: refId,
-        updated_at: new Date().toISOString()
-      });
-    }
-
-    advanceStep('done');
-    showSuccess();
-
-  } catch(err){
-    hideProgress();
-    COS.toast('Error: ' + err.message);
-    console.error('saveReference failed:', err);
-    _saving = false;
-    document.getElementById('btn-save').disabled = false;
   }
+
+  // 5. Save sections
+  advanceStep('sections');
+  const sectionRows = validSections.map((s, idx) => ({
+    reference_id: refId,
+    label: s.label.trim(),
+    start_seconds: parseTime(s.start),
+    end_seconds: parseTime(s.end),
+    position: idx,
+    notes: null
+  }));
+  if(sectionRows.length > 0){
+    const secRes = await sbPost('rs_sections', sectionRows);
+    if(!secRes) throw new Error('Failed to save sections');
+  }
+
+  // 6. Mark reference ready
+  await sbPatch('rs_references', `id=eq.${refId}`, {
+    status: 'ready',
+    audio_path: refPath
+  });
+
+  // 7. Link to arrangement if present
+  advanceStep('link');
+  if(state.arrangement){
+    await sbPatch('rs_arrangements', `id=eq.${state.arrangement.id}`, {
+      reference_id: refId,
+      updated_at: new Date().toISOString()
+    });
+  }
+
+  advanceStep('done');
+}
+
+// ── SAVE FLOW — EDIT EXISTING ────────────────────────────────
+async function saveEditMode(validSections){
+  const refId = state.existingReference.id;
+
+  showProgress([
+    { id:'update-meta', label:'Update reference metadata' },
+    { id:'clear-sections', label:'Clear previous section markers' },
+    { id:'save-sections', label:'Save new section markers' },
+    { id:'done', label:'Done' }
+  ]);
+
+  // 1. Patch metadata (in case key/BPM/duration were corrected)
+  advanceStep('update-meta');
+  await sbPatch('rs_references', `id=eq.${refId}`, {
+    detected_key: document.getElementById('meta-key').value.trim() || null,
+    detected_bpm: parseInt(document.getElementById('meta-bpm').value) || null,
+    duration_seconds: parseFloat(document.getElementById('meta-duration').value) || null
+  });
+
+  // 2. Atomically replace sections: delete all existing, insert new
+  advanceStep('clear-sections');
+  const del = await sbDelete('rs_sections', `reference_id=eq.${refId}`);
+  if(del === false) throw new Error('Failed to clear previous sections');
+
+  // 3. Insert new sections
+  advanceStep('save-sections');
+  const sectionRows = validSections.map((s, idx) => ({
+    reference_id: refId,
+    label: s.label.trim(),
+    start_seconds: parseTime(s.start),
+    end_seconds: parseTime(s.end),
+    position: idx,
+    notes: null
+  }));
+  if(sectionRows.length > 0){
+    const secRes = await sbPost('rs_sections', sectionRows);
+    if(!secRes) throw new Error('Failed to save sections');
+  }
+
+  // 4. Touch the arrangement's updated_at so the user sees their arrangement refreshed
+  if(state.arrangement){
+    await sbPatch('rs_arrangements', `id=eq.${state.arrangement.id}`, {
+      updated_at: new Date().toISOString()
+    });
+  }
+
+  advanceStep('done');
 }
 
 // ── PROGRESS UI ──────────────────────────────────────────────
@@ -798,6 +1005,11 @@ function showProgress(steps){
   _progSteps = steps;
   const list = document.getElementById('progress-steps');
   list.innerHTML = steps.map(s => `<li data-step="${s.id}">${s.label}</li>`).join('');
+  document.getElementById('progress-title').textContent = state.editMode ? 'Saving changes…' : 'Saving reference…';
+  document.getElementById('progress-msg').textContent = state.editMode
+    ? 'Updating section markers and metadata.'
+    : 'This will take a minute or two as stems upload.';
+  document.getElementById('progress-fill').style.width = '0%';
   document.getElementById('progress-overlay').classList.add('active');
 }
 function advanceStep(id){
@@ -818,13 +1030,26 @@ function hideProgress(){
   document.getElementById('progress-actions').style.display = 'none';
 }
 function showSuccess(){
-  document.getElementById('progress-title').textContent = '✓ Reference saved';
-  document.getElementById('progress-msg').textContent = 'The stems are uploaded and your arrangement is linked. You can now build the arrangement or come back to this song anytime.';
+  if(state.editMode){
+    document.getElementById('progress-title').textContent = '✓ Changes saved';
+    document.getElementById('progress-msg').textContent = "Your section markers and metadata are updated. The arrangement is ready to build.";
+  } else {
+    document.getElementById('progress-title').textContent = '✓ Reference saved';
+    document.getElementById('progress-msg').textContent = 'The stems are uploaded and your arrangement is linked. You can now build the arrangement or come back to this song anytime.';
+  }
   document.getElementById('progress-actions').style.display = 'block';
 }
 
 // ── UTILS ────────────────────────────────────────────────────
 function escapeAttr(s){ return (s||'').replace(/"/g,'&quot;'); }
+function escapeHtml(s){
+  return (s||'').toString()
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
 
 COS.init('rehearsal');
 </script>

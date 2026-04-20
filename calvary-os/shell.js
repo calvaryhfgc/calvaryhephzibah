@@ -42,6 +42,17 @@ async function sbPatch(table, match, data) {
   } catch(e) { console.warn('sbPatch error:', e); return null; }
 }
 
+async function sbDelete(table, match) {
+  try {
+    const res = await fetch(`${SUPA_URL}/rest/v1/${table}?${match}`, {
+      method: 'DELETE',
+      headers: sbHeaders
+    });
+    if (!res.ok) throw new Error(res.status);
+    return true;
+  } catch(e) { console.warn('sbDelete error:', e); return false; }
+}
+
 const COS = {
 
   // ── USERS ─────────────────────────────────────────────────────────────────
