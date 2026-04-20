@@ -458,7 +458,7 @@ function renderArrangements(){
       <div class="rs-empty">
         <div class="rs-empty-icon">🎼</div>
         <div class="rs-empty-title">${state.arrangements.length ? 'No arrangements match that search' : 'No arrangements yet'}</div>
-        <div class="rs-empty-sub">${state.arrangements.length ? 'Try a different search term.' : 'An arrangement is Calvary\\'s version of a song — built from a reference, with our order of sections and part notes. Add a song first, then create an arrangement from it.'}</div>
+        <div class="rs-empty-sub">${state.arrangements.length ? 'Try a different search term.' : "An arrangement is Calvary's version of a song — built from a reference, with our order of sections and part notes. Add a song first, then create an arrangement from it."}</div>
         ${!state.arrangements.length && (COS.currentUser.level==='admin'||COS.currentUser.level==='lead') ? '<button class="rs-btn rs-btn-primary" onclick="openNewArrangement()">+ New Arrangement</button>' : ''}
       </div>`;
     return;
