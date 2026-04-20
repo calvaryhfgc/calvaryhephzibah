@@ -15,13 +15,11 @@
   #app.visible { background: #0A0A0A; }
 
   /* The app shell chain (html/body/app/app-body/main) all have overflow:hidden
-     to keep the desktop layout fixed. That means content inside .main doesn't
-     scroll on its own. For Practice View we want the WHOLE page to scroll on
-     mobile, so .pv-wrap becomes the scroll container itself. */
-  .pv-wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px;color:white;height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box;}
-  /* Also make sure the parent chain lets us fill the viewport */
-  .main{overflow:visible !important;}
-  .app-body{overflow:visible !important;}
+     to constrain the viewport. Practice View is a tall, scrollable page, so we
+     make .pv-wrap itself the scroll container. It gets its height from the
+     flex chain above, scrolls vertically internally, and lets .main's
+     overflow:hidden clip any horizontal overflow from child scrollers. */
+  .pv-wrap{max-width:720px;margin:0 auto;padding:20px 16px 40px;color:white;height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;box-sizing:border-box;width:100%;}
 
   /* Header */
   .pv-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;}
@@ -37,7 +35,7 @@
   .pv-scroll-mask::after{content:'';position:absolute;top:0;right:0;bottom:0;width:24px;background:linear-gradient(to right, rgba(10,10,10,0), #0A0A0A);pointer-events:none;}
 
   /* Part selector */
-  .pv-parts{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;margin-bottom:20px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+  .pv-parts{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:2px 0 6px;margin-bottom:20px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;width:100%;max-width:100%;}
   .pv-parts::-webkit-scrollbar{display:none;}
   .pv-part{flex:0 0 auto;padding:11px 16px;min-height:44px;border-radius:100px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;white-space:nowrap;transition:all 0.15s;}
   .pv-part:hover{background:rgba(255,255,255,0.08);color:white;}
@@ -51,7 +49,7 @@
   .pv-direction-empty{font-size:13px;color:rgba(255,255,255,0.35);font-style:italic;}
 
   /* Section ribbon */
-  .pv-ribbon{display:flex;gap:6px;overflow-x:auto;padding:4px 0 8px;margin-bottom:20px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+  .pv-ribbon{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:4px 0 8px;margin-bottom:20px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;width:100%;max-width:100%;}
   .pv-ribbon::-webkit-scrollbar{display:none;}
   .pv-slot{flex:0 0 auto;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);min-width:84px;min-height:60px;cursor:pointer;transition:all 0.15s;text-align:center;}
   .pv-slot:hover{background:rgba(255,255,255,0.1);}
@@ -76,7 +74,7 @@
   .pv-time{font-family:monospace;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.9);text-align:center;padding:4px 0 8px;}
   .pv-time-sep{color:rgba(255,255,255,0.35);margin:0 6px;}
 
-  .pv-scrub{width:100%;accent-color:var(--red);margin:4px 0 14px;height:28px;}
+  .pv-scrub{width:100%;max-width:100%;min-width:0;display:block;accent-color:var(--red);margin:4px 0 14px;height:28px;box-sizing:border-box;}
 
   .pv-transport-bottom{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
   .pv-speed{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
@@ -106,7 +104,7 @@
   .pv-stem-btn:hover{background:rgba(255,255,255,0.08);}
   .pv-stem-btn.active{background:var(--red);border-color:var(--red);color:white;}
   .pv-stem-btn.mute.active{background:#6B7280;border-color:#6B7280;}
-  .pv-stem-slider{width:100%;accent-color:var(--red);cursor:pointer;height:32px;}
+  .pv-stem-slider{width:100%;max-width:100%;min-width:0;display:block;accent-color:var(--red);cursor:pointer;height:32px;box-sizing:border-box;}
   .pv-stem-loading{width:14px;height:14px;border:2px solid rgba(255,255,255,0.15);border-top-color:var(--red);border-radius:50%;animation:pv-spin 0.8s linear infinite;flex-shrink:0;}
   @keyframes pv-spin{to{transform:rotate(360deg);}}
   .pv-stem-missing{font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;}
