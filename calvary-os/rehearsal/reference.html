@@ -26,6 +26,8 @@
   .drop{border:2px dashed var(--ink-5);background:var(--ink-6);border-radius:var(--r12);padding:18px;text-align:center;cursor:pointer;transition:all 0.15s;position:relative;}
   .drop:hover{border-color:var(--red-mid);background:var(--red-light);}
   .drop.has-file{border-color:var(--green);background:var(--green-light);border-style:solid;}
+  .drop.drop-optional{border-style:dotted;opacity:0.85;}
+  .drop.drop-optional.has-file{opacity:1;}
   .drop.dragging{border-color:var(--red);background:var(--red-light);}
   .drop-icon{font-size:18px;margin-bottom:4px;opacity:0.5;}
   .drop-label{font-size:12px;font-weight:600;color:var(--ink-2);}
@@ -192,7 +194,7 @@
         <!-- Audio files -->
         <div class="ref-panel">
           <h3>Audio files</h3>
-          <div class="ref-panel-sub">The full reference track plus each of the 7 separated stems. All as MP3.</div>
+          <div class="ref-panel-sub">The full reference track plus whichever stems Moises gave you. Some songs won't have Strings or Metronome — skip any slot that doesn't apply.</div>
 
           <div style="margin-bottom:16px;">
             <label style="font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Reference track (full mix) *</label>
@@ -205,10 +207,7 @@
             </div>
           </div>
 
-          <label style="font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Stems from Moises (all 7) *</label>
-          <div class="stems-grid">
-            <!-- Populated by JS -->
-          </div>
+          <label style="font-size:11px;font-weight:600;color:var(--ink-3);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px;">Stems from Moises <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-4);">— add whichever you have, at least one required</span></label>
           <div id="stems-grid" class="stems-grid"></div>
         </div>
 
@@ -324,13 +323,14 @@
 
 // ── STEM DEFINITIONS ──────────────────────────────────────────
 const STEM_TYPES = [
-  { key:'vocals',  label:'Vocals',  icon:'🎤' },
-  { key:'drums',   label:'Drums',   icon:'🥁' },
-  { key:'bass',    label:'Bass',    icon:'🎸' },
-  { key:'keys',    label:'Keys',    icon:'🎹' },
-  { key:'guitar',  label:'Guitar',  icon:'🎸' },
-  { key:'strings', label:'Strings', icon:'🎻' },
-  { key:'other',   label:'Other',   icon:'🎶' }
+  { key:'vocals',    label:'Vocals',    icon:'🎤' },
+  { key:'drums',     label:'Drums',     icon:'🥁' },
+  { key:'bass',      label:'Bass',      icon:'🎸' },
+  { key:'keys',      label:'Keys',      icon:'🎹' },
+  { key:'guitar',    label:'Guitar',    icon:'🎸' },
+  { key:'other',     label:'Other',     icon:'🎶' },
+  { key:'strings',   label:'Strings',   icon:'🎻', optional:true },
+  { key:'metronome', label:'Metronome', icon:'🎯', optional:true }
 ];
 
 // ── STATE ────────────────────────────────────────────────────
@@ -421,9 +421,9 @@ function buildSidebar(){
 function buildStemGrid(){
   const grid = document.getElementById('stems-grid');
   grid.innerHTML = STEM_TYPES.map(s => `
-    <div class="drop" id="drop-${s.key}" onclick="document.getElementById('file-${s.key}').click()">
+    <div class="drop${s.optional ? ' drop-optional' : ''}" id="drop-${s.key}" onclick="document.getElementById('file-${s.key}').click()">
       <div class="drop-icon">${s.icon}</div>
-      <div class="drop-label">${s.label}</div>
+      <div class="drop-label">${s.label}${s.optional ? ' <span style="font-weight:400;color:var(--ink-4);font-size:10px;">(optional)</span>' : ''}</div>
       <div class="drop-filename" id="fn-${s.key}"></div>
       <input type="file" id="file-${s.key}" accept="audio/*" onchange="handleFile('${s.key}', this.files[0])">
     </div>`).join('');
@@ -511,7 +511,7 @@ function updateSummary(){
   );
   const parts = [];
   parts.push(hasRef ? '<strong>Reference ✓</strong>' : 'Reference missing');
-  parts.push(`<strong>${stemsCount}/7</strong> stems`);
+  parts.push(`<strong>${stemsCount}</strong> stem${stemsCount===1?'':'s'} attached`);
   parts.push(`<strong>${validSections.length}</strong> section${validSections.length===1?'':'s'}`);
   document.getElementById('summary').innerHTML = parts.join(' · ');
 
