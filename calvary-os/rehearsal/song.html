@@ -614,6 +614,7 @@ function renderArrangements(){
           </div>
           <div class="sg-item-actions">
             ${preferBtn}
+            ${hasRef && slotCount > 0 ? `<a href="practice.html?arrangement_id=${a.id}" class="rs-btn rs-btn-sm" title="Open in Practice View">▶ Practice</a>` : ''}
             <a href="${href}" class="rs-btn rs-btn-sm rs-btn-primary">Open</a>
           </div>
         </div>

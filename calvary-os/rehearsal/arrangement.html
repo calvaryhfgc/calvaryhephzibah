@@ -245,6 +245,7 @@
           <div class="actions-summary" id="arr-summary">Loading…</div>
           <div class="actions-btns">
             <button class="rs-btn" onclick="window.location.href='index.html'">Cancel</button>
+            <button class="rs-btn" id="btn-practice" onclick="openInPractice()" title="Open in Practice View (requires slots)">▶ Practice</button>
             <button class="rs-btn" id="btn-save-draft" onclick="saveArrangement('draft')">Save draft</button>
             <button class="rs-btn rs-btn-primary" id="btn-save-ready" onclick="saveArrangement('ready')">Save &amp; publish</button>
           </div>
@@ -553,6 +554,22 @@ function updateSlotNotes(idx, value){
 
 // ── SAVE ─────────────────────────────────────────────────────
 let _saving = false;
+function openInPractice(){
+  if(!state.arrangement || !state.arrangement.id){
+    COS.toast('Save the arrangement first');
+    return;
+  }
+  if(!state.arrangement.reference_id){
+    COS.toast('Link a reference first');
+    return;
+  }
+  if(!state.slots || state.slots.length === 0){
+    COS.toast('Add at least one slot first');
+    return;
+  }
+  window.location.href = `practice.html?arrangement_id=${state.arrangement.id}`;
+}
+
 async function saveArrangement(status){
   if(_saving) return;
   _saving = true;

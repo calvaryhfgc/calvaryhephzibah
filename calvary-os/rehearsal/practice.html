@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Practice</title>
+<meta name="theme-color" content="#0A0A0A">
+<link rel="stylesheet" href="../shell.css">
+<style>
+  /* ── PRACTICE VIEW LOCAL STYLES ───────────────────────────────
+     Dark theme, phone-first. Practice View is used by team members on
+     their phones during the week while they rehearse. */
+
+  body { background: #0A0A0A; }
+  #app.visible { background: #0A0A0A; }
+
+  .pv-wrap{max-width:720px;margin:0 auto;padding:16px;color:white;}
+
+  /* Header */
+  .pv-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+  .pv-back{width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;}
+  .pv-back:hover{background:rgba(255,255,255,0.1);}
+  .pv-hdr-body{flex:1;min-width:0;}
+  .pv-song-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55);}
+  .pv-arr-name{font-family:'Lora',serif;font-size:20px;font-weight:600;color:white;line-height:1.2;margin-top:2px;}
+  .pv-meta{font-size:11px;color:rgba(255,255,255,0.55);margin-top:4px;font-variant-numeric:tabular-nums;}
+
+  /* Part selector */
+  .pv-parts{display:flex;gap:6px;overflow-x:auto;padding:2px 0;margin-bottom:16px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+  .pv-parts::-webkit-scrollbar{display:none;}
+  .pv-part{flex:0 0 auto;padding:10px 14px;border-radius:100px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:all 0.15s;}
+  .pv-part:hover{background:rgba(255,255,255,0.08);color:white;}
+  .pv-part.active{background:var(--red);border-color:var(--red);color:white;}
+  .pv-part-icon{font-size:14px;}
+
+  /* Direction card */
+  .pv-direction{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+  .pv-direction-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:6px;}
+  .pv-direction-text{font-size:13px;line-height:1.55;color:rgba(255,255,255,0.85);white-space:pre-wrap;}
+  .pv-direction-empty{font-size:12px;color:rgba(255,255,255,0.35);font-style:italic;}
+  .pv-direction + .pv-direction{margin-top:-8px;}
+
+  /* Section ribbon */
+  .pv-ribbon{display:flex;gap:4px;overflow-x:auto;padding:4px 0;margin-bottom:18px;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;}
+  .pv-ribbon::-webkit-scrollbar{display:none;}
+  .pv-slot{flex:0 0 auto;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);min-width:80px;cursor:pointer;transition:all 0.15s;text-align:center;}
+  .pv-slot:hover{background:rgba(255,255,255,0.1);}
+  .pv-slot.current{background:rgba(196,30,42,0.25);border-color:var(--red);}
+  .pv-slot.looping{background:rgba(251,191,36,0.2);border-color:#FBBF24;}
+  .pv-slot-label{font-size:12px;font-weight:600;color:white;white-space:nowrap;}
+  .pv-slot-num{font-size:9px;color:rgba(255,255,255,0.45);font-weight:700;letter-spacing:0.5px;margin-bottom:2px;}
+  .pv-slot-dur{font-size:10px;color:rgba(255,255,255,0.55);margin-top:2px;font-variant-numeric:tabular-nums;}
+  .pv-ribbon-empty{padding:24px 16px;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.12);border-radius:14px;text-align:center;color:rgba(255,255,255,0.55);font-size:13px;line-height:1.5;}
+  .pv-ribbon-empty a{color:var(--red);font-weight:600;text-decoration:none;}
+
+  /* Transport */
+  .pv-transport{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:16px;}
+  .pv-transport-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .pv-play{width:52px;height:52px;border-radius:50%;border:none;background:var(--red);color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.1s;}
+  .pv-play:hover:not(:disabled){background:var(--red-d);}
+  .pv-play:disabled{opacity:0.4;cursor:not-allowed;}
+  .pv-play:active{transform:scale(0.95);}
+  .pv-time{font-family:monospace;font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:rgba(255,255,255,0.9);min-width:90px;}
+  .pv-time-sep{color:rgba(255,255,255,0.35);margin:0 4px;}
+  .pv-skip{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;}
+  .pv-skip:hover{background:rgba(255,255,255,0.1);color:white;}
+
+  .pv-scrub{width:100%;accent-color:var(--red);margin:8px 0 10px;}
+
+  .pv-transport-bottom{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+  .pv-speed{display:flex;align-items:center;gap:4px;}
+  .pv-speed-label{font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(255,255,255,0.45);font-weight:600;margin-right:4px;}
+  .pv-speed-chip{padding:4px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.7);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .pv-speed-chip.active{background:var(--red);border-color:var(--red);color:white;}
+  .pv-loop-toggle{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,0.7);cursor:pointer;margin-left:auto;}
+  .pv-loop-toggle input{accent-color:var(--red);cursor:pointer;}
+  .pv-loop-toggle .dot{width:6px;height:6px;border-radius:50%;background:#FBBF24;display:none;animation:pv-pulse 1s ease-in-out infinite;}
+  .pv-loop-toggle.looping .dot{display:inline-block;}
+  @keyframes pv-pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+  /* Stem mixer */
+  .pv-mixer{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
+  .pv-mixer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .pv-mixer-title{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700;color:rgba(255,255,255,0.7);}
+  .pv-mixer-reset{background:none;border:none;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer;font-family:inherit;text-decoration:underline;}
+  .pv-mixer-reset:hover{color:white;}
+  .pv-stem-row{display:grid;grid-template-columns:auto 80px 1fr auto;gap:10px;align-items:center;padding:6px 0;border-top:1px solid rgba(255,255,255,0.05);}
+  .pv-stem-row:first-of-type{border-top:none;}
+  .pv-stem-icon{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .pv-stem-name{font-size:12px;font-weight:600;color:rgba(255,255,255,0.85);}
+  .pv-stem-slider{width:100%;accent-color:var(--red);cursor:pointer;}
+  .pv-stem-btns{display:flex;gap:4px;}
+  .pv-stem-btn{width:28px;height:28px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.6);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;}
+  .pv-stem-btn:hover{background:rgba(255,255,255,0.08);}
+  .pv-stem-btn.active{background:var(--red);border-color:var(--red);color:white;}
+  .pv-stem-btn.mute.active{background:#6B7280;border-color:#6B7280;}
+  .pv-stem-loading{width:14px;height:14px;border:2px solid rgba(255,255,255,0.15);border-top-color:var(--red);border-radius:50%;animation:pv-spin 0.8s linear infinite;}
+  @keyframes pv-spin{to{transform:rotate(360deg);}}
+  .pv-stem-missing{font-size:10px;color:rgba(255,255,255,0.3);font-style:italic;}
+
+  /* Footer */
+  .pv-footer{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;text-align:center;}
+  .pv-practise-btn{padding:10px 20px;border-radius:10px;border:1.5px solid var(--red);background:transparent;color:var(--red);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .pv-practise-btn:hover{background:var(--red);color:white;}
+  .pv-practise-btn.done{background:var(--green);border-color:var(--green);color:white;}
+  .pv-practise-count{font-size:11px;color:rgba(255,255,255,0.5);margin-top:8px;}
+
+  /* Loading / error states */
+  .pv-loading-splash{padding:48px 24px;text-align:center;color:rgba(255,255,255,0.75);}
+  .pv-loading-title{font-family:'Lora',serif;font-size:20px;margin-bottom:8px;}
+  .pv-loading-bar{width:200px;height:4px;background:rgba(255,255,255,0.1);border-radius:100px;margin:16px auto;overflow:hidden;}
+  .pv-loading-fill{height:100%;background:var(--red);border-radius:100px;transition:width 0.2s;width:0;}
+  .pv-loading-sub{font-size:12px;color:rgba(255,255,255,0.45);margin-top:10px;}
+
+  .pv-error{padding:32px 24px;text-align:center;color:rgba(255,255,255,0.75);background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:14px;}
+
+  /* Responsive */
+  @media(max-width:480px){
+    .pv-wrap{padding:12px;}
+    .pv-arr-name{font-size:18px;}
+    .pv-play{width:48px;height:48px;}
+    .pv-stem-row{grid-template-columns:auto 60px 1fr auto;gap:8px;}
+  }
+
+  /* Hide the main app chrome on practice view — this is a dedicated playback UI */
+  .topbar{display:none;}
+  .sidebar{display:none;}
+  .app-body{padding-top:0;}
+  .mobile-nav{display:none !important;}
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared pattern) ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+  <div class="app-body">
+    <div class="main">
+      <div class="pv-wrap" id="pv-wrap">
+
+        <!-- Loading splash until arrangement data is fetched -->
+        <div class="pv-loading-splash" id="pv-loading">
+          <div class="pv-loading-title">Loading arrangement…</div>
+          <div class="pv-loading-bar"><div class="pv-loading-fill" id="pv-loading-fill"></div></div>
+          <div class="pv-loading-sub" id="pv-loading-sub">Fetching slots and part notes…</div>
+        </div>
+
+        <!-- Main UI (hidden until load completes) -->
+        <div id="pv-main" style="display:none;">
+
+          <!-- Header -->
+          <div class="pv-header">
+            <a href="#" class="pv-back" id="pv-back-btn">←</a>
+            <div class="pv-hdr-body">
+              <div class="pv-song-title" id="pv-song-title">Loading…</div>
+              <div class="pv-arr-name" id="pv-arr-name">Arrangement</div>
+              <div class="pv-meta" id="pv-meta"></div>
+            </div>
+          </div>
+
+          <!-- Part selector -->
+          <div class="pv-parts" id="pv-parts"></div>
+
+          <!-- Direction cards (worship leader + part notes) -->
+          <div class="pv-direction" id="pv-direction-wl" style="display:none;">
+            <div class="pv-direction-label">Worship leader</div>
+            <div class="pv-direction-text" id="pv-wl-text"></div>
+          </div>
+          <div class="pv-direction" id="pv-direction-part" style="display:none;">
+            <div class="pv-direction-label" id="pv-part-label">For your part</div>
+            <div class="pv-direction-text" id="pv-part-text"></div>
+          </div>
+
+          <!-- Section ribbon -->
+          <div id="pv-ribbon-container">
+            <div class="pv-ribbon" id="pv-ribbon"></div>
+          </div>
+
+          <!-- Transport -->
+          <div class="pv-transport">
+            <div class="pv-transport-top">
+              <button class="pv-play" id="pv-play" onclick="togglePlay()" disabled>▶</button>
+              <div class="pv-time">
+                <span id="pv-cur">0:00</span>
+                <span class="pv-time-sep">/</span>
+                <span id="pv-dur">0:00</span>
+              </div>
+              <div style="flex:1;"></div>
+              <button class="pv-skip" onclick="skipBy(-5)" title="Back 5s">−5s</button>
+              <button class="pv-skip" onclick="skipBy(5)" title="Forward 5s">+5s</button>
+            </div>
+            <input type="range" class="pv-scrub" id="pv-scrub" min="0" max="100" step="0.1" value="0" oninput="onScrub(this.value)">
+            <div class="pv-transport-bottom">
+              <div class="pv-speed">
+                <span class="pv-speed-label">Speed</span>
+                <button class="pv-speed-chip" onclick="setSpeed(0.5)" data-speed="0.5">0.5×</button>
+                <button class="pv-speed-chip" onclick="setSpeed(0.75)" data-speed="0.75">0.75×</button>
+                <button class="pv-speed-chip active" onclick="setSpeed(1)" data-speed="1">1×</button>
+                <button class="pv-speed-chip" onclick="setSpeed(1.25)" data-speed="1.25">1.25×</button>
+              </div>
+              <label class="pv-loop-toggle" id="pv-loop-toggle">
+                <span class="dot"></span>
+                <input type="checkbox" id="pv-loop-cb" onchange="onLoopToggle()">
+                <span>Loop slot</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Stem mixer -->
+          <div class="pv-mixer">
+            <div class="pv-mixer-header">
+              <div class="pv-mixer-title">Stem mixer</div>
+              <button class="pv-mixer-reset" onclick="resetMix()">Reset mix</button>
+            </div>
+            <div id="pv-stems"></div>
+          </div>
+
+          <!-- Footer -->
+          <div class="pv-footer">
+            <button class="pv-practise-btn" id="pv-practise-btn" onclick="markPractised()">✓ Mark as practised</button>
+            <div class="pv-practise-count" id="pv-practise-count"></div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../shell.js"></script>
+<script>
+
+// ── CONSTANTS ────────────────────────────────────────────────
+const PARTS = [
+  { key:'drums',      label:'Drums',       icon:'🥁', stem:'drums' },
+  { key:'bass',       label:'Bass',        icon:'🎸', stem:'bass' },
+  { key:'keys',       label:'Keys',        icon:'🎹', stem:'keys' },
+  { key:'electric',   label:'Electric',    icon:'⚡', stem:'guitar' },
+  { key:'acoustic',   label:'Acoustic',    icon:'🎵', stem:'guitar' },
+  { key:'lead_vocal', label:'Lead vocal',  icon:'🎤', stem:'vocals' },
+  { key:'bv',         label:'BV',          icon:'👥', stem:'vocals' },
+];
+
+const STEMS = [
+  { key:'vocals',    label:'Vocals',    icon:'🎤' },
+  { key:'drums',     label:'Drums',     icon:'🥁' },
+  { key:'bass',      label:'Bass',      icon:'🎸' },
+  { key:'keys',      label:'Keys',      icon:'🎹' },
+  { key:'guitar',    label:'Guitar',    icon:'🎸' },
+  { key:'other',     label:'Other',     icon:'🎶' },
+  { key:'strings',   label:'Strings',   icon:'🎻' },
+  { key:'metronome', label:'Metronome', icon:'🎯' },
+];
+
+// Auto-mix presets: when user picks a part, this is how stems default.
+// Keys are stem names; values are 0-1 gains.
+const AUTO_MIX = {
+  drums:      { drums:1.0, bass:0.7, vocals:0.5, keys:0.5, guitar:0.5, other:0.4, strings:0.4, metronome:0.0 },
+  bass:       { bass:1.0, drums:0.8, vocals:0.5, keys:0.5, guitar:0.5, other:0.4, strings:0.4, metronome:0.0 },
+  keys:       { keys:1.0, drums:0.7, bass:0.7, vocals:0.5, guitar:0.4, other:0.4, strings:0.5, metronome:0.0 },
+  electric:   { guitar:1.0, drums:0.7, bass:0.7, vocals:0.5, keys:0.4, other:0.4, strings:0.3, metronome:0.0 },
+  acoustic:   { guitar:1.0, drums:0.6, bass:0.6, vocals:0.6, keys:0.5, other:0.4, strings:0.3, metronome:0.0 },
+  lead_vocal: { vocals:1.0, drums:0.6, bass:0.6, keys:0.5, guitar:0.5, other:0.4, strings:0.4, metronome:0.0 },
+  bv:         { vocals:0.4, drums:0.7, bass:0.7, keys:0.6, guitar:0.6, other:0.5, strings:0.5, metronome:0.0 },
+};
+
+// ── STATE ────────────────────────────────────────────────────
+const state = {
+  arrangement: null,
+  song: null,
+  reference: null,
+  slots: [],          // ordered array of { section_id, notes, chop: {label, start_seconds, end_seconds} }
+  parts: {},          // { drums: 'notes…', bass: '…', ... }
+
+  // Audio engine state
+  audioCtx: null,
+  stems: {},          // { vocals: {buffer, gain, source, volume, muted, solo, loading, loaded, path}, ... }
+  currentPart: null,
+
+  // Playback state — all in "arrangement time" (0..totalDuration)
+  arrTime: 0,         // current position in arrangement time
+  startedAt: 0,       // AudioContext time when playback started
+  startOffset: 0,     // arrangement time at which playback started
+  playing: false,
+  playbackRate: 1,
+  totalDuration: 0,
+
+  // UI state
+  currentSlotIdx: -1,
+  loopSlotIdx: -1,    // -1 means no loop
+  rafId: null,
+  scrubbing: false,
+};
+
+// ── BOOT ─────────────────────────────────────────────────────
+function pageInit(){
+  // Load preferred part from localStorage or default to lead_vocal
+  const savedPart = localStorage.getItem('pv_part') || 'lead_vocal';
+  state.currentPart = savedPart;
+  loadArrangement();
+}
+
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadArrangement(){
+  const params = new URLSearchParams(location.search);
+  const arrId = params.get('arrangement_id') || params.get('id');
+  if(!arrId){
+    showError('No arrangement specified.', 'Open this page via a specific arrangement from Rehearsal Studio.');
+    return;
+  }
+
+  setLoadingProgress(0.1, 'Fetching arrangement…');
+
+  const arrs = await sbFetch(`rs_arrangements?id=eq.${arrId}`);
+  if(!arrs || !arrs[0]){ showError('Arrangement not found', 'It may have been deleted.'); return; }
+  state.arrangement = arrs[0];
+
+  setLoadingProgress(0.25, 'Fetching song + reference…');
+
+  const [songs, refs] = await Promise.all([
+    sbFetch(`rs_songs?id=eq.${state.arrangement.song_id}`),
+    state.arrangement.reference_id
+      ? sbFetch(`rs_references?id=eq.${state.arrangement.reference_id}`)
+      : Promise.resolve([])
+  ]);
+  state.song = (songs && songs[0]) || null;
+  state.reference = (refs && refs[0]) || null;
+
+  if(!state.reference){
+    showError('No reference linked',
+      `<a href="reference.html?arrangement_id=${arrId}" style="color:var(--red);">Add a reference to this arrangement →</a>`);
+    return;
+  }
+
+  setLoadingProgress(0.45, 'Fetching slots + chops…');
+
+  const [slots, chops, parts, stems] = await Promise.all([
+    sbFetch(`rs_arrangement_sections?arrangement_id=eq.${arrId}&order=position.asc`),
+    sbFetch(`rs_sections?reference_id=eq.${state.reference.id}&order=position.asc`),
+    sbFetch(`rs_arrangement_parts?arrangement_id=eq.${arrId}`),
+    sbFetch(`rs_stems?reference_id=eq.${state.reference.id}`)
+  ]);
+
+  // Resolve slot.chop by joining slots to chops on section_id
+  const chopsById = {};
+  (chops || []).forEach(c => { chopsById[c.id] = c; });
+  state.slots = (slots || []).map(s => ({
+    section_id: s.section_id,
+    notes: s.notes || '',
+    position: s.position,
+    chop: chopsById[s.section_id] || null
+  })).filter(s => s.chop);  // drop any orphan slots pointing at deleted chops
+
+  // Part notes
+  state.parts = {};
+  (parts || []).forEach(p => { state.parts[p.part] = p.notes || ''; });
+
+  // Stems (metadata only — audio is loaded lazily)
+  STEMS.forEach(s => {
+    const stemRow = (stems || []).find(x => x.stem_type === s.key);
+    state.stems[s.key] = {
+      type: s.key,
+      path: stemRow ? stemRow.audio_path : null,
+      exists: !!stemRow,
+      buffer: null,
+      source: null,
+      gain: null,
+      volume: 0,  // will be set by auto-mix
+      muted: false,
+      solo: false,
+      loaded: false,
+      loading: false
+    };
+  });
+
+  // Compute total arrangement duration as sum of slot durations
+  state.totalDuration = state.slots.reduce((sum, s) =>
+    sum + (s.chop.end_seconds - s.chop.start_seconds), 0);
+
+  // Apply initial auto-mix for the saved/default part
+  applyAutoMix(state.currentPart);
+
+  setLoadingProgress(0.7, 'Preparing audio…');
+
+  renderUI();
+
+  setLoadingProgress(1.0, 'Ready.');
+  setTimeout(() => {
+    document.getElementById('pv-loading').style.display = 'none';
+    document.getElementById('pv-main').style.display = 'block';
+  }, 300);
+
+  loadPracticeCount();
+}
+
+function setLoadingProgress(pct, text){
+  const fill = document.getElementById('pv-loading-fill');
+  const sub = document.getElementById('pv-loading-sub');
+  if(fill) fill.style.width = (pct * 100) + '%';
+  if(sub && text) sub.textContent = text;
+}
+
+function showError(title, sub){
+  const wrap = document.getElementById('pv-wrap');
+  wrap.innerHTML = `
+    <div class="pv-header">
+      <a href="song.html${state.song ? '?id='+state.song.id : ''}" class="pv-back">←</a>
+      <div class="pv-hdr-body"><div class="pv-arr-name">${escapeHtml(title)}</div></div>
+    </div>
+    <div class="pv-error">${sub}</div>`;
+}
+
+// ── UI RENDER ────────────────────────────────────────────────
+function renderUI(){
+  // Header
+  document.getElementById('pv-song-title').textContent = state.song ? state.song.title : 'Song';
+  document.getElementById('pv-arr-name').textContent = state.arrangement.name || 'Arrangement';
+  const meta = [];
+  if(state.arrangement.key) meta.push(state.arrangement.key);
+  if(state.arrangement.bpm) meta.push(state.arrangement.bpm + ' BPM');
+  if(state.totalDuration) meta.push(fmtTime(state.totalDuration));
+  meta.push(`${state.slots.length} slot${state.slots.length===1?'':'s'}`);
+  document.getElementById('pv-meta').textContent = meta.join(' · ');
+
+  // Back button
+  document.getElementById('pv-back-btn').href = state.song
+    ? `song.html?id=${state.song.id}`
+    : 'index.html';
+
+  // Parts
+  renderParts();
+
+  // Direction cards
+  renderDirection();
+
+  // Ribbon
+  renderRibbon();
+
+  // Stems (mixer rows)
+  renderStems();
+
+  // Duration display
+  document.getElementById('pv-dur').textContent = fmtTime(state.totalDuration);
+  document.getElementById('pv-scrub').max = state.totalDuration;
+
+  // Play button enabled if we have audio to play
+  if(state.slots.length > 0){
+    document.getElementById('pv-play').disabled = false;
+  }
+}
+
+function renderParts(){
+  const el = document.getElementById('pv-parts');
+  el.innerHTML = PARTS.map(p => `
+    <button class="pv-part ${p.key === state.currentPart ? 'active' : ''}" onclick="selectPart('${p.key}')">
+      <span class="pv-part-icon">${p.icon}</span>
+      <span>${p.label}</span>
+    </button>
+  `).join('');
+}
+
+function renderDirection(){
+  const wlEl = document.getElementById('pv-direction-wl');
+  const wlText = document.getElementById('pv-wl-text');
+  const wl = state.arrangement.worship_leader_notes;
+  if(wl && wl.trim()){
+    wlEl.style.display = 'block';
+    wlText.textContent = wl;
+  } else {
+    wlEl.style.display = 'none';
+  }
+
+  const partEl = document.getElementById('pv-direction-part');
+  const partText = document.getElementById('pv-part-text');
+  const partLabel = document.getElementById('pv-part-label');
+  const partNotes = state.parts[state.currentPart];
+  const partDef = PARTS.find(p => p.key === state.currentPart);
+  partLabel.textContent = `For ${partDef ? partDef.label.toLowerCase() : 'your part'}`;
+  if(partNotes && partNotes.trim()){
+    partEl.style.display = 'block';
+    partText.textContent = partNotes;
+    partText.classList.remove('pv-direction-empty');
+  } else {
+    partEl.style.display = 'block';
+    partText.innerHTML = `<span class="pv-direction-empty">No specific notes for this part. Use the stem mixer to focus.</span>`;
+  }
+}
+
+function renderRibbon(){
+  const el = document.getElementById('pv-ribbon');
+  if(state.slots.length === 0){
+    el.outerHTML = `
+      <div class="pv-ribbon-empty">
+        <strong>This arrangement has no slots yet.</strong><br>
+        <a href="arrangement.html?id=${state.arrangement.id}">Open the builder to compose it →</a>
+      </div>`;
+    return;
+  }
+  el.innerHTML = state.slots.map((s, i) => {
+    const dur = s.chop.end_seconds - s.chop.start_seconds;
+    return `
+      <div class="pv-slot ${i === state.currentSlotIdx ? 'current' : ''} ${i === state.loopSlotIdx ? 'looping' : ''}"
+           data-slot-idx="${i}"
+           onclick="jumpToSlot(${i})"
+           oncontextmenu="event.preventDefault();toggleLoopSlot(${i});return false;"
+           title="Tap to jump · Long-press to loop">
+        <div class="pv-slot-num">${i + 1}</div>
+        <div class="pv-slot-label">${escapeHtml(s.chop.label || 'Unnamed')}</div>
+        <div class="pv-slot-dur">${fmtTime(dur)}</div>
+      </div>`;
+  }).join('');
+
+  // Touch long-press for mobile (oncontextmenu covers desktop right-click)
+  el.querySelectorAll('.pv-slot').forEach(slotEl => {
+    let pressTimer = null;
+    slotEl.addEventListener('touchstart', (e) => {
+      pressTimer = setTimeout(() => {
+        const idx = parseInt(slotEl.getAttribute('data-slot-idx'));
+        toggleLoopSlot(idx);
+        pressTimer = null;
+      }, 500);
+    });
+    slotEl.addEventListener('touchend', () => { if(pressTimer){ clearTimeout(pressTimer); } });
+    slotEl.addEventListener('touchmove', () => { if(pressTimer){ clearTimeout(pressTimer); } });
+  });
+}
+
+function renderStems(){
+  const el = document.getElementById('pv-stems');
+  el.innerHTML = STEMS.map(s => {
+    const stem = state.stems[s.key];
+    if(!stem.exists){
+      return `
+        <div class="pv-stem-row" style="opacity:0.4;">
+          <div class="pv-stem-icon">${s.icon}</div>
+          <div class="pv-stem-name">${s.label}</div>
+          <div class="pv-stem-missing">not uploaded</div>
+          <div></div>
+        </div>`;
+    }
+    return `
+      <div class="pv-stem-row" id="stem-row-${s.key}">
+        <div class="pv-stem-icon">${s.icon}</div>
+        <div class="pv-stem-name">${s.label}</div>
+        <div>
+          <input type="range" class="pv-stem-slider" id="stem-vol-${s.key}"
+                 min="0" max="1" step="0.01" value="${stem.volume}"
+                 oninput="setStemVolume('${s.key}', parseFloat(this.value))">
+        </div>
+        <div class="pv-stem-btns">
+          <button class="pv-stem-btn solo ${stem.solo?'active':''}" id="stem-solo-${s.key}"
+                  onclick="toggleStemSolo('${s.key}')" title="Solo">S</button>
+          <button class="pv-stem-btn mute ${stem.muted?'active':''}" id="stem-mute-${s.key}"
+                  onclick="toggleStemMute('${s.key}')" title="Mute">M</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── PART SELECTION ───────────────────────────────────────────
+function selectPart(partKey){
+  state.currentPart = partKey;
+  localStorage.setItem('pv_part', partKey);
+  applyAutoMix(partKey);
+  renderParts();
+  renderDirection();
+  renderStems();
+  // Kick off downloads for the stems this part needs
+  const partStem = PARTS.find(p => p.key === partKey)?.stem;
+  if(partStem) ensureStemLoaded(partStem);
+  // Always keep vocals loaded as a guide
+  ensureStemLoaded('vocals');
+  // Apply volumes to any currently-loaded gain nodes
+  applyVolumesToLiveNodes();
+}
+
+function applyAutoMix(partKey){
+  const mix = AUTO_MIX[partKey] || {};
+  STEMS.forEach(s => {
+    const v = mix[s.key] !== undefined ? mix[s.key] : 0.5;
+    state.stems[s.key].volume = v;
+    state.stems[s.key].muted = false;
+    state.stems[s.key].solo = false;
+  });
+}
+
+function resetMix(){
+  applyAutoMix(state.currentPart);
+  renderStems();
+  applyVolumesToLiveNodes();
+}
+
+// ── STEM CONTROLS ────────────────────────────────────────────
+function setStemVolume(stemKey, v){
+  state.stems[stemKey].volume = v;
+  if(state.stems[stemKey].muted) state.stems[stemKey].muted = false;
+  applyVolumesToLiveNodes();
+  const muteBtn = document.getElementById('stem-mute-' + stemKey);
+  if(muteBtn) muteBtn.classList.remove('active');
+}
+
+function toggleStemMute(stemKey){
+  state.stems[stemKey].muted = !state.stems[stemKey].muted;
+  document.getElementById('stem-mute-' + stemKey).classList.toggle('active', state.stems[stemKey].muted);
+  applyVolumesToLiveNodes();
+}
+
+function toggleStemSolo(stemKey){
+  const newSolo = !state.stems[stemKey].solo;
+  // Clear all solos; then set this one (exclusive)
+  STEMS.forEach(s => {
+    state.stems[s.key].solo = false;
+    const btn = document.getElementById('stem-solo-' + s.key);
+    if(btn) btn.classList.remove('active');
+  });
+  if(newSolo){
+    state.stems[stemKey].solo = true;
+    document.getElementById('stem-solo-' + stemKey).classList.add('active');
+    // When soloing, we need that stem loaded
+    ensureStemLoaded(stemKey);
+  }
+  applyVolumesToLiveNodes();
+}
+
+// Compute the effective gain for a stem given volume/mute/solo flags
+function effectiveGain(stemKey){
+  const s = state.stems[stemKey];
+  if(!s || !s.exists) return 0;
+  // If any stem is soloed, only soloed stems play
+  const anySolo = STEMS.some(x => state.stems[x.key].solo);
+  if(anySolo && !s.solo) return 0;
+  if(s.muted) return 0;
+  return s.volume;
+}
+
+// Push current effective gains to any GainNodes that exist
+function applyVolumesToLiveNodes(){
+  if(!state.audioCtx) return;
+  STEMS.forEach(s => {
+    const stem = state.stems[s.key];
+    if(stem.gain){
+      stem.gain.gain.setValueAtTime(effectiveGain(s.key), state.audioCtx.currentTime);
+    }
+  });
+}
+
+// ── AUDIO ENGINE ─────────────────────────────────────────────
+function ensureAudioContext(){
+  if(state.audioCtx) return state.audioCtx;
+  state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return state.audioCtx;
+}
+
+async function ensureStemLoaded(stemKey){
+  const stem = state.stems[stemKey];
+  if(!stem || !stem.exists) return null;
+  if(stem.loaded) return stem.buffer;
+  if(stem.loading) return null;
+
+  stem.loading = true;
+  // Show spinner
+  const row = document.getElementById('stem-row-' + stemKey);
+  if(row){
+    const slot = row.querySelector('.pv-stem-slider');
+    if(slot) slot.style.opacity = '0.5';
+    const loader = document.createElement('div');
+    loader.className = 'pv-stem-loading';
+    loader.id = 'stem-loader-' + stemKey;
+    row.insertBefore(loader, row.children[2]);
+  }
+
+  try {
+    const ctx = ensureAudioContext();
+    const url = publicUrl(stem.path);
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const arrayBuffer = await res.arrayBuffer();
+    const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+    stem.buffer = audioBuffer;
+    stem.loaded = true;
+
+    // Create a GainNode for this stem (persists across plays)
+    if(!stem.gain){
+      stem.gain = ctx.createGain();
+      stem.gain.connect(ctx.destination);
+      stem.gain.gain.value = effectiveGain(stemKey);
+    }
+  } catch(err){
+    console.error('Failed to load stem ' + stemKey + ':', err);
+    COS.toast('Failed to load ' + stemKey + ' stem');
+  } finally {
+    stem.loading = false;
+    if(row){
+      const slot = row.querySelector('.pv-stem-slider');
+      if(slot) slot.style.opacity = '';
+      const loader = document.getElementById('stem-loader-' + stemKey);
+      if(loader) loader.remove();
+    }
+  }
+  return stem.buffer;
+}
+
+// Convert arrangement time (0..totalDuration) to reference time (seconds in the MP3)
+function arrangementToReferenceTime(arrT){
+  let remaining = arrT;
+  for(const slot of state.slots){
+    const slotDur = slot.chop.end_seconds - slot.chop.start_seconds;
+    if(remaining <= slotDur){
+      return { refTime: slot.chop.start_seconds + remaining, slot: slot, slotOffset: remaining };
+    }
+    remaining -= slotDur;
+  }
+  // Past the end
+  if(state.slots.length){
+    const lastSlot = state.slots[state.slots.length - 1];
+    return { refTime: lastSlot.chop.end_seconds, slot: lastSlot, slotOffset: lastSlot.chop.end_seconds - lastSlot.chop.start_seconds };
+  }
+  return { refTime: 0, slot: null, slotOffset: 0 };
+}
+
+// Compute which slot index the current arrTime falls into
+function slotIndexAtArrTime(arrT){
+  let cum = 0;
+  for(let i = 0; i < state.slots.length; i++){
+    const slotDur = state.slots[i].chop.end_seconds - state.slots[i].chop.start_seconds;
+    if(arrT < cum + slotDur) return i;
+    cum += slotDur;
+  }
+  return state.slots.length - 1;
+}
+
+// Arrangement time at the start of a slot
+function slotStartArrTime(idx){
+  let cum = 0;
+  for(let i = 0; i < idx; i++){
+    cum += state.slots[i].chop.end_seconds - state.slots[i].chop.start_seconds;
+  }
+  return cum;
+}
+
+// ── PLAYBACK ─────────────────────────────────────────────────
+async function togglePlay(){
+  if(state.playing){
+    pause();
+  } else {
+    await play();
+  }
+}
+
+async function play(){
+  const ctx = ensureAudioContext();
+  if(ctx.state === 'suspended') await ctx.resume();
+
+  // Make sure at least the selected-part stem + vocals are loaded before starting
+  const partStem = PARTS.find(p => p.key === state.currentPart)?.stem;
+  const prerequisites = [partStem, 'vocals'].filter(Boolean);
+  await Promise.all(prerequisites.map(s => ensureStemLoaded(s)));
+
+  // If every loaded stem has zero effective gain (all muted/soloed out), warn
+  const anyAudible = STEMS.some(s => state.stems[s.key].loaded && effectiveGain(s.key) > 0);
+  if(!anyAudible){
+    COS.toast('All stems are muted — adjust the mixer to hear playback');
+  }
+
+  startAllSources(state.arrTime);
+  state.playing = true;
+  document.getElementById('pv-play').textContent = '❚❚';
+  tickPlayback();
+}
+
+function pause(){
+  stopAllSources();
+  state.playing = false;
+  document.getElementById('pv-play').textContent = '▶';
+  if(state.rafId){ cancelAnimationFrame(state.rafId); state.rafId = null; }
+}
+
+// Start all loaded stems playing in lock-step at the given arrangement time
+function startAllSources(arrT){
+  const ctx = ensureAudioContext();
+  const { refTime } = arrangementToReferenceTime(arrT);
+  const startAt = ctx.currentTime + 0.02; // tiny lead so all sources share the same start
+  state.startedAt = startAt;
+  state.startOffset = arrT;
+
+  STEMS.forEach(s => {
+    const stem = state.stems[s.key];
+    if(!stem.loaded) return;
+    // Each play requires a fresh source node
+    try { if(stem.source) stem.source.stop(); } catch(e){}
+    stem.source = ctx.createBufferSource();
+    stem.source.buffer = stem.buffer;
+    stem.source.playbackRate.value = state.playbackRate;
+    stem.source.connect(stem.gain);
+    // Guard against refTime exceeding buffer length (shouldn't happen but safe)
+    const offset = Math.min(refTime, stem.buffer.duration - 0.01);
+    stem.source.start(startAt, Math.max(0, offset));
+  });
+}
+
+function stopAllSources(){
+  STEMS.forEach(s => {
+    const stem = state.stems[s.key];
+    if(stem.source){
+      try { stem.source.stop(); } catch(e){}
+      stem.source = null;
+    }
+  });
+}
+
+// Main playback tick — runs via RAF while playing
+function tickPlayback(){
+  if(!state.playing) return;
+  const ctx = state.audioCtx;
+  if(!ctx){ return; }
+
+  // Current arrangement time = startOffset + (audioTime - startedAt) * playbackRate
+  const audioElapsed = Math.max(0, ctx.currentTime - state.startedAt);
+  state.arrTime = state.startOffset + audioElapsed * state.playbackRate;
+
+  // End of arrangement?
+  if(state.arrTime >= state.totalDuration){
+    // If looping a specific slot, bounce back to that slot's start
+    if(state.loopSlotIdx >= 0){
+      const slotStart = slotStartArrTime(state.loopSlotIdx);
+      seek(slotStart);
+      state.rafId = requestAnimationFrame(tickPlayback);
+      return;
+    }
+    // Otherwise stop at end
+    state.arrTime = state.totalDuration;
+    pause();
+    updateTimeUI();
+    return;
+  }
+
+  // Slot-hop detection: did we cross from slot N to slot N+1?
+  const slotIdx = slotIndexAtArrTime(state.arrTime);
+  if(slotIdx !== state.currentSlotIdx){
+    state.currentSlotIdx = slotIdx;
+    updateCurrentSlotUI();
+    // Handle slot-hop in audio: we need to seek reference audio to the new slot's start
+    // Only seek if the slot transition is not "natural" (i.e. slot end doesn't align with next slot start in reference)
+    const thisSlotArrStart = slotStartArrTime(slotIdx);
+    const thisSlotRefStart = state.slots[slotIdx].chop.start_seconds;
+    // Expected reference time based on contiguous playback from startOffset
+    // If it differs by more than a tiny epsilon, we need to seek
+    if(slotIdx > 0){
+      const prevSlot = state.slots[slotIdx - 1];
+      const prevSlotRefEnd = prevSlot.chop.end_seconds;
+      if(Math.abs(thisSlotRefStart - prevSlotRefEnd) > 0.05){
+        // Slots are not contiguous in reference time → seek
+        seek(state.arrTime);
+      }
+    }
+  }
+
+  // Loop mode: if we're past the active loop slot's end, seek back
+  if(state.loopSlotIdx >= 0 && slotIdx > state.loopSlotIdx){
+    const slotStart = slotStartArrTime(state.loopSlotIdx);
+    seek(slotStart);
+    state.rafId = requestAnimationFrame(tickPlayback);
+    return;
+  }
+
+  updateTimeUI();
+  state.rafId = requestAnimationFrame(tickPlayback);
+}
+
+function updateTimeUI(){
+  document.getElementById('pv-cur').textContent = fmtTime(state.arrTime);
+  if(!state.scrubbing){
+    document.getElementById('pv-scrub').value = state.arrTime;
+  }
+}
+
+function updateCurrentSlotUI(){
+  document.querySelectorAll('#pv-ribbon .pv-slot').forEach((el, i) => {
+    el.classList.toggle('current', i === state.currentSlotIdx);
+  });
+  // Scroll the current slot into view
+  const activeEl = document.querySelector('#pv-ribbon .pv-slot.current');
+  if(activeEl) activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+}
+
+// ── SEEK / SKIP / SCRUB ──────────────────────────────────────
+function seek(arrT){
+  state.arrTime = Math.max(0, Math.min(state.totalDuration, arrT));
+  if(state.playing){
+    stopAllSources();
+    startAllSources(state.arrTime);
+  }
+  state.currentSlotIdx = slotIndexAtArrTime(state.arrTime);
+  updateCurrentSlotUI();
+  updateTimeUI();
+}
+
+function skipBy(delta){
+  seek(state.arrTime + delta);
+}
+
+function onScrub(v){
+  state.scrubbing = true;
+  const arrT = parseFloat(v);
+  document.getElementById('pv-cur').textContent = fmtTime(arrT);
+  clearTimeout(state._scrubTimer);
+  state._scrubTimer = setTimeout(() => {
+    seek(arrT);
+    state.scrubbing = false;
+  }, 120);
+}
+
+function jumpToSlot(idx){
+  const arrT = slotStartArrTime(idx);
+  seek(arrT);
+  if(!state.playing){ play(); }
+}
+
+function toggleLoopSlot(idx){
+  if(state.loopSlotIdx === idx){
+    state.loopSlotIdx = -1;
+    COS.toast('Loop off');
+  } else {
+    state.loopSlotIdx = idx;
+    document.getElementById('pv-loop-cb').checked = true;
+    document.getElementById('pv-loop-toggle').classList.add('looping');
+    COS.toast('Looping: ' + (state.slots[idx].chop.label || 'slot ' + (idx+1)));
+    // Seek to the slot start
+    jumpToSlot(idx);
+    return;  // jumpToSlot already updates UI
+  }
+  document.getElementById('pv-loop-toggle').classList.toggle('looping', state.loopSlotIdx >= 0);
+  renderRibbon();
+}
+
+function onLoopToggle(){
+  const checked = document.getElementById('pv-loop-cb').checked;
+  if(!checked){
+    state.loopSlotIdx = -1;
+    document.getElementById('pv-loop-toggle').classList.remove('looping');
+    renderRibbon();
+  } else if(state.loopSlotIdx < 0 && state.currentSlotIdx >= 0){
+    // Toggle on → loop the current slot
+    state.loopSlotIdx = state.currentSlotIdx;
+    document.getElementById('pv-loop-toggle').classList.add('looping');
+    renderRibbon();
+    COS.toast('Looping: ' + (state.slots[state.currentSlotIdx].chop.label || 'slot'));
+  }
+}
+
+// ── SPEED ────────────────────────────────────────────────────
+function setSpeed(rate){
+  state.playbackRate = rate;
+  document.querySelectorAll('.pv-speed-chip').forEach(chip => {
+    chip.classList.toggle('active', parseFloat(chip.getAttribute('data-speed')) === rate);
+  });
+  if(state.playing){
+    // Re-anchor time reference, then apply rate to live sources
+    const ctx = state.audioCtx;
+    const audioElapsed = Math.max(0, ctx.currentTime - state.startedAt);
+    state.startOffset = state.startOffset + audioElapsed * (state.playbackRate === rate ? 1 : rate);
+    // Simpler: just restart from current arrTime with new rate
+    seek(state.arrTime);
+  }
+  STEMS.forEach(s => {
+    const stem = state.stems[s.key];
+    if(stem.source){
+      try { stem.source.playbackRate.value = rate; } catch(e){}
+    }
+  });
+}
+
+// ── PRACTICE LOGGING ─────────────────────────────────────────
+async function markPractised(){
+  if(!COS.currentUser){ COS.toast('Not logged in'); return; }
+  const row = {
+    arrangement_id: state.arrangement.id,
+    part: state.currentPart,
+    duration_seconds: Math.round(state.totalDuration),
+    user_name: COS.currentUser.name,
+    completed_at: new Date().toISOString()
+  };
+  const res = await sbPost('rs_practice_sessions', row);
+  if(res){
+    const btn = document.getElementById('pv-practise-btn');
+    btn.classList.add('done');
+    btn.textContent = '✓ Logged';
+    setTimeout(() => {
+      btn.classList.remove('done');
+      btn.textContent = '✓ Mark as practised';
+    }, 2500);
+    loadPracticeCount();
+  } else {
+    COS.toast('Could not log practice — try again');
+  }
+}
+
+async function loadPracticeCount(){
+  if(!COS.currentUser) return;
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+  const userName = encodeURIComponent(COS.currentUser.name);
+  const sessions = await sbFetch(`rs_practice_sessions?arrangement_id=eq.${state.arrangement.id}&user_name=eq.${userName}&completed_at=gte.${weekAgo}`);
+  const count = (sessions || []).length;
+  const el = document.getElementById('pv-practise-count');
+  if(count === 0){
+    el.textContent = '';
+  } else {
+    el.textContent = `You've practised this ${count} time${count===1?'':'s'} this week.`;
+  }
+}
+
+// ── STORAGE URL ──────────────────────────────────────────────
+const SUPA_URL2 = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const STORAGE_BUCKET = 'rehearsal-studio';
+function publicUrl(path){
+  return `${SUPA_URL2}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function fmtTime(s){
+  if(s === null || s === undefined || isNaN(s)) return '0:00';
+  const n = Math.max(0, s);
+  const m = Math.floor(n / 60);
+  const r = Math.floor(n % 60);
+  return `${m}:${r.toString().padStart(2,'0')}`;
+}
+function escapeHtml(s){
+  return (s || '').toString()
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// Init auth-gated app
+COS.init('rehearsal');
+
+// Initial part-selection kick (done via pageInit too, but make sure auto-mix applies)
+document.addEventListener('DOMContentLoaded', () => {
+  // pageInit runs after COS.init completes; we'll hook stems there
+});
+
+// When user first interacts with page, unlock AudioContext (for iOS)
+document.addEventListener('click', () => {
+  if(state.audioCtx && state.audioCtx.state === 'suspended'){
+    state.audioCtx.resume();
+  }
+}, { once: false });
+
+</script>
+
+</body>
+</html>
