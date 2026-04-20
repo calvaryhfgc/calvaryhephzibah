@@ -128,6 +128,77 @@ html,body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink)
 </style>
 </head>
 <body>
+<style>
+#gate{position:fixed;inset:0;background:var(--ink);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px;}
+.gate-wrap{width:100%;max-width:360px;}
+.gate-logo{display:flex;align-items:center;gap:12px;margin-bottom:36px;}
+.gate-icon{width:44px;height:44px;background:var(--red);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(196,30,42,0.3);}
+.gate-icon svg{width:18px;height:18px;}
+.gate-name{font-size:17px;font-weight:700;color:white;}
+.gate-church{font-size:12px;color:rgba(255,255,255,0.4);margin-top:1px;}
+.gate-h{font-size:20px;font-weight:700;color:white;margin-bottom:4px;}
+.gate-sub{font-size:14px;color:rgba(255,255,255,0.4);margin-bottom:24px;}
+.gate-input{
+  width:100%;background:rgba(255,255,255,0.06);
+  border:1.5px solid rgba(255,255,255,0.12);
+  border-radius:12px;padding:14px 16px;
+  font-size:16px;font-family:'Poppins',sans-serif;
+  color:white;outline:none;letter-spacing:3px;
+  transition:border-color 0.15s;margin-bottom:12px;
+}
+.gate-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(196,30,42,0.15);}
+.gate-input::placeholder{letter-spacing:0;color:rgba(255,255,255,0.25);}
+.gate-btn{
+  width:100%;padding:14px;background:var(--red);
+  color:white;border:none;border-radius:12px;
+  font-size:16px;font-weight:700;font-family:'Poppins',sans-serif;
+  cursor:pointer;transition:background 0.12s;
+}
+.gate-btn:hover{background:var(--red-d,#A8181F);}
+.gate-err{font-size:13px;color:#FCA5A5;text-align:center;margin-top:10px;min-height:20px;font-weight:500;}
+</style>
+
+<div id="gate">
+  <div class="gate-wrap">
+    <div class="gate-logo">
+      <div class="gate-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div>
+        <div class="gate-name">Calvary Hephzibah</div>
+        <div class="gate-church">Restricted document</div>
+      </div>
+    </div>
+    <div class="gate-h">Enter password</div>
+    <div class="gate-sub">This document is restricted to authorised recipients.</div>
+    <input class="gate-input" id="gate-pw" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="gate-btn" onclick="checkPw()">Continue</button>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
+</div>
+
+<script>
+function checkPw(){
+  const val = document.getElementById('gate-pw').value;
+  if(val === 'calvary2026'){
+    document.getElementById('gate').style.display='none';
+    sessionStorage.setItem('fin_auth','1');
+  } else {
+    const err = document.getElementById('gate-err');
+    err.textContent = 'Incorrect password. Please try again.';
+    document.getElementById('gate-pw').value='';
+    document.getElementById('gate-pw').focus();
+    setTimeout(()=>err.textContent='',3000);
+  }
+}
+// Auto-dismiss if already authenticated this session
+if(sessionStorage.getItem('fin_auth')==='1'){
+  document.addEventListener('DOMContentLoaded',()=>{
+    const g=document.getElementById('gate');
+    if(g)g.style.display='none';
+  });
+}
+</script>
+
+
 <div class="page">
   <nav class="top-nav" id="top-nav">
     <a href="#s-feedback" class="tn-btn" onclick="tnActive(this)"><span class="tn-emoji">🙏</span><span class="tn-label">Feedback</span></a>
