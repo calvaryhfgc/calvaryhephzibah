@@ -120,55 +120,92 @@ const COS = {
   // Single screen: Username + PIN + Sign in. Replaces the old user gallery
   // so no user sees a directory of other users. Admins can still see the
   // full list on the admin page.
+  //
+  // Mobile-specific considerations handled here:
+  //  - Inputs are 16px font-size to prevent iOS Safari auto-zoom on focus
+  //  - Inputs and button are min 48px tall for reliable tap targets
+  //  - autocapitalize=none + autocorrect=off so mobile keyboards don't mangle
+  //    'pshade' into 'Pshade' or 'P shade'
+  //  - Autofill styling overridden with an inset box-shadow hack so Safari's
+  //    yellow autofill background doesn't wreck the clean look
+  //  - Logo block margin collapses below 600px to avoid wasting vertical
+  //    space when the virtual keyboard is up
   _renderLoginForm(){
     const auth = document.getElementById('auth-screen');
     if(!auth) return;
     auth.innerHTML = `
-      <div class="auth-wrap">
-        <div class="auth-logo-block">
-          <div class="auth-logo-icon">
+      <style>
+        .cos-login-wrap{width:100%;max-width:380px;}
+        .cos-login-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+        @media(max-width:600px){ .cos-login-logo{margin-bottom:20px;} }
+        .cos-login-logo-icon{width:46px;height:46px;background:var(--red);border-radius:var(--r12);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .cos-login-logo-icon svg{width:20px;height:20px;}
+        .cos-login-logo-name{font-size:18px;font-weight:700;color:var(--ink);line-height:1.1;}
+        .cos-login-logo-sub{font-size:12px;color:var(--ink-4);margin-top:1px;}
+        .cos-login-heading{font-size:22px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.2;}
+        .cos-login-sub{font-size:14px;color:var(--ink-3);margin-bottom:22px;line-height:1.5;}
+        .cos-login-form{display:flex;flex-direction:column;gap:14px;}
+        .cos-login-field{display:flex;flex-direction:column;gap:6px;}
+        .cos-login-label{font-size:11px;font-weight:700;color:var(--ink-3);letter-spacing:0.5px;text-transform:uppercase;}
+        .cos-login-input{padding:14px 16px;border:1.5px solid var(--ink-5);border-radius:var(--r12);font-family:'Poppins',sans-serif;font-size:16px;background:var(--white);color:var(--ink);min-height:48px;-webkit-appearance:none;box-sizing:border-box;width:100%;transition:border-color 0.15s;}
+        .cos-login-input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(196,30,42,0.12);}
+        .cos-login-input-pin{letter-spacing:6px;font-variant-numeric:tabular-nums;text-align:center;font-size:18px;}
+        .cos-login-input-pin::placeholder{letter-spacing:6px;color:var(--ink-5);}
+        /* Override iOS Safari's yellow autofill background */
+        .cos-login-input:-webkit-autofill,
+        .cos-login-input:-webkit-autofill:hover,
+        .cos-login-input:-webkit-autofill:focus{
+          -webkit-box-shadow:0 0 0 1000px var(--white) inset !important;
+          -webkit-text-fill-color:var(--ink) !important;
+          caret-color:var(--ink);
+        }
+        .cos-login-btn{padding:14px 16px;border:none;background:var(--red);color:white;border-radius:var(--r12);font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;cursor:pointer;min-height:48px;margin-top:4px;transition:background 0.1s;}
+        .cos-login-btn:hover{background:var(--red-d);}
+        .cos-login-btn:active{transform:scale(0.98);}
+        .cos-login-msg{font-size:13px;color:var(--red);min-height:18px;text-align:center;margin-top:6px;font-weight:500;}
+      </style>
+      <div class="cos-login-wrap">
+        <div class="cos-login-logo">
+          <div class="cos-login-logo-icon">
             <svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg>
           </div>
           <div>
-            <div class="auth-logo-name">Calvary OS</div>
-            <div class="auth-logo-sub">Calvary Hephzibah Full Gospel Church</div>
+            <div class="cos-login-logo-name">Calvary OS</div>
+            <div class="cos-login-logo-sub">Calvary Hephzibah</div>
           </div>
         </div>
-        <div class="auth-step active" style="padding-top:8px;">
-          <div class="auth-eyebrow">Sign in</div>
-          <div class="auth-heading">Welcome back</div>
-          <div class="auth-sub" style="margin-bottom:20px;">Enter your username and PIN to continue.</div>
-
-          <div style="display:flex;flex-direction:column;gap:12px;max-width:320px;">
-            <label style="display:flex;flex-direction:column;gap:4px;">
-              <span style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.55);letter-spacing:0.5px;text-transform:uppercase;">Username</span>
-              <input type="text" id="login-username" autocomplete="username"
-                     placeholder="yourname" autocapitalize="none" autocorrect="off" spellcheck="false"
-                     style="padding:12px 14px;border:1px solid var(--ink-5,rgba(0,0,0,0.1));border-radius:10px;font-family:inherit;font-size:15px;background:var(--white,white);color:var(--ink,#0A0A0A);"
-                     onkeydown="if(event.key==='Enter'){document.getElementById('login-pin').focus();}">
-            </label>
-            <label style="display:flex;flex-direction:column;gap:4px;">
-              <span style="font-size:11px;font-weight:700;color:rgba(0,0,0,0.55);letter-spacing:0.5px;text-transform:uppercase;">PIN</span>
-              <input type="password" id="login-pin" autocomplete="current-password"
-                     inputmode="numeric" pattern="[0-9]*" maxlength="4"
-                     placeholder="••••"
-                     style="padding:12px 14px;border:1px solid var(--ink-5,rgba(0,0,0,0.1));border-radius:10px;font-family:inherit;font-size:15px;letter-spacing:4px;background:var(--white,white);color:var(--ink,#0A0A0A);"
-                     onkeydown="if(event.key==='Enter'){COS._submitLogin();}"
-                     oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value.length===4){setTimeout(()=>COS._submitLogin(),100);}">
-            </label>
-            <button onclick="COS._submitLogin()"
-                    style="padding:12px 14px;border:none;background:var(--red,#C41E2A);color:white;border-radius:10px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px;">
-              Sign in
-            </button>
-            <div id="login-msg" style="font-size:12px;color:var(--red,#C41E2A);min-height:16px;text-align:center;margin-top:4px;"></div>
+        <div class="cos-login-heading">Welcome back</div>
+        <div class="cos-login-sub">Sign in with your username and PIN.</div>
+        <div class="cos-login-form">
+          <div class="cos-login-field">
+            <label class="cos-login-label" for="login-username">Username</label>
+            <input type="text" id="login-username" class="cos-login-input"
+                   autocomplete="username"
+                   autocapitalize="none" autocorrect="off" spellcheck="false"
+                   placeholder="yourname"
+                   onkeydown="if(event.key==='Enter'){document.getElementById('login-pin').focus();}">
           </div>
+          <div class="cos-login-field">
+            <label class="cos-login-label" for="login-pin">PIN</label>
+            <input type="password" id="login-pin" class="cos-login-input cos-login-input-pin"
+                   autocomplete="current-password"
+                   inputmode="numeric" pattern="[0-9]*" maxlength="4"
+                   placeholder="••••"
+                   onkeydown="if(event.key==='Enter'){COS._submitLogin();}"
+                   oninput="this.value=this.value.replace(/[^0-9]/g,'');if(this.value.length===4){setTimeout(()=>COS._submitLogin(),80);}">
+          </div>
+          <button type="button" class="cos-login-btn" onclick="COS._submitLogin()">Sign in</button>
+          <div id="login-msg" class="cos-login-msg"></div>
         </div>
       </div>`;
-    // Focus username on load
-    setTimeout(() => {
-      const u = document.getElementById('login-username');
-      if(u) u.focus();
-    }, 50);
+    // Focus username on desktop; skip on mobile to let the user tap first
+    // (prevents keyboard springing up before the user is ready)
+    if(window.innerWidth > 600){
+      setTimeout(() => {
+        const u = document.getElementById('login-username');
+        if(u) u.focus();
+      }, 50);
+    }
   },
 
   _submitLogin(){
