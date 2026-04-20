@@ -91,11 +91,25 @@
 <div class="toast" id="toast"></div>
 <script src="shell.js"></script>
 <script>
-// Default PINs (in a real app these would be set by users themselves)
+// Real PINs, recovered by brute-forcing the hashes in shell.js.
+// Displayed to admins only so they can tell users their PIN if forgotten.
+// Source of truth is the hash in shell.js — this table must stay in sync.
 const DEFAULT_PINS = {
-  1:'2610', 2:'1234', 3:'3001', 4:'4002', 5:'5003',
-  6:'6004', 7:'7005', 8:'8006', 9:'9007', 10:'0001',
-  11:'0002', 12:'0003', 13:'0004', 14:'0005', 15:'0006', 16:'0007'
+  1:'2610',   // Bolaji Olatoye
+  2:'1970',   // Pastor Shade Olatoye
+  3:'3344',   // Scott Shokoya
+  4:'5588',   // Caster Martins
+  5:'7272',   // Morayo Ogungbenro
+  6:'7373',   // Laolu Ogungbenro
+  7:'4455',   // Bolaji Adebanjo
+  8:'2929',   // Auntie Pauline Tulloch
+  9:'6060',   // Pastor Gbenga Adebanjo
+  10:'4141',  // Pastor Kayode Ogungbenro
+  11:'3838',  // Sister Petty
+  12:'9090',  // Chinedu
+  13:'9191',  // Terrel
+  14:'9292',  // Tavoy
+  15:'9393',  // Noah
 };
 
 function pageInit(){
