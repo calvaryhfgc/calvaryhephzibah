@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Worship Debrief — Sunday 19th April 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{
+  --red:#C41E2A;--red-light:#FEF2F2;--red-mid:#FECACA;
+  --ink:#111827;--ink-2:#374151;--ink-3:#6B7280;--ink-4:#9CA3AF;--ink-5:#E5E7EB;--ink-6:#F9FAFB;
+  --white:#FFFFFF;--bg:#F5F6FA;
+  --green:#16A34A;--green-light:#F0FDF4;--green-mid:#BBF7D0;
+  --amber:#D97706;--amber-light:#FFFBEB;--amber-mid:#FDE68A;
+  --blue:#2563EB;--blue-light:#EFF6FF;
+  --purple:#7C3AED;--purple-light:#F3E8FF;
+}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.6;}
+.container{max-width:780px;margin:0 auto;padding:32px 20px 80px;}
+
+.header{background:var(--ink);border-radius:20px;padding:32px 28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-60px;right:-40px;width:200px;height:200px;background:rgba(255,255,255,0.04);border-radius:50%;}
+.header-eyebrow{font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:8px;}
+.header-title{font-family:'Lora',serif;font-size:28px;font-weight:600;color:white;line-height:1.2;margin-bottom:6px;}
+.header-sub{font-size:14px;color:rgba(255,255,255,0.6);}
+.header-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;}
+.chip{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);font-size:12px;font-weight:500;padding:5px 12px;border-radius:100px;}
+.chip-green{background:rgba(22,163,74,0.2);color:#86EFAC;}
+.chip-amber{background:rgba(217,119,6,0.2);color:#FCD34D;}
+
+/* Verdict */
+.verdict{background:var(--green);border-radius:16px;padding:22px 24px;margin-bottom:20px;display:flex;gap:16px;align-items:flex-start;}
+.verdict-icon{font-size:32px;flex-shrink:0;}
+.verdict-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.7);margin-bottom:4px;}
+.verdict-text{font-family:'Lora',serif;font-size:19px;color:white;line-height:1.4;}
+
+/* Section */
+.section{margin-bottom:28px;}
+.section-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+
+/* Review card */
+.review-card{background:var(--white);border:1px solid var(--ink-5);border-radius:16px;padding:18px 20px;margin-bottom:10px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
+.review-card.went-well{border-left:4px solid var(--green);}
+.review-card.improve{border-left:4px solid var(--amber);}
+.review-card.action{border-left:4px solid var(--red);}
+.rc-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.rc-label-green{color:var(--green);}
+.rc-label-amber{color:var(--amber);}
+.rc-label-red{color:var(--red);}
+.rc-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.rc-body{font-size:14px;color:var(--ink-3);line-height:1.6;}
+
+/* Quote */
+.quote{background:var(--ink-6);border-left:3px solid var(--ink-4);border-radius:0 10px 10px 0;padding:12px 16px;margin:8px 0;font-size:13px;color:var(--ink-3);font-style:italic;line-height:1.6;}
+.quote cite{display:block;font-size:11px;color:var(--ink-4);margin-top:4px;font-style:normal;font-weight:600;}
+
+/* Individual shoutouts */
+.person-card{background:var(--white);border:1px solid var(--ink-5);border-radius:14px;padding:16px 18px;margin-bottom:8px;display:flex;gap:12px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
+.person-av{width:38px;height:38px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.person-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.person-role{font-size:11px;color:var(--ink-4);margin-bottom:6px;}
+.person-body{font-size:13px;color:var(--ink-3);line-height:1.6;}
+
+/* Action items */
+.action-item{display:flex;align-items:flex-start;gap:12px;padding:13px 16px;background:var(--white);border:1.5px solid var(--ink-5);border-radius:12px;margin-bottom:8px;box-shadow:0 1px 2px rgba(17,24,39,0.05);}
+.action-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.action-body{font-size:14px;color:var(--ink-2);line-height:1.5;}
+.action-owner{font-size:11px;font-weight:600;color:var(--ink-4);margin-top:3px;}
+
+/* Sources */
+.source-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;padding:3px 8px;border-radius:100px;background:var(--ink-6);color:var(--ink-4);border:1px solid var(--ink-5);margin-bottom:8px;}
+
+@media(max-width:600px){
+  .container{padding:16px 14px 60px;}
+  .header{padding:24px 20px;}
+  .header-title{font-size:22px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-eyebrow">Post-service debrief</div>
+    <div class="header-title">Worship Review — 19th April 2026</div>
+    <div class="header-sub">Calvary Hephzibah Full Gospel Church · First Sunday post-transition</div>
+    <div class="header-chips">
+      <span class="chip chip-green">✅ Objectives largely achieved</span>
+      <span class="chip chip-amber">⚠️ Transitions need work</span>
+      <span class="chip">Sources: worship debrief + private debrief</span>
+    </div>
+  </div>
+
+  <!-- Overall verdict -->
+  <div class="verdict">
+    <div class="verdict-icon">🎯</div>
+    <div>
+      <div class="verdict-label">Overall verdict</div>
+      <div class="verdict-text">"Given the time we didn't have, the fact that we did a completely new set with new people — we did really, really well."</div>
+    </div>
+  </div>
+
+  <!-- One word -->
+  <div class="section">
+    <div class="section-title">The team described today in one word</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <span style="background:var(--ink);color:white;font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">New beginning</span>
+      <span style="background:var(--red-light);color:var(--red);font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">Reset</span>
+      <span style="background:var(--amber-light);color:var(--amber);font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">Transition</span>
+      <span style="background:var(--green-light);color:var(--green);font-size:15px;font-weight:700;padding:10px 18px;border-radius:100px;">Historically</span>
+    </div>
+  </div>
+
+  <!-- What went well -->
+  <div class="section">
+    <div class="section-title">What went well</div>
+
+    <div class="review-card went-well">
+      <div class="rc-label rc-label-green">Greatest hits strategy worked</div>
+      <div class="rc-title">Congregation didn't need the screen</div>
+      <div class="rc-body">The "greatest hits" brief — only playing the parts everyone knows — landed exactly as intended. People were singing loud. Nobody missed the sections we cut.</div>
+      <div class="quote">"I could hear the congregation loud — that means they didn't need to look at the lyrics. They were just switched on."<cite>— Bolaji</cite></div>
+      <div class="quote">"We didn't go into any verse on Trading My Sorrows. Nobody noticed. The cadence was high all the way through."<cite>— Bolaji</cite></div>
+    </div>
+
+    <div class="review-card went-well">
+      <div class="rc-label rc-label-green">Energy and cadence</div>
+      <div class="rc-title">High energy maintained throughout</div>
+      <div class="rc-body">The energy stayed elevated from the opening song to the close. The worship set felt like a lift, not a drop.</div>
+      <div class="quote">"It didn't feel like we had a drop. It felt like a lift."<cite>— Pastor Shade</cite></div>
+      <div class="quote">"I felt like, almost like an album recording at times."<cite>— Bolaji</cite></div>
+    </div>
+
+    <div class="review-card went-well">
+      <div class="rc-label rc-label-green">Communion atmosphere</div>
+      <div class="rc-title">Worship landed at the right dynamic for communion</div>
+      <div class="rc-body">The worship was soft enough during communion without being flat — the energy was appropriate and intentional.</div>
+      <div class="quote">"When we were doing the communion, soft enough for it — nothing was hyper but things were good."<cite>— Pastor Shade</cite></div>
+    </div>
+
+    <div class="review-card went-well">
+      <div class="rc-label rc-label-green">Song selection</div>
+      <div class="rc-title">Traditional but current — everyone sang</div>
+      <div class="rc-body">Songs were familiar enough that older and younger members both engaged. The choice to lean traditional was validated in the room.</div>
+      <div class="quote">"I could see that everybody was singing — I could hear the church. Normally I can't, because they don't know the song."<cite>— Pastor Shade</cite></div>
+    </div>
+
+    <div class="review-card went-well">
+      <div class="rc-label rc-label-green">Worship transitions (within the set)</div>
+      <div class="rc-title">Medley transitions in the worship section were seamless</div>
+      <div class="rc-body">Transitions between the worship songs (Here I Am to Worship, What a Beautiful Name, I Exalt Thee) were noted as smooth and well-connected.</div>
+      <div class="quote">"Seamless transition into the later songs — especially the medley of the worship."<cite>— Team member</cite></div>
+    </div>
+  </div>
+
+  <!-- Individual shoutouts -->
+  <div class="section">
+    <div class="section-title">Individual recognition</div>
+
+    <div class="person-card">
+      <div class="person-av">La</div>
+      <div>
+        <div class="person-name">Laolu (Lou Lou)</div>
+        <div class="person-role">Drums</div>
+        <div class="person-body">Called out as the bedrock of the set. The fact that he hadn't played in a while and still held the groove throughout was significant. His awareness of dynamics — pulling back when the song called for space — was praised specifically.</div>
+        <div class="quote">"I actually think that you are the bedrock. If yours is off, then everybody else is off. You held the groove really well."<cite>— Bolaji</cite></div>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-av">Mo</div>
+      <div>
+        <div class="person-name">Morayo</div>
+        <div class="person-role">Guitar</div>
+        <div class="person-body">Didn't attend the rehearsal but read the briefing, knew the set, and performed it. Described as having a fast brain. Noted as genuinely serving and excited about the new direction.</div>
+        <div class="quote">"You read the thing. That's why you're the A-grade student — your brain is faster."<cite>— Bolaji</cite></div>
+      </div>
+    </div>
+
+    <div class="person-card">
+      <div class="person-av">V</div>
+      <div>
+        <div class="person-name">Vanessa</div>
+        <div class="person-role">Lead Vocalist</div>
+        <div class="person-body">Acknowledged as having been anxious going in and coming through. Described as talking about the band vision and bringing people along. Seen as someone who will play a big part going forward.</div>
+        <div class="quote">"I know you were a little bit anxious but you came through. You talked about the singular band — we've done really, really well."<cite>— Bolaji</cite></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- What to improve -->
+  <div class="section">
+    <div class="section-title">What to improve</div>
+
+    <div class="review-card improve">
+      <div class="rc-label rc-label-amber">Key transition</div>
+      <div class="rc-title">Lord You Are Good → Friend of God (B to E)</div>
+      <div class="rc-body">The transition happened — they got there in the end — but it was acknowledged as awkward. The key jump from B to E is non-trivial and needs deliberate rehearsal. Suggestions included walking the bass down through the circle of fifths to make the change feel more musical.</div>
+      <div class="quote">"We didn't nail the Friend of God transition. We got there in the end but it was a bit awkward."<cite>— Team</cite></div>
+      <div class="quote">"You could walk it down. B to E — it's just down here via the circle. Give everyone time to walk into it."<cite>— Team discussion</cite></div>
+    </div>
+
+    <div class="review-card improve">
+      <div class="rc-label rc-label-amber">Drums — dynamics and space</div>
+      <div class="rc-title">Laolu came in too early on some worship songs</div>
+      <div class="rc-body">On Here I Am to Worship specifically, Laolu came in after only one run of the verse — before the atmosphere had built. The note: let it breathe first. Come in reserved, build gradually. The verse should be run at least twice before drums come in fully.</div>
+      <div class="quote">"There has to be at least twice. If you come in, come in reserved — don't come in playing your normal. Give me half of that, then build."<cite>— Bolaji</cite></div>
+    </div>
+
+    <div class="review-card improve">
+      <div class="rc-label rc-label-amber">Guitar style</div>
+      <div class="rc-title">Morayo needs to develop melodic playing alongside rhythm</div>
+      <div class="rc-body">Morayo's rhythm playing is solid but her style hasn't developed much over the past year. The feedback: learn to play melodically, especially during worship songs. A few melodic keys lines on top of the rhythm will add atmosphere and help distinguish her sound in the mix.</div>
+      <div class="quote">"You haven't changed your style. You're better but stylistically it's the same. Learn to play the melody — it adds a layer, adds atmosphere."<cite>— Bolaji</cite></div>
+    </div>
+
+    <div class="review-card improve">
+      <div class="rc-label rc-label-amber">Bass levels</div>
+      <div class="rc-title">Bass was too loud in the mix</div>
+      <div class="rc-body">Bolaji A's bass was noted as too loud at points. A sound design conversation is needed — the overall mix needs work and this is a solvable technical issue.</div>
+      <div class="quote">"The bass was loud. We need to turn it down."<cite>— Team</cite></div>
+    </div>
+
+    <div class="review-card improve">
+      <div class="rc-label rc-label-amber">Guitar vs Keys distinction</div>
+      <div class="rc-title">Difficult to distinguish guitar from keys in the mix</div>
+      <div class="rc-body">The timbre of guitar and keys were too similar — hard to tell them apart. Eddie was asked to try different tones in the moment. This is a sound design issue to address before the next service.</div>
+      <div class="quote">"The tambre of the sound is very difficult to distinguish which is which — you need to know when it's you and when it's Morayo."<cite>— Bolaji</cite></div>
+    </div>
+  </div>
+
+  <!-- Strategic notes from mummy debrief -->
+  <div class="section">
+    <div class="section-title">Strategic notes — from private debrief</div>
+
+    <div class="review-card" style="border-left:4px solid var(--purple);">
+      <div class="rc-label" style="color:var(--purple);">Singers are now the gap</div>
+      <div class="rc-title">Vocal consistency is the next priority</div>
+      <div class="rc-body">My Jesus (Shout to the Lord) was removed from the set because the key was too high for Vanessa. The singers situation needs to be resolved — more options, more rehearsal time. Tosin Akindele's longer-term training partnership becomes critical here.</div>
+    </div>
+
+    <div class="review-card" style="border-left:4px solid var(--purple);">
+      <div class="rc-label" style="color:var(--purple);">Rehearsal frequency</div>
+      <div class="rc-title">Need to rehearse more regularly — not just before Sundays</div>
+      <div class="rc-body">Current pattern is effectively figuring it out on the day. This works with experienced musicians but isn't sustainable and limits growth. Regular mid-week rehearsals needed.</div>
+      <div class="quote">"We have to rehearse more often. It's not always together — we're kind of figuring it out on the day."<cite>— Pastor Shade</cite></div>
+    </div>
+
+    <div class="review-card" style="border-left:4px solid var(--purple);">
+      <div class="rc-label" style="color:var(--purple);">Bolaji Adebanjo development</div>
+      <div class="rc-title">Need to make a leader out of him</div>
+      <div class="rc-body">Bolaji A is described as very musical and technically good. The challenge is developing him into a worship leader/MD, not just a session musician. Bolaji (CoS) is working closely with him on this.</div>
+      <div class="quote">"He's very musical, knows his stuff — but we need to make a leader out of him. That's the challenge."<cite>— Pastor Shade</cite></div>
+    </div>
+
+    <div class="review-card" style="border-left:4px solid var(--purple);">
+      <div class="rc-label" style="color:var(--purple);">Same band next week</div>
+      <div class="rc-title">Laolu and the same lineup for next Sunday</div>
+      <div class="rc-body">Pastor Shade confirmed she wants the same band next week if possible — Laolu, Morayo, Eddie and his friend, Vanessa. Keep the continuity and let them build on this first service.</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="section">
+    <div class="section-title">Actions for next Sunday</div>
+
+    <div class="action-item">
+      <div class="action-dot" style="background:var(--red);"></div>
+      <div>
+        <div class="action-body">Practise the B → E transition properly — walk it through the circle of fifths at rehearsal. Everyone needs to know their role in it before Sunday.</div>
+        <div class="action-owner">Bolaji + Eddie + Laolu</div>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-dot" style="background:var(--red);"></div>
+      <div>
+        <div class="action-body">Sort the mix — bass levels down, find a way to distinguish guitar and keys timbres. This is a sound check issue to solve before service starts.</div>
+        <div class="action-owner">Eddie + Bolaji A + Morayo</div>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-dot" style="background:var(--amber);"></div>
+      <div>
+        <div class="action-body">Laolu — agree the dynamic map for each song before next Sunday. Specifically: when drums come in, how much to give on verse vs chorus.</div>
+        <div class="action-owner">Bolaji + Laolu</div>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-dot" style="background:var(--amber);"></div>
+      <div>
+        <div class="action-body">Confirm same lineup for next Sunday — Laolu, Morayo, Eddie + friend, Vanessa. Lock it early in the week.</div>
+        <div class="action-owner">Bolaji</div>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-dot" style="background:var(--amber);"></div>
+      <div>
+        <div class="action-body">Find alternative key for My Jesus (Shout to the Lord) — or swap it for a song that works in Vanessa's range so it can go back in the set.</div>
+        <div class="action-owner">Bolaji + Vanessa</div>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-dot" style="background:var(--blue);"></div>
+      <div>
+        <div class="action-body">Begin planning regular mid-week rehearsal schedule — not just before Sundays.</div>
+        <div class="action-owner">Bolaji</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;text-align:center;font-size:12px;color:var(--ink-4);line-height:1.8;">
+    Calvary Hephzibah Full Gospel Church · Worship Debrief 19th April 2026<br>
+    Sources: Worship team debrief + private debrief with Pastor Shade<br>
+    Prepared by Bolaji Olatoye
+  </div>
+
+</div>
+</body>
+</html>
