@@ -1583,12 +1583,27 @@ async function setTranspose(semitones){
   return swapToKey(n);
 }
 
+// Feature flag: the in-app pitch-shift generation produced audio that
+// wasn't quite rehearsal-tight (SoundTouch WSOLA has inherent limits
+// on percussive content). Hiding the UI until we can pipe in better-
+// quality variants from Moises or a server-side pipeline.
+// Flip TRANSPOSE_UI_ENABLED to true to re-expose. All backend
+// infrastructure (generation, storage, swap) is intact underneath.
+const TRANSPOSE_UI_ENABLED = false;
+
 // Render the transpose card. Shows one chip per semitone in range, with
 // state indicators (green dot = ready, amber pulse = generating, nothing
 // = not yet generated, tap to generate).
 function renderTransposeUI(){
   const container = document.getElementById('pv-transpose');
   if(!container) return;
+
+  // Feature-flag off — keep the card hidden and skip rendering.
+  // All state-update call sites still run safely (this just no-ops).
+  if(!TRANSPOSE_UI_ENABLED){
+    container.style.display = 'none';
+    return;
+  }
 
   const originalKey = state.arrangement ? state.arrangement.key : null;
 
