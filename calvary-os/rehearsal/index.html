@@ -361,18 +361,15 @@ function buildSidebar(){
     { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
     { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
     { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
-    { id:'live',       label:'Live',              href:'../live/index.html',  icon:'🎛️' },
     { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
     { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
     { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
     { id:'admin',      label:'Admin',             href:'../admin.html',       icon:'⚙️' }
   ];
-  // Rehearsal Studio and Live are both gated on 'worship' access
-  const accessible = modules.filter(m => {
-    if(m.id === 'dashboard') return true;
-    if(m.id === 'rehearsal' || m.id === 'live') return COS.hasAccess('worship');
-    return COS.hasAccess(m.id);
-  });
+  // Everyone with 'worship' access can see Rehearsal; otherwise fall back to normal access checks
+  const accessible = modules.filter(m =>
+    m.id === 'rehearsal' ? COS.hasAccess('worship') : (m.id === 'dashboard' || COS.hasAccess(m.id))
+  );
   sb.innerHTML = `
     <div class="nav-section">
       <div class="nav-section-label">Modules</div>
