@@ -77,6 +77,7 @@ const COS = {
     { id:15, name:'Noah',                    username:'noah',      role:'Media',            level:'team',  pin:'bp_yi1wp1',  sections:['sunday','media'], active:true },
     { id:16, name:'Esther',                  username:'esther',    role:'Worship',          level:'team',  pin:'bp_yhsmkl',  sections:['sunday','worship'], active:true },
     { id:17, name:'Michael Kabalu',          username:'mkabalu',   role:'Worship',          level:'team',  pin:'bp_yhtbwl',  sections:['sunday','worship'], active:true },
+    { id:18, name:'Edmund',                  username:'edmund',    role:'Worship',          level:'team',  pin:'bp_yhu5z9',  sections:['sunday','worship'], active:true },
   ],
 
   // ── AUTH ──────────────────────────────────────────────────────────────────
