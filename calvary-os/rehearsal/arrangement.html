@@ -46,8 +46,18 @@
 
   /* Slots (right) */
   .slots-list{display:flex;flex-direction:column;gap:8px;min-height:120px;}
-  .slot-card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r10);padding:10px 12px;display:flex;align-items:flex-start;gap:10px;}
-  .slot-card.dragging{opacity:0.5;}
+  .slot-card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r10);padding:10px 12px;display:flex;align-items:flex-start;gap:10px;transition:border-color 0.1s, box-shadow 0.1s;}
+  .slot-card.dragging{opacity:0.4;}
+  .slot-card.drop-above{border-top:2px solid var(--red);margin-top:-1px;}
+  .slot-card.drop-below{border-bottom:2px solid var(--red);margin-bottom:-1px;}
+  .slot-handle{width:18px;align-self:stretch;display:flex;align-items:center;justify-content:center;color:var(--ink-4);cursor:grab;user-select:none;flex-shrink:0;border-radius:4px;font-size:12px;line-height:1;letter-spacing:-2px;}
+  .slot-handle:hover{background:var(--ink-6);color:var(--ink-2);}
+  .slot-handle:active{cursor:grabbing;}
+  /* On mobile/touch devices the HTML5 drag API doesn't work — hide the
+     handle so the ↑↓ buttons are the expected interaction. */
+  @media (hover:none) and (pointer:coarse){
+    .slot-handle{display:none;}
+  }
   .slot-num{width:22px;height:22px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
   .slot-body{flex:1;min-width:0;}
   .slot-title{font-size:13px;font-weight:600;color:var(--ink);}
@@ -482,7 +492,8 @@ function renderSlots(){
     const label = chop ? (chop.label || 'Unnamed') : '(chop not found)';
     const dur = chop ? formatDuration(chop.end_seconds - chop.start_seconds) : '—';
     return `
-      <div class="slot-card" data-slot-idx="${i}">
+      <div class="slot-card" data-slot-idx="${i}" draggable="true">
+        <div class="slot-handle" title="Drag to reorder" aria-label="Drag to reorder">⋮⋮</div>
         <div class="slot-num">${i + 1}</div>
         <div class="slot-body">
           <div class="slot-title">${escapeHtml(label)}</div>
@@ -496,6 +507,9 @@ function renderSlots(){
         </div>
       </div>`;
   }).join('');
+
+  // Wire up drag-and-drop on the freshly rendered cards
+  wireSlotDragHandlers();
 }
 
 function updateSummary(){
@@ -528,6 +542,131 @@ function addChopToSlots(chopId){
     const last = cards[cards.length - 1];
     if(last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 50);
+}
+
+// ── DRAG AND DROP REORDERING ─────────────────────────────────
+// Uses the HTML5 Drag-and-Drop API. Desktop only — touch-drag
+// isn't reliably supported by mobile browsers, so on mobile the
+// handle is CSS-hidden and users fall back to the ↑↓ buttons.
+//
+// Interaction model:
+//  - Each .slot-card has draggable="true"
+//  - Drag can start from anywhere on the card (simplest + most
+//    forgiving) but the .slot-handle is the visual affordance
+//  - On dragover, we highlight the target with "drop-above" or
+//    "drop-below" based on the pointer Y position relative to
+//    the card's midpoint
+//  - On drop we splice state.slots to the new order, re-render,
+//    and update the summary
+//
+// Known limitation: dragging into the notes textarea while writing
+// would be awkward. We accept this — dragging on text is a long-
+// press/select gesture that the browser handles first; the card
+// drag only fires when the user actually starts a drag motion from
+// outside the textarea.
+
+let _dragState = { sourceIdx: null };
+
+function wireSlotDragHandlers(){
+  const cards = document.querySelectorAll('#slots-list .slot-card');
+  cards.forEach(card => {
+    card.addEventListener('dragstart', onSlotDragStart);
+    card.addEventListener('dragover', onSlotDragOver);
+    card.addEventListener('dragleave', onSlotDragLeave);
+    card.addEventListener('drop', onSlotDrop);
+    card.addEventListener('dragend', onSlotDragEnd);
+  });
+}
+
+function onSlotDragStart(e){
+  // e.currentTarget is the .slot-card
+  const idx = parseInt(e.currentTarget.dataset.slotIdx, 10);
+  if(isNaN(idx)) return;
+  _dragState.sourceIdx = idx;
+  e.currentTarget.classList.add('dragging');
+  // Firefox requires some data to be set for the drag to initiate
+  try { e.dataTransfer.setData('text/plain', String(idx)); } catch(err){}
+  e.dataTransfer.effectAllowed = 'move';
+}
+
+function onSlotDragOver(e){
+  if(_dragState.sourceIdx === null) return;
+  e.preventDefault();  // required to allow drop
+  e.dataTransfer.dropEffect = 'move';
+  const target = e.currentTarget;
+  const targetIdx = parseInt(target.dataset.slotIdx, 10);
+  if(isNaN(targetIdx) || targetIdx === _dragState.sourceIdx){
+    clearDropIndicators();
+    return;
+  }
+  // Work out whether the drop would land above or below the target,
+  // based on whether the pointer is in the top or bottom half
+  const rect = target.getBoundingClientRect();
+  const midY = rect.top + rect.height / 2;
+  const above = e.clientY < midY;
+  clearDropIndicators();
+  target.classList.add(above ? 'drop-above' : 'drop-below');
+}
+
+function onSlotDragLeave(e){
+  // Only clear if we've left the card entirely (not just a child element).
+  // relatedTarget is the element the pointer moved to.
+  if(e.currentTarget.contains(e.relatedTarget)) return;
+  e.currentTarget.classList.remove('drop-above', 'drop-below');
+}
+
+function onSlotDrop(e){
+  e.preventDefault();
+  if(_dragState.sourceIdx === null) return;
+  const sourceIdx = _dragState.sourceIdx;
+  const target = e.currentTarget;
+  const targetIdx = parseInt(target.dataset.slotIdx, 10);
+  if(isNaN(targetIdx) || targetIdx === sourceIdx){
+    cleanupDrag();
+    return;
+  }
+
+  // Determine final insertion index based on which half of the target
+  // was highlighted at drop time
+  const rect = target.getBoundingClientRect();
+  const above = e.clientY < (rect.top + rect.height / 2);
+
+  // Insertion logic:
+  //   - Remove the source from the array first
+  //   - Target's current index shifts if source was before it
+  //   - Insert above-target → insertion index = targetIdx (adjusted)
+  //   - Insert below-target → insertion index = targetIdx + 1 (adjusted)
+  const [moved] = state.slots.splice(sourceIdx, 1);
+  let insertAt = targetIdx;
+  if(sourceIdx < targetIdx) insertAt--;  // target shifted left by one
+  if(!above) insertAt++;                  // below = after the target
+  // Clamp to valid range
+  insertAt = Math.max(0, Math.min(state.slots.length, insertAt));
+  state.slots.splice(insertAt, 0, moved);
+
+  // Re-index positions (same invariant maintained by moveSlot)
+  state.slots.forEach((s, i) => { s.position = i; });
+
+  cleanupDrag();
+  renderSlots();
+  updateSummary();
+}
+
+function onSlotDragEnd(e){
+  // Always runs (even if drop failed or was cancelled). Cleanup visual state.
+  cleanupDrag();
+}
+
+function clearDropIndicators(){
+  document.querySelectorAll('#slots-list .slot-card.drop-above, #slots-list .slot-card.drop-below')
+    .forEach(c => c.classList.remove('drop-above', 'drop-below'));
+}
+
+function cleanupDrag(){
+  document.querySelectorAll('#slots-list .slot-card.dragging')
+    .forEach(c => c.classList.remove('dragging'));
+  clearDropIndicators();
+  _dragState.sourceIdx = null;
 }
 
 function removeSlot(idx){
