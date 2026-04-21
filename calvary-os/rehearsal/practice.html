@@ -127,7 +127,14 @@
   .pv-tx-progress-label{font-size:12px;font-weight:600;color:#FCD34D;margin-bottom:8px;}
   .pv-tx-progress-bar{width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;margin-bottom:6px;}
   .pv-tx-progress-fill{height:100%;background:#FBBF24;border-radius:100px;transition:width 0.2s;}
-  .pv-tx-progress-detail{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.4;}
+  .pv-tx-progress-detail{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.8;display:flex;flex-wrap:wrap;gap:4px;}
+  .pv-tx-stem-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:500;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);}
+  .pv-tx-stem-queued{color:rgba(255,255,255,0.4);}
+  .pv-tx-stem-rendering{color:#FCD34D;background:rgba(251,191,36,0.12);border-color:rgba(251,191,36,0.25);}
+  .pv-tx-stem-encoding{color:#A5F3FC;background:rgba(34,211,238,0.1);border-color:rgba(34,211,238,0.2);}
+  .pv-tx-stem-uploading{color:#C4B5FD;background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.2);}
+  .pv-tx-stem-done{color:#86EFAC;background:rgba(34,197,94,0.12);border-color:rgba(34,197,94,0.25);}
+  .pv-tx-stem-failed{color:#FCA5A5;background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.25);}
 
   /* Stem mixer — two-line row for proper slider + button sizes on mobile */
   .pv-mixer{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px 16px;margin-bottom:16px;}
@@ -323,6 +330,7 @@
 <div class="toast" id="toast"></div>
 
 <script src="../shell.js"></script>
+<script src="lib/lame.min.js"></script>
 <script>
 
 // ── CONSTANTS ────────────────────────────────────────────────
@@ -402,6 +410,16 @@ function pageInit(){
   const savedPart = localStorage.getItem('pv_part') || 'lead_vocal';
   state.currentPart = savedPart;
   loadArrangement();
+
+  // Guard against accidental navigation during variant generation
+  // (it can take several minutes and losing progress would be painful).
+  window.addEventListener('beforeunload', (e) => {
+    if(state.variantGeneration){
+      e.preventDefault();
+      e.returnValue = 'Variant generation is in progress. Leaving now will lose progress.';
+      return e.returnValue;
+    }
+  });
 }
 
 // ── LOAD ─────────────────────────────────────────────────────
@@ -877,19 +895,386 @@ function variantStatus(semitones){
   return 'partial';
 }
 
-// Placeholder — will be fully implemented in Chunk 2.
-// For Chunk 1 we make the placeholder VISIBLE in the transpose card so the
-// user can tell their tap was registered. A toast alone was too subtle.
+// ── OFFLINE PITCH SHIFTING ──────────────────────────────────
+//
+// Takes a decoded AudioBuffer (a stem) and returns a new AudioBuffer
+// pitch-shifted by N semitones, with tempo preserved. Uses SoundTouch
+// inside an OfflineAudioContext — renders faster than real-time (typically
+// 2-3x on desktop, 1.2-1.8x on mobile).
+//
+// SoundTouch introduces ~140ms of internal buffer-fill latency before
+// real output begins. To keep the variant buffer aligned with the
+// original (same length, same timing), we render (original duration +
+// latency) and then trim the leading latency samples from the result.
+//
+// Progress callback fires with (0..1) as rendering advances.
+
+const PITCH_SHIFT_LATENCY_SEC = 0.14;  // matches SoundTouch 1.0.10 internal buffer
+
+async function shiftStemBuffer(sourceBuffer, semitones, onProgress){
+  if(!sourceBuffer) throw new Error('shiftStemBuffer: sourceBuffer required');
+  if(semitones === 0) return sourceBuffer;  // shouldn't happen but defensive
+
+  const sampleRate = sourceBuffer.sampleRate;
+  const channels = sourceBuffer.numberOfChannels;
+  const originalFrames = sourceBuffer.length;
+  const latencyFrames = Math.floor(sampleRate * PITCH_SHIFT_LATENCY_SEC);
+
+  // Render for (original length + latency) so we can trim the leading
+  // silence/garbage and still preserve the full original audio.
+  const renderFrames = originalFrames + latencyFrames;
+
+  const offlineCtx = new OfflineAudioContext({
+    numberOfChannels: channels,
+    length: renderFrames,
+    sampleRate: sampleRate
+  });
+
+  // Register the SoundTouch worklet on this offline context. Each context
+  // needs its own addModule call.
+  await offlineCtx.audioWorklet.addModule('lib/soundtouch-processor.js');
+
+  // Build the graph: bufferSource -> soundtouch -> destination
+  const source = offlineCtx.createBufferSource();
+  source.buffer = sourceBuffer;
+
+  const stNode = new AudioWorkletNode(offlineCtx, 'soundtouch-processor', {
+    numberOfInputs: 1,
+    numberOfOutputs: 1,
+    channelCount: channels,
+    outputChannelCount: [channels]
+  });
+  const pitchParam = stNode.parameters.get('pitchSemitones');
+  if(pitchParam) pitchParam.value = semitones;
+
+  source.connect(stNode);
+  stNode.connect(offlineCtx.destination);
+  source.start(0);
+
+  // OfflineAudioContext doesn't natively report progress. We poll currentTime
+  // against the expected total render duration as a best-effort proxy.
+  let stopProgress = false;
+  if(typeof onProgress === 'function'){
+    const totalSec = renderFrames / sampleRate;
+    const poll = () => {
+      if(stopProgress) return;
+      const pct = Math.min(0.99, offlineCtx.currentTime / totalSec);
+      try { onProgress(pct); } catch(e){}
+      setTimeout(poll, 250);
+    };
+    poll();
+  }
+
+  const rendered = await offlineCtx.startRendering();
+  stopProgress = true;
+  if(typeof onProgress === 'function') onProgress(1);
+
+  // Trim the leading latency frames — copy the tail into a new buffer
+  // sized exactly like the original so timing is preserved.
+  const trimmed = new AudioBuffer({
+    numberOfChannels: channels,
+    length: originalFrames,
+    sampleRate: sampleRate
+  });
+  for(let ch = 0; ch < channels; ch++){
+    const src = rendered.getChannelData(ch);
+    const dst = trimmed.getChannelData(ch);
+    // Copy frames [latencyFrames .. latencyFrames + originalFrames)
+    for(let i = 0; i < originalFrames; i++){
+      dst[i] = src[i + latencyFrames] || 0;
+    }
+  }
+  return trimmed;
+}
+
+// ── MP3 ENCODING ─────────────────────────────────────────────
+//
+// Converts an AudioBuffer to an MP3 Blob via lamejs. Uses 128kbps,
+// which gives a good quality/size tradeoff for rehearsal stems:
+// roughly 5MB per stereo 5-minute stem.
+//
+// lamejs takes Int16 samples (16-bit PCM). Web Audio gives us Float32
+// in [-1, 1]. We convert channel by channel, process in 1152-sample
+// chunks (lamejs's preferred block size), and concatenate the encoded
+// byte chunks into a single Blob at the end.
+
+function floatTo16BitPcm(floatSamples){
+  const out = new Int16Array(floatSamples.length);
+  for(let i = 0; i < floatSamples.length; i++){
+    let s = Math.max(-1, Math.min(1, floatSamples[i]));
+    // Asymmetric quantization: negative values map to -32768, positive to 32767
+    out[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+  }
+  return out;
+}
+
+async function audioBufferToMp3Blob(audioBuffer, bitrateKbps){
+  const kbps = bitrateKbps || 128;
+  if(typeof lamejs === 'undefined' || !lamejs.Mp3Encoder){
+    throw new Error('lamejs not loaded — check that lib/lame.min.js is included');
+  }
+
+  const sampleRate = audioBuffer.sampleRate;
+  const channels = audioBuffer.numberOfChannels;
+  const encoder = new lamejs.Mp3Encoder(
+    Math.min(2, channels),   // lamejs supports mono (1) or stereo (2) only
+    sampleRate,
+    kbps
+  );
+
+  const left = floatTo16BitPcm(audioBuffer.getChannelData(0));
+  const right = channels > 1
+    ? floatTo16BitPcm(audioBuffer.getChannelData(1))
+    : left;  // duplicate mono to right for stereo encoder
+
+  const blockSize = 1152;
+  const mp3Chunks = [];
+
+  // Yield to the main thread occasionally so the UI doesn't freeze
+  // during long encodes. Every ~2 seconds of audio we break.
+  const yieldEvery = sampleRate * 2;  // frames, i.e. ~2s of audio
+  let framesSinceYield = 0;
+
+  for(let i = 0; i < left.length; i += blockSize){
+    const leftChunk = left.subarray(i, i + blockSize);
+    const rightChunk = right.subarray(i, i + blockSize);
+    const mp3buf = encoder.encodeBuffer(leftChunk, rightChunk);
+    if(mp3buf.length > 0) mp3Chunks.push(mp3buf);
+
+    framesSinceYield += blockSize;
+    if(framesSinceYield >= yieldEvery){
+      framesSinceYield = 0;
+      await new Promise(r => setTimeout(r, 0));  // yield to event loop
+    }
+  }
+
+  // Flush remaining samples from the encoder
+  const tail = encoder.flush();
+  if(tail.length > 0) mp3Chunks.push(tail);
+
+  return new Blob(mp3Chunks, { type: 'audio/mp3' });
+}
+
+// ── SUPABASE STORAGE UPLOAD ─────────────────────────────────
+//
+// Uploads a Blob to the `rehearsal-studio` bucket at the given path.
+// Returns the storage path (not a URL) for insertion into rs_stem_variants.
+// Mirrors the upload pattern in reference.html so both files behave the
+// same way (same content-type, same upsert header).
+//
+// Variant paths follow the convention:
+//   references/{reference_id}/variants/{semitones:+03d}/{stem_type}.mp3
+//
+// e.g. references/abc-123/variants/+02/vocals.mp3
+
+// Reuse credentials from the same pattern as reference.html.
+// If these rotate, update both files.
+const _PV_SUPA_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const _PV_SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
+const _PV_STORAGE_BUCKET = 'rehearsal-studio';
+
+function variantStoragePath(referenceId, stemType, semitones){
+  const sign = semitones > 0 ? '+' : '-';
+  const abs = Math.abs(semitones).toString().padStart(2, '0');
+  return `references/${referenceId}/variants/${sign}${abs}/${stemType}.mp3`;
+}
+
+async function uploadVariantFile(blob, path){
+  const url = `${_PV_SUPA_URL}/storage/v1/object/${_PV_STORAGE_BUCKET}/${path}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'apikey': _PV_SUPA_KEY,
+      'Authorization': `Bearer ${_PV_SUPA_KEY}`,
+      'Content-Type': 'audio/mpeg',
+      'x-upsert': 'true'
+    },
+    body: blob
+  });
+  if(!res.ok){
+    const body = await res.text().catch(() => '');
+    throw new Error(`Upload failed (${res.status}): ${body || res.statusText}`);
+  }
+  return path;
+}
+
+// ── VARIANT GENERATION ORCHESTRATION ────────────────────────
+//
+// Turns a key-chip tap into seven rendered, encoded, uploaded,
+// recorded variant files — one per stem. Sequential per stem
+// (not parallel) because offline rendering + MP3 encoding both
+// want a lot of CPU, and running them concurrently on mobile
+// can OOM or thermally throttle worse than doing them in sequence.
+//
+// Flow per stem:
+//   1. Ensure stem buffer is decoded (from Supabase, if not already)
+//   2. shiftStemBuffer() — OfflineAudioContext + SoundTouch
+//   3. audioBufferToMp3Blob() — lamejs at 128kbps
+//   4. uploadVariantFile() — POST to rehearsal-studio bucket
+//   5. INSERT into rs_stem_variants
+//
+// Progress is tracked in state.variantGeneration and re-rendered
+// into the transpose card after each tick.
+
 async function generateVariantForKey(semitones){
-  console.log('Would generate variant at', semitones, 'semitones');
-  state._pendingSemitones = semitones;
+  if(state.variantGeneration){
+    COS.toast('Already generating a variant — wait for it to finish');
+    return;
+  }
+  if(!state.reference || !state.reference.id){
+    COS.toast('No reference loaded — cannot generate variant');
+    return;
+  }
+
+  // List of stems this reference actually has. Generate variants only
+  // for those (no point generating for stems that don't exist).
+  const stemsToProcess = STEMS
+    .filter(s => state.stems[s.key].exists)
+    .map(s => s.key);
+
+  if(stemsToProcess.length === 0){
+    COS.toast('No stems available to shift');
+    return;
+  }
+
+  // Clear the "pending" placeholder banner if it's still showing
+  state._pendingSemitones = null;
+
+  // Kick off progress tracking — renderTransposeUI() reads this state
+  state.variantGeneration = {
+    semitones: semitones,
+    progress: 0,
+    stemStatuses: {},
+    currentStem: null,
+    currentStemProgress: 0,
+    startedAt: Date.now()
+  };
+  stemsToProcess.forEach(k => { state.variantGeneration.stemStatuses[k] = 'queued'; });
   renderTransposeUI();
-  COS.toast('Generation ships in next build');
-  // Clear the pending marker after a moment
-  setTimeout(() => {
-    state._pendingSemitones = null;
-    renderTransposeUI();
-  }, 4000);
+
+  const referenceId = state.reference.id;
+  const userName = (COS.currentUser && COS.currentUser.name) || null;
+
+  let completed = 0;
+  let hadFailure = false;
+
+  try {
+    for(const stemKey of stemsToProcess){
+      const gen = state.variantGeneration;
+      if(!gen) break;  // cancelled
+
+      gen.currentStem = stemKey;
+      gen.currentStemProgress = 0;
+      gen.stemStatuses[stemKey] = 'rendering';
+      renderTransposeUI();
+
+      try {
+        // 1. Ensure the source stem is loaded (decoded AudioBuffer in RAM)
+        await ensureStemLoaded(stemKey);
+        const sourceBuffer = state.stems[stemKey].buffer;
+        if(!sourceBuffer){
+          throw new Error('stem buffer unavailable after ensureStemLoaded');
+        }
+
+        // 2. Shift. This is the slow step (OfflineAudioContext render).
+        gen.stemStatuses[stemKey] = 'rendering';
+        renderTransposeUI();
+        const shiftedBuffer = await shiftStemBuffer(sourceBuffer, semitones, (p) => {
+          if(state.variantGeneration){
+            state.variantGeneration.currentStemProgress = p * 0.6;  // 0-60% of stem
+            updateOverallProgress(completed, stemsToProcess.length);
+          }
+        });
+
+        // 3. Encode to MP3
+        gen.stemStatuses[stemKey] = 'encoding';
+        renderTransposeUI();
+        const mp3Blob = await audioBufferToMp3Blob(shiftedBuffer, 128);
+        gen.currentStemProgress = 0.8;  // 60-80% for encode
+        updateOverallProgress(completed, stemsToProcess.length);
+
+        // 4. Upload
+        gen.stemStatuses[stemKey] = 'uploading';
+        renderTransposeUI();
+        const path = variantStoragePath(referenceId, stemKey, semitones);
+        await uploadVariantFile(mp3Blob, path);
+        gen.currentStemProgress = 0.95;
+        updateOverallProgress(completed, stemsToProcess.length);
+
+        // 5. Record in DB (idempotent via upsert semantics since the
+        // table's primary key is (reference_id, stem_type, semitones))
+        const row = {
+          reference_id: referenceId,
+          stem_type: stemKey,
+          semitones: semitones,
+          audio_path: path,
+          created_by: userName
+        };
+        // Use direct fetch so we can request upsert — sbPost doesn't support it
+        await upsertVariantRow(row);
+
+        // Reflect into available variants so future taps see it as 'ready'
+        const k = String(semitones);
+        if(!state.availableVariants[k]) state.availableVariants[k] = {};
+        state.availableVariants[k][stemKey] = path;
+
+        gen.stemStatuses[stemKey] = 'done';
+        completed++;
+      } catch(err){
+        console.error(`Variant gen failed for stem ${stemKey}:`, err);
+        if(state.variantGeneration){
+          state.variantGeneration.stemStatuses[stemKey] = 'failed';
+        }
+        hadFailure = true;
+        // Continue with remaining stems rather than aborting — partial
+        // is better than nothing.
+      }
+      updateOverallProgress(completed, stemsToProcess.length);
+    }
+  } finally {
+    // Leave the progress panel visible for a moment so the user sees
+    // the final state, then clear.
+    setTimeout(() => {
+      state.variantGeneration = null;
+      renderTransposeUI();
+    }, 3000);
+
+    if(hadFailure){
+      COS.toast(`Variant gen finished with some failures (${completed}/${stemsToProcess.length} stems)`);
+    } else if(completed > 0){
+      COS.toast(`${completed} stems ready at ${semitones > 0 ? '+' : ''}${semitones} st — tap the key to switch`);
+    }
+  }
+}
+
+// Recompute overall progress (0..1) based on completed stems + in-flight
+// stem progress. Rerenders the UI.
+function updateOverallProgress(completedCount, totalCount){
+  const gen = state.variantGeneration;
+  if(!gen) return;
+  const perStem = 1 / totalCount;
+  gen.progress = (completedCount * perStem) + (gen.currentStemProgress || 0) * perStem;
+  renderTransposeUI();
+}
+
+// INSERT or UPSERT a row into rs_stem_variants. We use direct fetch
+// with Prefer: resolution=merge-duplicates so a retry overwrites the
+// existing row instead of erroring on the composite-key conflict.
+async function upsertVariantRow(row){
+  const res = await fetch(`${_PV_SUPA_URL}/rest/v1/rs_stem_variants`, {
+    method: 'POST',
+    headers: {
+      'apikey': _PV_SUPA_KEY,
+      'Authorization': `Bearer ${_PV_SUPA_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'resolution=merge-duplicates'
+    },
+    body: JSON.stringify(row)
+  });
+  if(!res.ok){
+    const body = await res.text().catch(() => '');
+    throw new Error(`DB insert failed (${res.status}): ${body || res.statusText}`);
+  }
 }
 
 // Placeholder — will be fully implemented in Chunk 3.
@@ -938,13 +1323,26 @@ function renderTransposeUI(){
   let progressHTML = '';
   if(gen){
     const pct = Math.round((gen.progress || 0) * 100);
-    const stemList = Object.entries(gen.stemStatuses || {})
-      .map(([k, v]) => `${escapeHtml(k)}: ${escapeHtml(v)}`)
-      .join(' · ');
     const targetK = transposeKey(originalKey, gen.semitones);
+    const elapsedMs = Date.now() - (gen.startedAt || Date.now());
+    const elapsedSec = Math.round(elapsedMs / 1000);
+    // Rough ETA: if progress > 2%, extrapolate total from elapsed and subtract
+    let etaLabel = '';
+    if(gen.progress && gen.progress > 0.02){
+      const totalSec = elapsedMs / 1000 / gen.progress;
+      const remainingSec = Math.max(0, Math.round(totalSec - elapsedSec));
+      const mins = Math.floor(remainingSec / 60);
+      const secs = remainingSec % 60;
+      etaLabel = remainingSec > 60 ? ` · ~${mins}m ${secs}s remaining` : ` · ~${secs}s remaining`;
+    }
+    // Per-stem status as compact list. Icons reflect phase.
+    const icons = { queued: '·', rendering: '⚙', encoding: '⏳', uploading: '☁', done: '✓', failed: '⚠' };
+    const stemList = Object.entries(gen.stemStatuses || {})
+      .map(([k, v]) => `<span class="pv-tx-stem-pill pv-tx-stem-${escapeHtml(v)}">${icons[v] || '·'} ${escapeHtml(k)}</span>`)
+      .join('');
     progressHTML = `
       <div class="pv-tx-progress">
-        <div class="pv-tx-progress-label">Generating ${escapeHtml(targetK || '')} version… ${pct}%</div>
+        <div class="pv-tx-progress-label">Generating ${escapeHtml(targetK || '')} version… ${pct}%${etaLabel}</div>
         <div class="pv-tx-progress-bar"><div class="pv-tx-progress-fill" style="width:${pct}%"></div></div>
         <div class="pv-tx-progress-detail">${stemList}</div>
       </div>`;
@@ -986,13 +1384,8 @@ function renderTransposeUI(){
       <button class="pv-tx-reset" onclick="setTranspose(0)" ${st === 0 || gen ? 'disabled' : ''}>Reset</button>
     </div>
     <div class="pv-tx-chips">${chips.join('')}</div>
-    ${state._pendingSemitones !== null && state._pendingSemitones !== undefined ? `
-      <div class="pv-tx-pending">
-        ✓ Tap registered — you selected <strong>${escapeHtml(transposeKey(originalKey, state._pendingSemitones) || '')}</strong>.
-        Generation lands in the next build.
-      </div>` : ''}
     <div class="pv-tx-hint">
-      <strong>Phase 2 foundation</strong> — the new architecture pre-computes each key as a file. Chip taps will trigger generation in the next build. For now, playback is locked to the original key.
+      Tap a key to generate that version. First time takes a few minutes per key. Once generated, variants are instant next session. <strong>Chunk 3</strong> (not yet shipped) will swap playback to the new key automatically — for now, after generation completes, reload the page to hear the shifted version (Chunk 3 coming next).
     </div>
     ${progressHTML}
   `;
