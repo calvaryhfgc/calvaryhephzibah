@@ -97,6 +97,14 @@
   .status-ready{background:#D1FAE5;color:#065F46;}
   .status-archived{background:var(--ink-6);color:var(--ink-4);}
 
+  /* Autosave status indicator — sits between summary and action buttons */
+  .save-status{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-4);padding:4px 10px;border-radius:100px;background:var(--ink-6);transition:opacity 0.2s, background 0.2s, color 0.2s;min-width:80px;justify-content:center;}
+  .save-status.is-clean{color:#065F46;background:#D1FAE5;}
+  .save-status.is-dirty{color:#92400E;background:#FEF3C7;}
+  .save-status.is-saving{color:#1E40AF;background:#DBEAFE;}
+  .save-status.is-error{color:#9F1239;background:#FFE4E6;}
+  .save-status-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
   @media (max-width:640px){
     .arr-meta{grid-template-columns:1fr 1fr;}
     .arr-meta > :first-child{grid-column:1/-1;}
@@ -253,6 +261,10 @@
       <div style="position:sticky;bottom:16px;padding:0 20px 16px;max-width:1100px;margin:0 auto;">
         <div class="actions-bar">
           <div class="actions-summary" id="arr-summary">Loading…</div>
+          <div class="save-status" id="save-status" style="display:none;" aria-live="polite">
+            <span class="save-status-dot"></span>
+            <span id="save-status-text">Saved</span>
+          </div>
           <div class="actions-btns">
             <button class="rs-btn" onclick="window.location.href='index.html'">Cancel</button>
             <button class="rs-btn" id="btn-practice" onclick="openInPractice()" title="Open in Practice View (requires slots)">▶ Practice</button>
@@ -294,13 +306,43 @@ const state = {
   chops: [],             // rs_sections rows belonging to the reference
   slots: [],             // ordered: [{ section_id, notes, position }]
   parts: {},             // { drums: 'notes...', bass: '...', ... }
+
+  // Autosave / dirty tracking
+  // _dirtyVersion increments on every user edit. _savedVersion records
+  // the version that was last successfully persisted. They're equal =>
+  // no unsaved changes. They differ => changes pending.
+  // Starts at 0/0 (clean) until the user edits something.
+  _loaded: false,        // true after initial renderAll() — blocks autosave during load
+  _dirtyVersion: 0,
+  _savedVersion: 0,
+  _autosaveTimer: null,
+  _autosaveError: null,  // last error message, if autosave failed
 };
+
+// How long to wait after the last edit before autosaving. 3 seconds
+// is long enough to avoid mid-sentence saves and short enough that a
+// browser crash loses at most one paragraph.
+const AUTOSAVE_DEBOUNCE_MS = 3000;
 
 // ── BOOT ─────────────────────────────────────────────────────
 function pageInit(){
   buildSidebar();
   buildPartsGrid();
+  wireMetadataDirtyTracking();
   loadArrangement();
+}
+
+// Attach oninput/onchange listeners to the metadata fields so any edit
+// flows through markDirty(). We do this once at pageInit rather than
+// inline in HTML for cleanliness — the fields themselves don't change
+// during the page lifecycle.
+function wireMetadataDirtyTracking(){
+  ['arr-name','arr-key','arr-bpm','wl-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener('input', markDirty);
+  });
+  const status = document.getElementById('arr-status');
+  if(status) status.addEventListener('change', markDirty);
 }
 
 function buildSidebar(){
@@ -343,7 +385,7 @@ function buildPartsGrid(){
   grid.innerHTML = PARTS.map(p => `
     <div class="part-field">
       <label>${p.icon} ${p.label}</label>
-      <textarea id="part-${p.key}" placeholder="Notes for ${p.label.toLowerCase()}…" oninput="state.parts['${p.key}'] = this.value; updateSummary();"></textarea>
+      <textarea id="part-${p.key}" placeholder="Notes for ${p.label.toLowerCase()}…" oninput="state.parts['${p.key}'] = this.value; markDirty(); updateSummary();"></textarea>
     </div>`).join('');
 }
 
@@ -430,6 +472,13 @@ function renderAll(){
   renderChops();
   renderSlots();
   updateSummary();
+
+  // Unblock autosave now that the form is populated. Programmatic
+  // value-setting above does NOT fire 'input' events (by design in DOM),
+  // but guarding with _loaded is belt-and-braces against any future
+  // handler that might fire during load.
+  state._loaded = true;
+  renderSaveStatus();
 }
 
 function renderChops(){
@@ -534,6 +583,7 @@ function addChopToSlots(chopId){
     notes: '',
     position: state.slots.length
   });
+  markDirty();
   renderSlots();
   updateSummary();
   // Scroll the new slot into view (a nice touch for long lists)
@@ -647,6 +697,7 @@ function onSlotDrop(e){
   // Re-index positions (same invariant maintained by moveSlot)
   state.slots.forEach((s, i) => { s.position = i; });
 
+  markDirty();
   cleanupDrag();
   renderSlots();
   updateSummary();
@@ -673,6 +724,7 @@ function removeSlot(idx){
   state.slots.splice(idx, 1);
   // Re-index positions
   state.slots.forEach((s, i) => { s.position = i; });
+  markDirty();
   renderSlots();
   updateSummary();
 }
@@ -683,16 +735,42 @@ function moveSlot(idx, delta){
   const [slot] = state.slots.splice(idx, 1);
   state.slots.splice(target, 0, slot);
   state.slots.forEach((s, i) => { s.position = i; });
+  markDirty();
   renderSlots();
   updateSummary();
 }
 
 function updateSlotNotes(idx, value){
-  if(state.slots[idx]) state.slots[idx].notes = value;
+  if(state.slots[idx]){
+    state.slots[idx].notes = value;
+    markDirty();
+  }
 }
 
 // ── SAVE ─────────────────────────────────────────────────────
+//
+// saveArrangement accepts either:
+//   - a string status: 'draft' | 'ready'  (legacy call path from the buttons)
+//   - an options object: { status, silent }
+//
+// Silent mode is used by autosave:
+//   - No toast on success
+//   - No redirect after save
+//   - No button text changes ("Save draft" stays "Save draft")
+//   - Status stays as whatever the arrangement already is (doesn't
+//     auto-downgrade a published arrangement to draft)
+//
+// Explicit mode (button-triggered) behaves exactly as before — toast,
+// button disable, redirect to the Rehearsal Studio index.
+//
+// Both modes share the actual DB write. Dirty-tracking: the caller
+// snapshots state._dirtyVersion before saving; if the save succeeds
+// and no newer edits landed during the save, we bump _savedVersion to
+// the snapshot so the UI reflects "clean". If newer edits arrived,
+// dirty stays set and the next debounce picks them up.
+
 let _saving = false;
+
 function openInPractice(){
   if(!state.arrangement || !state.arrangement.id){
     COS.toast('Save the arrangement first');
@@ -706,18 +784,42 @@ function openInPractice(){
     COS.toast('Add at least one slot first');
     return;
   }
+  // If there are pending edits, flush them synchronously-ish before opening
+  // Practice View so the practice session reflects the current arrangement.
+  if(state._loaded && state._dirtyVersion !== state._savedVersion && !_saving){
+    // Fire-and-forget autosave, then navigate. The autosave will complete
+    // in the background; Practice View fetches fresh data from Supabase
+    // anyway so by the time its load query fires, the write will likely
+    // have landed.
+    saveArrangement({ silent: true });
+  }
   window.location.href = `practice.html?arrangement_id=${state.arrangement.id}`;
 }
 
-async function saveArrangement(status){
+async function saveArrangement(arg){
+  // Normalise args. String = legacy explicit save. Object = new shape.
+  const opts = (typeof arg === 'string') ? { status: arg, silent: false } : (arg || {});
+  const silent = opts.silent === true;
+  const status = opts.status || (state.arrangement && state.arrangement.status) || 'draft';
+
   if(_saving) return;
   _saving = true;
+
   const btnDraft = document.getElementById('btn-save-draft');
   const btnReady = document.getElementById('btn-save-ready');
-  btnDraft.disabled = true;
-  btnReady.disabled = true;
-  btnDraft.textContent = 'Saving…';
-  btnReady.textContent = 'Saving…';
+
+  // Snapshot dirty version so we can decide at the end whether to
+  // clear the dirty flag (only clear if no edits landed during save).
+  const savingVersion = state._dirtyVersion;
+
+  if(!silent){
+    btnDraft.disabled = true;
+    btnReady.disabled = true;
+    btnDraft.textContent = 'Saving…';
+    btnReady.textContent = 'Saving…';
+  } else {
+    renderSaveStatus('saving');
+  }
 
   try {
     const arrId = state.arrangement.id;
@@ -735,6 +837,12 @@ async function saveArrangement(status){
     if(!updRes) throw new Error('Failed to update arrangement');
 
     // 2. Replace slots atomically
+    //
+    // NOTE: this does a delete-all-then-insert pattern. If the save
+    // fails between the delete and the insert, the arrangement is left
+    // with no slots in the DB (the in-memory state.slots is intact).
+    // The next successful save will restore them. Not ideal — future
+    // polish could switch to diff-based upsert — but acceptable for now.
     await sbDelete('rs_arrangement_sections', `arrangement_id=eq.${arrId}`);
     if(state.slots.length > 0){
       const slotRows = state.slots.map((s, i) => ({
@@ -747,7 +855,7 @@ async function saveArrangement(status){
       if(!slotRes) throw new Error('Failed to save slots');
     }
 
-    // 3. Replace parts atomically
+    // 3. Replace parts atomically (same caveat as slots)
     await sbDelete('rs_arrangement_parts', `arrangement_id=eq.${arrId}`);
     const partRows = PARTS
       .map(p => ({ part: p.key, notes: (state.parts[p.key] || '').trim() }))
@@ -758,21 +866,126 @@ async function saveArrangement(status){
       if(!partRes) throw new Error('Failed to save part notes');
     }
 
-    // Update local state + UI
+    // Update local state
     state.arrangement = { ...state.arrangement, ...meta };
-    COS.toast(status === 'ready' ? '✓ Arrangement published' : '✓ Draft saved');
-    setTimeout(() => { window.location.href = 'index.html'; }, 900);
+    state._autosaveError = null;
+
+    // Mark clean only if no edits landed while save was in flight.
+    // If more edits came in, _dirtyVersion moved on — let the next
+    // autosave pick them up.
+    if(state._dirtyVersion === savingVersion){
+      state._savedVersion = savingVersion;
+    }
+    renderSaveStatus(); // re-derive from current dirty/saved versions
+
+    if(!silent){
+      COS.toast(status === 'ready' ? '✓ Arrangement published' : '✓ Draft saved');
+      setTimeout(() => { window.location.href = 'index.html'; }, 900);
+      // Deliberately NOT resetting _saving here — the redirect will
+      // take us away from this page anyway.
+    } else {
+      _saving = false;
+    }
 
   } catch(err){
     console.error('saveArrangement failed:', err);
-    COS.toast('Error: ' + err.message);
+    state._autosaveError = err.message || 'Save failed';
+
+    if(!silent){
+      COS.toast('Error: ' + err.message);
+      btnDraft.disabled = false;
+      btnReady.disabled = false;
+      btnDraft.textContent = 'Save draft';
+      btnReady.textContent = 'Save & publish';
+    } else {
+      renderSaveStatus('error');
+    }
     _saving = false;
-    btnDraft.disabled = false;
-    btnReady.disabled = false;
-    btnDraft.textContent = 'Save draft';
-    btnReady.textContent = 'Save & publish';
   }
 }
+
+// ── AUTOSAVE + DIRTY TRACKING ────────────────────────────────
+//
+// Called from every user-edit pathway (oninput on metadata fields,
+// slot mutations, part notes). Bumps _dirtyVersion so the UI knows
+// there are unsaved changes, then debounces an autosave 3 seconds
+// from now.
+
+function markDirty(){
+  if(!state._loaded) return;       // ignore programmatic changes during initial render
+  if(!state.arrangement) return;   // guard against race during load
+  state._dirtyVersion++;
+  renderSaveStatus();
+  scheduleAutosave();
+}
+
+function scheduleAutosave(){
+  if(state._autosaveTimer) clearTimeout(state._autosaveTimer);
+  state._autosaveTimer = setTimeout(() => {
+    state._autosaveTimer = null;
+    // Only actually save if still dirty (user might've undone the change
+    // or the explicit Save Draft button already ran)
+    if(state._dirtyVersion === state._savedVersion) return;
+    // Don't interleave with an in-flight save
+    if(_saving) { scheduleAutosave(); return; }
+    saveArrangement({ silent: true });
+  }, AUTOSAVE_DEBOUNCE_MS);
+}
+
+function renderSaveStatus(forceStateName){
+  const el = document.getElementById('save-status');
+  const txt = document.getElementById('save-status-text');
+  if(!el || !txt) return;
+
+  // Before the first edit, keep the pill hidden so the UI isn't noisy
+  // on arrangements that haven't been touched this session.
+  const everDirty = state._savedVersion > 0 || state._dirtyVersion > 0;
+  if(!everDirty && !forceStateName){
+    el.style.display = 'none';
+    return;
+  }
+  el.style.display = '';
+
+  // Reset state classes
+  el.classList.remove('is-clean', 'is-dirty', 'is-saving', 'is-error');
+
+  let stateName = forceStateName;
+  if(!stateName){
+    if(state._autosaveError) stateName = 'error';
+    else if(state._dirtyVersion === state._savedVersion) stateName = 'clean';
+    else stateName = 'dirty';
+  }
+
+  if(stateName === 'saving'){
+    el.classList.add('is-saving');
+    txt.textContent = 'Saving…';
+  } else if(stateName === 'clean'){
+    el.classList.add('is-clean');
+    txt.textContent = 'Saved';
+  } else if(stateName === 'dirty'){
+    el.classList.add('is-dirty');
+    txt.textContent = 'Unsaved changes';
+  } else if(stateName === 'error'){
+    el.classList.add('is-error');
+    txt.textContent = 'Save failed';
+  }
+}
+
+// ── UNSAVED WARNING ──────────────────────────────────────────
+// beforeunload: warn if the user tries to close/navigate-away with
+// pending edits. Modern browsers show a generic confirmation — the
+// returned string isn't displayed but must be truthy to trigger the
+// prompt.
+
+window.addEventListener('beforeunload', (e) => {
+  if(!state._loaded) return;
+  const dirty = state._dirtyVersion !== state._savedVersion;
+  if(!dirty) return;
+  e.preventDefault();
+  // Legacy browsers that do show the message use returnValue
+  e.returnValue = 'You have unsaved changes that will be lost.';
+  return 'You have unsaved changes that will be lost.';
+});
 
 // ── UTILS ────────────────────────────────────────────────────
 function formatTime(s){
