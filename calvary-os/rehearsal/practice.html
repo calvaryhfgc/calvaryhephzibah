@@ -131,6 +131,7 @@
   .pv-tx-progress-detail{font-size:11px;color:rgba(255,255,255,0.55);line-height:1.8;display:flex;flex-wrap:wrap;gap:4px;}
   .pv-tx-stem-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:500;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);}
   .pv-tx-stem-queued{color:rgba(255,255,255,0.4);}
+  .pv-tx-stem-loading{color:#93C5FD;background:rgba(96,165,250,0.1);border-color:rgba(96,165,250,0.2);}
   .pv-tx-stem-rendering{color:#FCD34D;background:rgba(251,191,36,0.12);border-color:rgba(251,191,36,0.25);}
   .pv-tx-stem-encoding{color:#A5F3FC;background:rgba(34,211,238,0.1);border-color:rgba(34,211,238,0.2);}
   .pv-tx-stem-uploading{color:#C4B5FD;background:rgba(167,139,250,0.1);border-color:rgba(167,139,250,0.2);}
@@ -991,6 +992,134 @@ async function shiftStemBuffer(sourceBuffer, semitones, onProgress){
   return trimmed;
 }
 
+// Shifts multiple stems in ONE shared OfflineAudioContext so they share
+// the same audio thread timing — no drift between stems.
+//
+// Each stem gets its own source → SoundTouchNode chain. Their outputs
+// are merged into a 2N-channel buffer (N stems × stereo) via
+// ChannelMergerNode. After rendering, we split the multi-channel result
+// back into N separate stereo AudioBuffers and trim the leading latency.
+//
+// This fixes the drift between stems that the previous per-stem approach
+// produced — stems rendered in separate contexts couldn't guarantee
+// sample-perfect alignment.
+//
+// stemEntries: [{ stemKey, buffer }]  (must all have same sampleRate, length)
+// semitones:   integer, the shift amount
+// onProgress:  called with (0..1) during render
+//
+// Returns: Map<stemKey, AudioBuffer>
+
+async function shiftAllStemsSharedContext(stemEntries, semitones, onProgress){
+  if(!stemEntries || stemEntries.length === 0) return new Map();
+  if(semitones === 0){
+    // No shift — just return the originals
+    const out = new Map();
+    stemEntries.forEach(e => out.set(e.stemKey, e.buffer));
+    return out;
+  }
+
+  // All stems must be compatible (same sample rate + length). Source files
+  // come from the same reference so this should always hold.
+  const first = stemEntries[0].buffer;
+  const sampleRate = first.sampleRate;
+  const originalFrames = first.length;
+  const latencyFrames = Math.floor(sampleRate * PITCH_SHIFT_LATENCY_SEC);
+  const renderFrames = originalFrames + latencyFrames;
+
+  // Each stem is stereo (2 channels). We'll output a single buffer with
+  // 2*N channels and split it after rendering.
+  const N = stemEntries.length;
+  const totalChannels = N * 2;
+
+  // Browsers typically cap channelCount at 32. 7 stems × 2 = 14, well under.
+  // If someone adds more stem types, guard against the cap here.
+  if(totalChannels > 32){
+    throw new Error(`shiftAllStemsSharedContext: ${totalChannels} channels exceeds 32-channel browser cap`);
+  }
+
+  const offlineCtx = new OfflineAudioContext({
+    numberOfChannels: totalChannels,
+    length: renderFrames,
+    sampleRate: sampleRate
+  });
+
+  // Register worklet once on this shared context
+  await offlineCtx.audioWorklet.addModule('lib/soundtouch-processor.js');
+
+  // Build a merger to combine all stems' stereo outputs into a single
+  // multi-channel destination. Channel layout: [L0,R0, L1,R1, L2,R2, ...]
+  const merger = offlineCtx.createChannelMerger(totalChannels);
+  merger.connect(offlineCtx.destination);
+
+  // For each stem: source → soundtouch → splitter (to 2 mono channels) →
+  // merger (at the right 2-channel slot)
+  stemEntries.forEach((entry, stemIdx) => {
+    const source = offlineCtx.createBufferSource();
+    source.buffer = entry.buffer;
+
+    const stNode = new AudioWorkletNode(offlineCtx, 'soundtouch-processor', {
+      numberOfInputs: 1,
+      numberOfOutputs: 1,
+      channelCount: 2,
+      outputChannelCount: [2]
+    });
+    const pitchParam = stNode.parameters.get('pitchSemitones');
+    if(pitchParam) pitchParam.value = semitones;
+
+    // Split the stereo output into two mono channels so we can route
+    // them to specific merger inputs.
+    const splitter = offlineCtx.createChannelSplitter(2);
+
+    source.connect(stNode);
+    stNode.connect(splitter);
+    splitter.connect(merger, 0, stemIdx * 2);      // L → channel stemIdx*2
+    splitter.connect(merger, 1, stemIdx * 2 + 1);  // R → channel stemIdx*2 + 1
+
+    source.start(0);
+  });
+
+  // Progress polling — same strategy as the single-stem version
+  let stopProgress = false;
+  if(typeof onProgress === 'function'){
+    const totalSec = renderFrames / sampleRate;
+    const poll = () => {
+      if(stopProgress) return;
+      const pct = Math.min(0.99, offlineCtx.currentTime / totalSec);
+      try { onProgress(pct); } catch(e){}
+      setTimeout(poll, 250);
+    };
+    poll();
+  }
+
+  const rendered = await offlineCtx.startRendering();
+  stopProgress = true;
+  if(typeof onProgress === 'function') onProgress(1);
+
+  // Split the multi-channel rendered buffer back into per-stem stereo
+  // AudioBuffers, trimming the leading latency frames so timing matches
+  // the original.
+  const out = new Map();
+  stemEntries.forEach((entry, stemIdx) => {
+    const trimmed = new AudioBuffer({
+      numberOfChannels: 2,
+      length: originalFrames,
+      sampleRate: sampleRate
+    });
+    const renderedL = rendered.getChannelData(stemIdx * 2);
+    const renderedR = rendered.getChannelData(stemIdx * 2 + 1);
+    const trimmedL = trimmed.getChannelData(0);
+    const trimmedR = trimmed.getChannelData(1);
+    for(let i = 0; i < originalFrames; i++){
+      trimmedL[i] = renderedL[i + latencyFrames] || 0;
+      trimmedR[i] = renderedR[i + latencyFrames] || 0;
+    }
+    out.set(entry.stemKey, trimmed);
+  });
+
+  return out;
+}
+
 // ── MP3 ENCODING ─────────────────────────────────────────────
 //
 // Converts an AudioBuffer to an MP3 Blob via lamejs. Uses 128kbps,
@@ -1130,8 +1259,7 @@ async function generateVariantForKey(semitones){
     return;
   }
 
-  // List of stems this reference actually has. Generate variants only
-  // for those (no point generating for stems that don't exist).
+  // List of stems this reference actually has.
   const stemsToProcess = STEMS
     .filter(s => state.stems[s.key].exists)
     .map(s => s.key);
@@ -1141,17 +1269,21 @@ async function generateVariantForKey(semitones){
     return;
   }
 
-  // Clear the "pending" placeholder banner if it's still showing
+  // Clear any stale placeholder
   state._pendingSemitones = null;
 
-  // Kick off progress tracking — renderTransposeUI() reads this state
+  // Overall progress model for this phase-based pipeline:
+  //   0–10%  : loading source buffers
+  //   10–60% : shared-context rendering (all stems together)
+  //   60–100%: per-stem encode + upload + DB insert (sequential)
   state.variantGeneration = {
     semitones: semitones,
     progress: 0,
     stemStatuses: {},
     currentStem: null,
     currentStemProgress: 0,
-    startedAt: Date.now()
+    startedAt: Date.now(),
+    phase: 'loading'
   };
   stemsToProcess.forEach(k => { state.variantGeneration.stemStatuses[k] = 'queued'; });
   renderTransposeUI();
@@ -1163,50 +1295,84 @@ async function generateVariantForKey(semitones){
   let hadFailure = false;
 
   try {
+    // ── Phase 1: make sure all source buffers are decoded in memory ──
+    state.variantGeneration.phase = 'loading';
+    stemsToProcess.forEach(k => { state.variantGeneration.stemStatuses[k] = 'loading'; });
+    renderTransposeUI();
+
+    await Promise.all(stemsToProcess.map(k => ensureStemLoaded(k)));
+
+    const stemEntries = [];
     for(const stemKey of stemsToProcess){
+      const buf = state.stems[stemKey].buffer;
+      if(!buf){
+        console.warn('Source buffer missing for', stemKey, '— skipping');
+        state.variantGeneration.stemStatuses[stemKey] = 'failed';
+        hadFailure = true;
+        continue;
+      }
+      stemEntries.push({ stemKey, buffer: buf });
+      state.variantGeneration.stemStatuses[stemKey] = 'rendering';
+    }
+    state.variantGeneration.progress = 0.1;
+    renderTransposeUI();
+
+    if(stemEntries.length === 0){
+      throw new Error('No source buffers available to shift');
+    }
+
+    // ── Phase 2: shared-context render (all stems together, no drift) ──
+    state.variantGeneration.phase = 'rendering';
+    renderTransposeUI();
+
+    const shifted = await shiftAllStemsSharedContext(
+      stemEntries,
+      semitones,
+      (p) => {
+        if(state.variantGeneration){
+          // 10% → 60% during render
+          state.variantGeneration.progress = 0.1 + p * 0.5;
+          renderTransposeUI();
+        }
+      }
+    );
+
+    // Mark all rendered stems as ready to encode
+    stemEntries.forEach(e => {
+      if(state.variantGeneration){
+        state.variantGeneration.stemStatuses[e.stemKey] = 'encoding';
+      }
+    });
+    renderTransposeUI();
+
+    // ── Phase 3: encode + upload + DB insert, per stem ──
+    // Sequential, not parallel — avoids hammering Supabase and keeps
+    // UI responsive between each stem.
+    for(let i = 0; i < stemEntries.length; i++){
+      const { stemKey } = stemEntries[i];
       const gen = state.variantGeneration;
       if(!gen) break;  // cancelled
 
-      gen.currentStem = stemKey;
-      gen.currentStemProgress = 0;
-      gen.stemStatuses[stemKey] = 'rendering';
-      renderTransposeUI();
-
       try {
-        // 1. Ensure the source stem is loaded (decoded AudioBuffer in RAM)
-        await ensureStemLoaded(stemKey);
-        const sourceBuffer = state.stems[stemKey].buffer;
-        if(!sourceBuffer){
-          throw new Error('stem buffer unavailable after ensureStemLoaded');
-        }
-
-        // 2. Shift. This is the slow step (OfflineAudioContext render).
-        gen.stemStatuses[stemKey] = 'rendering';
-        renderTransposeUI();
-        const shiftedBuffer = await shiftStemBuffer(sourceBuffer, semitones, (p) => {
-          if(state.variantGeneration){
-            state.variantGeneration.currentStemProgress = p * 0.6;  // 0-60% of stem
-            updateOverallProgress(completed, stemsToProcess.length);
-          }
-        });
-
-        // 3. Encode to MP3
+        gen.currentStem = stemKey;
         gen.stemStatuses[stemKey] = 'encoding';
         renderTransposeUI();
-        const mp3Blob = await audioBufferToMp3Blob(shiftedBuffer, 128);
-        gen.currentStemProgress = 0.8;  // 60-80% for encode
-        updateOverallProgress(completed, stemsToProcess.length);
 
-        // 4. Upload
+        const shiftedBuffer = shifted.get(stemKey);
+        if(!shiftedBuffer){
+          throw new Error('No shifted buffer for ' + stemKey);
+        }
+
+        // 3a. Encode
+        const mp3Blob = await audioBufferToMp3Blob(shiftedBuffer, 128);
+
+        // 3b. Upload
         gen.stemStatuses[stemKey] = 'uploading';
         renderTransposeUI();
         const path = variantStoragePath(referenceId, stemKey, semitones);
         await uploadVariantFile(mp3Blob, path);
-        gen.currentStemProgress = 0.95;
-        updateOverallProgress(completed, stemsToProcess.length);
 
-        // 5. Record in DB (idempotent via upsert semantics since the
-        // table's primary key is (reference_id, stem_type, semitones))
+        // 3c. Record in DB
         const row = {
           reference_id: referenceId,
           stem_type: stemKey,
@@ -1214,10 +1380,9 @@ async function generateVariantForKey(semitones){
           audio_path: path,
           created_by: userName
         };
-        // Use direct fetch so we can request upsert — sbPost doesn't support it
         await upsertVariantRow(row);
 
-        // Reflect into available variants so future taps see it as 'ready'
+        // Reflect into available variants state
         const k = String(semitones);
         if(!state.availableVariants[k]) state.availableVariants[k] = {};
         state.availableVariants[k][stemKey] = path;
@@ -1230,10 +1395,24 @@ async function generateVariantForKey(semitones){
           state.variantGeneration.stemStatuses[stemKey] = 'failed';
         }
         hadFailure = true;
-        // Continue with remaining stems rather than aborting — partial
-        // is better than nothing.
       }
-      updateOverallProgress(completed, stemsToProcess.length);
+
+      // Progress: 60% → 100% across Phase 3
+      if(state.variantGeneration){
+        const phase3Pct = (i + 1) / stemEntries.length;
+        state.variantGeneration.progress = 0.6 + phase3Pct * 0.4;
+        renderTransposeUI();
+      }
+    }
+  } catch(err){
+    console.error('Variant generation pipeline failed:', err);
+    hadFailure = true;
+    if(state.variantGeneration){
+      // Mark any still-queued stems as failed
+      Object.keys(state.variantGeneration.stemStatuses).forEach(k => {
+        const s = state.variantGeneration.stemStatuses[k];
+        if(s !== 'done') state.variantGeneration.stemStatuses[k] = 'failed';
+      });
     }
   } finally {
     // Leave the progress panel visible for a moment so the user sees
@@ -1244,7 +1423,7 @@ async function generateVariantForKey(semitones){
     }, 3000);
 
     if(hadFailure){
-      COS.toast(`Variant gen finished with some failures (${completed}/${stemsToProcess.length} stems)`);
+      COS.toast(`Variant gen finished with issues (${completed}/${stemsToProcess.length} stems)`);
     } else if(completed > 0){
       COS.toast(`${completed} stems ready at ${semitones > 0 ? '+' : ''}${semitones} st — tap the key to switch`);
     }
@@ -1353,28 +1532,28 @@ async function swapToKey(semitones){
   // Kick off parallel reload
   startParallelStemLoading();
 
-  // Wait for priority stems (selected part + vocals) to be loaded so
-  // playback sounds correct on resume. Other stems keep loading in
-  // the background; playback will just hear them come online mid-song.
-  const partStemKey = PARTS.find(p => p.key === state.currentPart)?.stem;
-  const priorityKeys = [partStemKey, 'vocals'].filter(Boolean);
-  const priorityStems = priorityKeys
-    .map(k => state.stems[k])
+  // Wait for ALL stems to be loaded before resuming playback. Staggered
+  // arrival (where vocals start playing but drums arrive 3s later)
+  // sounded jarring and broke the "tightness" of the mix. Better UX to
+  // wait the extra few seconds and have a clean start.
+  const allStems = STEMS
+    .map(s => state.stems[s.key])
     .filter(s => s && s.exists);
 
-  // Poll until priority stems are loaded or swap was cancelled
-  const waitForPriority = () => new Promise(resolve => {
+  // Poll until all stems are loaded (or failed, or swap was cancelled)
+  const waitForAll = () => new Promise(resolve => {
     const check = () => {
       // Stale check — a newer swap has taken over
       if(state.swapGeneration !== myGen) { resolve(false); return; }
-      const allLoaded = priorityStems.every(s => s.loaded);
-      const anyFailed = priorityStems.some(s => s.failed);
-      if(allLoaded || anyFailed) { resolve(allLoaded); return; }
+      const allLoaded = allStems.every(s => s.loaded);
+      const allSettled = allStems.every(s => s.loaded || s.failed);
+      if(allLoaded) { resolve(true); return; }
+      if(allSettled) { resolve(false); return; }  // some failed, partial playback
       setTimeout(check, 100);
     };
     check();
   });
-  const priorityReady = await waitForPriority();
+  const allReady = await waitForAll();
 
   // Stale-check one more time before resuming playback
   if(state.swapGeneration !== myGen) return;
@@ -1382,11 +1561,11 @@ async function swapToKey(semitones){
   state.swapInProgress = false;
   renderTransposeUI();
 
-  if(wasPlaying && priorityReady){
+  if(wasPlaying && allReady){
     // Resume playback at the same position
     state.arrTime = resumeAt;
     await play();
-  } else if(wasPlaying && !priorityReady){
+  } else if(wasPlaying && !allReady){
     COS.toast('Some stems failed to load — playback paused');
   }
 }
@@ -1444,7 +1623,7 @@ function renderTransposeUI(){
       etaLabel = remainingSec > 60 ? ` · ~${mins}m ${secs}s remaining` : ` · ~${secs}s remaining`;
     }
     // Per-stem status as compact list. Icons reflect phase.
-    const icons = { queued: '·', rendering: '⚙', encoding: '⏳', uploading: '☁', done: '✓', failed: '⚠' };
+    const icons = { queued: '·', loading: '⇣', rendering: '⚙', encoding: '⏳', uploading: '☁', done: '✓', failed: '⚠' };
     const stemList = Object.entries(gen.stemStatuses || {})
       .map(([k, v]) => `<span class="pv-tx-stem-pill pv-tx-stem-${escapeHtml(v)}">${icons[v] || '·'} ${escapeHtml(k)}</span>`)
       .join('');
