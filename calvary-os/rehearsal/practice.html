@@ -120,6 +120,9 @@
   @keyframes pv-pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
   .pv-tx-hint{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.4;}
   .pv-tx-hint strong{color:rgba(255,255,255,0.7);font-weight:600;}
+  .pv-tx-pending{font-size:12px;color:#FCD34D;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:8px 12px;margin-bottom:10px;line-height:1.4;animation:pv-fade-in 0.2s ease-out;}
+  .pv-tx-pending strong{color:#FBBF24;font-weight:700;}
+  @keyframes pv-fade-in{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
   .pv-tx-progress{margin-top:10px;padding:12px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px;}
   .pv-tx-progress-label{font-size:12px;font-weight:600;color:#FCD34D;margin-bottom:8px;}
   .pv-tx-progress-bar{width:100%;height:4px;background:rgba(255,255,255,0.08);border-radius:100px;overflow:hidden;margin-bottom:6px;}
@@ -875,9 +878,18 @@ function variantStatus(semitones){
 }
 
 // Placeholder — will be fully implemented in Chunk 2.
+// For Chunk 1 we make the placeholder VISIBLE in the transpose card so the
+// user can tell their tap was registered. A toast alone was too subtle.
 async function generateVariantForKey(semitones){
-  COS.toast('Variant generation ships in the next build — this is the foundation');
   console.log('Would generate variant at', semitones, 'semitones');
+  state._pendingSemitones = semitones;
+  renderTransposeUI();
+  COS.toast('Generation ships in next build');
+  // Clear the pending marker after a moment
+  setTimeout(() => {
+    state._pendingSemitones = null;
+    renderTransposeUI();
+  }, 4000);
 }
 
 // Placeholder — will be fully implemented in Chunk 3.
@@ -974,6 +986,11 @@ function renderTransposeUI(){
       <button class="pv-tx-reset" onclick="setTranspose(0)" ${st === 0 || gen ? 'disabled' : ''}>Reset</button>
     </div>
     <div class="pv-tx-chips">${chips.join('')}</div>
+    ${state._pendingSemitones !== null && state._pendingSemitones !== undefined ? `
+      <div class="pv-tx-pending">
+        ✓ Tap registered — you selected <strong>${escapeHtml(transposeKey(originalKey, state._pendingSemitones) || '')}</strong>.
+        Generation lands in the next build.
+      </div>` : ''}
     <div class="pv-tx-hint">
       <strong>Phase 2 foundation</strong> — the new architecture pre-computes each key as a file. Chip taps will trigger generation in the next build. For now, playback is locked to the original key.
     </div>
