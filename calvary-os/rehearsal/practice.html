@@ -120,8 +120,9 @@
   @keyframes pv-pulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
   .pv-tx-hint{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.4;}
   .pv-tx-hint strong{color:rgba(255,255,255,0.7);font-weight:600;}
-  .pv-tx-pending{font-size:12px;color:#FCD34D;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:8px 12px;margin-bottom:10px;line-height:1.4;animation:pv-fade-in 0.2s ease-out;}
+  .pv-tx-pending{font-size:12px;color:#FCD34D;background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:8px 12px;margin-bottom:10px;line-height:1.4;animation:pv-fade-in 0.2s ease-out;display:flex;align-items:center;gap:8px;}
   .pv-tx-pending strong{color:#FBBF24;font-weight:700;}
+  .pv-tx-spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(251,191,36,0.3);border-top-color:#FBBF24;border-radius:50%;animation:pv-spin 0.8s linear infinite;flex-shrink:0;}
   @keyframes pv-fade-in{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
   .pv-tx-progress{margin-top:10px;padding:12px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px;}
   .pv-tx-progress-label{font-size:12px;font-weight:600;color:#FCD34D;margin-bottom:8px;}
@@ -388,6 +389,8 @@ const state = {
   availableVariants: {},         // { '-2': {vocals: 'path', drums: 'path', ...}, '+3': {...} }
   variantGeneration: null,       // when generating: { semitones, progress (0-1), stemStatuses {vocals:'done'|'pending', ...} }
   workletReadyForOffline: false, // tracks whether SoundTouch worklet is ready for offline rendering
+  swapGeneration: 0,             // bumped on each key swap; in-flight loads check this to cancel stale work
+  swapInProgress: false,         // true while a key swap is loading new buffers
 
   // Playback state — all in "arrangement time" (0..totalDuration)
   arrTime: 0,         // current position in arrangement time
@@ -483,6 +486,7 @@ async function loadArrangement(){
     state.stems[s.key] = {
       type: s.key,
       path: stemRow ? stemRow.audio_path : null,
+      originalPath: stemRow ? stemRow.audio_path : null,  // remembered so we can swap back to key 0
       exists: !!stemRow,
       buffer: null,
       source: null,
@@ -1277,23 +1281,127 @@ async function upsertVariantRow(row){
   }
 }
 
-// Placeholder — will be fully implemented in Chunk 3.
+// ── KEY SWAP ────────────────────────────────────────────────
+//
+// When the user taps a chip that has a ready variant (or the original
+// key, semitones=0), swap the playing audio to that version. If they
+// tap an un-generated key, setTranspose routes to generation instead.
+//
+// Flow:
+//   1. Bump the swap generation counter (cancels any in-flight swap)
+//   2. Pause playback, remember position and whether was playing
+//   3. Point each stem.path at the new variant URL (or originalPath if 0)
+//   4. Clear buffers and kick off parallel reload
+//   5. Wait for at least vocals + the selected-part stem to load
+//   6. If was playing, resume at same arrTime; else just leave paused
+//
+// Cancellation: each in-flight piece checks state.swapGeneration against
+// its captured generation number and bails if stale.
+
+async function swapToKey(semitones){
+  if(semitones === state.transposeSemitones) return;  // nothing to do
+
+  // Cancel any in-flight swap
+  const myGen = ++state.swapGeneration;
+  state.swapInProgress = true;
+
+  const wasPlaying = state.playing;
+  const resumeAt = state.arrTime;
+
+  // Pause cleanly if playing. Keep arrTime intact so we can resume there.
+  if(state.playing){
+    pause();
+  }
+
+  // Flip the transpose pointer and persist early so the UI reflects
+  // the new state even if load fails later.
+  state.transposeSemitones = semitones;
+  try {
+    localStorage.setItem('pv_transpose_' + state.arrangement.id, String(semitones));
+  } catch(e){}
+
+  // Point each stem at the appropriate path (original or variant)
+  const variantMap = semitones === 0 ? null : state.availableVariants[String(semitones)] || {};
+  STEMS.forEach(s => {
+    const stem = state.stems[s.key];
+    if(!stem.exists) return;
+    // Discard existing buffer and source — they belong to the old key
+    try { if(stem.source) stem.source.stop(); } catch(e){}
+    stem.source = null;
+    stem.buffer = null;
+    stem.loaded = false;
+    stem.loading = false;
+    stem.failed = false;
+    stem.progress = 0;
+    // Swap the path. For key 0, revert to originalPath.
+    if(semitones === 0){
+      stem.path = stem.originalPath;
+    } else if(variantMap && variantMap[s.key]){
+      stem.path = variantMap[s.key];
+    } else {
+      // Variant missing for this stem — leave originalPath so playback
+      // at least has audio (degraded — this stem won't be shifted).
+      console.warn('Variant missing for stem', s.key, 'at', semitones, 'st — using original');
+      stem.path = stem.originalPath;
+    }
+  });
+
+  // Rerender so stem mixer rows show their new loading state
+  renderStems();
+  renderTransposeUI();
+
+  // Kick off parallel reload
+  startParallelStemLoading();
+
+  // Wait for priority stems (selected part + vocals) to be loaded so
+  // playback sounds correct on resume. Other stems keep loading in
+  // the background; playback will just hear them come online mid-song.
+  const partStemKey = PARTS.find(p => p.key === state.currentPart)?.stem;
+  const priorityKeys = [partStemKey, 'vocals'].filter(Boolean);
+  const priorityStems = priorityKeys
+    .map(k => state.stems[k])
+    .filter(s => s && s.exists);
+
+  // Poll until priority stems are loaded or swap was cancelled
+  const waitForPriority = () => new Promise(resolve => {
+    const check = () => {
+      // Stale check — a newer swap has taken over
+      if(state.swapGeneration !== myGen) { resolve(false); return; }
+      const allLoaded = priorityStems.every(s => s.loaded);
+      const anyFailed = priorityStems.some(s => s.failed);
+      if(allLoaded || anyFailed) { resolve(allLoaded); return; }
+      setTimeout(check, 100);
+    };
+    check();
+  });
+  const priorityReady = await waitForPriority();
+
+  // Stale-check one more time before resuming playback
+  if(state.swapGeneration !== myGen) return;
+
+  state.swapInProgress = false;
+  renderTransposeUI();
+
+  if(wasPlaying && priorityReady){
+    // Resume playback at the same position
+    state.arrTime = resumeAt;
+    await play();
+  } else if(wasPlaying && !priorityReady){
+    COS.toast('Some stems failed to load — playback paused');
+  }
+}
+
 async function setTranspose(semitones){
   const n = Math.max(-7, Math.min(7, Math.round(parseFloat(semitones) || 0)));
   if(n === state.transposeSemitones) return;
 
-  // If target variant isn't ready, kick off generation instead of switching
+  // If target variant isn't ready, kick off generation
   if(n !== 0 && variantStatus(n) !== 'ready'){
     return generateVariantForKey(n);
   }
 
-  // For now (Chunk 1) we only support switching to the original key (n=0).
-  // Full key-swap logic (reload stems, restart playback) comes in Chunk 3.
-  state.transposeSemitones = n;
-  try {
-    localStorage.setItem('pv_transpose_' + state.arrangement.id, String(n));
-  } catch(e){}
-  renderTransposeUI();
+  // Target is ready (either original or generated variant) — swap playback
+  return swapToKey(n);
 }
 
 // Render the transpose card. Shows one chip per semitone in range, with
@@ -1358,7 +1466,7 @@ function renderTransposeUI(){
     if(Math.round(s) === Math.round(st)) classes.push('active');
     if(status === 'ready' && s !== 0) classes.push('ready');
     if(gen && gen.semitones === s) classes.push('generating');
-    const disabled = gen ? 'disabled' : '';
+    const disabled = (gen || state.swapInProgress) ? 'disabled' : '';
     const title = s === 0
       ? 'Original key'
       : status === 'ready'
@@ -1381,11 +1489,15 @@ function renderTransposeUI(){
           <span class="pv-tx-st">(${stLabel} st)</span>
         </div>
       </div>
-      <button class="pv-tx-reset" onclick="setTranspose(0)" ${st === 0 || gen ? 'disabled' : ''}>Reset</button>
+      <button class="pv-tx-reset" onclick="setTranspose(0)" ${st === 0 || gen || state.swapInProgress ? 'disabled' : ''}>Reset</button>
     </div>
     <div class="pv-tx-chips">${chips.join('')}</div>
+    ${state.swapInProgress ? `
+      <div class="pv-tx-pending">
+        <span class="pv-tx-spinner"></span> Switching to ${escapeHtml(targetKey || '')} — reloading stems…
+      </div>` : ''}
     <div class="pv-tx-hint">
-      Tap a key to generate that version. First time takes a few minutes per key. Once generated, variants are instant next session. <strong>Chunk 3</strong> (not yet shipped) will swap playback to the new key automatically — for now, after generation completes, reload the page to hear the shifted version (Chunk 3 coming next).
+      Tap a key to switch. Green dot means variants are ready — switch is instant. No dot means tap to generate first (~50s per key).
     </div>
     ${progressHTML}
   `;
