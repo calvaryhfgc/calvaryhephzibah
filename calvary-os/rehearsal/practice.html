@@ -1284,14 +1284,20 @@ function startAllSources(arrT){
   const ctx = ensureAudioContext();
   const { refTime } = arrangementToReferenceTime(arrT);
 
-  // SoundTouch's AudioWorklet buffers audio internally before producing
-  // output — roughly half its auto-sequence length (125ms @ tempo 1.0),
-  // plus one process quantum. Measured experimentally at ~60-70ms.
-  // To keep vocals in sync with un-shifted stems, we start the vocal
-  // source earlier by this amount so it emerges from the pitchNode
-  // aligned with the other stems' first output.
-  // Tunable if it turns out to need adjustment on real audio.
-  const VOCAL_LATENCY = 0.07;
+  // SoundTouch 1.0.10 AudioWorklet buffers audio internally before
+  // producing output. The actual latency at tempo=1.0 is:
+  //   sequenceMs (110ms) + seekWindowMs (23ms) + overlap + 1 quantum
+  //   ≈ 130–150ms
+  // derived from AUTOSEQ constants in the worklet source. Initial test
+  // with 70ms confirmed by the user as "vocals still late, even at 0
+  // semitones" — the buffer-fill happens regardless of pitch value.
+  //
+  // Exposed on window for live tuning via DevTools console:
+  //   window.VOCAL_LATENCY = 0.16
+  // Any subsequent play/seek picks up the new value.
+  const VOCAL_LATENCY = (typeof window !== 'undefined' && typeof window.VOCAL_LATENCY === 'number')
+    ? window.VOCAL_LATENCY
+    : 0.14;
 
   // Everyone lands at this wall-clock time
   const syncAt = ctx.currentTime + VOCAL_LATENCY + 0.02;
