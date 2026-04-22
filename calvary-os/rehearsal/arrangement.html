@@ -61,7 +61,9 @@
   .slot-num{width:22px;height:22px;border-radius:50%;background:var(--red);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
   .slot-body{flex:1;min-width:0;}
   .slot-title{font-size:13px;font-weight:600;color:var(--ink);}
-  .slot-meta{font-size:11px;color:var(--ink-4);margin-top:1px;}
+  .slot-meta{font-size:11px;color:var(--ink-4);margin-top:1px;font-variant-numeric:tabular-nums;}
+  .slot-meta-start{color:var(--ink-2);font-weight:600;}
+  .slot-meta-source{color:var(--ink-4);}
   .slot-notes{margin-top:6px;width:100%;padding:6px 8px;border:1px solid var(--ink-5);background:var(--ink-6);border-radius:var(--r8);font-family:inherit;font-size:12px;color:var(--ink-2);resize:vertical;min-height:28px;}
   .slot-notes:focus{outline:none;border-color:var(--red);background:var(--white);}
   .slot-actions{display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
@@ -544,17 +546,30 @@ function renderSlots(){
   container.style.display = 'flex';
   count.textContent = `· ${state.slots.length} slot${state.slots.length===1?'':'s'}`;
 
+  // Precompute cumulative arrangement start time for each slot.
+  // Slot 0 starts at 0:00. Slot N starts at sum of durations of slots
+  // 0..N-1. Missing-chop slots contribute 0 so the next slot's start
+  // time reflects only the slots that actually have audio.
+  const startTimes = [];
+  let cumulative = 0;
+  state.slots.forEach(slot => {
+    startTimes.push(cumulative);
+    const chop = state.chops.find(c => c.id === slot.section_id);
+    if(chop) cumulative += (chop.end_seconds - chop.start_seconds);
+  });
+
   container.innerHTML = state.slots.map((slot, i) => {
     const chop = state.chops.find(c => c.id === slot.section_id);
     const label = chop ? (chop.label || 'Unnamed') : '(chop not found)';
     const dur = chop ? formatDuration(chop.end_seconds - chop.start_seconds) : '—';
+    const startTimeStr = formatTime(startTimes[i]);
     return `
       <div class="slot-card" data-slot-idx="${i}" draggable="true">
         <div class="slot-handle" title="Drag to reorder" aria-label="Drag to reorder">⋮⋮</div>
         <div class="slot-num">${i + 1}</div>
         <div class="slot-body">
           <div class="slot-title">${escapeHtml(label)}</div>
-          <div class="slot-meta">${dur}${chop ? ` · ${formatTime(chop.start_seconds)}–${formatTime(chop.end_seconds)}` : ''}</div>
+          <div class="slot-meta"><span class="slot-meta-start" title="Starts at this time in the arrangement">⏱ ${startTimeStr}</span> · ${dur}${chop ? ` · <span class="slot-meta-source" title="Source range in the reference recording">${formatTime(chop.start_seconds)}–${formatTime(chop.end_seconds)}</span>` : ''}</div>
           <textarea class="slot-notes" placeholder="Notes for this slot (optional) — e.g. 'drop to kick only', 'half-time', 'MC bridges here'" oninput="updateSlotNotes(${i}, this.value)">${escapeHtml(slot.notes || '')}</textarea>
         </div>
         <div class="slot-actions">
