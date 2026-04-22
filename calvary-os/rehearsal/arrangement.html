@@ -215,7 +215,10 @@
 
           <!-- Left: chops library -->
           <div class="arr-panel" style="margin-bottom:0;">
-            <h3>Chops library <span style="font-size:11px;font-weight:400;color:var(--ink-4);margin-left:6px;" id="chops-count"></span></h3>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;">
+              <h3 style="margin:0;">Chops library <span style="font-size:11px;font-weight:400;color:var(--ink-4);margin-left:6px;" id="chops-count"></span></h3>
+              <button class="rs-btn" id="btn-add-all-chops" onclick="addAllChopsToSlots()" style="font-size:11px;padding:5px 10px;" title="Add every chop to the arrangement in order" disabled>+ Add all</button>
+            </div>
             <div class="arr-panel-sub">Pieces cut from the reference. Click <strong>+ Add</strong> to drop one into the arrangement.</div>
             <div id="chops-container">
               <div class="chops-empty" id="chops-empty" style="display:none;">
@@ -485,6 +488,11 @@ function renderChops(){
   const container = document.getElementById('chops-list');
   const empty = document.getElementById('chops-empty');
   const count = document.getElementById('chops-count');
+  const addAllBtn = document.getElementById('btn-add-all-chops');
+
+  // Button enabled only when we have chops to add
+  const hasChops = state.chops && state.chops.length > 0;
+  if(addAllBtn) addAllBtn.disabled = !hasChops;
 
   if(!state.reference){
     container.style.display = 'none';
@@ -591,6 +599,56 @@ function addChopToSlots(chopId){
     const cards = document.querySelectorAll('#slots-list .slot-card');
     const last = cards[cards.length - 1];
     if(last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 50);
+}
+
+// Bulk-add: append every chop from the reference to the slots list in
+// the chops' natural position order. Common first step when building
+// a new arrangement — "use every section, then edit from there."
+//
+// Behaviour:
+//   - No-op if there are no chops
+//   - Confirms with the user if slots already exist (to avoid
+//     accidentally doubling up on a half-built arrangement)
+//   - Appends to end; doesn't reorder or clear existing slots
+//   - Batches state mutation so renderSlots/updateSummary/markDirty
+//     fire once regardless of chop count
+//
+// Autosave will persist 3s after the last bulk action, same as any
+// other edit.
+
+function addAllChopsToSlots(){
+  if(!state.chops || state.chops.length === 0){
+    COS.toast('No chops to add — mark sections on the reference first');
+    return;
+  }
+
+  if(state.slots.length > 0){
+    const msg = `You already have ${state.slots.length} slot${state.slots.length===1?'':'s'}. `
+              + `Add all ${state.chops.length} chops to the end?`;
+    if(!confirm(msg)) return;
+  }
+
+  const startIdx = state.slots.length;
+  state.chops.forEach(chop => {
+    state.slots.push({
+      section_id: chop.id,
+      notes: '',
+      position: state.slots.length
+    });
+  });
+
+  markDirty();
+  renderSlots();
+  updateSummary();
+  COS.toast(`Added ${state.chops.length} slot${state.chops.length===1?'':'s'}`);
+
+  // Scroll the first newly-added slot into view. Tiny delay so the DOM
+  // has repopulated.
+  setTimeout(() => {
+    const cards = document.querySelectorAll('#slots-list .slot-card');
+    const firstNew = cards[startIdx];
+    if(firstNew) firstNew.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 50);
 }
 
