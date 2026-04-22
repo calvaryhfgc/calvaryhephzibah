@@ -35,8 +35,12 @@
   .chop-card-label{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .chop-card-meta{font-size:10px;color:var(--ink-4);font-variant-numeric:tabular-nums;}
   .chop-card-btns{display:flex;gap:4px;flex-shrink:0;}
-  .chop-preview-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--ink-5);background:var(--white);color:var(--ink-3);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;}
-  .chop-preview-btn:hover{border-color:var(--red);color:var(--red);}
+  .chop-preview-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--ink-5);background:var(--white);color:var(--ink-3);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:background 0.1s, color 0.1s, border-color 0.1s;flex-shrink:0;}
+  .chop-preview-btn:hover:not(:disabled){border-color:var(--red);color:var(--red);}
+  .chop-preview-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .chop-preview-btn.is-playing{background:var(--red);border-color:var(--red);color:white;}
+  .chop-preview-btn.is-playing:hover{background:var(--red-d);border-color:var(--red-d);}
+  .chop-preview-btn.is-loading{border-color:var(--red);color:var(--red);}
   .chop-add-btn{padding:5px 10px;border-radius:var(--r8);background:var(--red);color:white;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:inherit;}
   .chop-add-btn:hover{background:var(--red-d);}
 
@@ -322,6 +326,13 @@ const state = {
   _savedVersion: 0,
   _autosaveTimer: null,
   _autosaveError: null,  // last error message, if autosave failed
+
+  // Chop preview playback
+  // Single <audio> element is created lazily on first preview. We
+  // swap currentTime for each chop; there's only ever one preview
+  // playing at a time, so iOS's "one audio" restriction is a non-issue.
+  _preview: null,        // { chopId, isLoading, endSec } or null
+  _previewAudio: null,   // HTMLAudioElement, lazily created
 };
 
 // How long to wait after the last edit before autosaving. 3 seconds
@@ -514,8 +525,21 @@ function renderChops(){
   empty.style.display = 'none';
   container.style.display = 'flex';
   count.textContent = `· ${state.chops.length} chop${state.chops.length===1?'':'s'}`;
+
+  // Can we preview? Need a reference with an audio_path.
+  const canPreview = !!(state.reference && state.reference.audio_path);
+  const previewTitle = canPreview
+    ? 'Preview this chop'
+    : 'Preview unavailable — reference has no audio file';
+
   container.innerHTML = state.chops.map((c, i) => {
     const dur = formatDuration(c.end_seconds - c.start_seconds);
+    const isPlaying = state._preview && state._preview.chopId === c.id && !state._preview.isLoading;
+    const isLoading = state._preview && state._preview.chopId === c.id && state._preview.isLoading;
+    const previewClasses = ['chop-preview-btn'];
+    if(isPlaying) previewClasses.push('is-playing');
+    if(isLoading) previewClasses.push('is-loading');
+    const previewIcon = isPlaying ? '⏹' : (isLoading ? '⋯' : '▶');
     return `
       <div class="chop-card" data-chop-id="${c.id}">
         <div class="chop-card-icon">${i + 1}</div>
@@ -524,6 +548,7 @@ function renderChops(){
           <div class="chop-card-meta">${formatTime(c.start_seconds)}–${formatTime(c.end_seconds)} · ${dur}</div>
         </div>
         <div class="chop-card-btns">
+          <button class="${previewClasses.join(' ')}" onclick="togglePreview('${c.id}')" title="${previewTitle}" ${canPreview ? '' : 'disabled'}>${previewIcon}</button>
           <button class="chop-add-btn" onclick="addChopToSlots('${c.id}')">+ Add</button>
         </div>
       </div>`;
@@ -666,6 +691,141 @@ function addAllChopsToSlots(){
     if(firstNew) firstNew.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 50);
 }
+
+// ── CHOP PREVIEW PLAYBACK ────────────────────────────────────
+//
+// Single <audio> element per page, lazily created on first preview.
+// Playing a chop = seek the audio element to chop.start_seconds,
+// play, and pause automatically when currentTime passes end_seconds.
+//
+// Why HTML5 <audio> over Web Audio API:
+//   - Streaming (no 50MB file download before first play)
+//   - iOS allows one <audio> element per page to play inline —
+//     fine for "preview one chop at a time"
+//   - No buffer decoding — instant first play
+//   - Trivially cleaned up on page navigation (browser handles it)
+//
+// Timeupdate fires every ~250ms, so end-of-chop cutoff isn't
+// sample-accurate — may overshoot by up to 250ms. Acceptable for
+// preview.
+
+const _PREVIEW_SUPA_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+const _PREVIEW_STORAGE_BUCKET = 'rehearsal-studio';
+
+function _previewPublicUrl(path){
+  return `${_PREVIEW_SUPA_URL}/storage/v1/object/public/${_PREVIEW_STORAGE_BUCKET}/${path}`;
+}
+
+function togglePreview(chopId){
+  // If this chop is already playing/loading, stop it
+  if(state._preview && state._preview.chopId === chopId){
+    stopPreview();
+    return;
+  }
+  // Otherwise start this one (stops any other first)
+  startPreview(chopId);
+}
+
+function startPreview(chopId){
+  // Stop any current preview before swapping
+  stopPreview();
+
+  const chop = state.chops.find(c => c.id === chopId);
+  if(!chop){
+    console.warn('startPreview: chop not found', chopId);
+    return;
+  }
+  if(!state.reference || !state.reference.audio_path){
+    COS.toast('No audio file linked to this reference — cannot preview');
+    return;
+  }
+
+  // Create the audio element on first use. Keep it on state so we
+  // reuse it across previews (avoids reloading the file every click).
+  const needsCreate = !state._previewAudio;
+  if(needsCreate){
+    const audio = new Audio();
+    audio.preload = 'auto';
+    audio.src = _previewPublicUrl(state.reference.audio_path);
+    audio.addEventListener('timeupdate', onPreviewTimeUpdate);
+    audio.addEventListener('error', onPreviewError);
+    audio.addEventListener('playing', onPreviewPlaying);
+    // Don't attach 'ended' — we use timeupdate + endSec to stop
+    // mid-file at the chop's end_seconds
+    state._previewAudio = audio;
+  }
+
+  // Record the active preview BEFORE play() so the UI reflects loading
+  // immediately. isLoading flips to false on the 'playing' event.
+  state._preview = {
+    chopId: chopId,
+    isLoading: true,
+    endSec: chop.end_seconds
+  };
+  renderChops();
+
+  // Seek + play. On first use, setting currentTime before metadata has
+  // loaded may be ignored — so wait for loadedmetadata on first use.
+  const audio = state._previewAudio;
+  const doSeekAndPlay = () => {
+    // Guard: user may have cancelled the preview while we were waiting
+    if(!state._preview || state._preview.chopId !== chopId) return;
+    audio.currentTime = chop.start_seconds;
+    const p = audio.play();
+    if(p && typeof p.catch === 'function'){
+      p.catch(err => {
+        console.warn('Preview play rejected:', err);
+        if(state._preview && state._preview.chopId === chopId){
+          COS.toast('Could not play preview');
+          stopPreview();
+        }
+      });
+    }
+  };
+  if(needsCreate && audio.readyState < 1){  // HAVE_METADATA = 1
+    audio.addEventListener('loadedmetadata', doSeekAndPlay, { once: true });
+  } else {
+    doSeekAndPlay();
+  }
+}
+
+function stopPreview(){
+  if(state._previewAudio){
+    try { state._previewAudio.pause(); } catch(e){}
+  }
+  state._preview = null;
+  renderChops();
+}
+
+function onPreviewTimeUpdate(){
+  if(!state._preview) return;
+  const audio = state._previewAudio;
+  if(!audio) return;
+  // Stop when we pass the chop's end time
+  if(audio.currentTime >= state._preview.endSec){
+    stopPreview();
+  }
+}
+
+function onPreviewPlaying(){
+  // Flip loading → playing now that audio is actually decoded + running
+  if(state._preview && state._preview.isLoading){
+    state._preview.isLoading = false;
+    renderChops();
+  }
+}
+
+function onPreviewError(e){
+  console.error('Preview audio error:', e);
+  if(state._preview){
+    COS.toast('Preview failed to load');
+    stopPreview();
+  }
+}
+
+// Stop any playing preview if the user navigates away. Belt-and-braces —
+// the browser tears down <audio> on unload anyway.
+window.addEventListener('pagehide', stopPreview);
 
 // ── DRAG AND DROP REORDERING ─────────────────────────────────
 // Uses the HTML5 Drag-and-Drop API. Desktop only — touch-drag
