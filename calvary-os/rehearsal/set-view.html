@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Rehearsal Set</title>
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" href="../shell.css">
+<style>
+  /* ── SET VIEW (READ-ONLY) ──────────────────────────────────────
+     Parallel to set.html but stripped of all editing machinery.
+     Worship team members land here from a shared URL (WhatsApp,
+     bookmark), log in with their PIN, and rehearse.
+
+     No picker, no save, no drag, no textareas. Just the set and
+     big Rehearse buttons. */
+
+  .sv-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-4);margin-bottom:8px;}
+  .sv-crumb a{color:var(--ink-3);text-decoration:none;}
+  .sv-crumb a:hover{color:var(--ink);}
+
+  /* Mode switcher — only shown for admin/lead users */
+  .sv-mode{display:inline-flex;gap:6px;margin-bottom:12px;}
+  .sv-mode a{font-size:11px;color:var(--ink-4);text-decoration:none;padding:4px 10px;border-radius:100px;border:1px solid var(--ink-5);background:var(--white);}
+  .sv-mode a:hover{color:var(--ink);border-color:var(--ink-4);}
+  .sv-mode .sv-mode-active{background:var(--ink);color:white;border-color:var(--ink);}
+
+  /* Header */
+  .sv-header{margin-bottom:20px;}
+  .sv-header-date{font-size:12px;color:var(--red);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+  .sv-header-title{font-family:'Lora',serif;font-size:28px;font-weight:700;color:var(--ink);margin:4px 0;line-height:1.2;}
+  .sv-header-sub{font-size:13px;color:var(--ink-3);}
+  .sv-header-notes{font-size:13px;color:var(--ink-2);margin-top:10px;padding:10px 12px;background:var(--ink-6);border-left:3px solid var(--red);border-radius:0 var(--r8) var(--r8) 0;font-style:italic;}
+
+  /* Items list */
+  .sv-items{display:flex;flex-direction:column;gap:12px;margin-top:16px;}
+  .sv-item{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r14);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:border-color 0.1s, box-shadow 0.1s;}
+  .sv-item:hover{border-color:var(--red-mid);box-shadow:var(--shadow);}
+  .sv-item-num{width:32px;height:32px;border-radius:50%;background:var(--red);color:white;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .sv-item-body{flex:1;min-width:0;}
+  .sv-item-song{font-size:17px;font-weight:600;color:var(--ink);line-height:1.25;}
+  .sv-item-arr{font-size:13px;color:var(--ink-3);margin-top:2px;}
+  .sv-item-meta{font-size:12px;color:var(--ink-4);margin-top:4px;font-variant-numeric:tabular-nums;display:flex;gap:8px;flex-wrap:wrap;}
+  .sv-item-meta span{display:inline-flex;align-items:center;}
+  .sv-item-transition{font-size:13px;color:var(--ink-2);margin-top:8px;padding:8px 10px;background:var(--ink-6);border-radius:var(--r8);font-style:italic;line-height:1.4;}
+  .sv-item-transition::before{content:'📝 ';font-style:normal;margin-right:2px;}
+  .sv-rehearse{flex-shrink:0;padding:11px 18px;border-radius:var(--r10);background:var(--red);color:white;font-weight:700;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;align-self:center;}
+  .sv-rehearse:hover{background:var(--red-d);}
+  .sv-rehearse-icon{font-size:11px;}
+
+  /* Degraded (stale) item */
+  .sv-item-stale{opacity:0.55;}
+  .sv-item-stale .sv-item-num{background:var(--ink-4);}
+
+  /* Empty + error states */
+  .sv-empty{padding:40px 20px;text-align:center;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r14);color:var(--ink-3);}
+  .sv-empty-title{font-size:15px;font-weight:600;color:var(--ink-2);margin-bottom:4px;}
+  .sv-empty-sub{font-size:13px;color:var(--ink-4);line-height:1.5;}
+
+  .sv-error{background:#FFE4E6;border:1px solid #fecdd3;color:#9F1239;padding:16px;border-radius:var(--r10);margin-bottom:16px;}
+
+  /* Mobile — tighten spacing, stack the Rehearse button below the body
+     on very narrow screens so text doesn't get squeezed */
+  @media (max-width:520px){
+    .sv-header-title{font-size:22px;}
+    .sv-item{flex-direction:column;gap:10px;padding:14px;}
+    .sv-item-num{width:28px;height:28px;font-size:13px;align-self:flex-start;}
+    .sv-rehearse{width:100%;justify-content:center;padding:13px 18px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared pattern) ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <div class="topbar">
+    <a href="../dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">Rehearsal set</div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <div class="main">
+      <div class="page-body" style="max-width:780px;margin:0 auto;padding:20px;">
+
+        <!-- Breadcrumb -->
+        <div class="sv-crumb">
+          <a href="index.html">Rehearsal Studio</a>
+          <span>›</span>
+          <span id="crumb-set">Set</span>
+        </div>
+
+        <!-- Mode switcher (admin/lead only) -->
+        <div class="sv-mode" id="mode-switcher" style="display:none;">
+          <a href="#" class="sv-mode-active">Team view</a>
+          <a href="#" id="link-editor">Edit →</a>
+        </div>
+
+        <!-- Error surface (hidden by default) -->
+        <div id="error-box" class="sv-error" style="display:none;"></div>
+
+        <!-- Loading state -->
+        <div id="loading-box" style="padding:40px 20px;text-align:center;color:var(--ink-4);font-size:13px;">
+          Loading…
+        </div>
+
+        <!-- Main content — hidden until load resolves -->
+        <div id="view-body" style="display:none;">
+
+          <!-- Header -->
+          <div class="sv-header">
+            <div class="sv-header-date" id="hdr-date">—</div>
+            <div class="sv-header-title" id="hdr-title">—</div>
+            <div class="sv-header-sub" id="hdr-sub"></div>
+            <div class="sv-header-notes" id="hdr-notes" style="display:none;"></div>
+          </div>
+
+          <!-- Items list -->
+          <div id="sv-items-wrap">
+            <div class="sv-empty" id="sv-empty" style="display:none;">
+              <div class="sv-empty-title">No arrangements yet</div>
+              <div class="sv-empty-sub">The worship leader hasn't added arrangements to this set. Check back soon.</div>
+            </div>
+            <div class="sv-items" id="sv-items"></div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="mob-nav-items" id="mob-nav"></div>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../shell.js"></script>
+<script>
+
+// ── STATE ────────────────────────────────────────────────────
+const state = {
+  set: null,
+  items: [],
+  arrangements: [],
+  songs: [],
+};
+
+// ── BOOT ─────────────────────────────────────────────────────
+function pageInit(){
+  buildSidebar();
+  loadSetView();
+}
+
+function buildSidebar(){
+  const sb = document.getElementById('sidebar');
+  const modules = [
+    { id:'dashboard',  label:'Dashboard',         href:'../dashboard.html',   icon:'🏠' },
+    { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
+    { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
+    { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
+    { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
+    { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
+    { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
+  ];
+  if(COS.currentUser && COS.currentUser.level === 'admin'){
+    modules.push({ id:'admin', label:'Admin', href:'../admin.html', icon:'⚙️' });
+  }
+  const accessible = modules.filter(m => COS.hasAccess(m.id));
+  sb.innerHTML = `
+    <div class="nav-section">
+      <div class="nav-section-label">Modules</div>
+      ${accessible.map(m=>`
+        <a href="${m.href}" class="nav-item${m.active?' active':''}" style="text-decoration:none;">
+          <span style="font-size:13px;">${m.icon}</span>
+          ${m.label}
+        </a>`).join('')}
+    </div>`;
+  const mob = document.getElementById('mob-nav');
+  if(mob){
+    mob.innerHTML = accessible.slice(0, 5).map(m => `
+      <a href="${m.href}" class="mob-nav-btn${m.active?' active':''}" style="text-decoration:none;">
+        <span>${m.icon}</span>
+        <span>${m.label.split(' ')[0]}</span>
+      </a>`).join('');
+  }
+}
+
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadSetView(){
+  const params = new URLSearchParams(location.search);
+  const setId = params.get('id');
+  if(!setId){
+    showError('No set ID in the URL', 'Ask the worship leader for the correct link.');
+    return;
+  }
+
+  try {
+    const sets = await sbFetch(`rs_sets?id=eq.${setId}`);
+    if(!sets || !sets[0]){
+      showError('Set not found', 'This rehearsal set may have been deleted. Ask the worship leader for the latest link.');
+      return;
+    }
+    state.set = sets[0];
+
+    // Items, arrangements, songs in parallel
+    const [items, arrangements, songs] = await Promise.all([
+      sbFetch(`rs_set_arrangements?set_id=eq.${setId}&order=position.asc`),
+      sbFetch('rs_arrangements'),
+      sbFetch('rs_songs')
+    ]);
+    state.items = items || [];
+    state.arrangements = arrangements || [];
+    state.songs = songs || [];
+
+    renderAll();
+  } catch(err){
+    console.error('loadSetView failed:', err);
+    showError('Couldn\'t load the set', 'Check your connection and try again. If this keeps happening, let the worship leader know.');
+  }
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function renderAll(){
+  if(!state.set) return;
+
+  document.getElementById('loading-box').style.display = 'none';
+  document.getElementById('view-body').style.display = 'block';
+
+  // Breadcrumb
+  document.getElementById('crumb-set').textContent = state.set.name || 'Set';
+
+  // Header
+  document.getElementById('hdr-date').textContent = formatServiceDate(state.set.service_date);
+  document.getElementById('hdr-title').textContent = state.set.name || 'Untitled set';
+  document.getElementById('hdr-sub').textContent = formatSubline(state.set);
+
+  if(state.set.notes){
+    const notesEl = document.getElementById('hdr-notes');
+    notesEl.textContent = state.set.notes;
+    notesEl.style.display = 'block';
+  }
+
+  // Admin/lead mode switcher
+  if(COS.currentUser && (COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead')){
+    document.getElementById('mode-switcher').style.display = 'inline-flex';
+    document.getElementById('link-editor').href = 'set.html?id=' + state.set.id;
+  }
+
+  renderItems();
+}
+
+function formatServiceDate(dateStr){
+  if(!dateStr) return '';
+  try {
+    // dateStr is YYYY-MM-DD. Rendering as "SUNDAY · 27 APRIL 2026" style
+    const d = new Date(dateStr + 'T00:00:00');
+    const day = d.toLocaleDateString('en-GB', { weekday: 'long' });
+    const rest = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    return `${day.toUpperCase()} · ${rest}`;
+  } catch(e){ return dateStr; }
+}
+
+function formatSubline(set){
+  const bits = [];
+  if(set.service_type){
+    bits.push(set.service_type[0].toUpperCase() + set.service_type.slice(1) + ' service');
+  }
+  const itemCount = state.items.length;
+  bits.push(`${itemCount} arrangement${itemCount === 1 ? '' : 's'}`);
+  return bits.join(' · ');
+}
+
+function renderItems(){
+  const wrap = document.getElementById('sv-items');
+  const empty = document.getElementById('sv-empty');
+
+  if(state.items.length === 0){
+    wrap.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+  wrap.style.display = 'flex';
+  empty.style.display = 'none';
+
+  wrap.innerHTML = state.items.map((item, i) => {
+    const arr = state.arrangements.find(a => a.id === item.arrangement_id);
+    if(!arr){
+      // Stale item — arrangement was deleted. Render muted placeholder,
+      // no Rehearse button (nothing to rehearse).
+      return `
+        <div class="sv-item sv-item-stale">
+          <div class="sv-item-num">${i + 1}</div>
+          <div class="sv-item-body">
+            <div class="sv-item-song">Removed song</div>
+            <div class="sv-item-arr">This arrangement is no longer available.</div>
+          </div>
+        </div>`;
+    }
+    const song = state.songs.find(s => s.id === arr.song_id);
+    const songTitle = song ? song.title : 'Untitled song';
+    const metaBits = [];
+    if(arr.key) metaBits.push(`🎹 Key ${arr.key}`);
+    if(arr.bpm) metaBits.push(`🥁 ${arr.bpm} bpm`);
+    return `
+      <div class="sv-item">
+        <div class="sv-item-num">${i + 1}</div>
+        <div class="sv-item-body">
+          <div class="sv-item-song">${escapeHtml(songTitle)}</div>
+          <div class="sv-item-arr">${escapeHtml(arr.name || 'Untitled arrangement')}</div>
+          ${metaBits.length ? `<div class="sv-item-meta">${metaBits.map(m => `<span>${escapeHtml(m)}</span>`).join('')}</div>` : ''}
+          ${item.transition_note ? `<div class="sv-item-transition">${escapeHtml(item.transition_note)}</div>` : ''}
+        </div>
+        <a class="sv-rehearse" href="practice.html?arrangement_id=${arr.id}">
+          <span class="sv-rehearse-icon">▶</span> Rehearse
+        </a>
+      </div>`;
+  }).join('');
+}
+
+// ── ERROR ────────────────────────────────────────────────────
+function showError(title, sub){
+  document.getElementById('loading-box').style.display = 'none';
+  document.getElementById('view-body').style.display = 'none';
+  const box = document.getElementById('error-box');
+  box.innerHTML = `<strong>${escapeHtml(title)}</strong><br>${escapeHtml(sub)}`;
+  box.style.display = 'block';
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function escapeHtml(s){
+  return (s || '').toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+COS.init('rehearsal');
+</script>
+
+</body>
+</html>
