@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Set</title>
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" href="../shell.css">
+<style>
+  /* ── SET PAGE LOCAL STYLES ─────────────────────────────────────
+     Intentionally mirrors arrangement.html's patterns so the two
+     feel consistent — a "set" is an arrangement-of-arrangements
+     one level up the hierarchy. */
+
+  .set-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-4);margin-bottom:8px;}
+  .set-crumb a{color:var(--ink-3);text-decoration:none;}
+  .set-crumb a:hover{color:var(--ink);}
+
+  .set-panel{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);padding:20px 24px;margin-bottom:16px;}
+  .set-panel h3{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+  .set-panel-sub{font-size:12px;color:var(--ink-3);margin-bottom:14px;line-height:1.5;}
+
+  /* Metadata form row */
+  .set-meta{display:grid;grid-template-columns:3fr 1fr 1fr 2fr;gap:10px;}
+  .set-meta label{display:block;font-size:10px;font-weight:600;color:var(--ink-4);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
+  .set-meta input,.set-meta select,.set-meta textarea{width:100%;padding:9px 11px;border:1.5px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:13px;color:var(--ink);}
+  .set-meta input:focus,.set-meta select:focus,.set-meta textarea:focus{outline:none;border-color:var(--red);}
+
+  .set-notes{width:100%;padding:10px 12px;border:1px solid var(--ink-5);background:var(--ink-6);border-radius:var(--r10);font-family:inherit;font-size:13px;color:var(--ink);resize:vertical;min-height:60px;line-height:1.5;}
+  .set-notes:focus{outline:none;border-color:var(--red);background:var(--white);}
+
+  /* Two-column builder — arrangement picker | set arrangements */
+  .set-workspace{display:grid;grid-template-columns:minmax(280px, 1fr) 1.2fr;gap:16px;align-items:start;}
+  @media(max-width:900px){ .set-workspace{grid-template-columns:1fr;} }
+
+  /* Arrangement picker (left) */
+  .arr-picker-list{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow-y:auto;padding-right:4px;}
+  .arr-picker-card{background:var(--ink-6);border:1px solid var(--ink-5);border-radius:var(--r10);padding:10px 12px;display:flex;align-items:center;gap:10px;transition:border-color 0.1s;}
+  .arr-picker-card:hover{border-color:var(--red-mid);}
+  .arr-picker-body{flex:1;min-width:0;}
+  .arr-picker-title{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .arr-picker-sub{font-size:11px;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .arr-picker-meta{font-size:10px;color:var(--ink-4);font-variant-numeric:tabular-nums;display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;}
+  .arr-picker-add{padding:5px 10px;border-radius:var(--r8);background:var(--red);color:white;font-size:11px;font-weight:600;border:none;cursor:pointer;font-family:inherit;flex-shrink:0;}
+  .arr-picker-add:hover{background:var(--red-d);}
+
+  /* Search input over the picker */
+  .arr-picker-search{position:relative;margin-bottom:8px;}
+  .arr-picker-search input{width:100%;padding:7px 28px 7px 11px;border:1px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:12px;color:var(--ink);}
+  .arr-picker-search input:focus{outline:none;border-color:var(--red);}
+
+  /* Filter chip (ready-only toggle) */
+  .arr-picker-filter{display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:11px;color:var(--ink-3);}
+  .arr-picker-filter input{accent-color:var(--red);}
+
+  .arr-picker-empty{padding:24px 16px;text-align:center;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);color:var(--ink-3);font-size:12px;line-height:1.5;}
+  .arr-picker-empty a{color:var(--red);font-weight:600;text-decoration:none;}
+
+  /* Set items (right) */
+  .set-items-list{display:flex;flex-direction:column;gap:8px;min-height:120px;}
+  .set-item-card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r10);padding:10px 12px;display:flex;align-items:flex-start;gap:10px;}
+  .set-item-num{width:24px;height:24px;border-radius:50%;background:var(--red);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .set-item-body{flex:1;min-width:0;}
+  .set-item-title{font-size:13px;font-weight:600;color:var(--ink);}
+  .set-item-meta{font-size:11px;color:var(--ink-4);margin-top:1px;font-variant-numeric:tabular-nums;}
+  .set-item-actions{display:flex;flex-direction:column;gap:2px;flex-shrink:0;}
+  .set-item-btn{width:24px;height:20px;border:none;background:none;color:var(--ink-4);cursor:pointer;font-size:11px;border-radius:4px;display:flex;align-items:center;justify-content:center;padding:0;}
+  .set-item-btn:hover{background:var(--ink-6);color:var(--ink-2);}
+  .set-item-btn-del:hover{background:var(--red-light);color:var(--red);}
+  .set-item-btn-practice{color:var(--red);font-size:10px;width:auto;padding:0 6px;text-decoration:none;}
+
+  .set-items-empty{padding:32px 16px;text-align:center;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);color:var(--ink-3);font-size:12px;line-height:1.6;}
+
+  /* Actions bar (same pattern as arrangement.html) */
+  .actions-bar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 18px;background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);position:sticky;bottom:16px;box-shadow:var(--shadow);}
+  .actions-summary{font-size:12px;color:var(--ink-3);}
+  .actions-summary strong{color:var(--ink);}
+  .actions-btns{display:flex;gap:8px;}
+  .rs-btn{padding:9px 16px;border-radius:var(--r10);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid var(--ink-5);background:var(--white);color:var(--ink-2);}
+  .rs-btn:hover{border-color:var(--ink-4);}
+  .rs-btn:disabled{opacity:0.4;cursor:not-allowed;}
+  .rs-btn-primary{background:var(--red);border-color:var(--red);color:white;}
+  .rs-btn-primary:hover:not(:disabled){background:var(--red-d);border-color:var(--red-d);}
+  .rs-btn-primary:disabled{background:var(--ink-5);border-color:var(--ink-5);}
+  .rs-btn-danger{background:var(--white);border-color:#fecdd3;color:#9F1239;}
+  .rs-btn-danger:hover{background:#FFE4E6;border-color:#fda4af;}
+
+  @media (max-width:640px){
+    .set-meta{grid-template-columns:1fr 1fr;}
+    .set-meta > :first-child{grid-column:1/-1;}
+    .set-meta > :last-child{grid-column:1/-1;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared pattern) ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <div class="topbar">
+    <a href="../dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">Set</div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <!-- Main -->
+    <div class="main">
+      <div class="page-body" style="max-width:1100px;margin:0 auto;padding:20px;">
+
+        <!-- Breadcrumb -->
+        <div class="set-crumb">
+          <a href="index.html">Rehearsal Studio</a>
+          <span>›</span>
+          <span id="crumb-set">Set</span>
+        </div>
+
+        <!-- Header -->
+        <div style="margin-bottom:16px;">
+          <div class="page-eyebrow" id="hdr-eyebrow">📅 Service set</div>
+          <div class="page-title" id="hdr-title" style="font-size:24px;margin:2px 0 0;">Loading…</div>
+          <div class="page-sub" id="hdr-sub" style="font-size:13px;color:var(--ink-3);margin-top:4px;"></div>
+        </div>
+
+        <!-- Error surface (hidden by default) -->
+        <div id="error-box" style="display:none;background:#FFE4E6;border:1px solid #fecdd3;color:#9F1239;padding:16px;border-radius:var(--r10);margin-bottom:16px;"></div>
+
+        <!-- Main content — hidden until load resolves -->
+        <div id="editor-body" style="display:none;">
+
+          <!-- Metadata -->
+          <div class="set-panel">
+            <h3>Set details</h3>
+            <div class="set-panel-sub">What and when. The date is used to sort sets on the Rehearsal Studio dashboard.</div>
+            <div class="set-meta">
+              <div>
+                <label>Set name</label>
+                <input type="text" id="set-name" placeholder="e.g. Sunday 27 April 2026">
+              </div>
+              <div>
+                <label>Service date</label>
+                <input type="date" id="set-date">
+              </div>
+              <div>
+                <label>Type</label>
+                <select id="set-type">
+                  <option value="sunday">Sunday</option>
+                  <option value="midweek">Mid-week</option>
+                  <option value="special">Special</option>
+                </select>
+              </div>
+              <div>
+                <label>Notes</label>
+                <input type="text" id="set-notes-short" placeholder="Optional short note">
+              </div>
+            </div>
+          </div>
+
+          <!-- Workspace: picker | set items -->
+          <div class="set-workspace">
+
+            <!-- Left: arrangement picker -->
+            <div class="set-panel" style="margin-bottom:0;">
+              <h3>Arrangements <span style="font-size:11px;font-weight:400;color:var(--ink-4);margin-left:6px;" id="arr-picker-count"></span></h3>
+              <div class="set-panel-sub">All arrangements in the library. Click <strong>+ Add</strong> to drop one into the set.</div>
+              <div class="arr-picker-search">
+                <input type="text" id="arr-picker-search" placeholder="Search arrangements…" oninput="renderPicker()" autocomplete="off">
+              </div>
+              <label class="arr-picker-filter">
+                <input type="checkbox" id="arr-picker-ready-only" checked onchange="renderPicker()">
+                Only show ready arrangements
+              </label>
+              <div id="arr-picker-container">
+                <div class="arr-picker-empty" id="arr-picker-empty" style="display:none;"></div>
+                <div class="arr-picker-list" id="arr-picker-list"></div>
+              </div>
+            </div>
+
+            <!-- Right: set items -->
+            <div class="set-panel" style="margin-bottom:0;">
+              <h3>This set <span style="font-size:11px;font-weight:400;color:var(--ink-4);margin-left:6px;" id="set-items-count"></span></h3>
+              <div class="set-panel-sub">Order for this service. Reorder with ↑↓, remove with ×, or open in Practice View for any arrangement.</div>
+              <div id="set-items-container">
+                <div class="set-items-empty" id="set-items-empty">
+                  <strong>No arrangements yet.</strong><br>
+                  Click <strong>+ Add</strong> on an arrangement to build the set.
+                </div>
+                <div class="set-items-list" id="set-items-list"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Actions bar -->
+          <div style="position:sticky;bottom:16px;padding:12px 0 0;max-width:1100px;margin:16px auto 0;">
+            <div class="actions-bar">
+              <div class="actions-summary" id="set-summary">Loading…</div>
+              <div class="actions-btns">
+                <button class="rs-btn rs-btn-danger" id="btn-delete-set" onclick="deleteSet()" style="display:none;">Delete set</button>
+                <button class="rs-btn" onclick="window.location.href='index.html'">Back to Rehearsal Studio</button>
+                <button class="rs-btn rs-btn-primary" id="btn-save" onclick="saveSet()">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="mob-nav-items" id="mob-nav"></div>
+  </nav>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="../shell.js"></script>
+<script>
+
+// ── STATE ────────────────────────────────────────────────────
+const state = {
+  set: null,              // rs_sets row
+  items: [],              // ordered: [{ arrangement_id, transition_note, position }]
+  arrangements: [],       // all arrangements in the library
+  songs: [],              // rs_songs lookup (title, artist)
+};
+
+// ── BOOT ─────────────────────────────────────────────────────
+function pageInit(){
+  buildSidebar();
+  loadSet();
+}
+
+function buildSidebar(){
+  const sb = document.getElementById('sidebar');
+  const modules = [
+    { id:'dashboard',  label:'Dashboard',         href:'../dashboard.html',   icon:'🏠' },
+    { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
+    { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
+    { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
+    { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
+    { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
+    { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
+  ];
+  if(COS.currentUser && COS.currentUser.level === 'admin'){
+    modules.push({ id:'admin', label:'Admin', href:'../admin.html', icon:'⚙️' });
+  }
+  const accessible = modules.filter(m => COS.hasAccess(m.id));
+  sb.innerHTML = `
+    <div class="nav-section">
+      <div class="nav-section-label">Modules</div>
+      ${accessible.map(m=>`
+        <a href="${m.href}" class="nav-item${m.active?' active':''}" style="text-decoration:none;">
+          <span style="font-size:13px;">${m.icon}</span>
+          ${m.label}
+        </a>`).join('')}
+    </div>`;
+  const mob = document.getElementById('mob-nav');
+  if(mob){
+    mob.innerHTML = accessible.slice(0, 5).map(m => `
+      <a href="${m.href}" class="mob-nav-btn${m.active?' active':''}" style="text-decoration:none;">
+        <span>${m.icon}</span>
+        <span>${m.label.split(' ')[0]}</span>
+      </a>`).join('');
+  }
+}
+
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadSet(){
+  const params = new URLSearchParams(location.search);
+  const setId = params.get('id');
+  if(!setId){
+    showError('No set ID in the URL.', 'Go back to the Rehearsal Studio and pick a set.');
+    return;
+  }
+
+  // Fetch set row
+  const sets = await sbFetch(`rs_sets?id=eq.${setId}`);
+  if(!sets || !sets[0]){
+    showError('Set not found', 'It may have been deleted. Go back to the Rehearsal Studio.');
+    return;
+  }
+  state.set = sets[0];
+
+  // Fetch items in order
+  const items = await sbFetch(`rs_set_arrangements?set_id=eq.${setId}&order=position.asc`);
+  state.items = (items || []).map(i => ({
+    arrangement_id: i.arrangement_id,
+    transition_note: i.transition_note || '',
+    position: i.position
+  }));
+
+  // Fetch arrangements library + songs (for picker)
+  const [arrangements, songs] = await Promise.all([
+    sbFetch('rs_arrangements?order=updated_at.desc'),
+    sbFetch('rs_songs?status=eq.active')
+  ]);
+  state.arrangements = arrangements || [];
+  state.songs = songs || [];
+
+  renderAll();
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function renderAll(){
+  if(!state.set) return;
+
+  // Show the editor body
+  document.getElementById('editor-body').style.display = 'block';
+
+  // Header
+  document.getElementById('crumb-set').textContent = state.set.name || 'Set';
+  document.getElementById('hdr-title').textContent = state.set.name || 'Untitled set';
+  document.getElementById('hdr-sub').textContent = formatSetHeaderSub(state.set);
+
+  // Metadata form
+  document.getElementById('set-name').value = state.set.name || '';
+  document.getElementById('set-date').value = state.set.service_date || '';
+  document.getElementById('set-type').value = state.set.service_type || 'sunday';
+  document.getElementById('set-notes-short').value = state.set.notes || '';
+
+  // Show delete button for admin/lead
+  if(COS.currentUser && (COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead')){
+    document.getElementById('btn-delete-set').style.display = '';
+  }
+
+  renderPicker();
+  renderSetItems();
+  updateSummary();
+}
+
+function formatSetHeaderSub(set){
+  const bits = [];
+  if(set.service_date){
+    try { bits.push(COS.fmtDate(set.service_date)); } catch(e){ bits.push(set.service_date); }
+  }
+  if(set.service_type) bits.push(capitalise(set.service_type));
+  return bits.join(' · ');
+}
+
+function renderPicker(){
+  const container = document.getElementById('arr-picker-list');
+  const empty = document.getElementById('arr-picker-empty');
+  const count = document.getElementById('arr-picker-count');
+  const q = (document.getElementById('arr-picker-search').value || '').toLowerCase().trim();
+  const readyOnly = document.getElementById('arr-picker-ready-only').checked;
+
+  let arrangements = state.arrangements.slice();
+
+  // Archived arrangements never show — they're out of rotation
+  arrangements = arrangements.filter(a => a.status !== 'archived');
+
+  // Ready-only filter
+  if(readyOnly) arrangements = arrangements.filter(a => a.status === 'ready');
+
+  // Text search: match arrangement name OR song title
+  if(q){
+    arrangements = arrangements.filter(a => {
+      const song = state.songs.find(s => s.id === a.song_id);
+      return (a.name || '').toLowerCase().includes(q) ||
+             (song && (song.title || '').toLowerCase().includes(q));
+    });
+  }
+
+  count.textContent = q || readyOnly
+    ? `· ${arrangements.length} of ${state.arrangements.length}`
+    : `· ${state.arrangements.length}`;
+
+  if(arrangements.length === 0){
+    container.style.display = 'none';
+    empty.style.display = 'block';
+    if(state.arrangements.length === 0){
+      empty.innerHTML = 'No arrangements exist yet. <a href="index.html">Create one in the Rehearsal Studio →</a>';
+    } else {
+      empty.textContent = 'No arrangements match your filters.';
+    }
+    return;
+  }
+  container.style.display = 'flex';
+  empty.style.display = 'none';
+
+  container.innerHTML = arrangements.map(a => {
+    const song = state.songs.find(s => s.id === a.song_id);
+    const songTitle = song ? song.title : '(unknown song)';
+    const meta = [];
+    if(a.key) meta.push(a.key);
+    if(a.bpm) meta.push(a.bpm + ' bpm');
+    if(a.status && a.status !== 'ready') meta.push(a.status);
+    return `
+      <div class="arr-picker-card" data-arr-id="${a.id}">
+        <div class="arr-picker-body">
+          <div class="arr-picker-title">${escapeHtml(a.name || 'Untitled')}</div>
+          <div class="arr-picker-sub">${escapeHtml(songTitle)}</div>
+          ${meta.length ? `<div class="arr-picker-meta">${meta.map(m=>`<span>${escapeHtml(m)}</span>`).join(' · ')}</div>` : ''}
+        </div>
+        <button class="arr-picker-add" onclick="addArrangementToSet('${a.id}')">+ Add</button>
+      </div>`;
+  }).join('');
+}
+
+function renderSetItems(){
+  const container = document.getElementById('set-items-list');
+  const empty = document.getElementById('set-items-empty');
+  const count = document.getElementById('set-items-count');
+
+  if(state.items.length === 0){
+    container.style.display = 'none';
+    empty.style.display = 'block';
+    count.textContent = '';
+    return;
+  }
+
+  container.style.display = 'flex';
+  empty.style.display = 'none';
+  count.textContent = `· ${state.items.length} arrangement${state.items.length===1?'':'s'}`;
+
+  container.innerHTML = state.items.map((item, i) => {
+    const arr = state.arrangements.find(a => a.id === item.arrangement_id);
+    if(!arr){
+      // Arrangement was deleted after being added to the set — render a
+      // degraded placeholder so the user can still remove the stale slot
+      return `
+        <div class="set-item-card">
+          <div class="set-item-num">${i + 1}</div>
+          <div class="set-item-body">
+            <div class="set-item-title" style="color:var(--ink-4);">(arrangement deleted)</div>
+            <div class="set-item-meta">This arrangement no longer exists — remove it from the set.</div>
+          </div>
+          <div class="set-item-actions">
+            <button class="set-item-btn" onclick="moveSetItem(${i}, -1)" title="Move up" ${i === 0 ? 'disabled' : ''}>↑</button>
+            <button class="set-item-btn" onclick="moveSetItem(${i}, 1)" title="Move down" ${i === state.items.length - 1 ? 'disabled' : ''}>↓</button>
+            <button class="set-item-btn set-item-btn-del" onclick="removeSetItem(${i})" title="Remove">×</button>
+          </div>
+        </div>`;
+    }
+    const song = state.songs.find(s => s.id === arr.song_id);
+    const songTitle = song ? song.title : '(unknown song)';
+    const meta = [];
+    if(arr.key) meta.push(arr.key);
+    if(arr.bpm) meta.push(arr.bpm + ' bpm');
+    return `
+      <div class="set-item-card" data-item-idx="${i}">
+        <div class="set-item-num">${i + 1}</div>
+        <div class="set-item-body">
+          <div class="set-item-title">${escapeHtml(arr.name || 'Untitled')}</div>
+          <div class="set-item-meta">${escapeHtml(songTitle)}${meta.length ? ' · ' + meta.join(' · ') : ''}</div>
+        </div>
+        <div class="set-item-actions">
+          <a class="set-item-btn set-item-btn-practice" href="practice.html?arrangement_id=${arr.id}" title="Open in Practice View">▶</a>
+          <button class="set-item-btn" onclick="moveSetItem(${i}, -1)" title="Move up" ${i === 0 ? 'disabled' : ''}>↑</button>
+          <button class="set-item-btn" onclick="moveSetItem(${i}, 1)" title="Move down" ${i === state.items.length - 1 ? 'disabled' : ''}>↓</button>
+          <button class="set-item-btn set-item-btn-del" onclick="removeSetItem(${i})" title="Remove">×</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function updateSummary(){
+  const el = document.getElementById('set-summary');
+  if(!el) return;
+  const parts = [];
+  parts.push(`<strong>${state.items.length}</strong> arrangement${state.items.length===1?'':'s'}`);
+  el.innerHTML = parts.join(' · ');
+}
+
+// ── MUTATIONS ────────────────────────────────────────────────
+function addArrangementToSet(arrangementId){
+  state.items.push({
+    arrangement_id: arrangementId,
+    transition_note: '',
+    position: state.items.length
+  });
+  renderSetItems();
+  updateSummary();
+  // Scroll new item into view
+  setTimeout(() => {
+    const cards = document.querySelectorAll('#set-items-list .set-item-card');
+    const last = cards[cards.length - 1];
+    if(last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 50);
+}
+
+function removeSetItem(idx){
+  state.items.splice(idx, 1);
+  state.items.forEach((it, i) => { it.position = i; });
+  renderSetItems();
+  updateSummary();
+}
+
+function moveSetItem(idx, delta){
+  const target = idx + delta;
+  if(target < 0 || target >= state.items.length) return;
+  const [item] = state.items.splice(idx, 1);
+  state.items.splice(target, 0, item);
+  state.items.forEach((it, i) => { it.position = i; });
+  renderSetItems();
+  updateSummary();
+}
+
+// ── SAVE ─────────────────────────────────────────────────────
+let _saving = false;
+
+async function saveSet(){
+  if(_saving) return;
+  const btn = document.getElementById('btn-save');
+  const name = document.getElementById('set-name').value.trim();
+  const date = document.getElementById('set-date').value;
+  if(!name){ COS.toast('Name is required'); return; }
+  if(!date){ COS.toast('Service date is required'); return; }
+
+  _saving = true;
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    const setId = state.set.id;
+
+    // 1. Update metadata
+    const meta = {
+      name,
+      service_date: date,
+      service_type: document.getElementById('set-type').value,
+      notes: document.getElementById('set-notes-short').value.trim() || null
+    };
+    const updRes = await sbPatch('rs_sets', `id=eq.${setId}`, meta);
+    if(!updRes) throw new Error('Failed to update set metadata');
+
+    // 2. Replace items atomically
+    //
+    // Same delete-then-insert pattern as arrangement builder. If save fails
+    // between delete and insert, items are temporarily missing. Next
+    // successful save restores. Not ideal but consistent.
+    await sbDelete('rs_set_arrangements', `set_id=eq.${setId}`);
+    if(state.items.length > 0){
+      const rows = state.items.map((it, i) => ({
+        set_id: setId,
+        arrangement_id: it.arrangement_id,
+        position: i,
+        transition_note: it.transition_note && it.transition_note.trim() ? it.transition_note.trim() : null
+      }));
+      const insRes = await sbPost('rs_set_arrangements', rows);
+      if(!insRes) throw new Error('Failed to save set items');
+    }
+
+    state.set = { ...state.set, ...meta };
+    COS.toast('✓ Set saved');
+    setTimeout(() => { window.location.href = 'index.html'; }, 900);
+  } catch(err){
+    console.error('saveSet failed:', err);
+    COS.toast('Error: ' + err.message);
+    _saving = false;
+    btn.disabled = false;
+    btn.textContent = 'Save';
+  }
+}
+
+async function deleteSet(){
+  if(!state.set) return;
+  if(!(COS.currentUser && (COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead'))){
+    COS.toast('Only admins and leads can delete sets');
+    return;
+  }
+  const confirmMsg = `Delete "${state.set.name}"? This removes the set and its arrangements list. Arrangements themselves are NOT deleted.`;
+  if(!confirm(confirmMsg)) return;
+
+  try {
+    // Cascade in the DB handles rs_set_arrangements automatically
+    const ok = await sbDelete('rs_sets', `id=eq.${state.set.id}`);
+    if(!ok) throw new Error('Delete failed');
+    COS.toast('Set deleted');
+    setTimeout(() => { window.location.href = 'index.html'; }, 600);
+  } catch(err){
+    console.error('deleteSet failed:', err);
+    COS.toast('Error: ' + err.message);
+  }
+}
+
+// ── ERROR STATE ──────────────────────────────────────────────
+function showError(title, sub){
+  const box = document.getElementById('error-box');
+  box.innerHTML = `<strong>${escapeHtml(title)}</strong><br>${escapeHtml(sub)}`;
+  box.style.display = 'block';
+  document.getElementById('editor-body').style.display = 'none';
+  document.getElementById('hdr-title').textContent = 'Error';
+  document.getElementById('hdr-sub').textContent = '';
+}
+
+// ── UTILS ────────────────────────────────────────────────────
+function capitalise(s){
+  if(!s) return '';
+  return s[0].toUpperCase() + s.slice(1);
+}
+
+function escapeHtml(s){
+  return (s || '').toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+COS.init('rehearsal');
+</script>
+
+</body>
+</html>
