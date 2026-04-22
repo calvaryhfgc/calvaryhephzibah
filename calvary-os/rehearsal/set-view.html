@@ -44,6 +44,11 @@
   .sv-item-meta span{display:inline-flex;align-items:center;}
   .sv-item-transition{font-size:13px;color:var(--ink-2);margin-top:8px;padding:8px 10px;background:var(--ink-6);border-radius:var(--r8);font-style:italic;line-height:1.4;}
   .sv-item-transition::before{content:'📝 ';font-style:normal;margin-right:2px;}
+
+  /* Own-practice chip — small green pill showing the logged-in user's
+     practice count this week. Positive reinforcement, not a comparison
+     against others (that data deliberately isn't shown on this page). */
+  .sv-item-practice{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#065F46;background:#D1FAE5;padding:2px 8px;border-radius:100px;margin-top:6px;align-self:flex-start;}
   .sv-rehearse{flex-shrink:0;padding:11px 18px;border-radius:var(--r10);background:var(--red);color:white;font-weight:700;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;align-self:center;}
   .sv-rehearse:hover{background:var(--red-d);}
   .sv-rehearse-icon{font-size:11px;}
@@ -187,6 +192,11 @@ const state = {
   items: [],
   arrangements: [],
   songs: [],
+  // Per-arrangement practice counts for THE CURRENT USER only, last 7 days.
+  // Team view deliberately shows only the logged-in user's own counts —
+  // peer-visible counts live on the editor (set.html) for the worship
+  // leader to monitor.
+  practiceCounts: Object.create(null),   // { arrangement_id → count }
 };
 
 // ── BOOT ─────────────────────────────────────────────────────
@@ -256,11 +266,35 @@ async function loadSetView(){
     state.arrangements = arrangements || [];
     state.songs = songs || [];
 
+    // Fetch the current user's own practice sessions for this set's
+    // arrangements, last 7 days. Only THIS user — we deliberately don't
+    // show peer counts here (that's a set.html editor concern).
+    if(state.items.length > 0 && COS.currentUser){
+      await loadOwnPracticeCounts();
+    }
+
     renderAll();
   } catch(err){
     console.error('loadSetView failed:', err);
     showError('Couldn\'t load the set', 'Check your connection and try again. If this keeps happening, let the worship leader know.');
   }
+}
+
+async function loadOwnPracticeCounts(){
+  const arrIds = state.items.map(it => it.arrangement_id).filter(Boolean);
+  if(arrIds.length === 0) return;
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+  const idList = arrIds.join(',');
+  const userName = encodeURIComponent(COS.currentUser.name);
+  const sessions = await sbFetch(
+    `rs_practice_sessions?arrangement_id=in.(${idList})&user_name=eq.${userName}&completed_at=gte.${weekAgo}&select=arrangement_id`
+  );
+  // Count per arrangement
+  const counts = Object.create(null);
+  for(const s of (sessions || [])){
+    counts[s.arrangement_id] = (counts[s.arrangement_id] || 0) + 1;
+  }
+  state.practiceCounts = counts;
 }
 
 // ── RENDER ───────────────────────────────────────────────────
@@ -345,6 +379,13 @@ function renderItems(){
     const metaBits = [];
     if(arr.key) metaBits.push(`🎹 Key ${arr.key}`);
     if(arr.bpm) metaBits.push(`🥁 ${arr.bpm} bpm`);
+    // Own practice count this week — only shown when > 0 so the page
+    // doesn't nag users who haven't practised yet. Deliberately no
+    // count when zero, to avoid a page of "0 practices" reminders.
+    const practiceCount = state.practiceCounts[arr.id] || 0;
+    const practiceChip = practiceCount > 0
+      ? `<div class="sv-item-practice">✓ ${practiceCount} practice${practiceCount===1?'':'s'} this week</div>`
+      : '';
     return `
       <div class="sv-item">
         <div class="sv-item-num">${i + 1}</div>
@@ -352,6 +393,7 @@ function renderItems(){
           <div class="sv-item-song">${escapeHtml(songTitle)}</div>
           <div class="sv-item-arr">${escapeHtml(arr.name || 'Untitled arrangement')}</div>
           ${metaBits.length ? `<div class="sv-item-meta">${metaBits.map(m => `<span>${escapeHtml(m)}</span>`).join('')}</div>` : ''}
+          ${practiceChip}
           ${item.transition_note ? `<div class="sv-item-transition">${escapeHtml(item.transition_note)}</div>` : ''}
         </div>
         <a class="sv-rehearse" href="practice.html?arrangement_id=${arr.id}">
