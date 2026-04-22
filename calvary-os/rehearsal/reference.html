@@ -109,6 +109,27 @@
   #waveform{width:100%;min-height:120px;overflow-x:auto;}
   #wave-grid-canvas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
 
+  /* Align mode: the overlay captures drag events to shift the beat offset.
+     When enabled, the canvas becomes interactive (above the wavesurfer
+     container) and the waveform gets a coloured border so the user knows
+     they're in a special mode. */
+  .wave-stack.align-mode #wave-grid-canvas{pointer-events:auto;cursor:ew-resize;}
+  .wave-stack.align-mode{outline:2px solid #FBBF24;outline-offset:-2px;}
+  .wave-stack.align-mode::after{content:'ALIGN MODE · drag left/right to shift beat 1';position:absolute;top:4px;right:8px;font-size:10px;font-weight:700;color:#FBBF24;background:rgba(0,0,0,0.7);padding:3px 8px;border-radius:4px;letter-spacing:0.5px;pointer-events:none;z-index:2;}
+
+  /* Beat-align toolbar block — nudge buttons + offset readout + metronome */
+  .wave-beat-block{display:inline-flex;align-items:center;gap:4px;padding:4px 6px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;}
+  .wave-beat-block .wave-beat-label{font-size:10px;color:rgba(255,255,255,0.5);margin-right:4px;text-transform:uppercase;letter-spacing:0.5px;}
+  .wave-nudge-btn{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);font-family:inherit;font-size:11px;padding:4px 8px;border-radius:5px;cursor:pointer;line-height:1;min-width:30px;}
+  .wave-nudge-btn:hover{border-color:rgba(255,255,255,0.4);color:white;}
+  .wave-offset-readout{font-family:monospace;font-size:11px;color:#FBBF24;padding:0 8px;min-width:60px;text-align:center;font-weight:600;}
+  .wave-align-toggle{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);font-family:inherit;font-size:11px;padding:4px 10px;border-radius:5px;cursor:pointer;line-height:1;}
+  .wave-align-toggle:hover{border-color:rgba(255,255,255,0.4);color:white;}
+  .wave-align-toggle.active{background:#FBBF24;border-color:#FBBF24;color:#0A0A0A;font-weight:700;}
+  .wave-metro-toggle{background:transparent;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);font-family:inherit;font-size:11px;padding:4px 10px;border-radius:5px;cursor:pointer;line-height:1;}
+  .wave-metro-toggle:hover{border-color:rgba(255,255,255,0.4);color:white;}
+  .wave-metro-toggle.active{background:var(--red);border-color:var(--red);color:white;font-weight:600;}
+
   .wave-actions{display:flex;align-items:center;gap:12px;padding:10px 12px;background:#0A0A0A;border-radius:0 0 var(--r12) var(--r12);color:rgba(255,255,255,0.7);margin-bottom:14px;flex-wrap:wrap;}
   .wave-hint{font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5;}
   .wave-hint code{background:rgba(255,255,255,0.1);padding:1px 6px;border-radius:4px;font-size:10px;color:rgba(255,255,255,0.7);}
@@ -316,6 +337,22 @@
                 <span>Loop while editing</span>
               </label>
               <div class="wave-sep"></div>
+
+              <!-- Beat alignment block: nudge + readout + align mode + metronome.
+                   Lets the user align the beat grid to the actual downbeat of
+                   the recording, then verify with an audible click. -->
+              <div class="wave-beat-block" title="Align beat 1 to the actual downbeat of the recording. Tip: hold Shift and drag on the waveform for quick alignment.">
+                <span class="wave-beat-label">Beat 1</span>
+                <button class="wave-nudge-btn" onclick="nudgeOffset(-0.1)" title="−100ms (or Shift+← in align mode)">−−</button>
+                <button class="wave-nudge-btn" onclick="nudgeOffset(-0.01)" title="−10ms (or ← in align mode)">−</button>
+                <span class="wave-offset-readout" id="wave-offset-readout">0 ms</span>
+                <button class="wave-nudge-btn" onclick="nudgeOffset(0.01)" title="+10ms (or → in align mode)">+</button>
+                <button class="wave-nudge-btn" onclick="nudgeOffset(0.1)" title="+100ms (or Shift+→ in align mode)">++</button>
+                <button class="wave-align-toggle" id="btn-align-mode" onclick="toggleAlignMode()" title="Enable drag-to-align: click and drag on the waveform to shift beat 1. Arrow keys also work when active. (Alternative: hold Shift and drag without toggling.)">⇔ Drag mode</button>
+              </div>
+              <button class="wave-metro-toggle" id="btn-metronome" onclick="toggleMetronome()" title="Play an audible click on every beat while the waveform plays. Use to verify alignment.">🎵 Click</button>
+
+              <div class="wave-sep"></div>
               <label class="wave-zoom">
                 <span>Zoom</span>
                 <input type="range" id="wave-zoom" min="10" max="400" value="40" step="10" oninput="onZoomChange(this.value)">
@@ -323,7 +360,7 @@
             </div>
 
             <!-- Waveform + overlay -->
-            <div class="wave-stack">
+            <div class="wave-stack" id="wave-stack">
               <div id="waveform"></div>
               <canvas id="wave-grid-canvas"></canvas>
             </div>
@@ -415,7 +452,20 @@ const state = {
   existingReference: null,   // rs_references row when editMode
   existingStems: [],         // rs_stems rows when editMode
   existingSections: [],      // rs_sections rows when editMode (used as initial state.sections)
-  snap: true                 // snap region edges to bar lines (wave editor)
+  snap: true,                // snap region edges to bar lines (wave editor)
+
+  // Beat alignment
+  // beatOffset: seconds to offset the beat grid by. Allows aligning
+  //   bar lines to the actual downbeat of the recording. Persisted
+  //   to rs_references.beat_offset_seconds.
+  // alignMode: when true, clicking + dragging on the waveform shifts
+  //   the offset instead of seeking. Mutually exclusive with seek.
+  // metronome: Web Audio scheduler state — see metronome section.
+  beatOffset: 0,
+  alignMode: false,
+  _offsetSaveTimer: null,    // debounced offset save
+  metronomeEnabled: false,
+  _metro: null               // { ctx, gainNode, nextTickAt, tickIdx, schedulerTimer } when running
 };
 
 // ── BOOT ─────────────────────────────────────────────────────
@@ -493,6 +543,12 @@ async function enterEditMode(referenceId){
   if(refs[0].detected_key) document.getElementById('meta-key').value = refs[0].detected_key;
   if(refs[0].detected_bpm) document.getElementById('meta-bpm').value = refs[0].detected_bpm;
   if(refs[0].duration_seconds) document.getElementById('meta-duration').value = Math.round(refs[0].duration_seconds);
+
+  // Load persisted beat offset (new column; defaults to 0 for older rows)
+  if(refs[0].beat_offset_seconds !== undefined && refs[0].beat_offset_seconds !== null){
+    state.beatOffset = Number(refs[0].beat_offset_seconds) || 0;
+  }
+  renderOffsetReadout();
 
   // Swap Audio Files panel for an "existing reference" summary
   renderExistingReferencePanel();
@@ -788,6 +844,14 @@ function setupWaveEditor(source){
     ws.load(source);
   }
 
+  // Shift+drag on the waveform = align offset shift (alternative to
+  // toggle-align-mode + drag). We attach in capture phase on the
+  // #waveform container so we beat wavesurfer's own pointerdown handler
+  // to the event. If shift is held, we capture the pointer and handle
+  // the drag ourselves; otherwise we let it bubble normally to
+  // wavesurfer for seeking.
+  wireShiftDragHandlers();
+
   // Event wiring
   ws.on('ready', () => {
     const dur = ws.getDuration();
@@ -813,9 +877,27 @@ function setupWaveEditor(source){
     // seek back to start when we cross the end.
     maintainLoop(t);
   });
-  ws.on('play',  () => { document.getElementById('wave-play-icon').textContent = '❚❚'; });
-  ws.on('pause', () => { document.getElementById('wave-play-icon').textContent = '▶'; });
-  ws.on('finish', () => { document.getElementById('wave-play-icon').textContent = '▶'; });
+  ws.on('play',  () => {
+    document.getElementById('wave-play-icon').textContent = '❚❚';
+    // Start metronome scheduling if user has it enabled
+    if(state.metronomeEnabled) startMetronome();
+  });
+  ws.on('pause', () => {
+    document.getElementById('wave-play-icon').textContent = '▶';
+    stopMetronome();
+  });
+  ws.on('finish', () => {
+    document.getElementById('wave-play-icon').textContent = '▶';
+    stopMetronome();
+  });
+  ws.on('seeking', () => {
+    // Seeking while the metronome is running invalidates its schedule —
+    // the "lastScheduledBeatN" counter no longer matches the new position.
+    // Restart cleanly from the new position.
+    if(state.metronomeEnabled && state._metro && ws.isPlaying()){
+      restartMetronomeFromNow();
+    }
+  });
   ws.on('zoom', () => { drawBarGrid(); });
   ws.on('scroll', () => { drawBarGrid(); });
   ws.on('error', (err) => {
@@ -1121,48 +1203,438 @@ function drawBarGrid(){
   const dur = ws.getDuration();
   if(!dur) return;
 
-  // Draw bar lines (strong) and beat lines (subtle)
-  for(let t = 0; t <= dur; t += secPerBeat){
+  const offset = state.beatOffset || 0;
+
+  // Grid colours — much stronger than before to be readable against a
+  // busy waveform. Bar lines are pronounced white; beat lines are quieter.
+  // Beat-1 of bar 1 (the anchor downbeat) gets a red tint so the user can
+  // see where alignment is pointing.
+  const BEAT_COLOR = 'rgba(255,255,255,0.14)';
+  const BAR_COLOR  = 'rgba(255,255,255,0.45)';
+  const ANCHOR_COLOR = 'rgba(251,191,36,0.85)';  // beat 1 of bar 1 — the "the 1"
+  const LABEL_COLOR = 'rgba(255,255,255,0.7)';
+
+  // Walk beats from the FIRST beat at or after time 0, accounting for
+  // offset. Beats that fall before t=0 (negative offset pushed them
+  // off-screen-left) are skipped; they'd be off-canvas anyway.
+  //
+  // Mathematically: beat N occurs at time = offset + N * secPerBeat.
+  // We want to iterate N such that this time is within [0, dur].
+  const firstBeatN = Math.ceil(-offset / secPerBeat);
+  const lastBeatN = Math.floor((dur - offset) / secPerBeat);
+
+  for(let n = firstBeatN; n <= lastBeatN; n++){
+    const t = offset + n * secPerBeat;
     const x = (t * pxPerSec) - scrollLeft;
-    if(x < 0 || x > w) continue;
-    const isBar = Math.abs((t / secPerBar) - Math.round(t / secPerBar)) < 0.01;
+    if(x < -2 || x > w + 2) continue;
+
+    // Is this beat the start of a bar? (N is relative to the anchor beat
+    // at offset; a bar starts every beatsPerBar beats from the anchor.)
+    const isBar = (n % beatsPerBar === 0);
+    // Is this the anchor beat — beat 1 of bar 1 — the "the 1"?
+    const isAnchor = (n === 0);
+
     ctx.beginPath();
     ctx.moveTo(x, 0);
     ctx.lineTo(x, h);
-    ctx.strokeStyle = isBar ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.07)';
-    ctx.lineWidth = 1;
+    if(isAnchor){
+      ctx.strokeStyle = ANCHOR_COLOR;
+      ctx.lineWidth = 2;
+    } else if(isBar){
+      ctx.strokeStyle = BAR_COLOR;
+      ctx.lineWidth = 1.5;
+    } else {
+      ctx.strokeStyle = BEAT_COLOR;
+      ctx.lineWidth = 1;
+    }
     ctx.stroke();
+
     if(isBar){
-      const barNum = Math.round(t / secPerBar) + 1;
-      ctx.fillStyle = 'rgba(255,255,255,0.45)';
-      ctx.font = '10px monospace';
-      ctx.fillText(barNum, x + 3, 12);
+      const barNum = Math.floor(n / beatsPerBar) + 1;
+      ctx.fillStyle = isAnchor ? ANCHOR_COLOR : LABEL_COLOR;
+      ctx.font = isAnchor ? 'bold 11px monospace' : '10px monospace';
+      ctx.fillText(barNum, x + 4, 14);
     }
   }
 }
 
-// Snap a time (in seconds) to the nearest bar boundary, given current BPM
+// Snap a time (in seconds) to the nearest bar boundary, accounting for
+// the user-configured beat offset. The grid's bar boundaries fall at
+// offset + N * secPerBar, so snap subtracts the offset, rounds to a
+// multiple of secPerBar, then adds the offset back.
 function snapToBar(t){
   const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
   if(!bpm) return t;
   const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
   const secPerBar = (60 / bpm) * beatsPerBar;
-  return Math.round(t / secPerBar) * secPerBar;
+  const offset = state.beatOffset || 0;
+  return Math.round((t - offset) / secPerBar) * secPerBar + offset;
 }
 
-// Snap both edges of a region to bar boundaries, keeping minimum 1-bar size
+// Snap both edges of a region to bar boundaries, keeping minimum 1-bar size.
+// Same offset treatment as snapToBar.
 function snapRegionToBars(start, end){
   const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
   if(!bpm) return { start, end };
   const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
   const secPerBar = (60 / bpm) * beatsPerBar;
-  const snappedStart = Math.round(start / secPerBar) * secPerBar;
-  const snappedEnd = Math.round(end / secPerBar) * secPerBar;
+  const offset = state.beatOffset || 0;
+  const snappedStart = Math.round((start - offset) / secPerBar) * secPerBar + offset;
+  const snappedEnd = Math.round((end - offset) / secPerBar) * secPerBar + offset;
   // Guard: minimum 1 bar size
   if(snappedEnd - snappedStart < secPerBar){
     return { start: snappedStart, end: snappedStart + secPerBar };
   }
   return { start: snappedStart, end: snappedEnd };
+}
+
+// ── BEAT OFFSET ──────────────────────────────────────────────
+//
+// The beat grid, the snap functions, and the metronome all read
+// state.beatOffset. Changing it requires: (1) redraw the grid,
+// (2) update the numeric readout, (3) debounce a save to
+// rs_references.beat_offset_seconds. Section times don't change —
+// the offset affects the grid overlay, not the waveform's timeline.
+
+// Nudge the offset by a delta (in seconds). Clamp to +/- 10s to
+// prevent nonsense values — in practice users will want < 2s range.
+function nudgeOffset(deltaSec){
+  setBeatOffset((state.beatOffset || 0) + deltaSec);
+}
+
+function setBeatOffset(sec){
+  const clamped = Math.max(-10, Math.min(10, Number(sec) || 0));
+  state.beatOffset = clamped;
+  renderOffsetReadout();
+  drawBarGrid();
+  // Rebuild metronome schedule if it was playing, so new clicks fire
+  // at the updated beat positions
+  if(state.metronomeEnabled && state._metro && ws && ws.isPlaying()){
+    restartMetronomeFromNow();
+  }
+  scheduleOffsetSave();
+}
+
+function renderOffsetReadout(){
+  const el = document.getElementById('wave-offset-readout');
+  if(!el) return;
+  const ms = Math.round((state.beatOffset || 0) * 1000);
+  el.textContent = (ms >= 0 ? '+' : '') + ms + ' ms';
+}
+
+// Debounced save: writes the offset to rs_references after 500ms
+// of no further changes. Only meaningful in edit mode (we have a
+// reference row to patch).
+function scheduleOffsetSave(){
+  if(!state.editMode || !state.existingReference) return;
+  if(state._offsetSaveTimer) clearTimeout(state._offsetSaveTimer);
+  state._offsetSaveTimer = setTimeout(async () => {
+    state._offsetSaveTimer = null;
+    try {
+      await sbPatch('rs_references', `id=eq.${state.existingReference.id}`,
+                    { beat_offset_seconds: state.beatOffset });
+    } catch(err){
+      console.warn('Failed to save beat offset:', err);
+    }
+  }, 500);
+}
+
+// ── ALIGN MODE ───────────────────────────────────────────────
+//
+// When enabled, the grid canvas captures pointer events instead of
+// passing them through to wavesurfer. Clicking + dragging left/right
+// shifts state.beatOffset live — live-updating the grid as you drag.
+// The user's mental model: "I'm grabbing the grid and sliding it
+// relative to the wave."
+//
+// Sign convention: dragging RIGHT makes beats appear later in time
+// (positive offset increase), which visually shifts the grid rightward.
+
+let _alignDrag = null;  // { startX, startOffset } while dragging
+
+function toggleAlignMode(){
+  state.alignMode = !state.alignMode;
+  const stack = document.getElementById('wave-stack');
+  const btn = document.getElementById('btn-align-mode');
+  if(state.alignMode){
+    stack.classList.add('align-mode');
+    btn.classList.add('active');
+    wireAlignDragHandlers();
+  } else {
+    stack.classList.remove('align-mode');
+    btn.classList.remove('active');
+    unwireAlignDragHandlers();
+  }
+}
+
+function wireAlignDragHandlers(){
+  const canvas = document.getElementById('wave-grid-canvas');
+  if(!canvas) return;
+  canvas.addEventListener('pointerdown', onAlignPointerDown);
+  canvas.addEventListener('pointermove', onAlignPointerMove);
+  canvas.addEventListener('pointerup',   onAlignPointerUp);
+  canvas.addEventListener('pointercancel', onAlignPointerUp);
+}
+
+function unwireAlignDragHandlers(){
+  const canvas = document.getElementById('wave-grid-canvas');
+  if(!canvas) return;
+  canvas.removeEventListener('pointerdown', onAlignPointerDown);
+  canvas.removeEventListener('pointermove', onAlignPointerMove);
+  canvas.removeEventListener('pointerup',   onAlignPointerUp);
+  canvas.removeEventListener('pointercancel', onAlignPointerUp);
+  _alignDrag = null;
+}
+
+function onAlignPointerDown(e){
+  if(!ws) return;
+  e.preventDefault();
+  _alignDrag = {
+    startX: e.clientX,
+    startOffset: state.beatOffset || 0
+  };
+  e.currentTarget.setPointerCapture(e.pointerId);
+}
+
+function onAlignPointerMove(e){
+  if(!_alignDrag || !ws) return;
+  e.preventDefault();
+  const deltaX = e.clientX - _alignDrag.startX;
+  const pxPerSec = ws.options.minPxPerSec || 40;
+  const deltaSec = deltaX / pxPerSec;
+  setBeatOffset(_alignDrag.startOffset + deltaSec);
+}
+
+function onAlignPointerUp(e){
+  if(!_alignDrag) return;
+  _alignDrag = null;
+  try { e.currentTarget.releasePointerCapture(e.pointerId); } catch(err){}
+}
+
+// ── SHIFT+DRAG (always-on alternative to align mode) ─────────
+//
+// Listens on #waveform in the CAPTURE phase so we see pointerdown
+// BEFORE wavesurfer's handler does. If Shift is held, we intercept
+// and take over the drag; otherwise we stay out of the way and
+// wavesurfer handles the seek as normal.
+//
+// This exists alongside the ⇔ Drag mode toggle for users who'd
+// rather use a modifier key than a mode button. Power-user path;
+// the toggle remains the discoverable primary.
+
+let _shiftDrag = null;  // { startX, startOffset } while shift-dragging
+
+function wireShiftDragHandlers(){
+  const waveEl = document.getElementById('waveform');
+  if(!waveEl) return;
+  // Capture phase = true. Our handler fires before any bubbling
+  // listeners (including wavesurfer's internal handlers on its own
+  // shadow DOM elements).
+  waveEl.addEventListener('pointerdown', onShiftPointerDown, true);
+}
+
+function onShiftPointerDown(e){
+  // Only engage if Shift is held. Without shift, let wavesurfer seek.
+  if(!e.shiftKey) return;
+  // Don't engage if regular align mode is already active — the canvas
+  // overlay handles that case.
+  if(state.alignMode) return;
+  if(!ws) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  _shiftDrag = {
+    startX: e.clientX,
+    startOffset: state.beatOffset || 0,
+    pointerId: e.pointerId
+  };
+
+  // Global listeners while drag is in progress. Attach to window so we
+  // keep receiving moves even if pointer leaves the waveform element.
+  window.addEventListener('pointermove', onShiftPointerMove, true);
+  window.addEventListener('pointerup',   onShiftPointerUp,   true);
+  window.addEventListener('pointercancel', onShiftPointerUp, true);
+}
+
+function onShiftPointerMove(e){
+  if(!_shiftDrag || !ws) return;
+  e.preventDefault();
+  const deltaX = e.clientX - _shiftDrag.startX;
+  const pxPerSec = ws.options.minPxPerSec || 40;
+  const deltaSec = deltaX / pxPerSec;
+  setBeatOffset(_shiftDrag.startOffset + deltaSec);
+}
+
+function onShiftPointerUp(e){
+  if(!_shiftDrag) return;
+  _shiftDrag = null;
+  window.removeEventListener('pointermove', onShiftPointerMove, true);
+  window.removeEventListener('pointerup',   onShiftPointerUp,   true);
+  window.removeEventListener('pointercancel', onShiftPointerUp, true);
+}
+
+// ── METRONOME ────────────────────────────────────────────────
+//
+// Web Audio synth clicks, scheduled with lookahead so timing is
+// tight even if the main thread stutters. Runs only while
+// wavesurfer is playing and the user has toggled it on.
+//
+// Sound design: short synth tones (oscillator + gain envelope).
+// Beat 1 of bar = higher-pitched accent (880 Hz), other beats =
+// plain (440 Hz). 25ms duration, percussive envelope — "tock".
+//
+// Scheduling strategy: on each tick of a 50ms setInterval, schedule
+// any beats that fall within the next 200ms. This gives Web Audio
+// time to prepare each click while staying responsive to pause/seek.
+
+const METRO_LOOKAHEAD_SEC = 0.20;
+const METRO_SCHEDULE_INTERVAL_MS = 50;
+
+function toggleMetronome(){
+  state.metronomeEnabled = !state.metronomeEnabled;
+  const btn = document.getElementById('btn-metronome');
+  if(state.metronomeEnabled){
+    btn.classList.add('active');
+    btn.textContent = '🎵 Click ON';
+    // Start now if the wave is playing; otherwise wait for play event
+    if(ws && ws.isPlaying()) startMetronome();
+  } else {
+    btn.classList.remove('active');
+    btn.textContent = '🎵 Click';
+    stopMetronome();
+  }
+}
+
+function startMetronome(){
+  if(state._metro) return;  // already running
+  if(!window.AudioContext && !window.webkitAudioContext){
+    console.warn('Web Audio not available — metronome disabled');
+    return;
+  }
+  const Ctor = window.AudioContext || window.webkitAudioContext;
+  const ctx = new Ctor();
+  const gainNode = ctx.createGain();
+  gainNode.gain.value = 0.75;
+  gainNode.connect(ctx.destination);
+
+  state._metro = {
+    ctx,
+    gainNode,
+    // audioStartTime: ctx.currentTime when the waveform's play position
+    // was at playStartWavePos. We use these two to translate between
+    // wave time and audio-context time for precise scheduling.
+    audioStartTime: ctx.currentTime,
+    playStartWavePos: ws ? ws.getCurrentTime() : 0,
+    schedulerTimer: null,
+    lastScheduledBeatN: null  // last beat index N we queued, to avoid duplicates
+  };
+
+  state._metro.schedulerTimer = setInterval(metronomeTick, METRO_SCHEDULE_INTERVAL_MS);
+}
+
+function stopMetronome(){
+  if(!state._metro) return;
+  clearInterval(state._metro.schedulerTimer);
+  try { state._metro.ctx.close(); } catch(e){}
+  state._metro = null;
+}
+
+// Restart metronome scheduling from the CURRENT wave position. Called
+// after seek, offset change, or other events that invalidate the
+// existing schedule.
+function restartMetronomeFromNow(){
+  if(!state._metro || !ws) return;
+  stopMetronome();
+  startMetronome();
+}
+
+function metronomeTick(){
+  const m = state._metro;
+  if(!m || !ws) return;
+
+  // If the wavesurfer paused underneath us, stop
+  if(!ws.isPlaying()){
+    stopMetronome();
+    return;
+  }
+
+  const bpm = parseInt(document.getElementById('wave-bpm').value) || 0;
+  if(!bpm) return;
+  const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
+  const secPerBeat = 60 / bpm;
+  const offset = state.beatOffset || 0;
+
+  // Current wave position
+  const waveNow = ws.getCurrentTime();
+  // Current audio-context time
+  const audioNow = m.ctx.currentTime;
+
+  // Schedule any beats that fall within [waveNow, waveNow + LOOKAHEAD]
+  const windowEnd = waveNow + METRO_LOOKAHEAD_SEC;
+
+  // The beat at index N is at wave time = offset + N * secPerBeat.
+  // Find the first N whose time is >= waveNow.
+  const firstN = Math.ceil((waveNow - offset) / secPerBeat);
+  const lastN  = Math.floor((windowEnd - offset) / secPerBeat);
+
+  for(let n = firstN; n <= lastN; n++){
+    if(m.lastScheduledBeatN !== null && n <= m.lastScheduledBeatN) continue;
+    const beatWaveTime = offset + n * secPerBeat;
+    // Translate to audio-context time: audioTime = audioNow + (beatWaveTime - waveNow)
+    const audioTime = audioNow + (beatWaveTime - waveNow);
+    if(audioTime < audioNow) continue;  // already past
+    const isDownbeat = (((n % beatsPerBar) + beatsPerBar) % beatsPerBar) === 0;
+    playMetronomeClick(audioTime, isDownbeat);
+    m.lastScheduledBeatN = n;
+  }
+}
+
+function playMetronomeClick(audioTime, isDownbeat){
+  const m = state._metro;
+  if(!m) return;
+  const ctx = m.ctx;
+
+  // Two-layer click: a pitched body (triangle wave) for tone + a high
+  // frequency transient (square, very short) for the attack click. The
+  // combination reads as a wood-block 'tock' that cuts through music.
+  //
+  // Downbeat is higher and slightly longer than offbeat, so beat 1 is
+  // clearly audible as the anchor.
+
+  const bodyFreq      = isDownbeat ? 1760 : 1200;
+  const bodyDecay     = isDownbeat ? 0.045 : 0.030;
+  const transientFreq = isDownbeat ? 3520 : 2400;
+  const transientDecay = 0.008;
+  const attack = 0.0005;  // essentially instantaneous
+
+  // Body: triangle oscillator + envelope
+  const bodyOsc = ctx.createOscillator();
+  const bodyEnv = ctx.createGain();
+  bodyOsc.type = 'triangle';
+  bodyOsc.frequency.value = bodyFreq;
+  bodyEnv.gain.value = 0;
+  bodyOsc.connect(bodyEnv);
+  bodyEnv.connect(m.gainNode);
+  bodyEnv.gain.setValueAtTime(0, audioTime);
+  bodyEnv.gain.linearRampToValueAtTime(1.0, audioTime + attack);
+  bodyEnv.gain.exponentialRampToValueAtTime(0.001, audioTime + attack + bodyDecay);
+  bodyOsc.start(audioTime);
+  bodyOsc.stop(audioTime + attack + bodyDecay + 0.01);
+
+  // Transient: short square-wave burst to sharpen the attack
+  const trOsc = ctx.createOscillator();
+  const trEnv = ctx.createGain();
+  trOsc.type = 'square';
+  trOsc.frequency.value = transientFreq;
+  trEnv.gain.value = 0;
+  trOsc.connect(trEnv);
+  trEnv.connect(m.gainNode);
+  trEnv.gain.setValueAtTime(0, audioTime);
+  trEnv.gain.linearRampToValueAtTime(0.5, audioTime + attack);
+  trEnv.gain.exponentialRampToValueAtTime(0.001, audioTime + attack + transientDecay);
+  trOsc.start(audioTime);
+  trOsc.stop(audioTime + attack + transientDecay + 0.01);
 }
 
 // Format a seconds number as M:SS (always two-digit seconds)
@@ -1191,6 +1663,15 @@ document.addEventListener('keydown', e => {
     return;
   }
   if(e.key === ' '){ e.preventDefault(); wavePlayPause(); }
+  else if((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && state.alignMode){
+    // Align-mode arrow keys nudge the beat offset. Only active when the
+    // user has explicitly entered align mode, to avoid hijacking arrow
+    // keys for other page/browser uses. Shift = 100ms, plain = 10ms.
+    e.preventDefault();
+    const magnitude = e.shiftKey ? 0.1 : 0.01;
+    const sign = (e.key === 'ArrowLeft') ? -1 : 1;
+    nudgeOffset(sign * magnitude);
+  }
   else if(e.key === '['){
     e.preventDefault();
     if(ws) createChunk();
