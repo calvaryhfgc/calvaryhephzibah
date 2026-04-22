@@ -48,6 +48,16 @@
   .chops-empty a{color:var(--red);font-weight:600;text-decoration:none;}
   .chops-empty a:hover{text-decoration:underline;}
 
+  /* Chops search input — filters the list client-side by label */
+  .chops-search{position:relative;margin-bottom:8px;}
+  .chops-search input{width:100%;padding:7px 28px 7px 11px;border:1px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:12px;color:var(--ink);}
+  .chops-search input:focus{outline:none;border-color:var(--red);}
+  .chops-search input::placeholder{color:var(--ink-4);}
+  .chops-search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;border:none;background:none;color:var(--ink-4);cursor:pointer;font-size:14px;line-height:1;display:none;align-items:center;justify-content:center;padding:0;}
+  .chops-search-clear:hover{color:var(--ink-2);background:var(--ink-6);}
+  .chops-search.has-value .chops-search-clear{display:flex;}
+  .chops-no-match{padding:16px;text-align:center;font-size:12px;color:var(--ink-4);font-style:italic;}
+
   /* Slots (right) */
   .slots-list{display:flex;flex-direction:column;gap:8px;min-height:120px;}
   .slot-card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r10);padding:10px 12px;display:flex;align-items:flex-start;gap:10px;transition:border-color 0.1s, box-shadow 0.1s;}
@@ -230,7 +240,12 @@
               <div class="chops-empty" id="chops-empty" style="display:none;">
                 No chops yet. <a href="#" id="chops-empty-link">Open the reference editor →</a> to mark sections first.
               </div>
+              <div class="chops-search" id="chops-search-wrap" style="display:none;">
+                <input type="text" id="chops-search-input" placeholder="Search chops by label…" oninput="onChopSearchInput(this.value)" autocomplete="off" spellcheck="false">
+                <button class="chops-search-clear" onclick="clearChopSearch()" title="Clear search" aria-label="Clear search">×</button>
+              </div>
               <div class="chops-list" id="chops-list"></div>
+              <div class="chops-no-match" id="chops-no-match" style="display:none;"></div>
             </div>
           </div>
 
@@ -333,6 +348,11 @@ const state = {
   // playing at a time, so iOS's "one audio" restriction is a non-issue.
   _preview: null,        // { chopId, isLoading, endSec } or null
   _previewAudio: null,   // HTMLAudioElement, lazily created
+
+  // Chops search — filters the left-column list client-side.
+  // Empty string or null = show all. Case-insensitive substring match
+  // on chop label. State is ephemeral (not persisted across reloads).
+  _chopSearch: '',
 };
 
 // How long to wait after the last edit before autosaving. 3 seconds
@@ -501,17 +521,21 @@ function renderChops(){
   const container = document.getElementById('chops-list');
   const empty = document.getElementById('chops-empty');
   const count = document.getElementById('chops-count');
+  const searchWrap = document.getElementById('chops-search-wrap');
+  const noMatch = document.getElementById('chops-no-match');
   const addAllBtn = document.getElementById('btn-add-all-chops');
 
-  // Button enabled only when we have chops to add
-  const hasChops = state.chops && state.chops.length > 0;
-  if(addAllBtn) addAllBtn.disabled = !hasChops;
-
+  // Early-return paths: no reference linked, or zero chops in the
+  // reference. Hide search + no-match in those cases — nothing to
+  // search through.
   if(!state.reference){
     container.style.display = 'none';
     empty.style.display = 'block';
     empty.innerHTML = 'This arrangement has no reference linked. <a href="reference.html?arrangement_id=' + state.arrangement.id + '">Add a reference →</a>';
     count.textContent = '';
+    searchWrap.style.display = 'none';
+    noMatch.style.display = 'none';
+    if(addAllBtn) addAllBtn.disabled = true;
     return;
   }
   if(state.chops.length === 0){
@@ -519,12 +543,59 @@ function renderChops(){
     empty.style.display = 'block';
     document.getElementById('chops-empty-link').href = 'reference.html?arrangement_id=' + state.arrangement.id;
     count.textContent = '';
+    searchWrap.style.display = 'none';
+    noMatch.style.display = 'none';
+    if(addAllBtn) addAllBtn.disabled = true;
     return;
   }
 
+  // There are chops. Show the search input and empty the "no chops"
+  // message.
   empty.style.display = 'none';
+  searchWrap.style.display = 'block';
+
+  // Apply filter. Substring match on label, case-insensitive. Empty
+  // search = everything. We preserve the original index (c_idx) so
+  // the numbered circle remains stable even when filtered.
+  const searchTerm = (state._chopSearch || '').trim().toLowerCase();
+  const filtered = state.chops
+    .map((c, idx) => ({ chop: c, origIdx: idx }))
+    .filter(entry => {
+      if(!searchTerm) return true;
+      const label = (entry.chop.label || '').toLowerCase();
+      return label.includes(searchTerm);
+    });
+
+  // Count reflects the active filter. When filtered, show both numbers
+  // so the user knows the total isn't being hidden.
+  if(searchTerm){
+    count.textContent = `· ${filtered.length} of ${state.chops.length}`;
+  } else {
+    count.textContent = `· ${state.chops.length} chop${state.chops.length===1?'':'s'}`;
+  }
+
+  // Add-all button: disabled when nothing matches, label shows the
+  // count the user will actually get.
+  if(addAllBtn){
+    addAllBtn.disabled = filtered.length === 0;
+    if(searchTerm && filtered.length !== state.chops.length){
+      addAllBtn.textContent = `+ Add all (${filtered.length})`;
+      addAllBtn.title = `Add the ${filtered.length} chop${filtered.length===1?'':'s'} matching "${searchTerm}" to the arrangement`;
+    } else {
+      addAllBtn.textContent = '+ Add all';
+      addAllBtn.title = 'Add every chop to the arrangement in order';
+    }
+  }
+
+  // No results state: hide the cards, show the inline message.
+  if(filtered.length === 0){
+    container.style.display = 'none';
+    noMatch.style.display = 'block';
+    noMatch.textContent = `No chops match "${searchTerm}"`;
+    return;
+  }
+  noMatch.style.display = 'none';
   container.style.display = 'flex';
-  count.textContent = `· ${state.chops.length} chop${state.chops.length===1?'':'s'}`;
 
   // Can we preview? Need a reference with an audio_path.
   const canPreview = !!(state.reference && state.reference.audio_path);
@@ -532,7 +603,9 @@ function renderChops(){
     ? 'Preview this chop'
     : 'Preview unavailable — reference has no audio file';
 
-  container.innerHTML = state.chops.map((c, i) => {
+  container.innerHTML = filtered.map(entry => {
+    const c = entry.chop;
+    const i = entry.origIdx;  // original index for stable numbering
     const dur = formatDuration(c.end_seconds - c.start_seconds);
     const isPlaying = state._preview && state._preview.chopId === c.id && !state._preview.isLoading;
     const isLoading = state._preview && state._preview.chopId === c.id && state._preview.isLoading;
@@ -663,14 +736,29 @@ function addAllChopsToSlots(){
     return;
   }
 
+  // Respect the active search filter: if the user has narrowed the
+  // list, "Add all" means "add all VISIBLE chops." Preserves the
+  // natural mental model and avoids a confusing "I filtered to 3
+  // but got 30" surprise.
+  const searchTerm = (state._chopSearch || '').trim().toLowerCase();
+  const toAdd = searchTerm
+    ? state.chops.filter(c => (c.label || '').toLowerCase().includes(searchTerm))
+    : state.chops;
+
+  if(toAdd.length === 0){
+    COS.toast('No matching chops to add');
+    return;
+  }
+
   if(state.slots.length > 0){
+    const countLabel = searchTerm ? `${toAdd.length} matching chop` : `${toAdd.length} chop`;
     const msg = `You already have ${state.slots.length} slot${state.slots.length===1?'':'s'}. `
-              + `Add all ${state.chops.length} chops to the end?`;
+              + `Add ${countLabel}${toAdd.length===1?'':'s'} to the end?`;
     if(!confirm(msg)) return;
   }
 
   const startIdx = state.slots.length;
-  state.chops.forEach(chop => {
+  toAdd.forEach(chop => {
     state.slots.push({
       section_id: chop.id,
       notes: '',
@@ -681,7 +769,7 @@ function addAllChopsToSlots(){
   markDirty();
   renderSlots();
   updateSummary();
-  COS.toast(`Added ${state.chops.length} slot${state.chops.length===1?'':'s'}`);
+  COS.toast(`Added ${toAdd.length} slot${toAdd.length===1?'':'s'}`);
 
   // Scroll the first newly-added slot into view. Tiny delay so the DOM
   // has repopulated.
@@ -690,6 +778,45 @@ function addAllChopsToSlots(){
     const firstNew = cards[startIdx];
     if(firstNew) firstNew.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 50);
+}
+
+// ── CHOP SEARCH ──────────────────────────────────────────────
+//
+// Simple substring match on chop label, case-insensitive. State
+// lives on state._chopSearch (ephemeral — not persisted).
+//
+// Debounce is not needed — filtering ~30 chops on each keystroke is
+// instant. We re-render on every input event.
+
+function onChopSearchInput(value){
+  state._chopSearch = value || '';
+  const wrap = document.getElementById('chops-search-wrap');
+  if(wrap){
+    if(state._chopSearch.trim()) wrap.classList.add('has-value');
+    else wrap.classList.remove('has-value');
+  }
+
+  // If a preview is playing and the new filter hides its chop,
+  // stop it — user can't see the stop button otherwise.
+  if(state._preview){
+    const playingChop = state.chops.find(c => c.id === state._preview.chopId);
+    const searchTerm = state._chopSearch.trim().toLowerCase();
+    if(playingChop && searchTerm && !(playingChop.label || '').toLowerCase().includes(searchTerm)){
+      stopPreview();
+    }
+  }
+
+  renderChops();
+}
+
+function clearChopSearch(){
+  state._chopSearch = '';
+  const input = document.getElementById('chops-search-input');
+  if(input) input.value = '';
+  const wrap = document.getElementById('chops-search-wrap');
+  if(wrap) wrap.classList.remove('has-value');
+  renderChops();
+  if(input) input.focus();
 }
 
 // ── CHOP PREVIEW PLAYBACK ────────────────────────────────────
