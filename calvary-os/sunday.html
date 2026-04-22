@@ -160,6 +160,35 @@
           <div class="page-eyebrow" id="songs-eyebrow">Sunday Service</div>
           <div class="page-title">Worship songs</div>
           <div class="page-sub">Today's set. Tap Generate for any song without slides.</div>
+
+          <!-- LINKED SET — shows the rs_sets entry whose service_date matches
+               this service, if one exists. Lets the worship team jump straight
+               from the Sunday module into Practice View or the full set editor.
+               Loads independently of the manual songs list below. -->
+          <div id="linked-set-block" style="display:none;margin-top:16px;">
+            <div class="section-label">🎶 Rehearsal set</div>
+            <div class="card" id="linked-set-card">
+              <div id="linked-set-loading" style="font-size:14px;color:var(--ink-4);">Looking for a rehearsal set for this date…</div>
+              <div id="linked-set-present" style="display:none;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+                  <div>
+                    <div style="font-size:15px;font-weight:600;color:var(--ink);" id="linked-set-name">—</div>
+                    <div style="font-size:12px;color:var(--ink-4);margin-top:2px;" id="linked-set-meta">—</div>
+                  </div>
+                  <a id="linked-set-open" href="#" class="btn btn-sm" style="text-decoration:none;">Open set →</a>
+                </div>
+                <div id="linked-set-items" style="display:flex;flex-direction:column;gap:6px;"></div>
+              </div>
+              <div id="linked-set-empty" style="display:none;">
+                <div style="font-size:14px;color:var(--ink-2);margin-bottom:8px;">No rehearsal set for this Sunday yet.</div>
+                <div style="font-size:12px;color:var(--ink-4);margin-bottom:12px;">A set groups the arrangements your worship team will rehearse — with links to Practice View for each song.</div>
+                <a href="rehearsal/index.html" class="btn btn-white btn-sm" style="text-decoration:none;">Create one →</a>
+              </div>
+              <div id="linked-set-error" style="display:none;font-size:13px;color:var(--ink-4);">Couldn't load rehearsal set.</div>
+            </div>
+          </div>
+
+          <div class="section-label" style="margin-top:24px;">Manual song list</div>
           <div id="songs-loading" style="padding:20px 0;color:var(--ink-4);font-size:14px;">Loading…</div>
           <div id="songs-content" style="display:none;">
             <div id="songs-list"></div>
@@ -444,6 +473,140 @@ function renderService(s) {
       <div class="card-label">YouTube livestream</div>
       <a href="${s.youtube_url}" target="_blank" class="btn btn-red" style="text-decoration:none;display:inline-flex;">▶ Watch Live</a>`;
   }
+
+  // Rehearsal set (linked by service_date)
+  // Fires after the rest of the page renders — non-blocking. If no
+  // rs_set matches this service's date, the empty-state CTA appears.
+  loadLinkedSet(s.service_date);
+}
+
+// ── LINKED REHEARSAL SET ──────────────────────────────────────────────────
+// Looks up rs_sets by service_date. If there are multiple sets on the same
+// date (e.g. morning + evening service), picks the most-recently-updated.
+// Pulls the set's arrangements (and their songs) so the user can jump
+// straight into Practice View for any song in the set.
+//
+// Fails gracefully: network error or missing tables just shows the error
+// state; no break to the rest of the Sunday page.
+async function loadLinkedSet(serviceDate){
+  const wrap       = document.getElementById('linked-set-block');
+  const loadingEl  = document.getElementById('linked-set-loading');
+  const presentEl  = document.getElementById('linked-set-present');
+  const emptyEl    = document.getElementById('linked-set-empty');
+  const errorEl    = document.getElementById('linked-set-error');
+  if(!wrap) return;
+
+  // Show the block now that we know a service exists
+  wrap.style.display = 'block';
+  loadingEl.style.display = 'block';
+  presentEl.style.display = 'none';
+  emptyEl.style.display = 'none';
+  errorEl.style.display = 'none';
+
+  if(!serviceDate){
+    // Service has no date yet — hide entirely (same as the rest of the
+    // page would for an incomplete service)
+    wrap.style.display = 'none';
+    return;
+  }
+
+  try {
+    // 1. Find the set for this date. Tie-break by most recently created.
+    const sets = await sbFetch(`rs_sets?service_date=eq.${serviceDate}&order=created_at.desc&limit=1`);
+
+    if(!sets || sets.length === 0){
+      loadingEl.style.display = 'none';
+      emptyEl.style.display = 'block';
+      return;
+    }
+
+    const set = sets[0];
+
+    // 2. Pull the items in order + the arrangements + the songs for labelling
+    //
+    // Three parallel fetches. Arrangements/songs are global lookups so we
+    // just grab all of them — the library is small enough that this is
+    // fine and keeps the query shape simple (no embedded selects).
+    const [items, arrangements, songs] = await Promise.all([
+      sbFetch(`rs_set_arrangements?set_id=eq.${set.id}&order=position.asc`),
+      sbFetch('rs_arrangements'),
+      sbFetch('rs_songs')
+    ]);
+
+    renderLinkedSet(set, items || [], arrangements || [], songs || []);
+  } catch(err){
+    console.error('loadLinkedSet failed:', err);
+    loadingEl.style.display = 'none';
+    errorEl.style.display = 'block';
+  }
+}
+
+function renderLinkedSet(set, items, arrangements, songs){
+  const loadingEl  = document.getElementById('linked-set-loading');
+  const presentEl  = document.getElementById('linked-set-present');
+
+  loadingEl.style.display = 'none';
+  presentEl.style.display = 'block';
+
+  // Header
+  document.getElementById('linked-set-name').textContent = set.name || 'Untitled set';
+  const metaBits = [];
+  if(set.service_type){
+    metaBits.push(set.service_type[0].toUpperCase() + set.service_type.slice(1));
+  }
+  metaBits.push(`${items.length} arrangement${items.length === 1 ? '' : 's'}`);
+  if(set.notes) metaBits.push(set.notes);
+  document.getElementById('linked-set-meta').textContent = metaBits.join(' · ');
+
+  // "Open set" button — editor for admins/leads, view for team (when built)
+  const canEdit = COS.currentUser && (COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead');
+  const openBtn = document.getElementById('linked-set-open');
+  openBtn.href = `rehearsal/set.html?id=${set.id}`;
+  openBtn.textContent = canEdit ? 'Open set →' : 'View set →';
+
+  // Items list — arrangement name + song title + key/bpm, practice link
+  const itemsEl = document.getElementById('linked-set-items');
+  if(items.length === 0){
+    itemsEl.innerHTML = '<div style="font-size:13px;color:var(--ink-4);font-style:italic;">No arrangements in this set yet.</div>';
+    return;
+  }
+
+  itemsEl.innerHTML = items.map((it, i) => {
+    const arr = arrangements.find(a => a.id === it.arrangement_id);
+    if(!arr){
+      // Stale item — arrangement was deleted. Show a muted placeholder.
+      return `
+        <div style="padding:10px 12px;background:var(--ink-6);border:1px solid var(--ink-5);border-radius:var(--r10);display:flex;align-items:center;gap:10px;">
+          <div style="font-size:11px;color:var(--ink-4);font-weight:600;width:20px;">${i + 1}</div>
+          <div style="flex:1;font-size:13px;color:var(--ink-4);font-style:italic;">Deleted arrangement</div>
+        </div>`;
+    }
+    const song = songs.find(s => s.id === arr.song_id);
+    const songTitle = song ? song.title : '(unknown song)';
+    const metaBits2 = [];
+    if(arr.key) metaBits2.push(arr.key);
+    if(arr.bpm) metaBits2.push(arr.bpm + ' bpm');
+    const meta2 = metaBits2.length ? ' · ' + metaBits2.join(' · ') : '';
+    return `
+      <a href="rehearsal/practice.html?arrangement_id=${arr.id}" style="text-decoration:none;color:inherit;padding:10px 12px;background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r10);display:flex;align-items:center;gap:10px;transition:border-color 0.1s;" onmouseover="this.style.borderColor='var(--red-mid)'" onmouseout="this.style.borderColor='var(--ink-5)'">
+        <div style="font-size:11px;color:var(--red);font-weight:700;width:20px;">${i + 1}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtmlSimple(songTitle)}</div>
+          <div style="font-size:11px;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtmlSimple(arr.name || 'Untitled arrangement')}${meta2}</div>
+          ${it.transition_note ? `<div style="font-size:11px;color:var(--ink-3);margin-top:3px;font-style:italic;">📝 ${escapeHtmlSimple(it.transition_note)}</div>` : ''}
+        </div>
+        <div style="font-size:11px;color:var(--red);font-weight:600;flex-shrink:0;">▶ Rehearse</div>
+      </a>`;
+  }).join('');
+}
+
+function escapeHtmlSimple(s){
+  return (s || '').toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // ── ARCHIVE ───────────────────────────────────────────────────────────────
