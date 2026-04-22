@@ -624,8 +624,9 @@ async function saveSet(){
 
   COS.toast('Set created');
   closeModal('modal-set');
-  // Navigate into the set builder once it's built (Phase 6). For now stay on list.
-  await loadAll();
+  // Head straight into the editor so the user can add arrangements.
+  // The editor page expects ?id=<set_id> and renders the set in place.
+  window.location.href = 'set.html?id=' + result[0].id;
 }
 
 async function saveArrangement(){
