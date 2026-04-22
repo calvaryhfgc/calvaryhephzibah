@@ -97,6 +97,14 @@
   .set-item-transition:focus{outline:none;border-color:var(--red);background:var(--white);}
   .set-item-transition::placeholder{color:var(--ink-4);font-style:italic;}
 
+  /* Practice session badge — subtle informational line under each set
+     item showing who on the team has practised this arrangement this
+     week. Muted by design so it's available but not loud. */
+  .set-item-practice{font-size:11px;color:var(--ink-4);margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.4;}
+  .set-item-practice-icon{font-size:10px;}
+  .set-item-practice-none{color:var(--ink-4);font-style:italic;}
+  .set-item-practice-user{color:var(--ink-3);}
+
   .set-items-empty{padding:32px 16px;text-align:center;background:var(--ink-6);border:1px dashed var(--ink-5);border-radius:var(--r10);color:var(--ink-3);font-size:12px;line-height:1.6;}
 
   /* Save status pill — sits in the actions bar between summary and buttons */
@@ -317,6 +325,7 @@ const state = {
   items: [],              // ordered: [{ arrangement_id, transition_note, position }]
   arrangements: [],       // all arrangements in the library
   songs: [],              // rs_songs lookup (title, artist)
+  practiceSessions: [],   // rs_practice_sessions rows for items in this set, last 7 days
 
   // Autosave / dirty tracking — same pattern as arrangement.html.
   // _dirtyVersion bumps on every user edit; _savedVersion records the
@@ -420,7 +429,29 @@ async function loadSet(){
   state.arrangements = arrangements || [];
   state.songs = songs || [];
 
+  // Fetch practice sessions for the arrangements in this set, last 7 days.
+  // Only worth running if there ARE items; otherwise skip (empty result
+  // would come back anyway but we save a round-trip).
+  if(state.items.length > 0){
+    await loadPracticeSessions();
+  }
+
   renderAll();
+}
+
+// Fetch the rs_practice_sessions rows for the arrangements in this set
+// that were completed within the last 7 days. Uses PostgREST `in.(…)`
+// filter with comma-separated UUIDs (no URL-encoding needed for hyphen
+// UUIDs; commas are the only separator of concern).
+async function loadPracticeSessions(){
+  const arrIds = state.items.map(it => it.arrangement_id).filter(Boolean);
+  if(arrIds.length === 0){ state.practiceSessions = []; return; }
+  const weekAgo = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+  const idList = arrIds.join(',');
+  const sessions = await sbFetch(
+    `rs_practice_sessions?arrangement_id=in.(${idList})&completed_at=gte.${weekAgo}&order=completed_at.desc`
+  );
+  state.practiceSessions = sessions || [];
 }
 
 // ── RENDER ───────────────────────────────────────────────────
@@ -528,6 +559,43 @@ function renderPicker(){
   }).join('');
 }
 
+// Aggregate practice sessions into a { arrangement_id → { user_name → count } }
+// map, so renderSetItems can look up "who practised this, how many times"
+// in constant time without re-scanning the array per item.
+//
+// Called once per renderAll (not per item). Re-derives from scratch
+// whenever called, which is fine — practiceSessions is small (N sessions
+// per week per team per song, maybe 20-50 rows total in steady state).
+function aggregatePracticeSessions(){
+  const byArr = Object.create(null);
+  for(const s of state.practiceSessions){
+    const k = s.arrangement_id;
+    if(!byArr[k]) byArr[k] = Object.create(null);
+    byArr[k][s.user_name] = (byArr[k][s.user_name] || 0) + 1;
+  }
+  return byArr;
+}
+
+// Render the practice-session badge for one arrangement. Takes the
+// per-user counts for that arrangement (or undefined if nobody has
+// practised it). Returns an HTML fragment — empty string when there's
+// nothing to say, so the caller can always embed the result.
+//
+// Format: "🎯 Morayo (2) · Laolu (1) · this week"
+// Ordering: by count descending, then name ascending for ties.
+function renderPracticeBadge(userCounts){
+  if(!userCounts){
+    return `<div class="set-item-practice"><span class="set-item-practice-none">Not yet practised this week</span></div>`;
+  }
+  const entries = Object.entries(userCounts)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  const parts = entries.map(([name, n]) => {
+    const first = name.split(' ')[0];
+    return `<span class="set-item-practice-user">${escapeHtml(first)} (${n})</span>`;
+  });
+  return `<div class="set-item-practice"><span class="set-item-practice-icon">🎯</span>${parts.join(' · ')}<span style="color:var(--ink-4);">· this week</span></div>`;
+}
+
 function renderSetItems(){
   const container = document.getElementById('set-items-list');
   const empty = document.getElementById('set-items-empty');
@@ -543,6 +611,10 @@ function renderSetItems(){
   container.style.display = 'flex';
   empty.style.display = 'none';
   count.textContent = `· ${state.items.length} arrangement${state.items.length===1?'':'s'}`;
+
+  // Compute per-arrangement practice breakdown once — renderPracticeBadge
+  // pulls the right slice for each item below.
+  const practiceByArr = aggregatePracticeSessions();
 
   container.innerHTML = state.items.map((item, i) => {
     const arr = state.arrangements.find(a => a.id === item.arrangement_id);
@@ -569,6 +641,7 @@ function renderSetItems(){
     const meta = [];
     if(arr.key) meta.push(arr.key);
     if(arr.bpm) meta.push(arr.bpm + ' bpm');
+    const practiceHtml = renderPracticeBadge(practiceByArr[arr.id]);
     return `
       <div class="set-item-card" data-item-idx="${i}" draggable="true">
         <div class="set-item-handle" title="Drag to reorder" aria-label="Drag to reorder">⋮⋮</div>
@@ -576,6 +649,7 @@ function renderSetItems(){
         <div class="set-item-body">
           <div class="set-item-title">${escapeHtml(arr.name || 'Untitled')}</div>
           <div class="set-item-meta">${escapeHtml(songTitle)}${meta.length ? ' · ' + meta.join(' · ') : ''}</div>
+          ${practiceHtml}
           <textarea class="set-item-transition" placeholder="Transition note (optional) — e.g. 'key change to F', 'MC bridges', 'segue direct'" oninput="updateTransitionNote(${i}, this.value)">${escapeHtml(item.transition_note || '')}</textarea>
         </div>
         <div class="set-item-actions">
@@ -609,6 +683,14 @@ function addArrangementToSet(arrangementId){
   markDirty();
   renderSetItems();
   updateSummary();
+
+  // The practice sessions fetched at load time didn't include this newly-
+  // added arrangement. Refetch in the background so its badge shows real
+  // data instead of "Not yet practised" (which might be wrong). Fire-and-
+  // forget — if it fails, the user just sees the default state, which is
+  // accurate enough to not warrant an error.
+  loadPracticeSessions().then(() => renderSetItems()).catch(() => {});
+
   // Scroll new item into view
   setTimeout(() => {
     const cards = document.querySelectorAll('#set-items-list .set-item-card');
