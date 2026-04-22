@@ -341,14 +341,14 @@
               <!-- Beat alignment block: nudge + readout + align mode + metronome.
                    Lets the user align the beat grid to the actual downbeat of
                    the recording, then verify with an audible click. -->
-              <div class="wave-beat-block" title="Align beat 1 to the actual downbeat of the recording">
+              <div class="wave-beat-block" title="Align beat 1 to the actual downbeat of the recording. Tip: hold Shift and drag on the waveform for quick alignment.">
                 <span class="wave-beat-label">Beat 1</span>
                 <button class="wave-nudge-btn" onclick="nudgeOffset(-0.1)" title="−100ms (or Shift+← in align mode)">−−</button>
                 <button class="wave-nudge-btn" onclick="nudgeOffset(-0.01)" title="−10ms (or ← in align mode)">−</button>
                 <span class="wave-offset-readout" id="wave-offset-readout">0 ms</span>
                 <button class="wave-nudge-btn" onclick="nudgeOffset(0.01)" title="+10ms (or → in align mode)">+</button>
                 <button class="wave-nudge-btn" onclick="nudgeOffset(0.1)" title="+100ms (or Shift+→ in align mode)">++</button>
-                <button class="wave-align-toggle" id="btn-align-mode" onclick="toggleAlignMode()" title="Enable drag-to-align: click and drag on the waveform to shift beat 1. Arrow keys also work when active.">⇔</button>
+                <button class="wave-align-toggle" id="btn-align-mode" onclick="toggleAlignMode()" title="Enable drag-to-align: click and drag on the waveform to shift beat 1. Arrow keys also work when active. (Alternative: hold Shift and drag without toggling.)">⇔ Drag mode</button>
               </div>
               <button class="wave-metro-toggle" id="btn-metronome" onclick="toggleMetronome()" title="Play an audible click on every beat while the waveform plays. Use to verify alignment.">🎵 Click</button>
 
@@ -843,6 +843,14 @@ function setupWaveEditor(source){
   } else if(typeof source === 'string'){
     ws.load(source);
   }
+
+  // Shift+drag on the waveform = align offset shift (alternative to
+  // toggle-align-mode + drag). We attach in capture phase on the
+  // #waveform container so we beat wavesurfer's own pointerdown handler
+  // to the event. If shift is held, we capture the pointer and handle
+  // the drag ourselves; otherwise we let it bubble normally to
+  // wavesurfer for seeking.
+  wireShiftDragHandlers();
 
   // Event wiring
   ws.on('ready', () => {
@@ -1403,6 +1411,69 @@ function onAlignPointerUp(e){
   try { e.currentTarget.releasePointerCapture(e.pointerId); } catch(err){}
 }
 
+// ── SHIFT+DRAG (always-on alternative to align mode) ─────────
+//
+// Listens on #waveform in the CAPTURE phase so we see pointerdown
+// BEFORE wavesurfer's handler does. If Shift is held, we intercept
+// and take over the drag; otherwise we stay out of the way and
+// wavesurfer handles the seek as normal.
+//
+// This exists alongside the ⇔ Drag mode toggle for users who'd
+// rather use a modifier key than a mode button. Power-user path;
+// the toggle remains the discoverable primary.
+
+let _shiftDrag = null;  // { startX, startOffset } while shift-dragging
+
+function wireShiftDragHandlers(){
+  const waveEl = document.getElementById('waveform');
+  if(!waveEl) return;
+  // Capture phase = true. Our handler fires before any bubbling
+  // listeners (including wavesurfer's internal handlers on its own
+  // shadow DOM elements).
+  waveEl.addEventListener('pointerdown', onShiftPointerDown, true);
+}
+
+function onShiftPointerDown(e){
+  // Only engage if Shift is held. Without shift, let wavesurfer seek.
+  if(!e.shiftKey) return;
+  // Don't engage if regular align mode is already active — the canvas
+  // overlay handles that case.
+  if(state.alignMode) return;
+  if(!ws) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  _shiftDrag = {
+    startX: e.clientX,
+    startOffset: state.beatOffset || 0,
+    pointerId: e.pointerId
+  };
+
+  // Global listeners while drag is in progress. Attach to window so we
+  // keep receiving moves even if pointer leaves the waveform element.
+  window.addEventListener('pointermove', onShiftPointerMove, true);
+  window.addEventListener('pointerup',   onShiftPointerUp,   true);
+  window.addEventListener('pointercancel', onShiftPointerUp, true);
+}
+
+function onShiftPointerMove(e){
+  if(!_shiftDrag || !ws) return;
+  e.preventDefault();
+  const deltaX = e.clientX - _shiftDrag.startX;
+  const pxPerSec = ws.options.minPxPerSec || 40;
+  const deltaSec = deltaX / pxPerSec;
+  setBeatOffset(_shiftDrag.startOffset + deltaSec);
+}
+
+function onShiftPointerUp(e){
+  if(!_shiftDrag) return;
+  _shiftDrag = null;
+  window.removeEventListener('pointermove', onShiftPointerMove, true);
+  window.removeEventListener('pointerup',   onShiftPointerUp,   true);
+  window.removeEventListener('pointercancel', onShiftPointerUp, true);
+}
+
 // ── METRONOME ────────────────────────────────────────────────
 //
 // Web Audio synth clicks, scheduled with lookahead so timing is
@@ -1444,7 +1515,7 @@ function startMetronome(){
   const Ctor = window.AudioContext || window.webkitAudioContext;
   const ctx = new Ctor();
   const gainNode = ctx.createGain();
-  gainNode.gain.value = 0.4;
+  gainNode.gain.value = 0.75;
   gainNode.connect(ctx.destination);
 
   state._metro = {
@@ -1523,24 +1594,47 @@ function playMetronomeClick(audioTime, isDownbeat){
   const m = state._metro;
   if(!m) return;
   const ctx = m.ctx;
-  // Oscillator + short envelope via a per-click gain node
-  const osc = ctx.createOscillator();
-  const env = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = isDownbeat ? 880 : 440;
-  env.gain.value = 0;
-  osc.connect(env);
-  env.connect(m.gainNode);
 
-  // Percussive envelope: near-instant attack, ~25ms decay
-  const attack = 0.001;
-  const decay  = 0.025;
-  env.gain.setValueAtTime(0, audioTime);
-  env.gain.linearRampToValueAtTime(1, audioTime + attack);
-  env.gain.exponentialRampToValueAtTime(0.001, audioTime + attack + decay);
+  // Two-layer click: a pitched body (triangle wave) for tone + a high
+  // frequency transient (square, very short) for the attack click. The
+  // combination reads as a wood-block 'tock' that cuts through music.
+  //
+  // Downbeat is higher and slightly longer than offbeat, so beat 1 is
+  // clearly audible as the anchor.
 
-  osc.start(audioTime);
-  osc.stop(audioTime + attack + decay + 0.01);
+  const bodyFreq      = isDownbeat ? 1760 : 1200;
+  const bodyDecay     = isDownbeat ? 0.045 : 0.030;
+  const transientFreq = isDownbeat ? 3520 : 2400;
+  const transientDecay = 0.008;
+  const attack = 0.0005;  // essentially instantaneous
+
+  // Body: triangle oscillator + envelope
+  const bodyOsc = ctx.createOscillator();
+  const bodyEnv = ctx.createGain();
+  bodyOsc.type = 'triangle';
+  bodyOsc.frequency.value = bodyFreq;
+  bodyEnv.gain.value = 0;
+  bodyOsc.connect(bodyEnv);
+  bodyEnv.connect(m.gainNode);
+  bodyEnv.gain.setValueAtTime(0, audioTime);
+  bodyEnv.gain.linearRampToValueAtTime(1.0, audioTime + attack);
+  bodyEnv.gain.exponentialRampToValueAtTime(0.001, audioTime + attack + bodyDecay);
+  bodyOsc.start(audioTime);
+  bodyOsc.stop(audioTime + attack + bodyDecay + 0.01);
+
+  // Transient: short square-wave burst to sharpen the attack
+  const trOsc = ctx.createOscillator();
+  const trEnv = ctx.createGain();
+  trOsc.type = 'square';
+  trOsc.frequency.value = transientFreq;
+  trEnv.gain.value = 0;
+  trOsc.connect(trEnv);
+  trEnv.connect(m.gainNode);
+  trEnv.gain.setValueAtTime(0, audioTime);
+  trEnv.gain.linearRampToValueAtTime(0.5, audioTime + attack);
+  trEnv.gain.exponentialRampToValueAtTime(0.001, audioTime + attack + transientDecay);
+  trOsc.start(audioTime);
+  trOsc.stop(audioTime + attack + transientDecay + 0.01);
 }
 
 // Format a seconds number as M:SS (always two-digit seconds)
