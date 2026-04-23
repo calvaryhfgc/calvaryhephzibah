@@ -510,6 +510,34 @@ async function loadContext(){
   } else if(songId){
     const songs = await sbFetch(`rs_songs?id=eq.${songId}`);
     if(songs && songs[0]) state.song = songs[0];
+
+    // A reference always needs an arrangement to attach to — otherwise
+    // it saves successfully but the user sees "nothing shows up" when
+    // they click the song's arrangement later. So we eagerly find or
+    // create one here, before any save path is taken.
+    if(state.song){
+      const existing = await sbFetch(
+        `rs_arrangements?song_id=eq.${state.song.id}&order=created_at.asc&limit=1`
+      );
+      if(existing && existing[0]){
+        state.arrangement = existing[0];
+        // If this arrangement already has a reference, the user is
+        // re-editing — go into edit mode so they don't create an orphan.
+        if(state.arrangement.reference_id){
+          await enterEditMode(state.arrangement.reference_id);
+        }
+      } else {
+        // No arrangement yet — create a minimal draft named after the song.
+        // Can be renamed later in the arrangement builder.
+        const created = await sbPost('rs_arrangements', {
+          song_id: state.song.id,
+          name: state.song.title,
+          status: 'draft',
+          created_by: COS.currentUser?.name || 'unknown'
+        });
+        if(created && created[0]) state.arrangement = created[0];
+      }
+    }
   }
 
   if(state.song){
@@ -1848,9 +1876,21 @@ async function saveNewReference(validSections){
     audio_path: refPath
   });
 
-  // 7. Link to arrangement if present
+  // 7. Link to arrangement — every reference must belong to one.
+  // If for any reason we got this far without an arrangement set on
+  // state (e.g. a direct entry path we haven't covered), create one
+  // now so the reference isn't orphaned.
   advanceStep('link');
-  if(state.arrangement){
+  if(!state.arrangement){
+    const created = await sbPost('rs_arrangements', {
+      song_id: state.song.id,
+      name: state.song.title,
+      status: 'draft',
+      created_by: COS.currentUser?.name || 'unknown',
+      reference_id: refId
+    });
+    if(created && created[0]) state.arrangement = created[0];
+  } else {
     await sbPatch('rs_arrangements', `id=eq.${state.arrangement.id}`, {
       reference_id: refId,
       updated_at: new Date().toISOString()
