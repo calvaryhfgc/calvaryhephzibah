@@ -419,7 +419,7 @@
     <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     <ul class="progress-steps" id="progress-steps"></ul>
     <div id="progress-actions" style="display:none;margin-top:20px;">
-      <a href="index.html" class="rs-btn rs-btn-primary" style="text-decoration:none;display:inline-block;">Back to Rehearsal Studio →</a>
+      <a id="progress-open-btn" href="#" class="rs-btn rs-btn-primary" style="text-decoration:none;display:inline-block;">Open reference →</a>
     </div>
   </div>
 </div>
@@ -480,8 +480,23 @@ async function loadContext(){
   const params = new URLSearchParams(location.search);
   const songId = params.get('song_id');
   const arrId  = params.get('arrangement_id');
+  const refId  = params.get('reference_id');
 
-  if(arrId){
+  // Direct reference entry (e.g. reloading after save). Resolve the
+  // reference → arrangement → song chain so all three are populated.
+  if(refId && !arrId){
+    const refs = await sbFetch(`rs_references?id=eq.${refId}`);
+    if(refs && refs[0]){
+      // Find the arrangement pointing at this reference, if any.
+      const arrs = await sbFetch(`rs_arrangements?reference_id=eq.${refId}&limit=1`);
+      if(arrs && arrs[0]){
+        state.arrangement = arrs[0];
+      }
+      const songs = await sbFetch(`rs_songs?id=eq.${refs[0].song_id}`);
+      if(songs && songs[0]) state.song = songs[0];
+      await enterEditMode(refId);
+    }
+  } else if(arrId){
     const arrs = await sbFetch(`rs_arrangements?id=eq.${arrId}`);
     if(arrs && arrs[0]){
       state.arrangement = arrs[0];
@@ -1787,6 +1802,7 @@ async function saveNewReference(validSections){
   const refRes = await sbPost('rs_references', refRow);
   if(!refRes || !refRes[0]) throw new Error('Failed to create reference record');
   const refId = refRes[0].id;
+  state.savedReferenceId = refId;  // for post-save redirect
 
   // 2. Upload reference
   advanceStep('upload-ref');
@@ -1847,6 +1863,7 @@ async function saveNewReference(validSections){
 // ── SAVE FLOW — EDIT EXISTING ────────────────────────────────
 async function saveEditMode(validSections){
   const refId = state.existingReference.id;
+  state.savedReferenceId = refId;  // for post-save redirect
 
   showProgress([
     { id:'update-meta', label:'Update reference metadata' },
@@ -1930,6 +1947,13 @@ function showSuccess(){
   } else {
     document.getElementById('progress-title').textContent = '✓ Reference saved';
     document.getElementById('progress-msg').textContent = 'The stems are uploaded and your arrangement is linked. You can now build the arrangement or come back to this song anytime.';
+  }
+  // Point the Open button at the saved reference so the page reloads
+  // with the stems and sections already there — no bounce back to the
+  // Rehearsal Studio index.
+  const openBtn = document.getElementById('progress-open-btn');
+  if(openBtn && state.savedReferenceId){
+    openBtn.href = 'reference.html?reference_id=' + encodeURIComponent(state.savedReferenceId);
   }
   document.getElementById('progress-actions').style.display = 'block';
 }
