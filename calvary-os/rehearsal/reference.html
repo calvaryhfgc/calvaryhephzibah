@@ -992,10 +992,86 @@ function onZoomChange(val){
 }
 
 // ── REGION ↔ STATE SYNC ──────────────────────────────────────
+// Minimum length after clamping — prevents regions being collapsed
+// to effectively zero when they try to cross a neighbour.
+const MIN_REGION_LEN = 0.2;
+
+// Given a region's desired [start, end] and its id, return a
+// [start, end] that doesn't overlap any other region. Preserves the
+// desired length when possible; shrinks to fit against the nearest
+// neighbour when not. The idea: user drags however they like, and
+// the region stops growing at the neighbour's edge rather than
+// being rejected.
+function clampRegionToNeighbours(regionId, start, end){
+  if(!wsRegions) return { start, end };
+  const others = wsRegions.getRegions()
+    .filter(r => r.id !== regionId)
+    .map(r => ({ start: r.start, end: r.end }))
+    .sort((a,b) => a.start - b.start);
+  if(others.length === 0) return { start, end };
+
+  // Nearest neighbour on the left (highest end <= our start)
+  // and on the right (lowest start >= our end).
+  let leftBound = 0;
+  let rightBound = ws ? ws.getDuration() : end;
+  for(const o of others){
+    if(o.end <= start) leftBound = Math.max(leftBound, o.end);
+    if(o.start >= end) { rightBound = Math.min(rightBound, o.start); break; }
+  }
+
+  // Check if the desired range sits inside a neighbour (overlaps it).
+  // If so, clamp to the nearer edge.
+  for(const o of others){
+    if(start < o.end && end > o.start){
+      // Overlap with this neighbour. Shrink to whichever side we
+      // encroached less into — the user's intent is usually "I meant
+      // to stop just before the neighbour".
+      const leftOverlap  = Math.max(0, o.end - start);   // how far past o's start we went
+      const rightOverlap = Math.max(0, end - o.start);   // how far into o we extended
+      if(rightOverlap <= leftOverlap){
+        // Encroached from the left — clamp end to o.start
+        end = o.start;
+      } else {
+        // Encroached from the right — clamp start to o.end
+        start = o.end;
+      }
+    }
+  }
+
+  // Final bounds against the non-overlapping range
+  start = Math.max(start, leftBound);
+  end   = Math.min(end,   rightBound);
+
+  // Preserve minimum length. If clamped to less than MIN_REGION_LEN,
+  // keep the region anchored against whichever edge it was dragged to.
+  if(end - start < MIN_REGION_LEN){
+    if(end - leftBound >= MIN_REGION_LEN){
+      start = end - MIN_REGION_LEN;
+    } else if(rightBound - start >= MIN_REGION_LEN){
+      end = start + MIN_REGION_LEN;
+    } else {
+      // No room at all — use whatever sliver is available.
+      start = leftBound;
+      end   = Math.min(rightBound, leftBound + MIN_REGION_LEN);
+    }
+  }
+
+  return { start, end };
+}
+
 function onRegionChanged(r, kind){
   if(wsSuppressSync) return;
-  if(state.snap && kind !== 'removed'){
-    const {start, end} = snapRegionToBars(r.start, r.end);
+  if(kind !== 'removed'){
+    let start = r.start;
+    let end   = r.end;
+    if(state.snap){
+      ({ start, end } = snapRegionToBars(start, end));
+    }
+    // Enforce no overlap with other regions (after snap, so bar
+    // alignment is respected before clamping to neighbours).
+    const clamped = clampRegionToNeighbours(r.id, start, end);
+    start = clamped.start;
+    end   = clamped.end;
     if(start !== r.start || end !== r.end){
       wsSuppressSync = true;
       r.setOptions({ start, end });
@@ -1057,8 +1133,35 @@ function createChunk(){
   const beatsPerBar = (document.getElementById('wave-timesig').value || '4/4').split('/').map(Number)[0];
   const secPerBar = bpm ? (60 / bpm) * beatsPerBar : 2;
   const len = Math.min(secPerBar * 4, Math.max(1, dur - t));
-  const start = state.snap ? snapToBar(t) : t;
-  const end = Math.min(dur, start + len);
+  let start = state.snap ? snapToBar(t) : t;
+
+  // If the playhead is inside or before an existing region, push the
+  // new chunk to just after it so we don't create an overlap from the
+  // get-go. (onRegionChanged would clamp anyway, but placing cleanly
+  // avoids a jumpy visual on creation.)
+  const existing = wsRegions.getRegions()
+    .map(r => ({ start: r.start, end: r.end }))
+    .sort((a,b) => a.start - b.start);
+  for(const o of existing){
+    if(start < o.end && start >= o.start){
+      // Playhead landed inside this region — start immediately after it
+      start = o.end;
+    }
+  }
+  let end = Math.min(dur, start + len);
+
+  // Final pass: clamp against neighbours in case anything still overlaps
+  // (e.g. chunks on either side of the insertion point). Uses a dummy id
+  // so clampRegionToNeighbours doesn't exclude anything real.
+  const clamped = clampRegionToNeighbours('__new__', start, end);
+  start = clamped.start;
+  end   = clamped.end;
+
+  if(end - start < MIN_REGION_LEN){
+    COS.toast('No room here — try a different spot');
+    return;
+  }
+
   const r = wsRegions.addRegion({
     start, end,
     content: '',
@@ -1786,6 +1889,22 @@ async function saveReference(){
   const validSections = state.sections.filter(s =>
     s.label && parseTime(s.start) !== null && parseTime(s.end) !== null
   );
+
+  // Defence in depth: reject overlapping sections at save time. The
+  // waveform editor enforces no-overlap live, but if anything slipped
+  // through (direct DB edit, import, future bug) we catch it here
+  // rather than persisting corrupted data.
+  const sorted = validSections
+    .map(s => ({ ...s, _start: parseTime(s.start), _end: parseTime(s.end) }))
+    .sort((a,b) => a._start - b._start);
+  for(let i = 1; i < sorted.length; i++){
+    if(sorted[i]._start < sorted[i-1]._end){
+      _saving = false;
+      document.getElementById('btn-save').disabled = false;
+      COS.toast(`Sections overlap: "${sorted[i-1].label}" and "${sorted[i].label}"`);
+      return;
+    }
+  }
 
   try {
     if(state.editMode){
