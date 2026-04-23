@@ -1824,6 +1824,7 @@ async function saveNewReference(validSections){
     duration_seconds: parseFloat(document.getElementById('meta-duration').value) || null,
     detected_key: document.getElementById('meta-key').value.trim() || null,
     detected_bpm: parseInt(document.getElementById('meta-bpm').value) || null,
+    beat_offset_seconds: state.beatOffset || 0,
     status: 'processing',
     created_by: COS.currentUser.name
   };
@@ -1912,12 +1913,20 @@ async function saveEditMode(validSections){
     { id:'done', label:'Done' }
   ]);
 
-  // 1. Patch metadata (in case key/BPM/duration were corrected)
+  // 1. Patch metadata (in case key/BPM/duration were corrected).
+  // Include beat_offset_seconds so a drag-then-immediately-save is
+  // captured even if the 500ms debounce hasn't yet fired.
   advanceStep('update-meta');
+  // Cancel any pending debounced save — we're persisting the offset now.
+  if(state._offsetSaveTimer){
+    clearTimeout(state._offsetSaveTimer);
+    state._offsetSaveTimer = null;
+  }
   await sbPatch('rs_references', `id=eq.${refId}`, {
     detected_key: document.getElementById('meta-key').value.trim() || null,
     detected_bpm: parseInt(document.getElementById('meta-bpm').value) || null,
-    duration_seconds: parseFloat(document.getElementById('meta-duration').value) || null
+    duration_seconds: parseFloat(document.getElementById('meta-duration').value) || null,
+    beat_offset_seconds: state.beatOffset || 0
   });
 
   // 2. Atomically replace sections: delete all existing, insert new
