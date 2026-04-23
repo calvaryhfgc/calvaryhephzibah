@@ -94,6 +94,9 @@
   .pv-loop-toggle input{accent-color:var(--red);cursor:pointer;width:18px;height:18px;}
   .pv-loop-toggle .dot{width:8px;height:8px;border-radius:50%;background:#FBBF24;display:none;animation:pv-pulse 1s ease-in-out infinite;}
   .pv-loop-toggle.looping .dot{display:inline-block;}
+  .pv-click-toggle{padding:8px 12px;min-height:36px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .pv-click-toggle.active{background:var(--red);border-color:var(--red);color:white;}
+  .pv-click-toggle:disabled{opacity:0.4;cursor:not-allowed;}
   @keyframes pv-pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
   /* Transpose card — Phase 2: pre-computed variants with state-aware chips */
@@ -296,6 +299,7 @@
                 <button class="pv-speed-chip active" onclick="setSpeed(1)" data-speed="1">1×</button>
                 <button class="pv-speed-chip" onclick="setSpeed(1.25)" data-speed="1.25">1.25×</button>
               </div>
+              <button class="pv-click-toggle" id="pv-click-toggle" onclick="toggleClick()" title="Play an audible click on every beat">🎵 Click</button>
               <label class="pv-loop-toggle" id="pv-loop-toggle">
                 <span class="dot"></span>
                 <input type="checkbox" id="pv-loop-cb" onchange="onLoopToggle()">
@@ -354,19 +358,18 @@ const STEMS = [
   { key:'guitar',    label:'Guitar',    icon:'🎸' },
   { key:'other',     label:'Other',     icon:'🎶' },
   { key:'strings',   label:'Strings',   icon:'🎻' },
-  { key:'metronome', label:'Metronome', icon:'🎯' },
 ];
 
 // Auto-mix presets: when user picks a part, this is how stems default.
 // Keys are stem names; values are 0-1 gains.
 const AUTO_MIX = {
-  drums:      { drums:1.0, bass:0.7, vocals:0.5, keys:0.5, guitar:0.5, other:0.4, strings:0.4, metronome:0.0 },
-  bass:       { bass:1.0, drums:0.8, vocals:0.5, keys:0.5, guitar:0.5, other:0.4, strings:0.4, metronome:0.0 },
-  keys:       { keys:1.0, drums:0.7, bass:0.7, vocals:0.5, guitar:0.4, other:0.4, strings:0.5, metronome:0.0 },
-  electric:   { guitar:1.0, drums:0.7, bass:0.7, vocals:0.5, keys:0.4, other:0.4, strings:0.3, metronome:0.0 },
-  acoustic:   { guitar:1.0, drums:0.6, bass:0.6, vocals:0.6, keys:0.5, other:0.4, strings:0.3, metronome:0.0 },
-  lead_vocal: { vocals:1.0, drums:0.6, bass:0.6, keys:0.5, guitar:0.5, other:0.4, strings:0.4, metronome:0.0 },
-  bv:         { vocals:0.4, drums:0.7, bass:0.7, keys:0.6, guitar:0.6, other:0.5, strings:0.5, metronome:0.0 },
+  drums:      { drums:1.0, bass:0.7, vocals:0.5, keys:0.5, guitar:0.5, other:0.4, strings:0.4 },
+  bass:       { bass:1.0, drums:0.8, vocals:0.5, keys:0.5, guitar:0.5, other:0.4, strings:0.4 },
+  keys:       { keys:1.0, drums:0.7, bass:0.7, vocals:0.5, guitar:0.4, other:0.4, strings:0.5 },
+  electric:   { guitar:1.0, drums:0.7, bass:0.7, vocals:0.5, keys:0.4, other:0.4, strings:0.3 },
+  acoustic:   { guitar:1.0, drums:0.6, bass:0.6, vocals:0.6, keys:0.5, other:0.4, strings:0.3 },
+  lead_vocal: { vocals:1.0, drums:0.6, bass:0.6, keys:0.5, guitar:0.5, other:0.4, strings:0.4 },
+  bv:         { vocals:0.4, drums:0.7, bass:0.7, keys:0.6, guitar:0.6, other:0.5, strings:0.5 },
 };
 
 // ── STATE ────────────────────────────────────────────────────
@@ -401,6 +404,16 @@ const state = {
   playbackRate: 1,
   totalDuration: 0,
 
+  // Click (metronome) state
+  // clickEnabled: user preference — persists in localStorage.
+  // _click: scheduler internals when running, null when off.
+  //   { gainNode, lastScheduledBeatN, schedulerTimer }
+  // clickVolume: 0-1. Kept separate from stem mixer because the click
+  //   isn't a stem — it's a transport tool.
+  clickEnabled: false,
+  clickVolume: 0.6,
+  _click: null,
+
   // UI state
   currentSlotIdx: -1,
   loopSlotIdx: -1,    // -1 means no loop
@@ -413,6 +426,10 @@ function pageInit(){
   // Load preferred part from localStorage or default to lead_vocal
   const savedPart = localStorage.getItem('pv_part') || 'lead_vocal';
   state.currentPart = savedPart;
+  // Restore click preference (off by default on first visit)
+  state.clickEnabled = localStorage.getItem('pv_click_on') === '1';
+  const savedVol = parseFloat(localStorage.getItem('pv_click_vol'));
+  if(!isNaN(savedVol)) state.clickVolume = Math.max(0, Math.min(1, savedVol));
   loadArrangement();
 
   // Guard against accidental navigation during variant generation
@@ -595,6 +612,9 @@ function renderUI(){
 
   // Stems (mixer rows)
   renderStems();
+
+  // Click toggle — reflect stored preference, disable if no BPM known
+  updateClickToggleUI();
 
   // Transpose controls (hidden until worklet ready)
   renderTransposeUI();
@@ -2007,11 +2027,14 @@ async function play(){
   startAllSources(state.arrTime);
   state.playing = true;
   document.getElementById('pv-play').textContent = '❚❚';
+  // If click is armed, start it alongside the stems — same audio clock
+  if(state.clickEnabled) startClick();
   tickPlayback();
 }
 
 function pause(){
   stopAllSources();
+  stopClick();
   state.playing = false;
   document.getElementById('pv-play').textContent = '▶';
   if(state.rafId){ cancelAnimationFrame(state.rafId); state.rafId = null; }
@@ -2135,6 +2158,9 @@ function seek(arrT){
   state.currentSlotIdx = slotIndexAtArrTime(state.arrTime);
   updateCurrentSlotUI();
   updateTimeUI();
+  // Click's scheduled beats are now stale — restart so it resumes from
+  // the new position rather than firing ticks from before the seek.
+  restartClickIfRunning();
 }
 
 function skipBy(delta){
@@ -2210,6 +2236,175 @@ function setSpeed(rate){
       try { stem.source.playbackRate.value = rate; } catch(e){}
     }
   });
+  // Speed change invalidates the click schedule — restart it
+  restartClickIfRunning();
+}
+
+// ── CLICK (METRONOME) ────────────────────────────────────────
+// A synthesised click on every beat, scheduled against the same
+// AudioContext clock as the stems so there is zero drift.
+//
+// Design notes:
+// - Beat timing is defined in *reference time* (the raw MP3's timeline),
+//   because that's where BPM and beat offset live. Every tick of the
+//   scheduler: take arrTime → convert to refTime → find which beats
+//   fall in the lookahead window → schedule them in audio-context time.
+// - When the user reorders or skips slots, arrangement time keeps
+//   flowing but reference time can jump. The scheduler handles this by
+//   re-reading arrTime on every tick rather than extrapolating.
+// - Playback rate affects how fast arrTime advances, but beats are
+//   anchored in reference time, so the click follows the music at
+//   whatever speed it's playing.
+
+const CLICK_LOOKAHEAD_SEC = 0.25;       // how far ahead to schedule
+const CLICK_SCHEDULE_INTERVAL_MS = 50;  // scheduler tick rate
+
+function toggleClick(){
+  state.clickEnabled = !state.clickEnabled;
+  localStorage.setItem('pv_click_on', state.clickEnabled ? '1' : '0');
+  updateClickToggleUI();
+  if(state.clickEnabled){
+    if(state.playing) startClick();
+  } else {
+    stopClick();
+  }
+}
+
+function updateClickToggleUI(){
+  const btn = document.getElementById('pv-click-toggle');
+  if(!btn) return;
+  btn.classList.toggle('active', state.clickEnabled);
+  btn.textContent = state.clickEnabled ? '🎵 Click ON' : '🎵 Click';
+  // Grey the button out if we can't click — no BPM known
+  const bpm = resolveBpm();
+  btn.disabled = !bpm;
+  btn.title = bpm
+    ? 'Play an audible click on every beat'
+    : 'No BPM set on this reference — can\'t run a click';
+}
+
+function resolveBpm(){
+  // Arrangement BPM wins (could be tempo-mapped for a new version),
+  // else fall back to the reference's detected BPM.
+  return (state.arrangement && state.arrangement.bpm)
+      || (state.reference  && state.reference.detected_bpm)
+      || 0;
+}
+
+function resolveBeatOffset(){
+  // In seconds, applied in reference time.
+  const v = state.reference && state.reference.beat_offset_seconds;
+  return (v !== null && v !== undefined) ? Number(v) || 0 : 0;
+}
+
+function startClick(){
+  if(state._click) return;  // already running
+  const ctx = state.audioCtx;
+  if(!ctx){ return; }
+  const gainNode = ctx.createGain();
+  gainNode.gain.value = state.clickVolume;
+  gainNode.connect(ctx.destination);
+  state._click = {
+    gainNode,
+    lastScheduledBeatN: null,
+    schedulerTimer: setInterval(clickTick, CLICK_SCHEDULE_INTERVAL_MS)
+  };
+}
+
+function stopClick(){
+  if(!state._click) return;
+  clearInterval(state._click.schedulerTimer);
+  try { state._click.gainNode.disconnect(); } catch(e){}
+  state._click = null;
+}
+
+// Called after seek, speed-change, or any event that invalidates
+// the click's currently-scheduled beats. Restarts only if it was
+// already running — does not force it on.
+function restartClickIfRunning(){
+  if(!state._click) return;
+  stopClick();
+  if(state.playing && state.clickEnabled) startClick();
+}
+
+function clickTick(){
+  const c = state._click;
+  if(!c || !state.playing || !state.audioCtx) return;
+
+  const bpm = resolveBpm();
+  if(!bpm) return;
+  const secPerBeat = 60 / bpm;
+
+  // Current arrangement time → current reference time
+  const { refTime } = arrangementToReferenceTime(state.arrTime);
+  const offset = resolveBeatOffset();
+
+  // Beat N lands at refTime = offset + N * secPerBeat.
+  // Schedule everything whose refTime lands inside [now, now + lookahead],
+  // remembering the last N we queued so ticks don't duplicate.
+  const windowEnd = refTime + CLICK_LOOKAHEAD_SEC;
+  const firstN = Math.ceil((refTime - offset) / secPerBeat);
+  const lastN  = Math.floor((windowEnd - offset) / secPerBeat);
+
+  const ctx = state.audioCtx;
+  const audioNow = ctx.currentTime;
+
+  for(let n = firstN; n <= lastN; n++){
+    if(c.lastScheduledBeatN !== null && n <= c.lastScheduledBeatN) continue;
+    const beatRefTime = offset + n * secPerBeat;
+    // Seconds from now (in reference time) until this beat
+    const deltaRef = beatRefTime - refTime;
+    // At playback rate r, 1s of reference time takes 1/r seconds of wall clock
+    // — but since our arrTime → refTime mapping already accounts for slot
+    // boundaries, and the stems play at playbackRate, we map delta in wall time as deltaRef / playbackRate.
+    const audioTime = audioNow + (deltaRef / state.playbackRate);
+    if(audioTime < audioNow) continue;  // already past
+    const beatsPerBar = 4;  // assume 4/4 — we don't store time signature per reference yet
+    const isDownbeat = (((n % beatsPerBar) + beatsPerBar) % beatsPerBar) === 0;
+    playClickAt(audioTime, isDownbeat);
+    c.lastScheduledBeatN = n;
+  }
+}
+
+function playClickAt(audioTime, isDownbeat){
+  const c = state._click;
+  if(!c || !state.audioCtx) return;
+  const ctx = state.audioCtx;
+
+  // Two-layer wood-block click: triangle body + short square transient.
+  // Downbeat: higher pitch, slightly longer — makes beat 1 audible as the
+  // anchor. Same design as the reference editor's metronome for consistency.
+  const bodyFreq       = isDownbeat ? 1760 : 1200;
+  const bodyDecay      = isDownbeat ? 0.045 : 0.030;
+  const transientFreq  = isDownbeat ? 3520 : 2400;
+  const transientDecay = 0.008;
+  const attack = 0.0005;
+
+  const bodyOsc = ctx.createOscillator();
+  const bodyEnv = ctx.createGain();
+  bodyOsc.type = 'triangle';
+  bodyOsc.frequency.value = bodyFreq;
+  bodyEnv.gain.value = 0;
+  bodyOsc.connect(bodyEnv);
+  bodyEnv.connect(c.gainNode);
+  bodyEnv.gain.setValueAtTime(0, audioTime);
+  bodyEnv.gain.linearRampToValueAtTime(1.0, audioTime + attack);
+  bodyEnv.gain.exponentialRampToValueAtTime(0.001, audioTime + attack + bodyDecay);
+  bodyOsc.start(audioTime);
+  bodyOsc.stop(audioTime + attack + bodyDecay + 0.01);
+
+  const trOsc = ctx.createOscillator();
+  const trEnv = ctx.createGain();
+  trOsc.type = 'square';
+  trOsc.frequency.value = transientFreq;
+  trEnv.gain.value = 0;
+  trOsc.connect(trEnv);
+  trEnv.connect(c.gainNode);
+  trEnv.gain.setValueAtTime(0, audioTime);
+  trEnv.gain.linearRampToValueAtTime(0.35, audioTime + attack);
+  trEnv.gain.exponentialRampToValueAtTime(0.001, audioTime + attack + transientDecay);
+  trOsc.start(audioTime);
+  trOsc.stop(audioTime + attack + transientDecay + 0.005);
 }
 
 // ── PRACTICE LOGGING ─────────────────────────────────────────
