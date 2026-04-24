@@ -280,6 +280,48 @@
   .watchout-body strong { color: var(--text); font-weight: 700; }
   .watchout-body em { color: var(--text-dim); font-style: italic; }
 
+  /* Practice link — deep-link into Calvary OS Practice View for this song */
+  .practice-link {
+    display: flex; align-items: center; gap: 12px;
+    text-decoration: none; color: var(--text);
+    padding: 13px 16px; margin-bottom: 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .practice-link:hover, .practice-link:active {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+  }
+  .practice-link-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: rgba(196,30,42,0.1);
+    border: 1px solid rgba(196,30,42,0.25);
+    color: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 16px;
+  }
+  .practice-link-body {
+    flex: 1; min-width: 0;
+  }
+  .practice-link-label {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .practice-link-title {
+    font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3;
+  }
+  .practice-link-chev {
+    color: var(--text-dim); font-size: 16px; flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+  .practice-link:hover .practice-link-chev {
+    transform: translateX(2px);
+    color: var(--red);
+  }
+
   /* ============================================
      CLIPS STRIP — overview of all clips, sits under the video
      ============================================ */
@@ -782,6 +824,15 @@
       </div>
     </div>
 
+    <a class="practice-link" href="https://calvaryhfgc.github.io/calvaryhephzibah/calvary-os/rehearsal/practice.html?arrangement_id=82d81f44-122b-4821-b137-e1a62db7a9e9" target="_blank" rel="noopener">
+      <span class="practice-link-icon">🎧</span>
+      <span class="practice-link-body">
+        <span class="practice-link-label">Rehearse your part</span>
+        <span class="practice-link-title">Open in Calvary OS Practice View</span>
+      </span>
+      <span class="practice-link-chev">→</span>
+    </a>
+
     <button class="play-full" data-clip="1" data-start="377" data-end="2344" data-label="Trading My Sorrows">
       <span class="play-num">
         <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
@@ -860,6 +911,15 @@
         After the first chorus, <strong>the whole band plays the descending line ×2</strong>. This is the late intro — don't skip it and don't let the song breeze past it.
       </div>
     </div>
+
+    <a class="practice-link" href="https://calvaryhfgc.github.io/calvaryhephzibah/calvary-os/rehearsal/practice.html?arrangement_id=130eac77-5c4d-46f3-8bed-067274ebaebb" target="_blank" rel="noopener">
+      <span class="practice-link-icon">🎧</span>
+      <span class="practice-link-body">
+        <span class="practice-link-label">Rehearse your part</span>
+        <span class="practice-link-title">Open in Calvary OS Practice View</span>
+      </span>
+      <span class="practice-link-chev">→</span>
+    </a>
 
     <button class="play-full" data-clip="2" data-start="2345" data-end="3305" data-label="Lord You Are Good">
       <span class="play-num">
