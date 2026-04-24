@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rehearsal Review — 23rd April 2026 | Calvary Worship</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --surface: #141414;
+    --surface-2: #1C1C1C;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #FFFFFF;
+    --text-dim: rgba(255,255,255,0.55);
+    --text-faint: rgba(255,255,255,0.35);
+    --red: #C41E2A;
+    --red-soft: rgba(196,30,42,0.12);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { background: var(--bg); color: var(--text); font-family: 'DM Sans', -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+
+  .container { max-width: 880px; margin: 0 auto; padding: 24px 20px 120px; }
+
+  /* Header */
+  .header { padding: 8px 0 24px; }
+  .eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; margin-bottom: 8px; }
+  .title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(32px, 6vw, 44px); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .title em { font-style: italic; color: var(--text-dim); }
+  .subtitle { color: var(--text-dim); font-size: 15px; }
+
+  /* Sticky video */
+  .video-wrap {
+    position: sticky; top: 0; z-index: 10;
+    margin: 16px -20px 24px;
+    background: var(--bg);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .video-inner {
+    max-width: 840px; margin: 0 auto; padding: 0 20px;
+  }
+  .video-frame {
+    position: relative; width: 100%; aspect-ratio: 16/9;
+    background: #000; border-radius: 12px; overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+  .video-frame iframe { position: absolute; inset: 0; width:100%; height:100%; border:0; }
+  .now-playing {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 10px; font-size: 13px; color: var(--text-dim);
+    min-height: 20px;
+  }
+  .now-playing strong { color: var(--text); font-weight: 600; }
+  .stop-btn {
+    background: transparent; border: 1px solid var(--border-strong); color: var(--text-dim);
+    padding: 4px 10px; border-radius: 100px; font-size: 12px; font-family: inherit;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .stop-btn:hover { color: var(--text); border-color: var(--text-dim); }
+  .stop-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* Quick nav */
+  .quicknav {
+    display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    margin: 0 -20px 28px; padding: 0 20px 4px;
+    scrollbar-width: none;
+  }
+  .quicknav::-webkit-scrollbar { display: none; }
+  .quicknav a {
+    flex-shrink: 0;
+    padding: 8px 14px; border-radius: 100px; background: var(--surface);
+    border: 1px solid var(--border); text-decoration: none; color: var(--text-dim);
+    font-size: 13px; font-weight: 500; white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .quicknav a:hover { color: var(--text); border-color: var(--border-strong); }
+
+  /* Summary card */
+  .summary {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px 22px; margin-bottom: 32px;
+  }
+  .summary h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 22px; margin-bottom: 12px; letter-spacing: -0.01em; }
+  .summary p { color: var(--text-dim); font-size: 14px; margin-bottom: 8px; }
+  .summary p:last-child { margin-bottom: 0; }
+  .summary strong { color: var(--text); font-weight: 600; }
+
+  /* Key map */
+  .keymap {
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 0; margin-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .keymap-row {
+    display: contents;
+  }
+  .keymap-row > div {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .keymap-slot { color: var(--text-faint); }
+  .keymap-song { color: var(--text); padding-right: 16px !important; }
+  .keymap-key { color: var(--red); font-weight: 700; text-align: right; min-width: 40px; }
+
+  /* Song section */
+  .song {
+    margin-bottom: 36px;
+    padding-top: 12px;
+    scroll-margin-top: 280px;
+  }
+  .song-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; margin-bottom: 6px; flex-wrap: wrap;
+  }
+  .song-title {
+    font-family: 'Instrument Serif', serif; font-weight: 400;
+    font-size: 30px; letter-spacing: -0.01em; line-height: 1.1;
+  }
+  .song-key {
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--red); font-weight: 700;
+  }
+  .song-meta { color: var(--text-faint); font-size: 13px; margin-bottom: 16px; }
+
+  /* Primary play button */
+  .play-full {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; padding: 14px 18px;
+    background: var(--red-soft); border: 1px solid rgba(196,30,42,0.3);
+    color: var(--text); border-radius: 12px;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer; text-align: left;
+    transition: all 0.15s;
+    margin-bottom: 20px;
+  }
+  .play-full:hover { background: rgba(196,30,42,0.2); border-color: rgba(196,30,42,0.5); }
+  .play-full.playing { background: var(--red); border-color: var(--red); }
+  .play-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--red); color: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-size: 13px;
+  }
+  .play-full.playing .play-icon { background: rgba(255,255,255,0.2); }
+  .play-label { flex: 1; }
+  .play-duration {
+    font-size: 12px; color: var(--text-dim); font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .play-full.playing .play-duration { color: rgba(255,255,255,0.8); }
+
+  /* Notes */
+  .notes { padding: 0 2px; }
+  .notes h3 {
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 600;
+    margin: 20px 0 10px;
+  }
+  .notes h3:first-child { margin-top: 0; }
+  .notes ul { list-style: none; padding: 0; }
+  .notes li {
+    padding: 8px 0 8px 20px; position: relative;
+    font-size: 15px; line-height: 1.55; color: rgba(255,255,255,0.85);
+    border-bottom: 1px solid var(--border);
+  }
+  .notes li:last-child { border-bottom: 0; }
+  .notes li::before {
+    content: ''; position: absolute; left: 4px; top: 17px;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--red);
+  }
+  .notes li strong { color: var(--text); font-weight: 600; }
+  .notes li em { color: var(--text-dim); font-style: italic; }
+  .notes li code {
+    font-family: 'DM Sans', monospace; background: var(--surface);
+    padding: 2px 8px; border-radius: 6px; font-size: 13px;
+    border: 1px solid var(--border); color: var(--text);
+  }
+
+  /* Structure list */
+  .structure {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 18px; margin-top: 14px;
+  }
+  .structure-title {
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 600; margin-bottom: 10px;
+  }
+  .structure ol { list-style: none; padding: 0; counter-reset: step; }
+  .structure li {
+    counter-increment: step; padding: 6px 0 6px 28px; position: relative;
+    font-size: 14px; color: rgba(255,255,255,0.85);
+  }
+  .structure li::before {
+    content: counter(step); position: absolute; left: 0; top: 6px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--surface-2); border: 1px solid var(--border);
+    font-size: 11px; font-weight: 600; color: var(--text-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 60px; padding-top: 24px; border-top: 1px solid var(--border);
+    color: var(--text-faint); font-size: 13px; text-align: center;
+  }
+  .footer p { margin-bottom: 4px; }
+
+  @media (max-width: 500px) {
+    .container { padding: 16px 16px 80px; }
+    .video-wrap { margin: 12px -16px 20px; }
+    .video-inner { padding: 0 16px; }
+    .song-title { font-size: 26px; }
+    .keymap-song { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="header">
+    <div class="eyebrow">Calvary Worship · Virtual Rehearsal</div>
+    <h1 class="title">Rehearsal Review <em>— 23rd April 2026</em></h1>
+    <p class="subtitle">Preparing for Sunday 26th April · Caster leading</p>
+  </header>
+
+  <div class="video-wrap">
+    <div class="video-inner">
+      <div class="video-frame">
+        <div id="player"></div>
+      </div>
+      <div class="now-playing">
+        <span id="nowPlaying">Tap any section below to jump to it</span>
+        <button class="stop-btn" id="stopBtn" disabled>■ Stop section</button>
+      </div>
+    </div>
+  </div>
+
+  <nav class="quicknav">
+    <a href="#summary">Overview</a>
+    <a href="#trading">Trading My Sorrows</a>
+    <a href="#lord">Lord You Are Good</a>
+    <a href="#friend">Friend of God</a>
+    <a href="#worship">Worship Set</a>
+    <a href="#offering">Offering</a>
+  </nav>
+
+  <section class="summary" id="summary">
+    <h2>What we decided</h2>
+    <p><strong>Caster is leading this Sunday</strong> — Vanessa is away. Keys adjusted to suit his voice.</p>
+    <p><strong>No modulations.</strong> Everything stays in one key per song. One key change only across the whole service: <strong style="color:var(--red)">B → D</strong> for worship, <strong style="color:var(--red)">D → B</strong> coming out.</p>
+    <p><strong>Offering:</strong> <em>Blessing and Honour</em> back in — <em>Lift Your Name on High</em> arrangement deferred, no rehearsal time.</p>
+
+    <div class="keymap">
+      <div class="keymap-row"><div class="keymap-slot">Praise 1</div><div class="keymap-song">Trading My Sorrows</div><div class="keymap-key">B</div></div>
+      <div class="keymap-row"><div class="keymap-slot">Praise 2</div><div class="keymap-song">Lord You Are Good</div><div class="keymap-key">B</div></div>
+      <div class="keymap-row"><div class="keymap-slot">Praise 3</div><div class="keymap-song">Friend of God</div><div class="keymap-key">B</div></div>
+      <div class="keymap-row"><div class="keymap-slot">Worship 1</div><div class="keymap-song">Be Magnified</div><div class="keymap-key">D</div></div>
+      <div class="keymap-row"><div class="keymap-slot">Worship 2</div><div class="keymap-song">I Exalt Thee</div><div class="keymap-key">D</div></div>
+      <div class="keymap-row"><div class="keymap-slot">Offering</div><div class="keymap-song">Blessing and Honour</div><div class="keymap-key">B</div></div>
+      <div class="keymap-row"><div class="keymap-slot">End of Service</div><div class="keymap-song">He Is Lord</div><div class="keymap-key">B</div></div>
+    </div>
+  </section>
+
+  <!-- TRADING MY SORROWS -->
+  <section class="song" id="trading">
+    <div class="song-header">
+      <h2 class="song-title">Trading My Sorrows</h2>
+      <span class="song-key">Key of B</span>
+    </div>
+    <p class="song-meta">Praise · Opening song</p>
+
+    <button class="play-full" data-start="377" data-end="2344" data-label="Trading My Sorrows — full discussion">
+      <span class="play-icon">▶</span>
+      <span class="play-label">Play full discussion</span>
+      <span class="play-duration">32m 47s · 6:17 → 39:04</span>
+    </button>
+
+    <div class="notes">
+      <h3>Key decisions</h3>
+      <ul>
+        <li><strong>Intro loops 4 times</strong> — up from 2 last week. Gives Caster clean room to find his entry. Last Sunday Vanessa came in hesitantly because the intro felt rushed.</li>
+        <li><strong>Laolu's Afro groove on the verses stays in.</strong> Uncle B confirmed it worked last Sunday even though it wasn't planned.</li>
+        <li><strong>Melody phrasing correction (Uncle B):</strong> <em>"I'm trading my sor-rows"</em> — not <em>"I'm trading my sorrows"</em>. Same feel on <em>"Yes Lord, yes Lord, yes, yes Lord."</em> Caster to listen back to last Sunday's recording to lock it in. Esther to adopt the same phrasing.</li>
+      </ul>
+    </div>
+
+    <div class="structure">
+      <div class="structure-title">Structure</div>
+      <ol>
+        <li><strong>Intro</strong> — 2-bar groove, looped ×4</li>
+        <li><strong>Verse 1 → Verse 2</strong> back-to-back (<em>sorrows / sickness</em>)</li>
+        <li><strong>Chorus</strong> (<em>Yes Lord…</em>) ×2</li>
+        <li><strong>Verse 1 → Verse 2</strong> again</li>
+        <li><strong>Chorus</strong> ×4</li>
+        <li>Transition straight into <em>Lord You Are Good</em></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- LORD YOU ARE GOOD -->
+  <section class="song" id="lord">
+    <div class="song-header">
+      <h2 class="song-title">Lord You Are Good</h2>
+      <span class="song-key">Key of B</span>
+    </div>
+    <p class="song-meta">Praise · No key change this week</p>
+
+    <button class="play-full" data-start="2345" data-end="3305" data-label="Lord You Are Good — full discussion">
+      <span class="play-icon">▶</span>
+      <span class="play-label">Play full discussion</span>
+      <span class="play-duration">16m · 39:05 → 55:05</span>
+    </button>
+
+    <div class="notes">
+      <h3>Key decisions</h3>
+      <ul>
+        <li><strong>No key change from Trading My Sorrows.</strong> Both songs stay in B. Removes the transition risk that bit us last week.</li>
+        <li><strong>Transition:</strong> Come straight out of the final <em>Yes Lord</em> chorus into the <em>Hallelujah, hallelujah</em> chorus of Lord You Are Good.</li>
+        <li><strong>Breathing moment</strong> after the first chorus — let the song breathe — then drop into the verse.</li>
+      </ul>
+
+      <h3>The instrumental "lick" section</h3>
+      <ul>
+        <li>After the first chorus, the band plays the descending melodic line together. <strong>Reference:</strong> Transformation Church version — the <code>1-2-3-4-3-2-1 / 2-3-4-3-2</code> line.</li>
+        <li>All instruments play the line in unison. Bass plays the harmonic version underneath.</li>
+        <li><strong>Laolu:</strong> kick pattern follows the line — hits on the accents, crash on the landings.</li>
+        <li><strong>Morayo:</strong> plays the line on electric. Distortion would lift it further but not required this Sunday — flag for future.</li>
+        <li><strong>Play the line ×2</strong> before returning to the chorus groove.</li>
+      </ul>
+    </div>
+
+    <div class="structure">
+      <div class="structure-title">Structure</div>
+      <ol>
+        <li>Enter from <em>Trading My Sorrows</em> chorus → <strong>Chorus</strong> of Lord You Are Good</li>
+        <li>Break — let it breathe</li>
+        <li><strong>Verse</strong> (<em>Lord you are good and your mercy endureth forever / people from every nation…</em>)</li>
+        <li><strong>Chorus</strong></li>
+        <li><strong>Instrumental line ×2</strong></li>
+        <li><strong>Chorus</strong> → vamp (<em>You are good, yes you are…</em>) — Caster leads, loop as feels right</li>
+        <li>End on <em>Lord you are good all the time / all the time / you are good</em></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FRIEND OF GOD -->
+  <section class="song" id="friend">
+    <div class="song-header">
+      <h2 class="song-title">Friend of God</h2>
+      <span class="song-key">Key of B</span>
+    </div>
+    <p class="song-meta">Praise · Stays in B — no key change</p>
+
+    <button class="play-full" data-start="3307" data-end="4422" data-label="Friend of God — full discussion">
+      <span class="play-icon">▶</span>
+      <span class="play-label">Play full discussion</span>
+      <span class="play-duration">18m 35s · 55:07 → 1:13:42</span>
+    </button>
+
+    <div class="notes">
+      <h3>Key decisions</h3>
+      <ul>
+        <li><strong>No <em>"You are my…"</em> interlude/vamp this week.</strong> Come off Lord You Are Good cleanly and go straight in.</li>
+        <li><strong>Intro:</strong> Drop the band down. Play the <em>chorus groove</em> of <em>I Am a Friend of God</em> as the intro. All instruments come in. <strong>2 bars</strong> before Caster enters with Verse 1.</li>
+        <li><strong>Bridge is in.</strong> <em>God Almighty…</em> section comes after the second chorus cycle, then back to chorus ×2, then ending.</li>
+      </ul>
+
+      <h3>Mix note for FoH</h3>
+      <ul>
+        <li>Drums and electric guitar both need to be louder in the stream mix — flagged from last Sunday. Especially electric.</li>
+      </ul>
+    </div>
+
+    <div class="structure">
+      <div class="structure-title">Structure</div>
+      <ol>
+        <li><strong>Intro</strong> — chorus groove, 2 bars</li>
+        <li><strong>Verse 1 → Verse 2</strong> (<em>Who am I… / Is it true…</em>)</li>
+        <li><strong>Chorus</strong> (<em>I am a friend of God…</em>) ×2</li>
+        <li><strong>Verse 1 → Verse 2</strong></li>
+        <li><strong>Chorus</strong> ×2</li>
+        <li><strong>Bridge</strong> (<em>God Almighty…</em>)</li>
+        <li><strong>Chorus</strong> ×2</li>
+        <li><strong>End on:</strong> <em>He calls me friend / He calls me friend / He calls me friend / He calls me friend</em></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- WORSHIP SET -->
+  <section class="song" id="worship">
+    <div class="song-header">
+      <h2 class="song-title">Worship Set</h2>
+      <span class="song-key">Key of D</span>
+    </div>
+    <p class="song-meta">Be Magnified → I Exalt Thee · Choruses only</p>
+
+    <button class="play-full" data-start="4423" data-end="5587" data-label="Worship Set — full discussion">
+      <span class="play-icon">▶</span>
+      <span class="play-label">Play full discussion</span>
+      <span class="play-duration">19m 24s · 1:13:43 → 1:33:07</span>
+    </button>
+
+    <div class="notes">
+      <h3>Key decisions</h3>
+      <ul>
+        <li><strong>Key of D for both songs.</strong> Worked through C, C♯, E♭, E — landed on D as the most comfortable for Caster across both.</li>
+        <li><strong>Choruses only — verses cut.</strong> Keeps the worship tight and the dynamics up.</li>
+        <li><strong>No modulation.</strong> Uncle B suggested a key change between <em>Be Magnified</em> and <em>I Exalt Thee</em> to build dynamics — discussion went round and landed on: don't attempt without proper rehearsal time. <strong>Parked for future.</strong></li>
+        <li><strong>Keep Edmund's 7-1 / 7-1 / 5 movement</strong> on <em>I Exalt Thee</em> from last Sunday. BJ confirmed it works — worth holding onto.</li>
+      </ul>
+    </div>
+
+    <div class="structure">
+      <div class="structure-title">Structure</div>
+      <ol>
+        <li><strong>Be Magnified</strong> — short groove intro, Caster enters when ready</li>
+        <li><strong>Chorus ×2</strong> — no verses</li>
+        <li>Transition straight into <strong>I Exalt Thee</strong></li>
+        <li><strong>Chorus</strong> — loop as Caster feels led, keep the 7-1/5 movement, then land</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- OFFERING -->
+  <section class="song" id="offering">
+    <div class="song-header">
+      <h2 class="song-title">Blessing and Honour</h2>
+      <span class="song-key">Key of B</span>
+    </div>
+    <p class="song-meta">Offering · Swapped back in from Lift Your Name on High</p>
+
+    <button class="play-full" data-start="5589" data-end="5869" data-label="Offering discussion">
+      <span class="play-icon">▶</span>
+      <span class="play-label">Play full discussion</span>
+      <span class="play-duration">4m 40s · 1:33:09 → 1:37:49</span>
+    </button>
+
+    <div class="notes">
+      <h3>Key decisions</h3>
+      <ul>
+        <li><strong>Reverting to <em>Blessing and Honour</em></strong> — the new arrangement for <em>Lift Your Name on High</em> wasn't ready and there was no time in rehearsal to work it through.</li>
+        <li><strong>Key of B</strong> — worked through with Caster. Lands cleanly off the worship set (D → B) and sets up the end-of-service song which also stays in B.</li>
+        <li><strong>Standard arrangement</strong> — nothing fancy, keep it clean.</li>
+      </ul>
+
+      <h3>Parked</h3>
+      <ul>
+        <li><em>Lift Your Name on High</em> arrangement — work it through properly for a future offering slot. Not this Sunday.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Calvary Worship · Rehearsal Review for Sunday 26th April 2026</p>
+    <p>Questions → Bolaji · <em>"Unless the Lord builds the house, the builders labour in vain."</em></p>
+  </footer>
+
+</div>
+
+<script>
+  // YouTube IFrame API
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+
+  var player;
+  var currentEndTime = null;
+  var currentLabel = null;
+  var endCheckInterval = null;
+  var activeButton = null;
+
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('player', {
+      videoId: '6V6v0QO2Ox8',
+      playerVars: {
+        'playsinline': 1,
+        'rel': 0,
+        'modestbranding': 1
+      },
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+  function onPlayerReady(event) {
+    setupButtons();
+  }
+
+  function onPlayerStateChange(event) {
+    // If user manually pauses or video ends, clear the end-time guard
+    if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+      if (endCheckInterval) {
+        clearInterval(endCheckInterval);
+        endCheckInterval = null;
+      }
+    }
+    if (event.data === YT.PlayerState.PLAYING && currentEndTime) {
+      startEndCheck();
+    }
+  }
+
+  function setupButtons() {
+    var buttons = document.querySelectorAll('.play-full');
+    buttons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var start = parseFloat(btn.dataset.start);
+        var end = parseFloat(btn.dataset.end);
+        var label = btn.dataset.label;
+        playSection(start, end, label, btn);
+      });
+    });
+
+    document.getElementById('stopBtn').addEventListener('click', stopSection);
+  }
+
+  function playSection(start, end, label, btn) {
+    if (!player || !player.seekTo) return;
+
+    // Clear previous end check
+    if (endCheckInterval) {
+      clearInterval(endCheckInterval);
+      endCheckInterval = null;
+    }
+
+    // Reset previous active button
+    if (activeButton) {
+      activeButton.classList.remove('playing');
+      var prevIcon = activeButton.querySelector('.play-icon');
+      if (prevIcon) prevIcon.textContent = '▶';
+    }
+
+    currentEndTime = end;
+    currentLabel = label;
+    activeButton = btn;
+
+    btn.classList.add('playing');
+    var icon = btn.querySelector('.play-icon');
+    if (icon) icon.textContent = '❚❚';
+
+    player.seekTo(start, true);
+    player.playVideo();
+
+    document.getElementById('nowPlaying').innerHTML = '<strong>Playing:</strong> ' + label;
+    document.getElementById('stopBtn').disabled = false;
+
+    // Scroll the video into view on mobile
+    if (window.innerWidth < 700) {
+      document.querySelector('.video-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function startEndCheck() {
+    if (endCheckInterval) clearInterval(endCheckInterval);
+    endCheckInterval = setInterval(function() {
+      if (!player || !player.getCurrentTime) return;
+      var t = player.getCurrentTime();
+      if (currentEndTime && t >= currentEndTime) {
+        stopSection();
+      }
+    }, 500);
+  }
+
+  function stopSection() {
+    if (player && player.pauseVideo) player.pauseVideo();
+    if (endCheckInterval) {
+      clearInterval(endCheckInterval);
+      endCheckInterval = null;
+    }
+    currentEndTime = null;
+    if (activeButton) {
+      activeButton.classList.remove('playing');
+      var icon = activeButton.querySelector('.play-icon');
+      if (icon) icon.textContent = '▶';
+      activeButton = null;
+    }
+    document.getElementById('nowPlaying').textContent = 'Section ended — tap another to jump';
+    document.getElementById('stopBtn').disabled = true;
+  }
+</script>
+
+</body>
+</html>
