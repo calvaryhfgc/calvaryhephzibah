@@ -32,6 +32,24 @@
   .sv-header-sub{font-size:13px;color:var(--ink-3);}
   .sv-header-notes{font-size:13px;color:var(--ink-2);margin-top:10px;padding:10px 12px;background:var(--ink-6);border-left:3px solid var(--red);border-radius:0 var(--r8) var(--r8) 0;font-style:italic;}
 
+  /* Rehearsal review button — prominent, sits between the sub and notes in the header */
+  .sv-review-btn{
+    display:flex;align-items:center;gap:14px;
+    margin-top:14px;padding:14px 16px;
+    background:linear-gradient(135deg, var(--red) 0%, #9A1720 100%);
+    color:white;text-decoration:none;
+    border-radius:var(--r12);
+    box-shadow:0 2px 12px rgba(196,30,42,0.2);
+    transition:transform 0.1s, box-shadow 0.1s;
+  }
+  .sv-review-btn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(196,30,42,0.3);}
+  .sv-review-btn:active{transform:translateY(0);}
+  .sv-review-btn-icon{font-size:20px;flex-shrink:0;line-height:1;}
+  .sv-review-btn-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+  .sv-review-btn-label{font-size:14px;font-weight:700;line-height:1.2;}
+  .sv-review-btn-sub{font-size:12px;font-weight:500;opacity:0.85;line-height:1.3;}
+  .sv-review-btn-chev{font-size:18px;font-weight:700;opacity:0.9;flex-shrink:0;}
+
   /* Items list */
   .sv-items{display:flex;flex-direction:column;gap:12px;margin-top:16px;}
   .sv-item{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r14);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;transition:border-color 0.1s, box-shadow 0.1s;}
@@ -158,6 +176,14 @@
             <div class="sv-header-date" id="hdr-date">—</div>
             <div class="sv-header-title" id="hdr-title">—</div>
             <div class="sv-header-sub" id="hdr-sub"></div>
+            <a class="sv-review-btn" id="hdr-review-btn" href="#" target="_blank" rel="noopener" style="display:none;">
+              <span class="sv-review-btn-icon">📺</span>
+              <span class="sv-review-btn-body">
+                <span class="sv-review-btn-label">Watch rehearsal review</span>
+                <span class="sv-review-btn-sub">Clips, notes, and decisions from rehearsal</span>
+              </span>
+              <span class="sv-review-btn-chev">→</span>
+            </a>
             <div class="sv-header-notes" id="hdr-notes" style="display:none;"></div>
           </div>
 
@@ -316,6 +342,18 @@ function renderAll(){
     const notesEl = document.getElementById('hdr-notes');
     notesEl.textContent = state.set.notes;
     notesEl.style.display = 'block';
+  }
+
+  // Rehearsal review link — validate and render as a button if present
+  const reviewUrl = state.set.rehearsal_review_url;
+  if(reviewUrl && typeof reviewUrl === 'string' && reviewUrl.trim()){
+    const trimmed = reviewUrl.trim();
+    // Only permit http/https to avoid javascript: or data: URIs being injected
+    if(/^https?:\/\//i.test(trimmed)){
+      const btn = document.getElementById('hdr-review-btn');
+      btn.href = trimmed;
+      btn.style.display = 'flex';
+    }
   }
 
   // Admin/lead mode switcher

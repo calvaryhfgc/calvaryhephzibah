@@ -134,6 +134,7 @@ CREATE TABLE IF NOT EXISTS public.rs_sets (
   service_date   date NOT NULL,
   service_type   text,               -- 'sunday' | 'midweek' | 'special'
   notes          text,
+  rehearsal_review_url text,         -- optional link to hosted rehearsal review page
   created_by     text,
   created_at     timestamptz NOT NULL DEFAULT now()
 );

@@ -35,6 +35,11 @@
   .set-meta label{display:block;font-size:10px;font-weight:600;color:var(--ink-4);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
   .set-meta input,.set-meta select,.set-meta textarea{width:100%;padding:9px 11px;border:1.5px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:13px;color:var(--ink);}
   .set-meta input:focus,.set-meta select:focus,.set-meta textarea:focus{outline:none;border-color:var(--red);}
+  .set-review-row{margin-top:14px;}
+  .set-review-row label{display:block;font-size:10px;font-weight:600;color:var(--ink-4);margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;}
+  .set-review-label-hint{font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink-4);margin-left:6px;font-size:10px;}
+  .set-review-row input{width:100%;padding:9px 11px;border:1.5px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:13px;color:var(--ink);}
+  .set-review-row input:focus{outline:none;border-color:var(--red);}
 
   .set-notes{width:100%;padding:10px 12px;border:1px solid var(--ink-5);background:var(--ink-6);border-radius:var(--r10);font-family:inherit;font-size:13px;color:var(--ink);resize:vertical;min-height:60px;line-height:1.5;}
   .set-notes:focus{outline:none;border-color:var(--red);background:var(--white);}
@@ -251,6 +256,12 @@
                 <input type="text" id="set-notes-short" placeholder="Optional short note">
               </div>
             </div>
+
+            <!-- Rehearsal review link — optional; renders as a button in team view -->
+            <div class="set-review-row">
+              <label for="set-review-url">Rehearsal review URL <span class="set-review-label-hint">optional · shown as a button on the team view</span></label>
+              <input type="url" id="set-review-url" placeholder="https://… (e.g. hosted rehearsal review page)">
+            </div>
           </div>
 
           <!-- Workspace: picker | set items -->
@@ -353,7 +364,7 @@ function pageInit(){
 // _loaded guard inside markDirty ensures programmatic value-sets during
 // renderAll don't count as edits.
 function wireMetadataListeners(){
-  ['set-name', 'set-date', 'set-type', 'set-notes-short'].forEach(id => {
+  ['set-name', 'set-date', 'set-type', 'set-notes-short', 'set-review-url'].forEach(id => {
     const el = document.getElementById(id);
     if(!el) return;
     // 'input' fires for typing; 'change' covers date picker and select
@@ -471,6 +482,7 @@ function renderAll(){
   document.getElementById('set-date').value = state.set.service_date || '';
   document.getElementById('set-type').value = state.set.service_type || 'sunday';
   document.getElementById('set-notes-short').value = state.set.notes || '';
+  document.getElementById('set-review-url').value = state.set.rehearsal_review_url || '';
 
   // Show delete button + mode switcher for admin/lead
   if(COS.currentUser && (COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead')){
@@ -901,7 +913,8 @@ async function saveSet(arg){
       name,
       service_date: date,
       service_type: document.getElementById('set-type').value,
-      notes: document.getElementById('set-notes-short').value.trim() || null
+      notes: document.getElementById('set-notes-short').value.trim() || null,
+      rehearsal_review_url: document.getElementById('set-review-url').value.trim() || null
     };
     const updRes = await sbPatch('rs_sets', `id=eq.${setId}`, meta);
     if(!updRes) throw new Error('Failed to update set metadata');
@@ -960,7 +973,7 @@ async function saveSet(arg){
 // ── AUTOSAVE ─────────────────────────────────────────────────
 //
 // markDirty is called from every user-edit pathway:
-//   - metadata inputs (name, date, type, notes) via 'input' listeners
+//   - metadata inputs (name, date, type, notes, review URL) via 'input' listeners
 //     wired in renderAll (after initial value-set, with _loaded=true)
 //   - set item mutations (add / remove / reorder)
 //   - transition note textareas (oninput)
