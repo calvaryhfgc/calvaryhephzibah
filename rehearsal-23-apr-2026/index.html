@@ -407,6 +407,79 @@
   }
 
   /* ============================================
+     MELODIC LINE PLAYER — MIDI via Tone.js
+     ============================================ */
+  .melody-card {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px; margin-bottom: 20px;
+    background: linear-gradient(135deg, rgba(107,70,193,0.08), rgba(59,130,246,0.06));
+    border: 1px solid rgba(107,70,193,0.25);
+    border-radius: 12px;
+  }
+  .melody-card-btn {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, #6B46C1, #3B82F6);
+    color: white; border: none;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+  }
+  .melody-card-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(107,70,193,0.35);
+  }
+  .melody-card-btn:active { transform: scale(0.97); }
+  .melody-card-btn svg { width: 14px; height: 14px; fill: currentColor; }
+  .melody-card-btn .pause-icon-svg { display: none; }
+  .melody-card-btn.playing .play-icon-svg { display: none; }
+  .melody-card-btn.playing .pause-icon-svg { display: block; }
+  .melody-card-btn.loading {
+    pointer-events: none; opacity: 0.7;
+  }
+  .melody-card-btn.loading::after {
+    content: '';
+    position: absolute; inset: 4px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: melody-spin 0.7s linear infinite;
+  }
+  @keyframes melody-spin { to { transform: rotate(360deg); } }
+  .melody-card-body { flex: 1; min-width: 0; }
+  .melody-card-label {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(180, 150, 230, 0.95); font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .melody-card-title {
+    font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.3;
+  }
+  .melody-card-notes {
+    display: flex; gap: 4px; margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .melody-note-pill {
+    font-family: 'DM Sans', monospace;
+    font-size: 11px; font-weight: 700;
+    color: rgba(180, 150, 230, 0.95);
+    background: rgba(107,70,193,0.12);
+    border: 1px solid rgba(107,70,193,0.3);
+    padding: 3px 8px; border-radius: 6px;
+    font-variant-numeric: tabular-nums;
+    transition: all 0.1s;
+  }
+  .melody-note-pill.active {
+    background: linear-gradient(135deg, #6B46C1, #3B82F6);
+    color: white;
+    border-color: transparent;
+    transform: scale(1.15);
+    box-shadow: 0 2px 8px rgba(107,70,193,0.4);
+  }
+
+  /* ============================================
      CLIPS STRIP — overview of all clips, sits under the video
      ============================================ */
   .clips-strip {
@@ -911,6 +984,26 @@
       <div class="watchout-body">
         <span class="watchout-label">Watch out for</span>
         Intro is now <strong>4 loops</strong>, not 2. Watch Uncle Caster's entry cue — don't rush in.
+      </div>
+    </div>
+
+    <div class="melody-card">
+      <button class="melody-card-btn" id="melody-trading-btn" aria-label="Play melodic line">
+        <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+        <svg class="pause-icon-svg" viewBox="0 0 10 12" fill="white"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+      </button>
+      <div class="melody-card-body">
+        <div class="melody-card-label">🎹 Melodic line · verse → chorus</div>
+        <div class="melody-card-title">Pick-up from beat 4-and, lands into the chorus</div>
+        <div class="melody-card-notes" id="melody-trading-notes">
+          <span class="melody-note-pill" data-step="0">2</span>
+          <span class="melody-note-pill" data-step="1">3</span>
+          <span class="melody-note-pill" data-step="2">4</span>
+          <span class="melody-note-pill" data-step="3">3</span>
+          <span class="melody-note-pill" data-step="4">2</span>
+          <span class="melody-note-pill" data-step="5">1</span>
+          <span class="melody-note-pill" data-step="6">7</span>
+        </div>
       </div>
     </div>
 
@@ -1544,6 +1637,159 @@
       document.body.classList.remove('video-collapsed');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+  }
+
+  // ============================================
+  // MIDI melodic line player — Trading My Sorrows verse → chorus lick
+  // Lazy-loads Tone.js on first tap so page load stays fast.
+  // Key of B major. Degrees 2-3-4-3-2-1-7 = C♯-D♯-E-D♯-C♯-B-A♯.
+  // Rhythm: pick-up eighths on beats 4-and + downbeat, then triplet-eighths
+  // descending through the remaining notes, final rest to breathe into the chorus.
+  // ============================================
+  var toneLoadPromise = null;
+  var melodySynth = null;
+  var melodyIsPlaying = false;
+  var melodyActiveTimers = [];
+
+  function loadTone() {
+    if (toneLoadPromise) return toneLoadPromise;
+    toneLoadPromise = new Promise(function(resolve, reject) {
+      if (window.Tone) { resolve(window.Tone); return; }
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js';
+      s.onload = function() { resolve(window.Tone); };
+      s.onerror = function() { reject(new Error('Tone.js failed to load')); };
+      document.head.appendChild(s);
+    });
+    return toneLoadPromise;
+  }
+
+  function getMelodySynth(Tone) {
+    if (melodySynth) return melodySynth;
+    // Clean polyphonic synth with a warm triangle-ish lead voice
+    melodySynth = new Tone.PolySynth(Tone.Synth, {
+      oscillator: { type: 'triangle8' },
+      envelope: { attack: 0.01, decay: 0.1, sustain: 0.5, release: 0.3 }
+    }).toDestination();
+    // Gentle reverb so it doesn't feel dry in a browser tab
+    var reverb = new Tone.Reverb({ decay: 1.4, wet: 0.15 }).toDestination();
+    melodySynth.connect(reverb);
+    melodySynth.volume.value = -6;
+    return melodySynth;
+  }
+
+  // Schedule and play the lick. All notes lined up against a single time base.
+  // 130 BPM, 4/4. One quarter-note = 60/130 ≈ 0.4615s.
+  function playTradingLick() {
+    var btn = document.getElementById('melody-trading-btn');
+    var notesContainer = document.getElementById('melody-trading-notes');
+    if (!btn) return;
+
+    // Toggle off if already playing — stop everything
+    if (melodyIsPlaying) {
+      stopTradingLick();
+      return;
+    }
+
+    btn.classList.add('loading');
+
+    loadTone().then(function(Tone) {
+      return Tone.start().then(function() {
+        var synth = getMelodySynth(Tone);
+        var bpm = 130;
+        var beat = 60 / bpm;               // quarter-note seconds
+        var eighth = beat / 2;
+        var triplet = beat / 3;
+
+        // B major scale degrees → note names
+        var notes = [
+          { pill: 0, note: 'C#4', dur: eighth      },  // 2, pickup (&4)
+          { pill: 1, note: 'D#4', dur: eighth      },  // 3, beat 1
+          { pill: 2, note: 'E4',  dur: triplet     },  // 4, beat 2 trip-1
+          { pill: 3, note: 'D#4', dur: triplet     },  // 3, beat 2 trip-2
+          { pill: 4, note: 'C#4', dur: triplet     },  // 2, beat 2 trip-3
+          { pill: 5, note: 'B3',  dur: triplet     },  // 1, beat 3 trip-1
+          { pill: 6, note: 'A#3', dur: triplet * 2 }   // 7, last — slightly held
+        ];
+
+        var now = Tone.now() + 0.08; // small lead-in to avoid click
+        var cursor = 0;
+
+        btn.classList.remove('loading');
+        btn.classList.add('playing');
+        melodyIsPlaying = true;
+
+        // Schedule all notes
+        notes.forEach(function(n, i) {
+          var startAt = now + cursor;
+          synth.triggerAttackRelease(n.note, n.dur * 0.92, startAt);
+          cursor += n.dur;
+
+          // Also schedule UI pill highlighting
+          var relMs = (cursor - n.dur) * 1000;
+          var offMs = cursor * 1000;
+          melodyActiveTimers.push(setTimeout(function() {
+            highlightNotePill(notesContainer, n.pill, true);
+          }, relMs));
+          melodyActiveTimers.push(setTimeout(function() {
+            highlightNotePill(notesContainer, n.pill, false);
+          }, offMs));
+        });
+
+        // Full phrase length + 250ms breathing room before resetting button
+        var phraseMs = cursor * 1000 + 250;
+        melodyActiveTimers.push(setTimeout(function() {
+          btn.classList.remove('playing');
+          melodyIsPlaying = false;
+          melodyActiveTimers = [];
+        }, phraseMs));
+      });
+    }).catch(function(err) {
+      btn.classList.remove('loading');
+      console.error('Melody playback failed:', err);
+      // Brief user feedback
+      var originalLabel = notesContainer.previousElementSibling;
+      if (originalLabel) {
+        var orig = originalLabel.textContent;
+        originalLabel.textContent = '⚠️ Audio not available — try again';
+        setTimeout(function() { originalLabel.textContent = orig; }, 2500);
+      }
+    });
+  }
+
+  function stopTradingLick() {
+    melodyActiveTimers.forEach(function(t) { clearTimeout(t); });
+    melodyActiveTimers = [];
+    melodyIsPlaying = false;
+    var btn = document.getElementById('melody-trading-btn');
+    if (btn) { btn.classList.remove('playing'); btn.classList.remove('loading'); }
+    // Clear any lingering pill highlights
+    document.querySelectorAll('#melody-trading-notes .melody-note-pill.active')
+      .forEach(function(el) { el.classList.remove('active'); });
+    if (melodySynth) {
+      try { melodySynth.releaseAll(); } catch (e) { /* fine */ }
+    }
+  }
+
+  function highlightNotePill(container, step, on) {
+    if (!container) return;
+    var pill = container.querySelector('.melody-note-pill[data-step="' + step + '"]');
+    if (!pill) return;
+    if (on) pill.classList.add('active');
+    else pill.classList.remove('active');
+  }
+
+  function setupMelodyButton() {
+    var btn = document.getElementById('melody-trading-btn');
+    if (!btn) return;
+    btn.addEventListener('click', playTradingLick);
+  }
+
+  // Initialise melody button as soon as DOM is ready — doesn't wait on YouTube API
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupMelodyButton);
+  } else {
+    setupMelodyButton();
   }
 </script>
 
