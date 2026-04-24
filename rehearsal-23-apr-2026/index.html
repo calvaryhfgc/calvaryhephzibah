@@ -111,24 +111,70 @@
     border-radius: 16px; padding: 20px 22px; margin-bottom: 32px;
     scroll-margin-top: calc(var(--video-collapsed-h) + 60px);
   }
-  .summary h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 22px; margin-bottom: 12px; letter-spacing: -0.01em; }
+  .summary h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 24px; margin-bottom: 16px; letter-spacing: -0.01em; }
   .summary p { color: var(--text-dim); font-size: 14px; margin-bottom: 8px; }
   .summary p:last-child { margin-bottom: 0; }
   .summary strong { color: var(--text); font-weight: 600; }
-  .summary .present-row {
-    padding: 10px 14px; margin-bottom: 14px;
+
+  .summary-lead {
+    font-size: 15px; line-height: 1.5; color: var(--text);
+    padding: 14px 16px; margin-bottom: 24px;
     background: var(--surface-2); border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
     border-radius: 10px;
-    font-size: 13px; color: var(--text-dim);
-    display: flex; flex-wrap: wrap; gap: 6px 10px;
   }
-  .summary .present-row strong { color: var(--text-faint); font-weight: 600; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin-right: 4px; }
-  .summary .present-row span { color: var(--text); }
+  .summary-lead strong { color: var(--text); font-weight: 700; }
+
+  .summary-subhead {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .keymap-footnote {
+    font-size: 13px !important; color: var(--text-dim);
+    margin: 12px 0 24px !important;
+    padding: 0 2px;
+  }
+
+  .changes-panel {
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    background: rgba(196,30,42,0.05); border: 1px solid rgba(196,30,42,0.2);
+    border-radius: 10px;
+  }
+  .changes-panel-title {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--red); font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .changes-panel ul { list-style: none; padding: 0; margin: 0; }
+  .changes-panel li {
+    padding: 6px 0 6px 18px; position: relative;
+    font-size: 14px; color: rgba(255,255,255,0.85); line-height: 1.5;
+  }
+  .changes-panel li::before {
+    content: '→'; position: absolute; left: 0; top: 6px;
+    color: var(--red); font-weight: 700;
+  }
+  .changes-panel li strong { color: var(--text); font-weight: 600; }
+  .changes-panel li em { color: var(--text-dim); font-style: italic; }
+
+  .summary .present-row {
+    margin-top: 0 !important; margin-bottom: 0 !important;
+    padding: 10px 14px;
+    background: transparent; border: 1px dashed var(--border);
+    border-radius: 8px;
+    font-size: 12px; color: var(--text-faint);
+    display: flex; flex-wrap: wrap; gap: 4px 10px;
+  }
+  .summary .present-row strong { color: var(--text-faint); font-weight: 600; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; margin-right: 4px; }
+  .summary .present-row span { color: var(--text-dim); }
 
   /* Key map */
   .keymap {
     display: grid; grid-template-columns: 1fr auto auto;
-    gap: 0; margin-top: 14px;
+    gap: 0; margin-top: 0;
     border-top: 1px solid var(--border);
   }
   .keymap-row { display: contents; }
@@ -607,12 +653,13 @@
   </div>
 
   <section class="summary" id="summary">
-    <h2>What we decided</h2>
-    <p class="present-row"><strong>Present at rehearsal:</strong> <span>Bolaji Adebanjo · Uncle Caster · Laolu · Esther · Uncle B</span></p>
-    <p><strong>Uncle Caster is leading this Sunday</strong> — Vanessa is away. Keys adjusted to suit his voice.</p>
-    <p><strong>No modulations.</strong> Everything stays in one key per song. One key change only across the whole service: <strong style="color:var(--red)">B → D</strong> for worship, <strong style="color:var(--red)">D → B</strong> coming out.</p>
-    <p><strong>Offering:</strong> <em>Blessing and Honour</em> back in — <em>Lift Your Name on High</em> arrangement deferred, no rehearsal time.</p>
+    <h2>Everything you need for Sunday</h2>
 
+    <div class="summary-lead">
+      <strong>Uncle Caster is leading this Sunday.</strong> Vanessa is away. Keys are set to suit his voice.
+    </div>
+
+    <div class="summary-subhead">The set · in order</div>
     <div class="keymap">
       <div class="keymap-row"><div class="keymap-slot">Praise 1</div><div class="keymap-song">Trading My Sorrows</div><div class="keymap-key">B</div></div>
       <div class="keymap-row"><div class="keymap-slot">Praise 2</div><div class="keymap-song">Lord You Are Good</div><div class="keymap-key">B</div></div>
@@ -622,6 +669,18 @@
       <div class="keymap-row"><div class="keymap-slot">Offering</div><div class="keymap-song">Blessing and Honour</div><div class="keymap-key">B</div></div>
       <div class="keymap-row"><div class="keymap-slot">End of Service</div><div class="keymap-song">He Is Lord</div><div class="keymap-key">B</div></div>
     </div>
+    <p class="keymap-footnote">One key change across the whole service: <strong style="color:var(--red)">B → D</strong> going into worship, <strong style="color:var(--red)">D → B</strong> coming out.</p>
+
+    <div class="changes-panel">
+      <div class="changes-panel-title">Changes from last week</div>
+      <ul>
+        <li><strong>No modulations this week.</strong> Each song stays in one key end-to-end.</li>
+        <li><strong>Trading My Sorrows intro loops 4× now</strong>, not 2×. Gives Uncle Caster clean room to enter.</li>
+        <li><strong>Offering swapped back to <em>Blessing and Honour</em></strong> — the new <em>Lift Your Name on High</em> arrangement wasn't ready.</li>
+      </ul>
+    </div>
+
+    <p class="present-row"><strong>Present at rehearsal</strong><span>Bolaji · Uncle Caster · Laolu · Esther · Uncle B</span></p>
   </section>
 
   <section class="song" id="trading" data-tab="trading">
