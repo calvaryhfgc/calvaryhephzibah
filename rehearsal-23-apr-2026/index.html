@@ -160,34 +160,164 @@
   }
   .song-meta { color: var(--text-faint); font-size: 13px; margin-bottom: 16px; }
 
-  /* Primary play button */
+  /* ============================================
+     CLIPS STRIP — overview of all clips, sits under the video
+     ============================================ */
+  .clips-strip {
+    margin: 0 -20px 24px;
+    padding: 0 20px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .clips-strip::-webkit-scrollbar { display: none; }
+  .clips-strip-inner {
+    display: flex; gap: 10px;
+    padding-bottom: 4px;
+  }
+  .clips-strip-label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 600;
+    margin: 0 0 10px 0;
+  }
+  .clip-chip {
+    flex-shrink: 0;
+    min-width: 180px; max-width: 220px;
+    padding: 12px 14px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer; text-align: left;
+    font-family: inherit; color: var(--text);
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+  }
+  .clip-chip:hover, .clip-chip:active {
+    border-color: var(--border-strong);
+    background: var(--surface-2);
+  }
+  .clip-chip.playing {
+    background: var(--red); border-color: var(--red);
+  }
+  .clip-chip-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--red); color: white;
+    font-size: 11px; font-weight: 700;
+    margin-right: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .clip-chip.playing .clip-chip-num {
+    background: rgba(255,255,255,0.25);
+  }
+  .clip-chip-title {
+    font-size: 14px; font-weight: 600; line-height: 1.3;
+    margin-bottom: 6px;
+    display: flex; align-items: center;
+  }
+  .clip-chip-title-text {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    flex: 1;
+  }
+  .clip-chip-meta {
+    font-size: 11px; color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .clip-chip.playing .clip-chip-meta { color: rgba(255,255,255,0.85); }
+  .clip-chip-meta-dot { opacity: 0.5; }
+  .clip-chip-progress {
+    position: absolute; left: 0; bottom: 0; height: 2px;
+    background: white; width: 0;
+    transition: width 0.4s linear;
+  }
+
+  /* Hide clips strip when video is collapsed — avoid crowding */
+  body.video-collapsed .clips-strip { display: none; }
+
+  /* ============================================
+     IMPROVED PER-SONG CLIP CARD
+     ============================================ */
   .play-full {
-    display: flex; align-items: center; gap: 12px;
-    width: 100%; padding: 14px 18px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "num title duration"
+      "num meta duration";
+    row-gap: 4px;
+    column-gap: 14px;
+    align-items: center;
+    width: 100%; padding: 16px 18px;
     background: var(--red-soft); border: 1px solid rgba(196,30,42,0.3);
-    color: var(--text); border-radius: 12px;
-    font-family: inherit; font-size: 15px; font-weight: 600;
+    color: var(--text); border-radius: 14px;
+    font-family: inherit;
     cursor: pointer; text-align: left;
     transition: all 0.15s;
     margin-bottom: 20px;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
   }
   .play-full:hover, .play-full:active { background: rgba(196,30,42,0.2); border-color: rgba(196,30,42,0.5); }
   .play-full.playing { background: var(--red); border-color: var(--red); }
-  .play-icon {
-    width: 32px; height: 32px; border-radius: 50%;
+
+  .play-num {
+    grid-area: num;
+    width: 44px; height: 44px; border-radius: 50%;
     background: var(--red); color: white;
     display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; font-size: 13px;
+    flex-shrink: 0;
+    position: relative;
   }
-  .play-full.playing .play-icon { background: rgba(255,255,255,0.2); }
-  .play-label { flex: 1; min-width: 0; }
-  .play-duration {
+  .play-num-label {
+    position: absolute; top: -2px; right: -2px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: white; color: var(--red);
+    font-size: 10px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    border: 2px solid var(--red);
+    font-variant-numeric: tabular-nums;
+  }
+  .play-full.playing .play-num { background: rgba(255,255,255,0.2); }
+  .play-full.playing .play-num-label { background: white; color: var(--red); border-color: white; }
+  .play-icon-svg { width: 14px; height: 14px; fill: currentColor; }
+  .play-full.playing .play-icon-svg { display: none; }
+  .pause-icon-svg { display: none; width: 12px; height: 12px; }
+  .play-full.playing .pause-icon-svg { display: block; }
+
+  .play-title {
+    grid-area: title;
+    font-size: 15px; font-weight: 600; line-height: 1.2;
+  }
+  .play-meta {
+    grid-area: meta;
     font-size: 12px; color: var(--text-dim); font-weight: 500;
     font-variant-numeric: tabular-nums;
-    flex-shrink: 0;
+    display: flex; gap: 8px; align-items: center;
   }
-  .play-full.playing .play-duration { color: rgba(255,255,255,0.8); }
+  .play-full.playing .play-meta { color: rgba(255,255,255,0.85); }
+  .play-meta-dot { opacity: 0.5; }
+
+  .play-duration {
+    grid-area: duration;
+    font-size: 14px; color: var(--text); font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    padding: 6px 10px; border-radius: 100px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+  }
+  .play-full.playing .play-duration {
+    background: rgba(255,255,255,0.15);
+    border-color: transparent;
+  }
+
+  .play-progress {
+    position: absolute; left: 0; bottom: 0; height: 3px;
+    background: white; width: 0;
+    transition: width 0.4s linear;
+    pointer-events: none;
+  }
 
   /* Notes */
   .notes { padding: 0 2px; }
@@ -358,9 +488,41 @@
         </div>
       </div>
       <div class="now-playing">
-        <span class="now-playing-label" id="nowPlaying">Tap any section below to jump to it</span>
+        <span class="now-playing-label" id="nowPlaying">Tap any clip below to jump to it</span>
         <button class="stop-btn" id="stopBtn" disabled>■ Stop</button>
       </div>
+    </div>
+  </div>
+
+  <!-- All clips at a glance — horizontal strip, scrollable -->
+  <div class="clips-strip-label">5 Clips · Tap any to play</div>
+  <div class="clips-strip">
+    <div class="clips-strip-inner">
+      <button class="clip-chip" data-clip="1" data-start="377" data-end="2344" data-label="Trading My Sorrows">
+        <div class="clip-chip-title"><span class="clip-chip-num">1</span><span class="clip-chip-title-text">Trading My Sorrows</span></div>
+        <div class="clip-chip-meta"><span>32m 47s</span><span class="clip-chip-meta-dot">·</span><span>6:17 → 39:04</span></div>
+        <div class="clip-chip-progress"></div>
+      </button>
+      <button class="clip-chip" data-clip="2" data-start="2345" data-end="3305" data-label="Lord You Are Good">
+        <div class="clip-chip-title"><span class="clip-chip-num">2</span><span class="clip-chip-title-text">Lord You Are Good</span></div>
+        <div class="clip-chip-meta"><span>16m 00s</span><span class="clip-chip-meta-dot">·</span><span>39:05 → 55:05</span></div>
+        <div class="clip-chip-progress"></div>
+      </button>
+      <button class="clip-chip" data-clip="3" data-start="3307" data-end="4422" data-label="Friend of God">
+        <div class="clip-chip-title"><span class="clip-chip-num">3</span><span class="clip-chip-title-text">Friend of God</span></div>
+        <div class="clip-chip-meta"><span>18m 35s</span><span class="clip-chip-meta-dot">·</span><span>55:07 → 1:13:42</span></div>
+        <div class="clip-chip-progress"></div>
+      </button>
+      <button class="clip-chip" data-clip="4" data-start="4423" data-end="5587" data-label="Worship Set">
+        <div class="clip-chip-title"><span class="clip-chip-num">4</span><span class="clip-chip-title-text">Worship Set</span></div>
+        <div class="clip-chip-meta"><span>19m 24s</span><span class="clip-chip-meta-dot">·</span><span>1:13:43 → 1:33:07</span></div>
+        <div class="clip-chip-progress"></div>
+      </button>
+      <button class="clip-chip" data-clip="5" data-start="5589" data-end="5869" data-label="Blessing and Honour">
+        <div class="clip-chip-title"><span class="clip-chip-num">5</span><span class="clip-chip-title-text">Blessing and Honour</span></div>
+        <div class="clip-chip-meta"><span>4m 40s</span><span class="clip-chip-meta-dot">·</span><span>1:33:09 → 1:37:49</span></div>
+        <div class="clip-chip-progress"></div>
+      </button>
     </div>
   </div>
 
@@ -389,10 +551,20 @@
     </div>
     <p class="song-meta">Praise · Opening song</p>
 
-    <button class="play-full" data-start="377" data-end="2344" data-label="Trading My Sorrows — full discussion">
-      <span class="play-icon">▶</span>
-      <span class="play-label">Play full discussion</span>
+    <button class="play-full" data-clip="1" data-start="377" data-end="2344" data-label="Trading My Sorrows">
+      <span class="play-num">
+        <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+        <svg class="pause-icon-svg" viewBox="0 0 10 12" fill="white"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+        <span class="play-num-label">1</span>
+      </span>
+      <span class="play-title">Play full clip</span>
+      <span class="play-meta">
+        <span>Clip 1 of 5</span>
+        <span class="play-meta-dot">·</span>
+        <span>6:17 → 39:04</span>
+      </span>
       <span class="play-duration">32m 47s</span>
+      <span class="play-progress"></span>
     </button>
 
     <div class="notes">
@@ -424,10 +596,20 @@
     </div>
     <p class="song-meta">Praise · No key change this week</p>
 
-    <button class="play-full" data-start="2345" data-end="3305" data-label="Lord You Are Good — full discussion">
-      <span class="play-icon">▶</span>
-      <span class="play-label">Play full discussion</span>
+    <button class="play-full" data-clip="2" data-start="2345" data-end="3305" data-label="Lord You Are Good">
+      <span class="play-num">
+        <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+        <svg class="pause-icon-svg" viewBox="0 0 10 12" fill="white"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+        <span class="play-num-label">2</span>
+      </span>
+      <span class="play-title">Play full clip</span>
+      <span class="play-meta">
+        <span>Clip 2 of 5</span>
+        <span class="play-meta-dot">·</span>
+        <span>39:05 → 55:05</span>
+      </span>
       <span class="play-duration">16m 00s</span>
+      <span class="play-progress"></span>
     </button>
 
     <div class="notes">
@@ -469,10 +651,20 @@
     </div>
     <p class="song-meta">Praise · Stays in B — no key change</p>
 
-    <button class="play-full" data-start="3307" data-end="4422" data-label="Friend of God — full discussion">
-      <span class="play-icon">▶</span>
-      <span class="play-label">Play full discussion</span>
+    <button class="play-full" data-clip="3" data-start="3307" data-end="4422" data-label="Friend of God">
+      <span class="play-num">
+        <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+        <svg class="pause-icon-svg" viewBox="0 0 10 12" fill="white"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+        <span class="play-num-label">3</span>
+      </span>
+      <span class="play-title">Play full clip</span>
+      <span class="play-meta">
+        <span>Clip 3 of 5</span>
+        <span class="play-meta-dot">·</span>
+        <span>55:07 → 1:13:42</span>
+      </span>
       <span class="play-duration">18m 35s</span>
+      <span class="play-progress"></span>
     </button>
 
     <div class="notes">
@@ -511,10 +703,20 @@
     </div>
     <p class="song-meta">Be Magnified → I Exalt Thee · Choruses only</p>
 
-    <button class="play-full" data-start="4423" data-end="5587" data-label="Worship Set — full discussion">
-      <span class="play-icon">▶</span>
-      <span class="play-label">Play full discussion</span>
+    <button class="play-full" data-clip="4" data-start="4423" data-end="5587" data-label="Worship Set">
+      <span class="play-num">
+        <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+        <svg class="pause-icon-svg" viewBox="0 0 10 12" fill="white"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+        <span class="play-num-label">4</span>
+      </span>
+      <span class="play-title">Play full clip</span>
+      <span class="play-meta">
+        <span>Clip 4 of 5</span>
+        <span class="play-meta-dot">·</span>
+        <span>1:13:43 → 1:33:07</span>
+      </span>
       <span class="play-duration">19m 24s</span>
+      <span class="play-progress"></span>
     </button>
 
     <div class="notes">
@@ -545,10 +747,20 @@
     </div>
     <p class="song-meta">Offering · Swapped back in from Lift Your Name on High</p>
 
-    <button class="play-full" data-start="5589" data-end="5869" data-label="Offering discussion">
-      <span class="play-icon">▶</span>
-      <span class="play-label">Play full discussion</span>
+    <button class="play-full" data-clip="5" data-start="5589" data-end="5869" data-label="Blessing and Honour">
+      <span class="play-num">
+        <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+        <svg class="pause-icon-svg" viewBox="0 0 10 12" fill="white"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+        <span class="play-num-label">5</span>
+      </span>
+      <span class="play-title">Play full clip</span>
+      <span class="play-meta">
+        <span>Clip 5 of 5</span>
+        <span class="play-meta-dot">·</span>
+        <span>1:33:09 → 1:37:49</span>
+      </span>
       <span class="play-duration">4m 40s</span>
+      <span class="play-progress"></span>
     </button>
 
     <div class="notes">
@@ -611,8 +823,10 @@
 
   var player;
   var currentEndTime = null;
+  var currentStartTime = null;
   var endCheckInterval = null;
-  var activeButton = null;
+  var progressInterval = null;
+  var activeClipId = null;
 
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
@@ -632,50 +846,62 @@
 
   function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.PLAYING) {
-      if (currentEndTime) startEndCheck();
+      if (currentEndTime) {
+        startEndCheck();
+        startProgressUpdates();
+      }
     }
     if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
       if (endCheckInterval) { clearInterval(endCheckInterval); endCheckInterval = null; }
+      if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
     }
   }
 
   function setupButtons() {
-    document.querySelectorAll('.play-full').forEach(function(btn) {
+    // Every element with data-clip can trigger a clip — both cards and strip chips
+    document.querySelectorAll('[data-clip]').forEach(function(btn) {
       btn.addEventListener('click', function() {
+        var clipId = btn.dataset.clip;
         var start = parseFloat(btn.dataset.start);
         var end = parseFloat(btn.dataset.end);
         var label = btn.dataset.label;
-        playSection(start, end, label, btn);
+        playClip(clipId, start, end, label);
       });
     });
-    document.getElementById('stopBtn').addEventListener('click', stopSection);
+    document.getElementById('stopBtn').addEventListener('click', stopClip);
   }
 
-  function playSection(start, end, label, btn) {
+  function playClip(clipId, start, end, label) {
     if (!player || !player.seekTo) return;
 
+    // Clear any prior timers
     if (endCheckInterval) { clearInterval(endCheckInterval); endCheckInterval = null; }
+    if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
 
-    if (activeButton) {
-      activeButton.classList.remove('playing');
-      var prevIcon = activeButton.querySelector('.play-icon');
-      if (prevIcon) prevIcon.textContent = '▶';
+    // Reset previous active clip (both its card and its strip chip)
+    if (activeClipId) {
+      document.querySelectorAll('[data-clip="' + activeClipId + '"]').forEach(function(el) {
+        el.classList.remove('playing');
+        var progress = el.querySelector('.play-progress, .clip-chip-progress');
+        if (progress) progress.style.width = '0';
+      });
     }
 
+    currentStartTime = start;
     currentEndTime = end;
-    activeButton = btn;
+    activeClipId = clipId;
 
-    btn.classList.add('playing');
-    var icon = btn.querySelector('.play-icon');
-    if (icon) icon.textContent = '❚❚';
+    // Activate both card and strip chip for this clip
+    document.querySelectorAll('[data-clip="' + clipId + '"]').forEach(function(el) {
+      el.classList.add('playing');
+    });
 
     player.seekTo(start, true);
     player.playVideo();
 
-    document.getElementById('nowPlaying').innerHTML = '<strong>Playing:</strong> ' + label;
+    document.getElementById('nowPlaying').innerHTML = '<strong>Clip ' + clipId + ':</strong> ' + label;
     document.getElementById('stopBtn').disabled = false;
 
-    // Expand video when user actively starts a section
     document.body.classList.remove('video-collapsed');
   }
 
@@ -684,22 +910,42 @@
     endCheckInterval = setInterval(function() {
       if (!player || !player.getCurrentTime) return;
       if (currentEndTime && player.getCurrentTime() >= currentEndTime) {
-        stopSection();
+        stopClip();
       }
     }, 500);
   }
 
-  function stopSection() {
+  function startProgressUpdates() {
+    if (progressInterval) clearInterval(progressInterval);
+    progressInterval = setInterval(function() {
+      if (!player || !player.getCurrentTime || !activeClipId) return;
+      var t = player.getCurrentTime();
+      var total = currentEndTime - currentStartTime;
+      var elapsed = t - currentStartTime;
+      if (total <= 0) return;
+      var pct = Math.max(0, Math.min(100, (elapsed / total) * 100));
+      document.querySelectorAll('[data-clip="' + activeClipId + '"]').forEach(function(el) {
+        var progress = el.querySelector('.play-progress, .clip-chip-progress');
+        if (progress) progress.style.width = pct + '%';
+      });
+    }, 400);
+  }
+
+  function stopClip() {
     if (player && player.pauseVideo) player.pauseVideo();
     if (endCheckInterval) { clearInterval(endCheckInterval); endCheckInterval = null; }
+    if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
     currentEndTime = null;
-    if (activeButton) {
-      activeButton.classList.remove('playing');
-      var icon = activeButton.querySelector('.play-icon');
-      if (icon) icon.textContent = '▶';
-      activeButton = null;
+    currentStartTime = null;
+    if (activeClipId) {
+      document.querySelectorAll('[data-clip="' + activeClipId + '"]').forEach(function(el) {
+        el.classList.remove('playing');
+        var progress = el.querySelector('.play-progress, .clip-chip-progress');
+        if (progress) progress.style.width = '0';
+      });
+      activeClipId = null;
     }
-    document.getElementById('nowPlaying').textContent = 'Section ended — tap another to jump';
+    document.getElementById('nowPlaying').textContent = 'Clip ended — tap another to jump';
     document.getElementById('stopBtn').disabled = true;
   }
 
