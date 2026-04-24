@@ -206,6 +206,52 @@
   }
   .song-meta { color: var(--text-faint); font-size: 13px; margin-bottom: 16px; }
 
+  /* One-line take — the "what is this song" hero statement */
+  .oneliner {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 18px; margin-bottom: 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .oneliner-key {
+    flex-shrink: 0;
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px; font-weight: 400; line-height: 1;
+    color: var(--red);
+    letter-spacing: -0.01em;
+    padding: 4px 14px;
+    background: rgba(196,30,42,0.08);
+    border: 1.5px solid rgba(196,30,42,0.4);
+    border-radius: 10px;
+    min-width: 72px; text-align: center;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 56px;
+  }
+  .oneliner-key-label {
+    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--red); font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+    opacity: 0.7;
+    margin-bottom: 2px;
+    display: block;
+  }
+  .oneliner-key-note {
+    display: flex; flex-direction: column;
+  }
+  .oneliner-body {
+    flex: 1;
+    font-size: 15px; line-height: 1.5;
+    color: rgba(255,255,255,0.92);
+    padding-top: 2px;
+  }
+  .oneliner-body strong { color: var(--text); font-weight: 700; }
+
+  @media (max-width: 420px) {
+    .oneliner { padding: 14px 14px; gap: 12px; }
+    .oneliner-key { font-size: 24px; min-width: 64px; min-height: 52px; padding: 4px 10px; }
+    .oneliner-body { font-size: 14px; }
+  }
+
   /* ============================================
      CLIPS STRIP — overview of all clips, sits under the video
      ============================================ */
@@ -690,6 +736,16 @@
     </div>
     <p class="song-meta">Praise · Opening song</p>
 
+    <div class="oneliner">
+      <div class="oneliner-key oneliner-key-note">
+        <span class="oneliner-key-label">Key</span>
+        <span>B</span>
+      </div>
+      <div class="oneliner-body">
+        Energetic opener. <strong>4-bar intro loop</strong> gives Uncle Caster space to enter. <strong>Afro groove</strong> on the verses.
+      </div>
+    </div>
+
     <button class="play-full" data-clip="1" data-start="377" data-end="2344" data-label="Trading My Sorrows">
       <span class="play-num">
         <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
@@ -750,6 +806,16 @@
       <span class="song-key">Key of B</span>
     </div>
     <p class="song-meta">Praise · No key change this week</p>
+
+    <div class="oneliner">
+      <div class="oneliner-key oneliner-key-note">
+        <span class="oneliner-key-label">Key</span>
+        <span>B</span>
+      </div>
+      <div class="oneliner-body">
+        Flows <strong>directly out of Trading My Sorrows</strong> — no stop, no key change. Whole band plays the descending line <strong>×2 after the first chorus</strong> — this is the "late intro."
+      </div>
+    </div>
 
     <button class="play-full" data-clip="2" data-start="2345" data-end="3305" data-label="Lord You Are Good">
       <span class="play-num">
@@ -822,6 +888,16 @@
     </div>
     <p class="song-meta">Praise · Stays in B — no key change</p>
 
+    <div class="oneliner">
+      <div class="oneliner-key oneliner-key-note">
+        <span class="oneliner-key-label">Key</span>
+        <span>B</span>
+      </div>
+      <div class="oneliner-body">
+        Straight out of Lord You Are Good, still in B. <strong>Chorus groove becomes the intro</strong> (2 bars). <strong>Bridge is in</strong> this week. Ends on <em>"He calls me friend"</em> ×4.
+      </div>
+    </div>
+
     <button class="play-full" data-clip="3" data-start="3307" data-end="4422" data-label="Friend of God">
       <span class="play-num">
         <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
@@ -874,6 +950,16 @@
     </div>
     <p class="song-meta">Be Magnified → I Exalt Thee · Choruses only</p>
 
+    <div class="oneliner">
+      <div class="oneliner-key oneliner-key-note">
+        <span class="oneliner-key-label">Key</span>
+        <span>D</span>
+      </div>
+      <div class="oneliner-body">
+        Medley, <strong>choruses only — no verses</strong>. Be Magnified ×2, then straight into I Exalt Thee. <strong>No modulation</strong> this week. Keep Edmund's 7-1 / 5 movement on I Exalt Thee.
+      </div>
+    </div>
+
     <button class="play-full" data-clip="4" data-start="4423" data-end="5587" data-label="Worship Set">
       <span class="play-num">
         <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
@@ -917,6 +1003,16 @@
       <span class="song-key">Key of B</span>
     </div>
     <p class="song-meta">Offering · Swapped back in from Lift Your Name on High</p>
+
+    <div class="oneliner">
+      <div class="oneliner-key oneliner-key-note">
+        <span class="oneliner-key-label">Key</span>
+        <span>B</span>
+      </div>
+      <div class="oneliner-body">
+        <strong>Standard arrangement</strong>. Lands cleanly off worship (D → B). Nothing fancy — keep it clean.
+      </div>
+    </div>
 
     <button class="play-full" data-clip="5" data-start="5589" data-end="5869" data-label="Blessing and Honour">
       <span class="play-num">
