@@ -1698,18 +1698,27 @@
         var synth = getMelodySynth(Tone);
         var bpm = 130;
         var beat = 60 / bpm;               // quarter-note seconds
-        var eighth = beat / 2;
-        var triplet = beat / 3;
+        var sixteenth = beat / 4;
+        var tripletEighth = beat / 3;      // one click inside the triplet feel
+        var tripletQuarter = tripletEighth * 2;  // "2-click" duration for 4,3,2,1
+        var tripletDotted = tripletEighth * 3;   // "3-click" held duration for 7
 
-        // B major scale degrees → note names
+        // Rhythm:
+        //   2 (C#) 16th on "&" of beat 4   (pickup click 3 of 4)
+        //   3 (D#) 16th on "a" of beat 4   (pickup click 4 of 4)
+        //   4 (E)  triplet-quarter on beat 1 — held, kicks off the triplet feel
+        //   3 (D#) triplet-quarter
+        //   2 (C#) triplet-quarter
+        //   1 (B)  triplet-quarter
+        //   7 (A#) dotted triplet-quarter — held longer, resolves before chorus
         var notes = [
-          { pill: 0, note: 'C#4', dur: eighth      },  // 2, pickup (&4)
-          { pill: 1, note: 'D#4', dur: eighth      },  // 3, beat 1
-          { pill: 2, note: 'E4',  dur: triplet     },  // 4, beat 2 trip-1
-          { pill: 3, note: 'D#4', dur: triplet     },  // 3, beat 2 trip-2
-          { pill: 4, note: 'C#4', dur: triplet     },  // 2, beat 2 trip-3
-          { pill: 5, note: 'B3',  dur: triplet     },  // 1, beat 3 trip-1
-          { pill: 6, note: 'A#3', dur: triplet * 2 }   // 7, last — slightly held
+          { pill: 0, note: 'C#4', dur: sixteenth      },
+          { pill: 1, note: 'D#4', dur: sixteenth      },
+          { pill: 2, note: 'E4',  dur: tripletQuarter },
+          { pill: 3, note: 'D#4', dur: tripletQuarter },
+          { pill: 4, note: 'C#4', dur: tripletQuarter },
+          { pill: 5, note: 'B3',  dur: tripletQuarter },
+          { pill: 6, note: 'A#3', dur: tripletDotted  }
         ];
 
         var now = Tone.now() + 0.08; // small lead-in to avoid click
