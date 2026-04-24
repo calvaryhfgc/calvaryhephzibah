@@ -19,71 +19,97 @@
     --text-faint: rgba(255,255,255,0.35);
     --red: #C41E2A;
     --red-soft: rgba(196,30,42,0.12);
+    --tabbar-h: 68px;
+    --video-collapsed-h: 56px;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { background: var(--bg); color: var(--text); font-family: 'DM Sans', -apple-system, sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
+  body {
+    padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0));
+  }
 
-  .container { max-width: 880px; margin: 0 auto; padding: 24px 20px 120px; }
+  .container { max-width: 880px; margin: 0 auto; padding: 20px 20px 40px; }
 
   /* Header */
-  .header { padding: 8px 0 24px; }
-  .eyebrow { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; margin-bottom: 8px; }
-  .title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(32px, 6vw, 44px); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 4px; }
+  .header { padding: 4px 0 16px; }
+  .eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; margin-bottom: 8px; }
+  .title { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: clamp(28px, 6vw, 44px); line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 4px; }
   .title em { font-style: italic; color: var(--text-dim); }
-  .subtitle { color: var(--text-dim); font-size: 15px; }
+  .subtitle { color: var(--text-dim); font-size: 14px; }
 
-  /* Sticky video */
+  /* Sticky video container */
   .video-wrap {
-    position: sticky; top: 0; z-index: 10;
-    margin: 16px -20px 24px;
+    position: sticky; top: 0; z-index: 50;
+    margin: 16px -20px 20px;
     background: var(--bg);
-    padding: 8px 0;
+    padding: 8px 0 10px;
     border-bottom: 1px solid var(--border);
+    transition: padding 0.25s ease;
   }
   .video-inner {
     max-width: 840px; margin: 0 auto; padding: 0 20px;
+    transition: all 0.25s ease;
   }
   .video-frame {
     position: relative; width: 100%; aspect-ratio: 16/9;
     background: #000; border-radius: 12px; overflow: hidden;
     box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .video-frame iframe { position: absolute; inset: 0; width:100%; height:100%; border:0; }
+
   .now-playing {
     display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
     margin-top: 10px; font-size: 13px; color: var(--text-dim);
     min-height: 20px;
   }
-  .now-playing strong { color: var(--text); font-weight: 600; }
+  .now-playing-label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .now-playing-label strong { color: var(--text); font-weight: 600; }
   .stop-btn {
     background: transparent; border: 1px solid var(--border-strong); color: var(--text-dim);
-    padding: 4px 10px; border-radius: 100px; font-size: 12px; font-family: inherit;
-    cursor: pointer; transition: all 0.15s;
+    padding: 6px 12px; border-radius: 100px; font-size: 12px; font-family: inherit;
+    cursor: pointer; transition: all 0.15s; flex-shrink: 0;
   }
   .stop-btn:hover { color: var(--text); border-color: var(--text-dim); }
   .stop-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  /* Quick nav */
-  .quicknav {
-    display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
-    margin: 0 -20px 28px; padding: 0 20px 4px;
-    scrollbar-width: none;
+  /* COLLAPSED video state (mobile, when scrolled past header) */
+  body.video-collapsed .video-frame {
+    aspect-ratio: auto;
+    height: var(--video-collapsed-h);
+    border-radius: 10px;
   }
-  .quicknav::-webkit-scrollbar { display: none; }
-  .quicknav a {
-    flex-shrink: 0;
-    padding: 8px 14px; border-radius: 100px; background: var(--surface);
-    border: 1px solid var(--border); text-decoration: none; color: var(--text-dim);
-    font-size: 13px; font-weight: 500; white-space: nowrap;
-    transition: all 0.15s;
+  body.video-collapsed .now-playing {
+    margin-top: 8px;
   }
-  .quicknav a:hover { color: var(--text); border-color: var(--border-strong); }
+
+  /* Expand-hint overlay when collapsed */
+  .expand-hint {
+    position: absolute; inset: 0;
+    display: none;
+    align-items: center; justify-content: center;
+    gap: 10px;
+    background: linear-gradient(90deg, rgba(20,20,20,0.95), rgba(28,28,28,0.95));
+    color: var(--text-dim);
+    font-size: 13px; font-weight: 500;
+    cursor: pointer;
+    border-radius: 10px;
+  }
+  body.video-collapsed .expand-hint { display: flex; }
+  .expand-hint-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--red); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; flex-shrink: 0;
+  }
 
   /* Summary card */
   .summary {
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 16px; padding: 20px 22px; margin-bottom: 32px;
+    scroll-margin-top: calc(var(--video-collapsed-h) + 60px);
   }
   .summary h2 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 22px; margin-bottom: 12px; letter-spacing: -0.01em; }
   .summary p { color: var(--text-dim); font-size: 14px; margin-bottom: 8px; }
@@ -96,9 +122,7 @@
     gap: 0; margin-top: 14px;
     border-top: 1px solid var(--border);
   }
-  .keymap-row {
-    display: contents;
-  }
+  .keymap-row { display: contents; }
   .keymap-row > div {
     padding: 10px 0; border-bottom: 1px solid var(--border);
     font-size: 14px;
@@ -110,8 +134,8 @@
   /* Song section */
   .song {
     margin-bottom: 36px;
-    padding-top: 12px;
-    scroll-margin-top: 280px;
+    padding-top: 8px;
+    scroll-margin-top: calc(var(--video-collapsed-h) + 40px);
   }
   .song-header {
     display: flex; align-items: baseline; justify-content: space-between;
@@ -122,7 +146,7 @@
     font-size: 30px; letter-spacing: -0.01em; line-height: 1.1;
   }
   .song-key {
-    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
     color: var(--red); font-weight: 700;
   }
   .song-meta { color: var(--text-faint); font-size: 13px; margin-bottom: 16px; }
@@ -137,8 +161,9 @@
     cursor: pointer; text-align: left;
     transition: all 0.15s;
     margin-bottom: 20px;
+    -webkit-tap-highlight-color: transparent;
   }
-  .play-full:hover { background: rgba(196,30,42,0.2); border-color: rgba(196,30,42,0.5); }
+  .play-full:hover, .play-full:active { background: rgba(196,30,42,0.2); border-color: rgba(196,30,42,0.5); }
   .play-full.playing { background: var(--red); border-color: var(--red); }
   .play-icon {
     width: 32px; height: 32px; border-radius: 50%;
@@ -147,17 +172,18 @@
     flex-shrink: 0; font-size: 13px;
   }
   .play-full.playing .play-icon { background: rgba(255,255,255,0.2); }
-  .play-label { flex: 1; }
+  .play-label { flex: 1; min-width: 0; }
   .play-duration {
     font-size: 12px; color: var(--text-dim); font-weight: 500;
     font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
   }
   .play-full.playing .play-duration { color: rgba(255,255,255,0.8); }
 
   /* Notes */
   .notes { padding: 0 2px; }
   .notes h3 {
-    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
     color: var(--text-faint); font-weight: 600;
     margin: 20px 0 10px;
   }
@@ -187,7 +213,7 @@
     border-radius: 12px; padding: 16px 18px; margin-top: 14px;
   }
   .structure-title {
-    font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
     color: var(--text-faint); font-weight: 600; margin-bottom: 10px;
   }
   .structure ol { list-style: none; padding: 0; counter-reset: step; }
@@ -211,12 +237,95 @@
   }
   .footer p { margin-bottom: 4px; }
 
+  /* ============================================
+     BOTTOM TAB BAR — mobile-first navigation
+     ============================================ */
+  .tabbar {
+    position: fixed; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--border);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .tabbar-inner {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    max-width: 880px; margin: 0 auto;
+    height: var(--tabbar-h);
+  }
+  .tab {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px; padding: 6px 4px;
+    text-decoration: none; color: var(--text-faint);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: color 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    text-align: center;
+    line-height: 1.15;
+  }
+  .tab-icon {
+    font-size: 18px; line-height: 1;
+    opacity: 0.75;
+    transition: all 0.15s;
+  }
+  .tab-label {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tab.active { color: var(--text); }
+  .tab.active .tab-icon { opacity: 1; transform: scale(1.05); }
+  .tab.active::before {
+    content: '';
+    position: absolute; top: 0; left: 20%; right: 20%;
+    height: 2px; background: var(--red);
+    border-radius: 0 0 2px 2px;
+  }
+
+  @media (min-width: 700px) {
+    .tabbar-inner { height: 72px; }
+    .tab { font-size: 12px; gap: 5px; }
+    .tab-icon { font-size: 20px; }
+  }
+
+  @media (max-width: 380px) {
+    .tab { font-size: 9px; }
+    .tab-icon { font-size: 16px; }
+  }
+
+  /* ============================================
+     MOBILE tweaks
+     ============================================ */
   @media (max-width: 500px) {
-    .container { padding: 16px 16px 80px; }
-    .video-wrap { margin: 12px -16px 20px; }
+    .container { padding: 14px 16px 30px; }
+    .video-wrap { margin: 10px -16px 16px; padding-top: 6px; padding-bottom: 8px; }
     .video-inner { padding: 0 16px; }
     .song-title { font-size: 26px; }
+    .summary { padding: 18px 18px; }
+    .summary h2 { font-size: 20px; }
     .keymap-song { font-size: 13px; }
+    .header { padding: 0 0 10px; }
+    .subtitle { font-size: 13px; }
+
+    body.video-collapsed .video-wrap {
+      padding: 6px 0 6px;
+    }
+    body.video-collapsed .now-playing {
+      font-size: 12px;
+      margin-top: 6px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .video-frame, .video-wrap, .tab-icon { transition: none !important; }
   }
 </style>
 </head>
@@ -230,26 +339,21 @@
     <p class="subtitle">Preparing for Sunday 26th April · Caster leading</p>
   </header>
 
-  <div class="video-wrap">
+  <div class="video-wrap" id="videoWrap">
     <div class="video-inner">
-      <div class="video-frame">
+      <div class="video-frame" id="videoFrame">
         <div id="player"></div>
+        <div class="expand-hint" id="expandHint">
+          <span class="expand-hint-icon">▶</span>
+          <span>Tap to expand video</span>
+        </div>
       </div>
       <div class="now-playing">
-        <span id="nowPlaying">Tap any section below to jump to it</span>
-        <button class="stop-btn" id="stopBtn" disabled>■ Stop section</button>
+        <span class="now-playing-label" id="nowPlaying">Tap any section below to jump to it</span>
+        <button class="stop-btn" id="stopBtn" disabled>■ Stop</button>
       </div>
     </div>
   </div>
-
-  <nav class="quicknav">
-    <a href="#summary">Overview</a>
-    <a href="#trading">Trading My Sorrows</a>
-    <a href="#lord">Lord You Are Good</a>
-    <a href="#friend">Friend of God</a>
-    <a href="#worship">Worship Set</a>
-    <a href="#offering">Offering</a>
-  </nav>
 
   <section class="summary" id="summary">
     <h2>What we decided</h2>
@@ -268,8 +372,7 @@
     </div>
   </section>
 
-  <!-- TRADING MY SORROWS -->
-  <section class="song" id="trading">
+  <section class="song" id="trading" data-tab="trading">
     <div class="song-header">
       <h2 class="song-title">Trading My Sorrows</h2>
       <span class="song-key">Key of B</span>
@@ -279,7 +382,7 @@
     <button class="play-full" data-start="377" data-end="2344" data-label="Trading My Sorrows — full discussion">
       <span class="play-icon">▶</span>
       <span class="play-label">Play full discussion</span>
-      <span class="play-duration">32m 47s · 6:17 → 39:04</span>
+      <span class="play-duration">32m 47s</span>
     </button>
 
     <div class="notes">
@@ -304,8 +407,7 @@
     </div>
   </section>
 
-  <!-- LORD YOU ARE GOOD -->
-  <section class="song" id="lord">
+  <section class="song" id="lord" data-tab="lord">
     <div class="song-header">
       <h2 class="song-title">Lord You Are Good</h2>
       <span class="song-key">Key of B</span>
@@ -315,7 +417,7 @@
     <button class="play-full" data-start="2345" data-end="3305" data-label="Lord You Are Good — full discussion">
       <span class="play-icon">▶</span>
       <span class="play-label">Play full discussion</span>
-      <span class="play-duration">16m · 39:05 → 55:05</span>
+      <span class="play-duration">16m 00s</span>
     </button>
 
     <div class="notes">
@@ -350,8 +452,7 @@
     </div>
   </section>
 
-  <!-- FRIEND OF GOD -->
-  <section class="song" id="friend">
+  <section class="song" id="friend" data-tab="friend">
     <div class="song-header">
       <h2 class="song-title">Friend of God</h2>
       <span class="song-key">Key of B</span>
@@ -361,7 +462,7 @@
     <button class="play-full" data-start="3307" data-end="4422" data-label="Friend of God — full discussion">
       <span class="play-icon">▶</span>
       <span class="play-label">Play full discussion</span>
-      <span class="play-duration">18m 35s · 55:07 → 1:13:42</span>
+      <span class="play-duration">18m 35s</span>
     </button>
 
     <div class="notes">
@@ -393,8 +494,7 @@
     </div>
   </section>
 
-  <!-- WORSHIP SET -->
-  <section class="song" id="worship">
+  <section class="song" id="worship" data-tab="worship">
     <div class="song-header">
       <h2 class="song-title">Worship Set</h2>
       <span class="song-key">Key of D</span>
@@ -404,7 +504,7 @@
     <button class="play-full" data-start="4423" data-end="5587" data-label="Worship Set — full discussion">
       <span class="play-icon">▶</span>
       <span class="play-label">Play full discussion</span>
-      <span class="play-duration">19m 24s · 1:13:43 → 1:33:07</span>
+      <span class="play-duration">19m 24s</span>
     </button>
 
     <div class="notes">
@@ -428,8 +528,7 @@
     </div>
   </section>
 
-  <!-- OFFERING -->
-  <section class="song" id="offering">
+  <section class="song" id="offering" data-tab="offering">
     <div class="song-header">
       <h2 class="song-title">Blessing and Honour</h2>
       <span class="song-key">Key of B</span>
@@ -439,7 +538,7 @@
     <button class="play-full" data-start="5589" data-end="5869" data-label="Offering discussion">
       <span class="play-icon">▶</span>
       <span class="play-label">Play full discussion</span>
-      <span class="play-duration">4m 40s · 1:33:09 → 1:37:49</span>
+      <span class="play-duration">4m 40s</span>
     </button>
 
     <div class="notes">
@@ -459,10 +558,40 @@
 
   <footer class="footer">
     <p>Calvary Worship · Rehearsal Review for Sunday 26th April 2026</p>
-    <p>Questions → Bolaji · <em>"Unless the Lord builds the house, the builders labour in vain."</em></p>
+    <p><em>"Unless the Lord builds the house, the builders labour in vain."</em></p>
   </footer>
 
 </div>
+
+<!-- BOTTOM TAB BAR — thumb-reachable, always visible, scroll-spy active state -->
+<nav class="tabbar" aria-label="Jump to section">
+  <div class="tabbar-inner">
+    <a class="tab" data-target="summary" href="#summary">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">Overview</span>
+    </a>
+    <a class="tab" data-target="trading" href="#trading">
+      <span class="tab-icon">🎵</span>
+      <span class="tab-label">Trading</span>
+    </a>
+    <a class="tab" data-target="lord" href="#lord">
+      <span class="tab-icon">🎵</span>
+      <span class="tab-label">Lord</span>
+    </a>
+    <a class="tab" data-target="friend" href="#friend">
+      <span class="tab-icon">🎵</span>
+      <span class="tab-label">Friend</span>
+    </a>
+    <a class="tab" data-target="worship" href="#worship">
+      <span class="tab-icon">🙌</span>
+      <span class="tab-label">Worship</span>
+    </a>
+    <a class="tab" data-target="offering" href="#offering">
+      <span class="tab-icon">💝</span>
+      <span class="tab-label">Offering</span>
+    </a>
+  </div>
+</nav>
 
 <script>
   // YouTube IFrame API
@@ -472,45 +601,36 @@
 
   var player;
   var currentEndTime = null;
-  var currentLabel = null;
   var endCheckInterval = null;
   var activeButton = null;
 
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
       videoId: '6V6v0QO2Ox8',
-      playerVars: {
-        'playsinline': 1,
-        'rel': 0,
-        'modestbranding': 1
-      },
-      events: {
-        'onReady': onPlayerReady,
-        'onStateChange': onPlayerStateChange
-      }
+      playerVars: { 'playsinline': 1, 'rel': 0, 'modestbranding': 1 },
+      events: { 'onReady': onPlayerReady, 'onStateChange': onPlayerStateChange }
     });
   }
 
-  function onPlayerReady(event) {
+  function onPlayerReady() {
     setupButtons();
+    setupTabbar();
+    setupScrollSpy();
+    setupVideoCollapse();
+    setupExpandHint();
   }
 
   function onPlayerStateChange(event) {
-    // If user manually pauses or video ends, clear the end-time guard
-    if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
-      if (endCheckInterval) {
-        clearInterval(endCheckInterval);
-        endCheckInterval = null;
-      }
+    if (event.data === YT.PlayerState.PLAYING) {
+      if (currentEndTime) startEndCheck();
     }
-    if (event.data === YT.PlayerState.PLAYING && currentEndTime) {
-      startEndCheck();
+    if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
+      if (endCheckInterval) { clearInterval(endCheckInterval); endCheckInterval = null; }
     }
   }
 
   function setupButtons() {
-    var buttons = document.querySelectorAll('.play-full');
-    buttons.forEach(function(btn) {
+    document.querySelectorAll('.play-full').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var start = parseFloat(btn.dataset.start);
         var end = parseFloat(btn.dataset.end);
@@ -518,20 +638,14 @@
         playSection(start, end, label, btn);
       });
     });
-
     document.getElementById('stopBtn').addEventListener('click', stopSection);
   }
 
   function playSection(start, end, label, btn) {
     if (!player || !player.seekTo) return;
 
-    // Clear previous end check
-    if (endCheckInterval) {
-      clearInterval(endCheckInterval);
-      endCheckInterval = null;
-    }
+    if (endCheckInterval) { clearInterval(endCheckInterval); endCheckInterval = null; }
 
-    // Reset previous active button
     if (activeButton) {
       activeButton.classList.remove('playing');
       var prevIcon = activeButton.querySelector('.play-icon');
@@ -539,7 +653,6 @@
     }
 
     currentEndTime = end;
-    currentLabel = label;
     activeButton = btn;
 
     btn.classList.add('playing');
@@ -552,18 +665,15 @@
     document.getElementById('nowPlaying').innerHTML = '<strong>Playing:</strong> ' + label;
     document.getElementById('stopBtn').disabled = false;
 
-    // Scroll the video into view on mobile
-    if (window.innerWidth < 700) {
-      document.querySelector('.video-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // Expand video when user actively starts a section
+    document.body.classList.remove('video-collapsed');
   }
 
   function startEndCheck() {
     if (endCheckInterval) clearInterval(endCheckInterval);
     endCheckInterval = setInterval(function() {
       if (!player || !player.getCurrentTime) return;
-      var t = player.getCurrentTime();
-      if (currentEndTime && t >= currentEndTime) {
+      if (currentEndTime && player.getCurrentTime() >= currentEndTime) {
         stopSection();
       }
     }, 500);
@@ -571,10 +681,7 @@
 
   function stopSection() {
     if (player && player.pauseVideo) player.pauseVideo();
-    if (endCheckInterval) {
-      clearInterval(endCheckInterval);
-      endCheckInterval = null;
-    }
+    if (endCheckInterval) { clearInterval(endCheckInterval); endCheckInterval = null; }
     currentEndTime = null;
     if (activeButton) {
       activeButton.classList.remove('playing');
@@ -584,6 +691,87 @@
     }
     document.getElementById('nowPlaying').textContent = 'Section ended — tap another to jump';
     document.getElementById('stopBtn').disabled = true;
+  }
+
+  // Bottom tab bar — smooth scroll with video-height offset
+  function setupTabbar() {
+    document.querySelectorAll('.tab').forEach(function(tab) {
+      tab.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = tab.dataset.target;
+        var el = document.getElementById(targetId);
+        if (!el) return;
+        var videoEl = document.getElementById('videoWrap');
+        var offset = videoEl ? videoEl.getBoundingClientRect().height + 16 : 80;
+        var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  }
+
+  // Scroll-spy — highlight active tab
+  function setupScrollSpy() {
+    var sections = ['summary', 'trading', 'lord', 'friend', 'worship', 'offering']
+      .map(function(id) { return document.getElementById(id); })
+      .filter(Boolean);
+    var tabs = document.querySelectorAll('.tab');
+
+    function updateActive() {
+      var videoEl = document.getElementById('videoWrap');
+      var threshold = (videoEl ? videoEl.getBoundingClientRect().height : 0) + 80;
+      var activeId = sections[0].id;
+      sections.forEach(function(section) {
+        var rect = section.getBoundingClientRect();
+        if (rect.top <= threshold) activeId = section.id;
+      });
+      tabs.forEach(function(tab) {
+        if (tab.dataset.target === activeId) tab.classList.add('active');
+        else tab.classList.remove('active');
+      });
+    }
+
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        window.requestAnimationFrame(function() { updateActive(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+    updateActive();
+  }
+
+  // Video collapse on scroll (mobile only) — saves vertical real estate
+  function setupVideoCollapse() {
+    var mq = window.matchMedia('(max-width: 700px)');
+    var summary = document.getElementById('summary');
+
+    function check() {
+      if (!mq.matches) { document.body.classList.remove('video-collapsed'); return; }
+      if (!summary) return;
+      var rect = summary.getBoundingClientRect();
+      if (rect.top < -20) document.body.classList.add('video-collapsed');
+      else document.body.classList.remove('video-collapsed');
+    }
+
+    var ticking = false;
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        window.requestAnimationFrame(function() { check(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+    if (mq.addEventListener) mq.addEventListener('change', check);
+    check();
+  }
+
+  // Expand-hint overlay click → expand video
+  function setupExpandHint() {
+    var hint = document.getElementById('expandHint');
+    if (!hint) return;
+    hint.addEventListener('click', function() {
+      document.body.classList.remove('video-collapsed');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   }
 </script>
 
