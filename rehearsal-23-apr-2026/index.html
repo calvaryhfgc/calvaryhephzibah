@@ -1972,22 +1972,22 @@
   //   Beat 2 click 4:  tra  — eighth (2 clicks)
   //   Beat 3 click 2:  ding — eighth (2 clicks)
   //   Beat 3 click 4:  my   — eighth (2 clicks)
-  //   Beat 4 click 2:  sor  — held for 9 quarter beats (dramatic sustain, ~2.25 bars)
-  //   (~bar 3 beat 3):  ro  — eighth (2 clicks, dips to the 6)
-  //   (bar 3 beat 3.5): ows — held long, resolves on the 5
+  //   Beat 4 click 2:  sor  — held for 9 clicks (2¼ beats), big sustain
+  //   (next bar):      ro   — eighth (2 clicks, dips to the 6)
+  //                    ows  — held long, resolves on the 5
   function vocalNewNotes() {
     var bpm = 130, beat = 60 / bpm;
     var sixteenth = beat / 4;
     var eighth = sixteenth * 2;         // 2 clicks
     var dottedEighth = sixteenth * 3;   // 3 clicks
-    var sorHold = beat * 9;             // 9 full quarter beats on "sor"
+    var sorHold = sixteenth * 9;        // 9 clicks = 2¼ beats
     var owsHold = beat * 2;             // resolution hold on "ows"
     return [
       { step: 0, note: 'D#4', dur: dottedEighth, restBefore: beat }, // I'm — after beat-1 rest
       { step: 1, note: 'C#4', dur: eighth       },                   // tra
       { step: 2, note: 'B3',  dur: eighth       },                   // ding
       { step: 3, note: 'B3',  dur: eighth       },                   // my
-      { step: 4, note: 'B3',  dur: sorHold      },                   // sor — huge sustain
+      { step: 4, note: 'B3',  dur: sorHold      },                   // sor — 9 clicks sustain
       { step: 5, note: 'G#3', dur: eighth       },                   // ro
       { step: 6, note: 'F#3', dur: owsHold      }                    // ows
     ];
@@ -1996,22 +1996,21 @@
   // Vocal melody — "I'm trading my sorrows" (old phrasing, what was being sung)
   // Syllables: I'm(3) tra(2) ding(1) my(1) sor(1) rows(7)
   //
-  // Same rhythm as new version up through "sor" including the 9-beat hold;
-  // old version only has one final syllable ("rows"/7) where new version has
-  // two (ro/6 + ows/5).
+  // Same rhythm as new version up through "sor" (including the 9-click / 2¼-beat
+  // hold); old version only has one final syllable ("rows"/7) where new has two.
   function vocalOldNotes() {
     var bpm = 130, beat = 60 / bpm;
     var sixteenth = beat / 4;
     var eighth = sixteenth * 2;
     var dottedEighth = sixteenth * 3;
-    var sorHold = beat * 9;
+    var sorHold = sixteenth * 9;
     var rowsHold = beat * 2;
     return [
       { step: 0, note: 'D#4', dur: dottedEighth, restBefore: beat },
       { step: 1, note: 'C#4', dur: eighth       },
       { step: 2, note: 'B3',  dur: eighth       },
       { step: 3, note: 'B3',  dur: eighth       },
-      { step: 4, note: 'B3',  dur: sorHold      },   // sor — same 9-beat sustain
+      { step: 4, note: 'B3',  dur: sorHold      },   // sor — 9 clicks, same as new
       { step: 5, note: 'A#3', dur: rowsHold     }    // rows — single held syllable
     ];
   }
