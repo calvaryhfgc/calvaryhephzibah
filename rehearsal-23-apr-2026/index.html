@@ -31,6 +31,90 @@
 
   .container { max-width: 880px; margin: 0 auto; padding: 20px 20px 40px; }
 
+  /* Desktop two-column layout — video + clips stick on the left, notes scroll on the right.
+     Only engages at ≥1024px; below that, the page stacks as normal. */
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1400px;
+      padding: 24px 32px 48px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+      grid-template-areas:
+        "header  header"
+        "leftcol rightcol";
+      gap: 0 40px;
+      align-items: start;
+    }
+    .header { grid-area: header; }
+    .desktop-leftcol {
+      grid-area: leftcol;
+      position: sticky;
+      top: 24px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      padding-right: 4px;
+    }
+    .desktop-leftcol::-webkit-scrollbar { width: 6px; }
+    .desktop-leftcol::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
+    .desktop-rightcol {
+      grid-area: rightcol;
+      min-width: 0;
+    }
+
+    /* Video wrap no longer needs to be sticky on desktop — the whole left column is */
+    .video-wrap {
+      position: static;
+      margin: 0 0 20px;
+      padding: 0;
+      border-bottom: 0;
+      background: transparent;
+    }
+    .video-inner { padding: 0; }
+
+    /* Clips strip on desktop: stack vertically inside the left column, not a horizontal scroll */
+    .clips-strip {
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+    }
+    .clips-strip-inner {
+      display: flex; flex-direction: column; gap: 8px;
+      padding-bottom: 0;
+    }
+    .clip-chip {
+      min-width: 0; max-width: none;
+      width: 100%;
+      padding: 14px 16px;
+    }
+    .clip-chip-title-text {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+
+    /* Hide the bottom tab bar on desktop — left column + natural scroll replaces it */
+    .tabbar { display: none; }
+    body { padding-bottom: 40px; }
+
+    /* Collapsed video is a mobile-only pattern — neutralise it on desktop */
+    body.video-collapsed .video-wrap { padding: 0; }
+    body.video-collapsed .video-frame {
+      aspect-ratio: 16/9;
+      height: auto;
+      border-radius: 12px;
+    }
+    body.video-collapsed .expand-hint { display: none; }
+    body.video-collapsed .clips-strip { display: block; }
+  }
+
+  @media (min-width: 1280px) {
+    .container { grid-template-columns: minmax(0, 620px) minmax(0, 1fr); }
+  }
+
   /* Header */
   .header { padding: 4px 0 16px; }
   .eyebrow { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-faint); font-weight: 600; margin-bottom: 8px; }
@@ -720,6 +804,8 @@
     <p class="subtitle">Preparing for Sunday 26th April · Uncle Caster leading</p>
   </header>
 
+  <div class="desktop-leftcol">
+
   <div class="video-wrap" id="videoWrap">
     <div class="video-inner">
       <div class="video-frame" id="videoFrame">
@@ -767,6 +853,10 @@
       </button>
     </div>
   </div>
+
+  </div><!-- /desktop-leftcol -->
+
+  <div class="desktop-rightcol">
 
   <section class="summary" id="summary">
     <h2>Everything you need for Sunday</h2>
@@ -1178,6 +1268,8 @@
     <p><em>"Unless the Lord builds the house, the builders labour in vain."</em></p>
   </footer>
 
+  </div><!-- /desktop-rightcol -->
+
 </div>
 
 <!-- BOTTOM TAB BAR — thumb-reachable, always visible, scroll-spy active state -->
@@ -1272,12 +1364,20 @@
     document.getElementById('stopBtn').addEventListener('click', stopClip);
   }
 
-  // Shared helper — scrolls to a section, accounting for sticky video height
+  // Shared helper — scrolls to a section, accounting for sticky video height.
+  // On desktop (>=1024px), the video lives in a sticky left column so the right-column
+  // scroll isn't occluded and the offset is minimal. On mobile, the video wraps the
+  // top of the page so we need to offset by its height.
   function scrollToSection(targetId) {
     var el = document.getElementById(targetId);
     if (!el) return;
-    var videoEl = document.getElementById('videoWrap');
-    var offset = videoEl ? videoEl.getBoundingClientRect().height + 16 : 80;
+    var offset;
+    if (window.innerWidth >= 1024) {
+      offset = 24; // top padding only; sticky column doesn't eat vertical space
+    } else {
+      var videoEl = document.getElementById('videoWrap');
+      offset = videoEl ? videoEl.getBoundingClientRect().height + 16 : 80;
+    }
     var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
     window.scrollTo({ top: top, behavior: 'smooth' });
   }
@@ -1384,8 +1484,13 @@
     var tabs = document.querySelectorAll('.tab');
 
     function updateActive() {
-      var videoEl = document.getElementById('videoWrap');
-      var threshold = (videoEl ? videoEl.getBoundingClientRect().height : 0) + 80;
+      var threshold;
+      if (window.innerWidth >= 1024) {
+        threshold = 120; // fixed top-ish area on desktop
+      } else {
+        var videoEl = document.getElementById('videoWrap');
+        threshold = (videoEl ? videoEl.getBoundingClientRect().height : 0) + 80;
+      }
       var activeId = sections[0].id;
       sections.forEach(function(section) {
         var rect = section.getBoundingClientRect();
