@@ -319,6 +319,86 @@
     pointer-events: none;
   }
 
+  /* ============================================
+     SUB-CLIPS — specific moments inside a main clip
+     ============================================ */
+  .subclips {
+    margin: -12px 0 20px;
+    padding: 6px 0 4px 14px;
+    border-left: 2px solid rgba(196,30,42,0.25);
+  }
+  .subclips-label {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--text-faint); font-weight: 600;
+    margin: 6px 0 8px 2px;
+  }
+  .subclip {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; padding: 10px 12px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text); border-radius: 10px;
+    font-family: inherit;
+    cursor: pointer; text-align: left;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative; overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .subclip:last-child { margin-bottom: 0; }
+  .subclip:hover, .subclip:active {
+    background: var(--surface);
+    border-color: var(--border-strong);
+  }
+  .subclip.playing {
+    background: var(--red); border-color: var(--red);
+  }
+  .subclip-play {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(196,30,42,0.15);
+    border: 1px solid rgba(196,30,42,0.4);
+    color: var(--red);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .subclip.playing .subclip-play {
+    background: rgba(255,255,255,0.2);
+    border-color: transparent;
+    color: white;
+  }
+  .subclip-play svg { width: 10px; height: 10px; fill: currentColor; }
+  .subclip.playing .subclip-play .play-icon-svg { display: none; }
+  .subclip-play .pause-icon-svg { display: none; }
+  .subclip.playing .subclip-play .pause-icon-svg { display: block; fill: white; }
+  .subclip-body { flex: 1; min-width: 0; }
+  .subclip-title {
+    font-size: 14px; font-weight: 600; line-height: 1.25;
+    margin-bottom: 2px;
+  }
+  .subclip-meta {
+    font-size: 11px; color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    display: flex; gap: 6px; align-items: center;
+  }
+  .subclip.playing .subclip-meta { color: rgba(255,255,255,0.85); }
+  .subclip-duration {
+    font-size: 12px; color: var(--text); font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    padding: 3px 8px; border-radius: 100px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+  }
+  .subclip.playing .subclip-duration {
+    background: rgba(255,255,255,0.15);
+    border-color: transparent;
+  }
+  .subclip-progress {
+    position: absolute; left: 0; bottom: 0; height: 2px;
+    background: white; width: 0;
+    transition: width 0.4s linear;
+    pointer-events: none;
+  }
+
   /* Notes */
   .notes { padding: 0 2px; }
   .notes h3 {
@@ -566,6 +646,22 @@
       <span class="play-duration">32m 47s</span>
       <span class="play-progress"></span>
     </button>
+
+    <div class="subclips">
+      <div class="subclips-label">Jump to moments in this clip</div>
+      <button class="subclip" data-clip="1a" data-start="1934" data-end="2278" data-label="Melody walkthrough for singers">
+        <span class="subclip-play">
+          <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+          <svg class="pause-icon-svg" viewBox="0 0 10 12"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+        </span>
+        <span class="subclip-body">
+          <span class="subclip-title">Melody walkthrough for singers</span>
+          <span class="subclip-meta"><span>32:14 → 37:58</span></span>
+        </span>
+        <span class="subclip-duration">5m 44s</span>
+        <span class="subclip-progress"></span>
+      </button>
+    </div>
 
     <div class="notes">
       <h3>Key decisions</h3>
@@ -882,7 +978,7 @@
     if (activeClipId) {
       document.querySelectorAll('[data-clip="' + activeClipId + '"]').forEach(function(el) {
         el.classList.remove('playing');
-        var progress = el.querySelector('.play-progress, .clip-chip-progress');
+        var progress = el.querySelector('.play-progress, .clip-chip-progress, .subclip-progress');
         if (progress) progress.style.width = '0';
       });
     }
@@ -899,7 +995,13 @@
     player.seekTo(start, true);
     player.playVideo();
 
-    document.getElementById('nowPlaying').innerHTML = '<strong>Clip ' + clipId + ':</strong> ' + label;
+    // Sub-clips have IDs like "1a" — show just the label without the "Clip X:" prefix
+    var isSubclip = /[a-z]/i.test(String(clipId));
+    if (isSubclip) {
+      document.getElementById('nowPlaying').innerHTML = '<strong>Playing:</strong> ' + label;
+    } else {
+      document.getElementById('nowPlaying').innerHTML = '<strong>Clip ' + clipId + ':</strong> ' + label;
+    }
     document.getElementById('stopBtn').disabled = false;
 
     document.body.classList.remove('video-collapsed');
@@ -925,7 +1027,7 @@
       if (total <= 0) return;
       var pct = Math.max(0, Math.min(100, (elapsed / total) * 100));
       document.querySelectorAll('[data-clip="' + activeClipId + '"]').forEach(function(el) {
-        var progress = el.querySelector('.play-progress, .clip-chip-progress');
+        var progress = el.querySelector('.play-progress, .clip-chip-progress, .subclip-progress');
         if (progress) progress.style.width = pct + '%';
       });
     }, 400);
@@ -940,7 +1042,7 @@
     if (activeClipId) {
       document.querySelectorAll('[data-clip="' + activeClipId + '"]').forEach(function(el) {
         el.classList.remove('playing');
-        var progress = el.querySelector('.play-progress, .clip-chip-progress');
+        var progress = el.querySelector('.play-progress, .clip-chip-progress, .subclip-progress');
         if (progress) progress.style.width = '0';
       });
       activeClipId = null;
