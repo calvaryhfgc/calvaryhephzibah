@@ -252,6 +252,34 @@
     .oneliner-body { font-size: 14px; }
   }
 
+  /* Watch out for — single-sentence attention callout per song */
+  .watchout {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px; margin-bottom: 20px;
+    background: rgba(245, 158, 11, 0.06);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    border-left: 3px solid rgba(245, 158, 11, 0.85);
+    border-radius: 10px;
+  }
+  .watchout-icon {
+    flex-shrink: 0;
+    font-size: 16px; line-height: 1.5;
+    color: rgba(245, 158, 11, 0.95);
+  }
+  .watchout-body {
+    flex: 1; min-width: 0;
+    font-size: 14px; line-height: 1.5;
+    color: rgba(255,255,255,0.92);
+  }
+  .watchout-label {
+    display: inline-block;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: rgba(245, 158, 11, 0.95); font-weight: 700;
+    margin-right: 8px;
+  }
+  .watchout-body strong { color: var(--text); font-weight: 700; }
+  .watchout-body em { color: var(--text-dim); font-style: italic; }
+
   /* ============================================
      CLIPS STRIP — overview of all clips, sits under the video
      ============================================ */
@@ -746,6 +774,14 @@
       </div>
     </div>
 
+    <div class="watchout">
+      <span class="watchout-icon">👀</span>
+      <div class="watchout-body">
+        <span class="watchout-label">Watch out for</span>
+        Intro is now <strong>4 loops</strong>, not 2. Watch Uncle Caster's entry cue — don't rush in.
+      </div>
+    </div>
+
     <button class="play-full" data-clip="1" data-start="377" data-end="2344" data-label="Trading My Sorrows">
       <span class="play-num">
         <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
@@ -814,6 +850,14 @@
       </div>
       <div class="oneliner-body">
         Flows <strong>directly out of Trading My Sorrows</strong> — no stop, no key change. Whole band plays the descending line <strong>×2 after the first chorus</strong> — this is the "late intro."
+      </div>
+    </div>
+
+    <div class="watchout">
+      <span class="watchout-icon">👀</span>
+      <div class="watchout-body">
+        <span class="watchout-label">Watch out for</span>
+        After the first chorus, <strong>the whole band plays the descending line ×2</strong>. This is the late intro — don't skip it and don't let the song breeze past it.
       </div>
     </div>
 
@@ -898,6 +942,14 @@
       </div>
     </div>
 
+    <div class="watchout">
+      <span class="watchout-icon">👀</span>
+      <div class="watchout-body">
+        <span class="watchout-label">Watch out for</span>
+        <strong>No <em>"You are my…"</em> vamp this week.</strong> Come off Lord You Are Good clean and go straight into the chorus-groove intro.
+      </div>
+    </div>
+
     <button class="play-full" data-clip="3" data-start="3307" data-end="4422" data-label="Friend of God">
       <span class="play-num">
         <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
@@ -960,6 +1012,14 @@
       </div>
     </div>
 
+    <div class="watchout">
+      <span class="watchout-icon">👀</span>
+      <div class="watchout-body">
+        <span class="watchout-label">Watch out for</span>
+        <strong>Choruses only, no verses.</strong> Resist the urge to add them — keeps the dynamics high and the section tight.
+      </div>
+    </div>
+
     <button class="play-full" data-clip="4" data-start="4423" data-end="5587" data-label="Worship Set">
       <span class="play-num">
         <svg class="play-icon-svg" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
@@ -1011,6 +1071,14 @@
       </div>
       <div class="oneliner-body">
         <strong>Standard arrangement</strong>. Lands cleanly off worship (D → B). Nothing fancy — keep it clean.
+      </div>
+    </div>
+
+    <div class="watchout">
+      <span class="watchout-icon">👀</span>
+      <div class="watchout-body">
+        <span class="watchout-label">Watch out for</span>
+        Nothing tricky — just the <strong>D → B key change</strong> coming out of worship. Standard arrangement otherwise.
       </div>
     </div>
 
