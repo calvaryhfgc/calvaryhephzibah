@@ -578,27 +578,27 @@
   <div class="clips-strip-label">5 Clips · Tap any to play</div>
   <div class="clips-strip">
     <div class="clips-strip-inner">
-      <button class="clip-chip" data-clip="1" data-start="377" data-end="2344" data-label="Trading My Sorrows">
+      <button class="clip-chip" data-clip="1" data-start="377" data-end="2344" data-label="Trading My Sorrows" data-target="trading">
         <div class="clip-chip-title"><span class="clip-chip-num">1</span><span class="clip-chip-title-text">Trading My Sorrows</span></div>
         <div class="clip-chip-meta"><span>32m 47s</span><span class="clip-chip-meta-dot">·</span><span>6:17 → 39:04</span></div>
         <div class="clip-chip-progress"></div>
       </button>
-      <button class="clip-chip" data-clip="2" data-start="2345" data-end="3305" data-label="Lord You Are Good">
+      <button class="clip-chip" data-clip="2" data-start="2345" data-end="3305" data-label="Lord You Are Good" data-target="lord">
         <div class="clip-chip-title"><span class="clip-chip-num">2</span><span class="clip-chip-title-text">Lord You Are Good</span></div>
         <div class="clip-chip-meta"><span>16m 00s</span><span class="clip-chip-meta-dot">·</span><span>39:05 → 55:05</span></div>
         <div class="clip-chip-progress"></div>
       </button>
-      <button class="clip-chip" data-clip="3" data-start="3307" data-end="4422" data-label="Friend of God">
+      <button class="clip-chip" data-clip="3" data-start="3307" data-end="4422" data-label="Friend of God" data-target="friend">
         <div class="clip-chip-title"><span class="clip-chip-num">3</span><span class="clip-chip-title-text">Friend of God</span></div>
         <div class="clip-chip-meta"><span>18m 35s</span><span class="clip-chip-meta-dot">·</span><span>55:07 → 1:13:42</span></div>
         <div class="clip-chip-progress"></div>
       </button>
-      <button class="clip-chip" data-clip="4" data-start="4423" data-end="5587" data-label="Worship Set">
+      <button class="clip-chip" data-clip="4" data-start="4423" data-end="5587" data-label="Worship Set" data-target="worship">
         <div class="clip-chip-title"><span class="clip-chip-num">4</span><span class="clip-chip-title-text">Worship Set</span></div>
         <div class="clip-chip-meta"><span>19m 24s</span><span class="clip-chip-meta-dot">·</span><span>1:13:43 → 1:33:07</span></div>
         <div class="clip-chip-progress"></div>
       </button>
-      <button class="clip-chip" data-clip="5" data-start="5589" data-end="5869" data-label="Blessing and Honour">
+      <button class="clip-chip" data-clip="5" data-start="5589" data-end="5869" data-label="Blessing and Honour" data-target="offering">
         <div class="clip-chip-title"><span class="clip-chip-num">5</span><span class="clip-chip-title-text">Blessing and Honour</span></div>
         <div class="clip-chip-meta"><span>4m 40s</span><span class="clip-chip-meta-dot">·</span><span>1:33:09 → 1:37:49</span></div>
         <div class="clip-chip-progress"></div>
@@ -977,10 +977,26 @@
         var start = parseFloat(btn.dataset.start);
         var end = parseFloat(btn.dataset.end);
         var label = btn.dataset.label;
+        var target = btn.dataset.target;
         playClip(clipId, start, end, label);
+        // If this button also has a scroll target (strip chips do), scroll to it
+        if (target) {
+          // Delay slightly so the video expansion has begun before we measure
+          setTimeout(function() { scrollToSection(target); }, 150);
+        }
       });
     });
     document.getElementById('stopBtn').addEventListener('click', stopClip);
+  }
+
+  // Shared helper — scrolls to a section, accounting for sticky video height
+  function scrollToSection(targetId) {
+    var el = document.getElementById(targetId);
+    if (!el) return;
+    var videoEl = document.getElementById('videoWrap');
+    var offset = videoEl ? videoEl.getBoundingClientRect().height + 16 : 80;
+    var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+    window.scrollTo({ top: top, behavior: 'smooth' });
   }
 
   function playClip(clipId, start, end, label) {
@@ -1067,18 +1083,12 @@
     document.getElementById('stopBtn').disabled = true;
   }
 
-  // Bottom tab bar — smooth scroll with video-height offset
+  // Bottom tab bar — uses shared scrollToSection helper
   function setupTabbar() {
     document.querySelectorAll('.tab').forEach(function(tab) {
       tab.addEventListener('click', function(e) {
         e.preventDefault();
-        var targetId = tab.dataset.target;
-        var el = document.getElementById(targetId);
-        if (!el) return;
-        var videoEl = document.getElementById('videoWrap');
-        var offset = videoEl ? videoEl.getBoundingClientRect().height + 16 : 80;
-        var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
-        window.scrollTo({ top: top, behavior: 'smooth' });
+        scrollToSection(tab.dataset.target);
       });
     });
   }
