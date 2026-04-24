@@ -57,10 +57,16 @@
   .rs-song-tag{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;background:var(--bg-2);color:var(--ink-3);border-radius:100px;margin-right:4px;}
   .rs-song-action{font-size:11px;font-weight:600;color:var(--red);cursor:pointer;background:none;border:none;padding:4px 10px;border-radius:var(--r8);font-family:inherit;}
   .rs-song-action:hover{background:var(--red-light);}
+  .rs-song-action-danger{color:var(--ink-3);border:1px solid var(--ink-5);}
+  .rs-song-action-danger:hover{color:var(--red);background:var(--red-light);border-color:var(--red-mid);}
 
   @media (max-width:640px){
     .rs-song-row{grid-template-columns:1fr auto;}
-    .rs-song-meta,.rs-song-row .rs-song-action:not(:last-child){display:none;}
+    .rs-song-meta{display:none;}
+    /* Archive is destructive and admin-only — desktop-only to avoid fat-finger taps on mobile */
+    .rs-song-action-danger{display:none;}
+    /* Hide the "+ Reference" anchor on mobile (matches pre-Archive behaviour: only "+ Arrangement" stays) */
+    .rs-song-row a.rs-song-action{display:none;}
   }
 
   /* Modal form */
@@ -523,6 +529,9 @@ function renderSongs(){
           ? `<div style="display:flex;gap:4px;" onclick="event.stopPropagation();">
                <a href="reference.html?song_id=${s.id}" class="rs-song-action" style="text-decoration:none;">+ Reference</a>
                <button class="rs-song-action" onclick="event.stopPropagation();newArrangementFor('${s.id}')">+ Arrangement</button>
+               ${COS.currentUser.level==='admin'
+                 ? `<button class="rs-song-action rs-song-action-danger" title="Archive this song" onclick="event.stopPropagation();archiveSong('${s.id}')">Archive</button>`
+                 : ''}
              </div>`
           : `<span class="rs-song-meta">—</span>`}
       </div>
@@ -603,6 +612,42 @@ async function saveSong(){
 
   COS.toast('Song saved');
   closeModal('modal-song');
+  await loadAll();
+}
+
+// Archive a song — soft delete. Sets status='archived'. The library list
+// filters by status='active', so archived songs disappear from view.
+// References and arrangements remain intact (they're not cascaded on archive,
+// only on hard delete).
+async function archiveSong(songId){
+  // Admin gate — defence in depth; the button is already only rendered for admins,
+  // but belt-and-braces in case the function is called some other way.
+  if(!COS.currentUser || COS.currentUser.level !== 'admin'){
+    COS.toast('Only admins can archive songs');
+    return;
+  }
+
+  const song = state.songs.find(s => s.id === songId);
+  if(!song){ COS.toast('Song not found'); return; }
+  const songTitle = song.title;
+
+  const refCount = state.references ? state.references.filter(r => r.song_id === songId).length : 0;
+  const arrCount = countArrangementsForSong(songId);
+
+  let warning = `Archive "${songTitle}"?`;
+  if(refCount || arrCount){
+    warning += `\n\nThis song has ${refCount} reference${refCount===1?'':'s'} and ${arrCount} arrangement${arrCount===1?'':'s'}. Archiving hides the song from the library but keeps its data intact.`;
+  } else {
+    warning += `\n\nThis hides the song from the library. Its data is preserved.`;
+  }
+  warning += `\n\nYou can restore it later from Supabase if needed.`;
+
+  if(!confirm(warning)) return;
+
+  const result = await sbPatch('rs_songs', `id=eq.${songId}`, { status: 'archived' });
+  if(!result){ COS.toast('Archive failed — try again'); return; }
+
+  COS.toast(`Archived "${songTitle}"`);
   await loadAll();
 }
 
