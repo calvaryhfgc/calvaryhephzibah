@@ -198,6 +198,134 @@
   }
   .pe-add-note:hover{background:rgba(107,70,193,0.1);border-color:#6B46C1;}
 
+  /* ── PIANO-ROLL ─────────────────────────────────────────────── */
+  .pr-hint{
+    font-size:12px;color:var(--ink-3);margin-bottom:10px;line-height:1.5;
+  }
+  .pr-hint strong{color:var(--ink-2);font-weight:600;}
+  .pr-hint code{
+    background:var(--ink-6);padding:1px 6px;border-radius:4px;
+    font-size:11px;color:var(--ink-2);
+  }
+
+  .pr-frame{
+    display:grid;grid-template-columns:52px 1fr;gap:0;
+    border:1px solid var(--ink-5);border-radius:var(--r10);
+    background:var(--ink-6);overflow:hidden;
+  }
+  /* Fixed pitch-label column (always visible, doesn't scroll) */
+  .pr-labels-col{
+    background:var(--white);border-right:1px solid var(--ink-5);
+    display:flex;flex-direction:column;position:relative;
+  }
+  .pr-labels-ruler-spacer{
+    height:28px;border-bottom:1px solid var(--ink-5);
+    background:var(--ink-6);flex-shrink:0;
+  }
+  .pr-label{
+    display:flex;align-items:center;justify-content:flex-end;
+    padding-right:8px;font-size:10px;font-variant-numeric:tabular-nums;
+    color:var(--ink-3);border-bottom:1px solid rgba(0,0,0,0.03);
+    user-select:none;flex-shrink:0;
+  }
+  .pr-label.black{color:var(--ink-4);}
+  .pr-label.octave{color:var(--ink);font-weight:600;}
+
+  /* Scrolling grid column */
+  .pr-grid-scroll{
+    overflow-x:auto;overflow-y:hidden;
+    position:relative;min-height:240px;
+    background:var(--white);
+  }
+  .pr-grid-scroll::-webkit-scrollbar{height:10px;}
+  .pr-grid-scroll::-webkit-scrollbar-track{background:var(--ink-6);}
+  .pr-grid-scroll::-webkit-scrollbar-thumb{background:var(--ink-5);border-radius:5px;}
+
+  .pr-svg{display:block;user-select:none;touch-action:pan-y;}
+
+  /* Row backgrounds (alternating white/black keys) */
+  .pr-row-white{fill:#FFFFFF;}
+  .pr-row-black{fill:#F5F5F7;}
+  .pr-row-hover{fill:rgba(107,70,193,0.06);}
+
+  /* Grid lines */
+  .pr-grid-line-sub{stroke:rgba(0,0,0,0.04);stroke-width:1;}
+  .pr-grid-line-beat{stroke:rgba(0,0,0,0.10);stroke-width:1;}
+  .pr-grid-line-bar{stroke:rgba(0,0,0,0.20);stroke-width:1.5;}
+  .pr-grid-line-row{stroke:rgba(0,0,0,0.04);stroke-width:1;}
+
+  /* Ruler at top */
+  .pr-ruler-bg{fill:var(--ink-6);}
+  .pr-ruler-text{font-size:10px;font-family:-apple-system,'Segoe UI',sans-serif;fill:var(--ink-3);font-variant-numeric:tabular-nums;}
+  .pr-ruler-text-bar{fill:var(--ink-2);font-weight:600;}
+  .pr-ruler-line{stroke:rgba(0,0,0,0.08);stroke-width:1;}
+
+  /* Note blocks */
+  .pr-note{cursor:grab;}
+  .pr-note:active{cursor:grabbing;}
+  .pr-note-body{
+    stroke-width:1;stroke:rgba(0,0,0,0.15);
+    transition:filter 0.08s;
+  }
+  .pr-note:hover .pr-note-body{filter:brightness(1.08);}
+  .pr-note-body-active{ /* colour set inline per kind */ }
+  .pr-note-body-ghost{opacity:0.22;pointer-events:none;}
+
+  .pr-note-selected .pr-note-body{
+    stroke:#1A1A1A;stroke-width:2;
+    filter:brightness(1.1);
+  }
+  .pr-note-resize-handle{
+    fill:transparent;cursor:ew-resize;
+  }
+  .pr-note-label{
+    font-size:10px;fill:white;font-weight:600;
+    pointer-events:none;user-select:none;
+  }
+  .pr-note-lyric{
+    font-size:9px;fill:rgba(255,255,255,0.8);font-style:italic;
+    pointer-events:none;user-select:none;
+  }
+
+  /* Per-track colours */
+  .pr-melody .pr-note-body-active  { fill:#6B46C1; }
+  .pr-bass   .pr-note-body-active  { fill:#3B82F6; }
+  .pr-counter.pr-note-body-active  { fill:#10B981; }
+  .pr-click  .pr-note-body-active  { fill:#F59E0B; }
+  /* Ghost colours — same hues, different saturation */
+  .pr-ghost-melody  { fill:#6B46C1; }
+  .pr-ghost-bass    { fill:#3B82F6; }
+  .pr-ghost-counter { fill:#10B981; }
+  .pr-ghost-click   { fill:#F59E0B; }
+
+  /* Floating popover for editing a selected note's lyric */
+  .pr-popover{
+    position:absolute;background:var(--white);
+    border:1px solid var(--ink-5);border-radius:var(--r10);
+    box-shadow:var(--shadow-md);
+    padding:10px 12px;z-index:30;min-width:200px;
+    display:flex;flex-direction:column;gap:8px;
+  }
+  .pr-popover-row{display:flex;align-items:center;gap:6px;}
+  .pr-popover input{
+    flex:1;padding:5px 8px;border:1px solid var(--ink-5);
+    border-radius:var(--r8);font-family:inherit;font-size:12px;
+    color:var(--ink);
+  }
+  .pr-popover input:focus{outline:none;border-color:#6B46C1;}
+  .pr-popover-label{font-size:10px;color:var(--ink-4);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+  .pr-popover-btn{
+    padding:4px 10px;font-size:11px;font-weight:600;
+    border:1px solid var(--ink-5);border-radius:var(--r8);
+    background:var(--white);cursor:pointer;font-family:inherit;
+  }
+  .pr-popover-btn-danger{color:var(--red);border-color:var(--red);}
+  .pr-popover-btn-danger:hover{background:var(--red);color:white;}
+
+  @media(max-width:640px){
+    .pr-hint{font-size:11px;}
+  }
+
   /* Playback strip */
   .pe-playback{
     display:flex;align-items:center;gap:12px;
@@ -407,7 +535,7 @@
             <div class="pe-hero-actions">
               <div class="pe-mode-toggle">
                 <button class="pe-mode-btn active" data-mode="step">Step sequencer</button>
-                <button class="pe-mode-btn" data-mode="pianoroll" disabled title="Coming in phase 2">Piano-roll (phase 2)</button>
+                <button class="pe-mode-btn" data-mode="pianoroll">Piano-roll</button>
               </div>
               <div style="flex:1"></div>
               <button class="pe-btn pe-btn-danger" id="btn-delete" style="display:none;">Delete</button>
@@ -476,14 +604,33 @@
               <button class="pe-mute-toggle" id="track-mute-btn">Unmuted</button>
             </div>
 
-            <div id="steps-container">
-              <div class="pe-empty">
-                No notes yet on this track.
-                <div class="pe-empty-hint">Add notes below to build the phrase.</div>
+            <!-- Step-sequencer mode (default) -->
+            <div id="step-mode">
+              <div id="steps-container">
+                <div class="pe-empty">
+                  No notes yet on this track.
+                  <div class="pe-empty-hint">Add notes below to build the phrase.</div>
+                </div>
               </div>
+              <button class="pe-add-note" id="btn-add-note">+ Add note</button>
             </div>
 
-            <button class="pe-add-note" id="btn-add-note">+ Add note</button>
+            <!-- Piano-roll mode -->
+            <div id="pianoroll-mode" style="display:none;">
+              <div class="pr-hint">
+                <strong>Tap empty space</strong> to add a note. <strong>Drag</strong> the body to move, <strong>drag the right edge</strong> to resize. Other tracks ghost behind — switch tabs to edit them.
+              </div>
+              <div class="pr-frame">
+                <div class="pr-labels-col" id="pr-labels-col">
+                  <div class="pr-labels-ruler-spacer"></div>
+                  <!-- pitch labels injected here -->
+                </div>
+                <div class="pr-grid-scroll" id="pr-grid-scroll">
+                  <svg class="pr-svg" id="pr-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+                </div>
+              </div>
+              <div id="pr-popover-container" style="position:relative;"></div>
+            </div>
           </div>
 
         </div>
@@ -555,6 +702,7 @@ const state = {
   countInEnabled: true,
   loopEnabled: false,
   isPlaying: false,
+  mode: 'step',       // 'step' | 'pianoroll'
 };
 
 // Short track-kind → default instrument map. Used when we auto-create
@@ -820,7 +968,506 @@ function switchTrack(kind){
   });
   renderTrackControls();
   renderSteps();
+  // If piano-roll is the active mode, re-render it too (colours and ghosts change).
+  if(state.mode === 'pianoroll') renderPianoRoll();
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// MODE SWITCHING (step sequencer ↔ piano-roll)
+// ═══════════════════════════════════════════════════════════════════
+function setMode(mode){
+  state.mode = mode;
+  document.querySelectorAll('.pe-mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  document.getElementById('step-mode').style.display     = mode === 'step' ? '' : 'none';
+  document.getElementById('pianoroll-mode').style.display = mode === 'pianoroll' ? '' : 'none';
+  if(mode === 'pianoroll') renderPianoRoll();
+  closeNotePopover();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PIANO-ROLL MODULE
+// ═══════════════════════════════════════════════════════════════════
+//
+// Coordinate system:
+//   x = (start_position in grid units) * PX_PER_UNIT + LABEL_W
+//   y = (maxPitch - pitch MIDI) * ROW_H + RULER_H
+// The y-axis is inverted (higher pitch = smaller y) to match how people
+// read piano-rolls visually.
+//
+// All distance maths is done in MIDI numbers (0-127), converted to/from
+// pitch strings like "C#4" at the edges.
+
+const PR = {
+  PX_PER_UNIT: 24,    // pixels per grid unit (16th note in a default phrase)
+  ROW_H: 18,          // pixels per semitone row
+  RULER_H: 28,        // pixels for the top bar/beat ruler
+  LABEL_W: 0,         // labels live in a sibling column, not inside the SVG
+  MIN_BARS: 2,        // minimum visible width even if phrase is empty
+  HEADROOM_SEMITONES: 3, // pitch padding above highest note and below lowest
+
+  // Per-track palette for note-body fill (used inline because CSS can't
+  // target nested SVG classes reliably across browsers)
+  colours: {
+    melody:  '#6B46C1',
+    bass:    '#3B82F6',
+    counter: '#10B981',
+    click:   '#F59E0B'
+  },
+
+  // Interaction state
+  dragging: null,    // { noteId, mode: 'move'|'resize', startPtX, startPtY, origStart, origPitch, origDuration }
+  selectedId: null,
+  hoverCell: null,   // { unit, pitch } for row-hover preview
+  // Computed on each render
+  minMidi: 60,
+  maxMidi: 72,
+  totalUnits: 32,
+  beatsPerBar: 4,
+  gridPerBeat: 4,
+};
+
+// Pitch ↔ MIDI helpers --------------------------------------------------
+const PITCH_CLASSES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const PITCH_CLASS_INDEX = {
+  'C':0, 'B#':0,
+  'C#':1, 'Db':1,
+  'D':2,
+  'D#':3, 'Eb':3,
+  'E':4, 'Fb':4,
+  'F':5, 'E#':5,
+  'F#':6, 'Gb':6,
+  'G':7,
+  'G#':8, 'Ab':8,
+  'A':9,
+  'A#':10, 'Bb':10,
+  'B':11, 'Cb':11
+};
+
+function pitchToMidi(pitch){
+  if(!pitch) return null;
+  const m = String(pitch).trim().match(/^([A-Ga-g])([#b])?(-?\d+)$/);
+  if(!m) return null;
+  const letter = m[1].toUpperCase();
+  const acc = m[2] || '';
+  const octave = parseInt(m[3], 10);
+  const pc = PITCH_CLASS_INDEX[letter + acc];
+  if(pc == null) return null;
+  // MIDI: C-1 = 0, C0 = 12, C4 = 60
+  return (octave + 1) * 12 + pc;
+}
+
+function midiToPitch(midi){
+  const pc = ((midi % 12) + 12) % 12;
+  const octave = Math.floor(midi / 12) - 1;
+  return PITCH_CLASSES[pc] + octave;
+}
+
+function isBlackKey(midi){
+  const pc = ((midi % 12) + 12) % 12;
+  return [1, 3, 6, 8, 10].includes(pc);
+}
+
+// Compute grid dimensions from phrase + notes -------------------------
+function computePianoRollDims(){
+  const phrase = state.phrase;
+  if(!phrase) return;
+
+  // Derive grid-per-beat from phrase.grid_resolution / beats-per-bar
+  const timeSig = phrase.time_signature || '4/4';
+  const beatsPerBar = parseInt(timeSig.split('/')[0], 10) || 4;
+  const gridPerBeat = Math.round((phrase.grid_resolution || 16) / beatsPerBar);
+  const unitsPerBar = beatsPerBar * gridPerBeat;
+
+  // Collect all notes across all tracks to find pitch + time bounds
+  let minMidi = null, maxMidi = null, maxEnd = 0;
+  for(const track of state.tracks){
+    for(const note of (state.notes[track.id] || [])){
+      const midi = pitchToMidi(note.pitch);
+      if(midi == null) continue; // skip pitchless (click) notes for pitch range
+      if(minMidi == null || midi < minMidi) minMidi = midi;
+      if(maxMidi == null || midi > maxMidi) maxMidi = midi;
+      const end = (note.start_position || 0) + (note.duration || 0);
+      if(end > maxEnd) maxEnd = end;
+    }
+  }
+  // Fallback range if no notes: one octave around C4
+  if(minMidi == null){ minMidi = 60; maxMidi = 72; }
+  // Pad
+  minMidi -= PR.HEADROOM_SEMITONES;
+  maxMidi += PR.HEADROOM_SEMITONES;
+  // Ensure at least one octave visible
+  if(maxMidi - minMidi < 12){
+    const mid = Math.floor((minMidi + maxMidi) / 2);
+    minMidi = mid - 6;
+    maxMidi = mid + 6;
+  }
+
+  // Width: at least MIN_BARS worth of units, rounded up to next bar
+  let totalUnits = Math.max(maxEnd, PR.MIN_BARS * unitsPerBar);
+  totalUnits = Math.ceil(totalUnits / unitsPerBar) * unitsPerBar;
+  // Always give at least one extra empty bar at the end so there's space to add
+  totalUnits += unitsPerBar;
+
+  PR.minMidi = minMidi;
+  PR.maxMidi = maxMidi;
+  PR.totalUnits = totalUnits;
+  PR.beatsPerBar = beatsPerBar;
+  PR.gridPerBeat = gridPerBeat;
+  PR.unitsPerBar = unitsPerBar;
+}
+
+// Main render ---------------------------------------------------------
+function renderPianoRoll(){
+  if(!state.phrase) return;
+  computePianoRollDims();
+
+  const pitchRange = PR.maxMidi - PR.minMidi + 1;
+  const gridHeight = pitchRange * PR.ROW_H;
+  const totalHeight = gridHeight + PR.RULER_H;
+  const totalWidth  = PR.totalUnits * PR.PX_PER_UNIT;
+
+  const svg = document.getElementById('pr-svg');
+  svg.setAttribute('width', totalWidth);
+  svg.setAttribute('height', totalHeight);
+  svg.setAttribute('viewBox', `0 0 ${totalWidth} ${totalHeight}`);
+  svg.innerHTML = buildPianoRollSVG(totalWidth, totalHeight, gridHeight);
+
+  // Render pitch labels in the sibling fixed column
+  renderPianoRollLabels(pitchRange);
+
+  // Wire interactions on the rendered SVG
+  wirePianoRollInteractions();
+}
+
+function buildPianoRollSVG(totalWidth, totalHeight, gridHeight){
+  const parts = [];
+  const pitchRange = PR.maxMidi - PR.minMidi + 1;
+
+  // ── Layer 1: row backgrounds ──────────────────────────────
+  for(let i = 0; i < pitchRange; i++){
+    const midi = PR.maxMidi - i;
+    const y = PR.RULER_H + i * PR.ROW_H;
+    const cls = isBlackKey(midi) ? 'pr-row-black' : 'pr-row-white';
+    parts.push(`<rect x="0" y="${y}" width="${totalWidth}" height="${PR.ROW_H}" class="${cls}"/>`);
+  }
+
+  // ── Layer 2: grid lines ───────────────────────────────────
+  // Horizontal row lines
+  for(let i = 0; i <= pitchRange; i++){
+    const y = PR.RULER_H + i * PR.ROW_H;
+    parts.push(`<line x1="0" y1="${y}" x2="${totalWidth}" y2="${y}" class="pr-grid-line-row"/>`);
+  }
+  // Vertical grid lines
+  for(let u = 0; u <= PR.totalUnits; u++){
+    const x = u * PR.PX_PER_UNIT;
+    let cls;
+    if(u % PR.unitsPerBar === 0) cls = 'pr-grid-line-bar';
+    else if(u % PR.gridPerBeat === 0) cls = 'pr-grid-line-beat';
+    else cls = 'pr-grid-line-sub';
+    parts.push(`<line x1="${x}" y1="${PR.RULER_H}" x2="${x}" y2="${totalHeight}" class="${cls}"/>`);
+  }
+
+  // ── Layer 3: top ruler ────────────────────────────────────
+  parts.push(`<rect x="0" y="0" width="${totalWidth}" height="${PR.RULER_H}" class="pr-ruler-bg"/>`);
+  parts.push(`<line x1="0" y1="${PR.RULER_H}" x2="${totalWidth}" y2="${PR.RULER_H}" class="pr-ruler-line"/>`);
+  // Bar numbers
+  const barCount = PR.totalUnits / PR.unitsPerBar;
+  for(let bar = 0; bar < barCount; bar++){
+    const x = bar * PR.unitsPerBar * PR.PX_PER_UNIT + 6;
+    parts.push(`<text x="${x}" y="14" class="pr-ruler-text pr-ruler-text-bar">Bar ${bar + 1}</text>`);
+    // Beat numbers within the bar
+    for(let b = 0; b < PR.beatsPerBar; b++){
+      const bx = (bar * PR.unitsPerBar + b * PR.gridPerBeat) * PR.PX_PER_UNIT + 4;
+      if(b === 0) continue; // bar number already covers beat 1
+      parts.push(`<text x="${bx}" y="24" class="pr-ruler-text">${b + 1}</text>`);
+    }
+  }
+
+  // ── Layer 4: ghost notes (non-active tracks) ──────────────
+  for(const track of state.tracks){
+    if(track.kind === state.activeTrackKind) continue;
+    if(track.muted) continue;
+    const ghostColour = PR.colours[track.kind] || '#888';
+    for(const note of (state.notes[track.id] || [])){
+      const midi = pitchToMidi(note.pitch);
+      if(midi == null) continue;
+      if(midi < PR.minMidi || midi > PR.maxMidi) continue;
+      const x = (note.start_position || 0) * PR.PX_PER_UNIT;
+      const y = PR.RULER_H + (PR.maxMidi - midi) * PR.ROW_H;
+      const w = (note.duration || 1) * PR.PX_PER_UNIT;
+      parts.push(`<rect x="${x + 1}" y="${y + 1}" width="${Math.max(w - 2, 4)}" height="${PR.ROW_H - 2}" fill="${ghostColour}" class="pr-note-body-ghost" rx="3"/>`);
+    }
+  }
+
+  // ── Layer 5: active-track notes ───────────────────────────
+  const activeTrack = getActiveTrack();
+  if(activeTrack){
+    const colour = PR.colours[activeTrack.kind] || '#888';
+    const activeNotes = state.notes[activeTrack.id] || [];
+    for(const note of activeNotes){
+      const midi = pitchToMidi(note.pitch);
+      if(midi == null) continue;
+      // Expand grid vertically for notes outside current range? Safer to clip.
+      if(midi < PR.minMidi || midi > PR.maxMidi) continue;
+      const x = (note.start_position || 0) * PR.PX_PER_UNIT;
+      const y = PR.RULER_H + (PR.maxMidi - midi) * PR.ROW_H;
+      const w = Math.max((note.duration || 1) * PR.PX_PER_UNIT, 6);
+      const selected = note.id === PR.selectedId;
+      const groupClass = 'pr-note ' + (selected ? 'pr-note-selected' : '');
+      const resizeHandleX = x + w - 8;
+      const labelX = x + 5;
+      const labelY = y + 12;
+      const lyricY = y + 24;
+      const pitchLabel = escapeHtml(note.pitch);
+      const lyricLabel = note.lyric ? escapeHtml(note.lyric) : '';
+      parts.push(`
+        <g class="${groupClass}" data-note-id="${note.id}">
+          <rect class="pr-note-body" x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${PR.ROW_H - 2}" fill="${colour}" rx="3"/>
+          <text x="${labelX}" y="${labelY}" class="pr-note-label">${pitchLabel}</text>
+          ${lyricLabel && (PR.ROW_H > 18) ? `<text x="${labelX}" y="${lyricY}" class="pr-note-lyric">${lyricLabel}</text>` : ''}
+          <rect class="pr-note-resize-handle" x="${resizeHandleX}" y="${y}" width="8" height="${PR.ROW_H}"/>
+        </g>
+      `);
+    }
+  }
+
+  return parts.join('');
+}
+
+function renderPianoRollLabels(pitchRange){
+  const col = document.getElementById('pr-labels-col');
+  // Preserve the spacer and rebuild label rows
+  const spacer = col.querySelector('.pr-labels-ruler-spacer');
+  col.innerHTML = '';
+  col.appendChild(spacer);
+  for(let i = 0; i < pitchRange; i++){
+    const midi = PR.maxMidi - i;
+    const name = midiToPitch(midi);
+    const div = document.createElement('div');
+    let cls = 'pr-label';
+    if(isBlackKey(midi)) cls += ' black';
+    if(midi % 12 === 0) cls += ' octave'; // C note starts a new octave — emphasise
+    div.className = cls;
+    div.style.height = PR.ROW_H + 'px';
+    div.textContent = name;
+    col.appendChild(div);
+  }
+}
+
+// Interaction --------------------------------------------------------
+function wirePianoRollInteractions(){
+  const svg = document.getElementById('pr-svg');
+  // Remove any previous listeners by cloning — cleanest idempotent approach
+  const fresh = svg.cloneNode(true);
+  svg.parentNode.replaceChild(fresh, svg);
+
+  fresh.addEventListener('pointerdown', onPianoRollPointerDown);
+  fresh.addEventListener('pointermove', onPianoRollPointerMove);
+  fresh.addEventListener('pointerup',   onPianoRollPointerUp);
+  fresh.addEventListener('pointercancel', onPianoRollPointerUp);
+}
+
+// Convert a pointer event into (unit, midi) grid coordinates
+function pointerToGrid(evt){
+  const svg = document.getElementById('pr-svg');
+  const rect = svg.getBoundingClientRect();
+  const x = evt.clientX - rect.left;
+  const y = evt.clientY - rect.top;
+  const unit = Math.floor(x / PR.PX_PER_UNIT);
+  const rowIndex = Math.floor((y - PR.RULER_H) / PR.ROW_H);
+  const midi = PR.maxMidi - rowIndex;
+  return { unit, midi, x, y };
+}
+
+function onPianoRollPointerDown(evt){
+  // Find if we pressed on a note group or on empty grid
+  const target = evt.target.closest('.pr-note');
+  const isResizeHandle = evt.target.classList && evt.target.classList.contains('pr-note-resize-handle');
+
+  if(target){
+    const noteId = target.getAttribute('data-note-id');
+    const activeTrack = getActiveTrack();
+    if(!activeTrack) return;
+    const note = (state.notes[activeTrack.id] || []).find(n => n.id === noteId);
+    if(!note) return;
+
+    // Select
+    PR.selectedId = noteId;
+    renderPianoRoll();
+    openNotePopover(note);
+
+    // Begin drag
+    const pt = pointerToGrid(evt);
+    PR.dragging = {
+      noteId,
+      mode: isResizeHandle ? 'resize' : 'move',
+      startUnit: pt.unit,
+      startMidi: pt.midi,
+      origStart: note.start_position,
+      origPitch: note.pitch,
+      origDuration: note.duration
+    };
+    evt.preventDefault();
+    try { document.getElementById('pr-svg').setPointerCapture(evt.pointerId); } catch(e){}
+    return;
+  }
+
+  // Empty grid: only add a note if the click is below the ruler
+  const pt = pointerToGrid(evt);
+  if(pt.y < PR.RULER_H) return;
+  if(pt.unit < 0 || pt.unit >= PR.totalUnits) return;
+  if(pt.midi < PR.minMidi || pt.midi > PR.maxMidi) return;
+  addNoteAtGrid(pt.unit, pt.midi);
+}
+
+function onPianoRollPointerMove(evt){
+  if(!PR.dragging) return;
+  const pt = pointerToGrid(evt);
+  const activeTrack = getActiveTrack();
+  if(!activeTrack) return;
+  const note = (state.notes[activeTrack.id] || []).find(n => n.id === PR.dragging.noteId);
+  if(!note) return;
+
+  if(PR.dragging.mode === 'move'){
+    const deltaUnits = pt.unit - PR.dragging.startUnit;
+    const deltaMidi  = pt.midi - PR.dragging.startMidi;
+    let newStart = PR.dragging.origStart + deltaUnits;
+    let newPitch = midiToPitch(pitchToMidi(PR.dragging.origPitch) + deltaMidi);
+    newStart = Math.max(0, newStart);
+    newStart = Math.min(newStart, PR.totalUnits - note.duration);
+    note.start_position = newStart;
+    note.pitch = newPitch;
+  } else if(PR.dragging.mode === 'resize'){
+    const deltaUnits = pt.unit - PR.dragging.startUnit;
+    let newDur = PR.dragging.origDuration + deltaUnits;
+    if(newDur < 1) newDur = 1;
+    if(note.start_position + newDur > PR.totalUnits) newDur = PR.totalUnits - note.start_position;
+    note.duration = newDur;
+  }
+
+  // Re-render locally for feedback (cheap — few hundred elements)
+  renderPianoRoll();
+}
+
+async function onPianoRollPointerUp(evt){
+  if(!PR.dragging) return;
+  const { noteId } = PR.dragging;
+  const activeTrack = getActiveTrack();
+  PR.dragging = null;
+  try { document.getElementById('pr-svg').releasePointerCapture(evt.pointerId); } catch(e){}
+
+  if(!activeTrack) return;
+  const note = (state.notes[activeTrack.id] || []).find(n => n.id === noteId);
+  if(!note) return;
+
+  // Persist the new position / pitch / duration
+  renderSaveStatus('saving');
+  const ok = await sbPatch('rs_phrase_notes', `id=eq.${note.id}`, {
+    start_position: note.start_position,
+    pitch: note.pitch,
+    duration: note.duration
+  });
+  if(!ok){ renderSaveStatus('error'); return; }
+  renderSaveStatus('saved');
+  // Re-sort notes by start_position so the step list stays ordered if user switches modes
+  (state.notes[activeTrack.id] || []).sort((a, b) => a.start_position - b.start_position);
+  renderTrackCounts();
+}
+
+async function addNoteAtGrid(unit, midi){
+  const activeTrack = getActiveTrack();
+  if(!activeTrack) return;
+  const pitch = midiToPitch(midi);
+  // Default duration: one beat worth of grid units (gridPerBeat)
+  const duration = PR.gridPerBeat;
+
+  renderSaveStatus('saving');
+  const existing = state.notes[activeTrack.id] || [];
+  const maxStep = existing.reduce((m, n) => Math.max(m, n.step || 0), 0);
+  const row = {
+    track_id: activeTrack.id,
+    step: maxStep + 1,
+    pitch,
+    start_position: unit,
+    duration,
+    lyric: null
+  };
+  const created = await sbPost('rs_phrase_notes', row);
+  if(!created){ renderSaveStatus('error'); return; }
+  const newNote = Array.isArray(created) ? created[0] : created;
+  if(!state.notes[activeTrack.id]) state.notes[activeTrack.id] = [];
+  state.notes[activeTrack.id].push(newNote);
+  state.notes[activeTrack.id].sort((a, b) => a.start_position - b.start_position);
+  PR.selectedId = newNote.id;
+  renderSaveStatus('saved');
+  renderTrackCounts();
+  renderPianoRoll();
+  openNotePopover(newNote);
+}
+
+// Popover for selected note (lyric + delete) -------------------------
+function openNotePopover(note){
+  closeNotePopover();
+  const container = document.getElementById('pr-popover-container');
+  const scroll = document.getElementById('pr-grid-scroll');
+  const pop = document.createElement('div');
+  pop.className = 'pr-popover';
+  pop.innerHTML = `
+    <div class="pr-popover-label">Note · ${escapeHtml(note.pitch || '')}</div>
+    <div class="pr-popover-row">
+      <input type="text" id="pr-pop-lyric" placeholder="lyric (optional)" value="${note.lyric ? escapeHtml(note.lyric) : ''}">
+    </div>
+    <div class="pr-popover-row" style="justify-content:space-between;">
+      <span class="pr-popover-label">start ${note.start_position} · dur ${note.duration}</span>
+      <button class="pr-popover-btn pr-popover-btn-danger" id="pr-pop-delete">Delete</button>
+    </div>
+  `;
+  // Position the popover below the grid area, roughly where the user is looking.
+  // Simpler than positioning against the note itself (which scrolls horizontally).
+  pop.style.top = '8px';
+  pop.style.left = '8px';
+  container.appendChild(pop);
+
+  const input = pop.querySelector('#pr-pop-lyric');
+  input.addEventListener('input', debouncedLyricSave(note.id));
+  input.focus();
+
+  pop.querySelector('#pr-pop-delete').addEventListener('click', async () => {
+    await deleteNote(note.id);
+    PR.selectedId = null;
+    closeNotePopover();
+    renderPianoRoll();
+  });
+}
+
+function closeNotePopover(){
+  const container = document.getElementById('pr-popover-container');
+  if(container) container.innerHTML = '';
+}
+
+let _lyricSaveTimer = null;
+function debouncedLyricSave(noteId){
+  return (evt) => {
+    const val = evt.target.value.trim() || null;
+    if(_lyricSaveTimer) clearTimeout(_lyricSaveTimer);
+    _lyricSaveTimer = setTimeout(async () => {
+      renderSaveStatus('saving');
+      const ok = await sbPatch('rs_phrase_notes', `id=eq.${noteId}`, { lyric: val });
+      if(!ok){ renderSaveStatus('error'); return; }
+      // Update local state
+      for(const tid of Object.keys(state.notes)){
+        const n = state.notes[tid].find(x => x.id === noteId);
+        if(n){ n.lyric = val; break; }
+      }
+      renderSaveStatus('saved');
+      // Re-render so lyric shows inside the note block
+      if(state.mode === 'pianoroll') renderPianoRoll();
+    }, 500);
+  };
+}
+
 
 // ── WIRE UP LISTENERS ───────────────────────────────────────
 function wireListeners(){
@@ -835,6 +1482,14 @@ function wireListeners(){
   // Track tabs
   document.querySelectorAll('.pe-track-tab').forEach(tab => {
     tab.addEventListener('click', () => switchTrack(tab.dataset.kind));
+  });
+
+  // Mode toggle (step sequencer ↔ piano-roll)
+  document.querySelectorAll('.pe-mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(btn.disabled) return;
+      setMode(btn.dataset.mode);
+    });
   });
 
   // Track controls
@@ -1047,6 +1702,7 @@ async function submitAddNote(){
   closeAddNoteModal();
   renderSteps();
   renderTrackCounts();
+  if(state.mode === 'pianoroll') renderPianoRoll();
   renderSaveStatus('saved');
 }
 
@@ -1062,6 +1718,7 @@ async function deleteNote(noteId){
   state.notes[track.id] = (state.notes[track.id] || []).filter(n => n.id !== noteId);
   renderSteps();
   renderTrackCounts();
+  if(state.mode === 'pianoroll') renderPianoRoll();
   renderSaveStatus('saved');
 }
 
