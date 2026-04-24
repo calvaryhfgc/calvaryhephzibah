@@ -254,4 +254,77 @@ BEGIN
   END IF;
 END $$;
 
+-- ── PHRASES ─────────────────────────────────────────────────────────────
+-- Short named musical phrases (verse entries, licks, transitions) with
+-- multi-voice tracks. Can be standalone or attached to a song/arrangement.
+-- See migrations/2026-04-24-phrase-editor.sql for full commentary.
+
+CREATE TABLE IF NOT EXISTS public.rs_phrases (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name            text NOT NULL,
+  song_id         uuid REFERENCES public.rs_songs(id) ON DELETE SET NULL,
+  arrangement_id  uuid REFERENCES public.rs_arrangements(id) ON DELETE SET NULL,
+  key             text NOT NULL DEFAULT 'C',
+  tempo           integer NOT NULL DEFAULT 120,
+  time_signature  text NOT NULL DEFAULT '4/4',
+  grid_resolution integer NOT NULL DEFAULT 16,
+  description     text,
+  created_by      text,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  updated_at      timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.rs_phrase_tracks (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  phrase_id   uuid NOT NULL REFERENCES public.rs_phrases(id) ON DELETE CASCADE,
+  kind        text NOT NULL CHECK (kind IN ('melody','bass','counter','click')),
+  position    integer NOT NULL DEFAULT 0,
+  instrument  text NOT NULL DEFAULT 'synth_lead',
+  volume_db   numeric NOT NULL DEFAULT -6,
+  muted       boolean NOT NULL DEFAULT false,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS rs_phrase_tracks_phrase_id_idx
+  ON public.rs_phrase_tracks (phrase_id, position);
+
+CREATE TABLE IF NOT EXISTS public.rs_phrase_notes (
+  id              uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  track_id        uuid NOT NULL REFERENCES public.rs_phrase_tracks(id) ON DELETE CASCADE,
+  step            integer NOT NULL DEFAULT 0,
+  pitch           text,
+  start_position  integer NOT NULL,
+  duration        integer NOT NULL,
+  lyric           text,
+  velocity        numeric NOT NULL DEFAULT 1.0
+);
+
+CREATE INDEX IF NOT EXISTS rs_phrase_notes_track_id_idx
+  ON public.rs_phrase_notes (track_id, start_position);
+
+ALTER TABLE public.rs_phrases       ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.rs_phrase_tracks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.rs_phrase_notes  ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS rs_phrases_all       ON public.rs_phrases;
+DROP POLICY IF EXISTS rs_phrase_tracks_all ON public.rs_phrase_tracks;
+DROP POLICY IF EXISTS rs_phrase_notes_all  ON public.rs_phrase_notes;
+
+CREATE POLICY rs_phrases_all       ON public.rs_phrases       FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY rs_phrase_tracks_all ON public.rs_phrase_tracks FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY rs_phrase_notes_all  ON public.rs_phrase_notes  FOR ALL USING (true) WITH CHECK (true);
+
+CREATE OR REPLACE FUNCTION public.rs_phrases_touch_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS rs_phrases_touch_updated_at_trigger ON public.rs_phrases;
+CREATE TRIGGER rs_phrases_touch_updated_at_trigger
+  BEFORE UPDATE ON public.rs_phrases
+  FOR EACH ROW EXECUTE FUNCTION public.rs_phrases_touch_updated_at();
+
 -- ── DONE ─────────────────────────────────────────────────────────────────
