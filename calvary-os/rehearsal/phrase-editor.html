@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Phrase Editor</title>
+<meta name="theme-color" content="#FFFFFF">
+<link rel="stylesheet" href="../shell.css">
+<style>
+  /* ── PHRASE EDITOR LOCAL STYLES ─────────────────────────────── */
+  .pe-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink-4);margin-bottom:8px;flex-wrap:wrap;}
+  .pe-crumb a{color:var(--ink-3);text-decoration:none;}
+  .pe-crumb a:hover{color:var(--ink);}
+
+  /* Hero */
+  .pe-hero{
+    background:linear-gradient(135deg, #F5F3FF 0%, #EFF6FF 100%);
+    border:1px solid var(--ink-5);
+    border-radius:var(--r20);padding:22px 26px;margin-bottom:16px;
+  }
+  .pe-hero-eyebrow{
+    font-size:11px;text-transform:uppercase;letter-spacing:1px;
+    color:#6B46C1;font-weight:700;margin-bottom:6px;
+  }
+  .pe-hero-title-input{
+    font-family:'Lora',serif;font-size:26px;font-weight:700;color:var(--ink);
+    line-height:1.2;width:100%;border:none;background:transparent;padding:2px 0;
+    border-bottom:1.5px dashed transparent;transition:border-color 0.1s;
+  }
+  .pe-hero-title-input:focus{outline:none;border-bottom-color:#6B46C1;}
+  .pe-hero-description{
+    margin-top:8px;font-size:13px;color:var(--ink-3);width:100%;
+    border:none;background:transparent;padding:2px 0;resize:none;
+    font-family:inherit;line-height:1.5;min-height:24px;
+  }
+  .pe-hero-description:focus{outline:none;}
+
+  /* Hero meta row: key, tempo, time sig, grid, attachments */
+  .pe-hero-meta{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));gap:10px;margin-top:16px;}
+  @media(max-width:720px){.pe-hero-meta{grid-template-columns:repeat(2, minmax(0, 1fr));}}
+  .pe-meta-cell{
+    background:rgba(255,255,255,0.65);border:1px solid var(--ink-5);
+    border-radius:var(--r10);padding:8px 10px;min-width:0;
+  }
+  .pe-meta-label{
+    font-size:9px;font-weight:700;color:var(--ink-4);
+    letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;
+  }
+  .pe-meta-input, .pe-meta-select{
+    width:100%;border:none;background:transparent;padding:0;
+    font-family:inherit;font-size:14px;font-weight:600;color:var(--ink);
+  }
+  .pe-meta-input:focus, .pe-meta-select:focus{outline:none;}
+  .pe-meta-input::placeholder{color:var(--ink-4);font-weight:400;}
+
+  /* Attachments row (song + arrangement) */
+  .pe-attach-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+  @media(max-width:640px){.pe-attach-row{grid-template-columns:1fr;}}
+  .pe-attach-cell{
+    background:rgba(255,255,255,0.65);border:1px solid var(--ink-5);
+    border-radius:var(--r10);padding:8px 10px;
+  }
+
+  /* Action row */
+  .pe-hero-actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;}
+  .pe-btn{
+    padding:7px 13px;font-size:12px;font-weight:600;border-radius:var(--r8);
+    border:1px solid var(--ink-5);background:var(--white);color:var(--ink);
+    cursor:pointer;font-family:inherit;transition:all 0.1s;
+  }
+  .pe-btn:hover{border-color:var(--ink-3);}
+  .pe-btn-primary{background:#6B46C1;color:white;border-color:#6B46C1;}
+  .pe-btn-primary:hover{background:#5B37B1;border-color:#5B37B1;}
+  .pe-btn-danger{color:var(--red);border-color:var(--red);}
+  .pe-btn-danger:hover{background:var(--red);color:white;}
+  .pe-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+  /* Mode toggle (step / piano-roll — piano-roll coming phase 2) */
+  .pe-mode-toggle{display:inline-flex;border:1px solid var(--ink-5);border-radius:var(--r8);overflow:hidden;}
+  .pe-mode-btn{
+    padding:7px 14px;background:var(--white);color:var(--ink-3);border:none;cursor:pointer;
+    font-family:inherit;font-size:12px;font-weight:600;border-right:1px solid var(--ink-5);
+  }
+  .pe-mode-btn:last-child{border-right:none;}
+  .pe-mode-btn.active{background:var(--ink);color:var(--white);}
+  .pe-mode-btn:disabled{color:var(--ink-4);cursor:not-allowed;background:var(--ink-6);}
+
+  /* Panel */
+  .pe-panel{
+    background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);
+    padding:20px 22px;margin-bottom:16px;
+  }
+  .pe-panel-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;margin-bottom:12px;flex-wrap:wrap;
+  }
+  .pe-panel h3{
+    font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--ink);
+    display:flex;align-items:center;gap:8px;margin:0;
+  }
+  .pe-panel-sub{font-size:12px;color:var(--ink-3);margin-bottom:14px;line-height:1.5;}
+
+  /* Track tabs */
+  .pe-track-tabs{
+    display:flex;gap:4px;padding:4px;background:var(--ink-6);
+    border:1px solid var(--ink-5);border-radius:var(--r10);margin-bottom:16px;
+    overflow-x:auto;
+  }
+  .pe-track-tab{
+    flex:1;min-width:96px;padding:8px 12px;
+    background:transparent;border:none;border-radius:var(--r8);
+    cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;
+    color:var(--ink-3);transition:all 0.1s;display:flex;align-items:center;
+    justify-content:center;gap:6px;white-space:nowrap;
+  }
+  .pe-track-tab:hover{color:var(--ink);}
+  .pe-track-tab.active{background:var(--white);color:var(--ink);box-shadow:var(--shadow-sm);}
+  .pe-track-tab .track-dot{
+    width:6px;height:6px;border-radius:50%;flex-shrink:0;
+  }
+  .pe-track-tab[data-kind="melody"]  .track-dot{background:#6B46C1;}
+  .pe-track-tab[data-kind="bass"]    .track-dot{background:#3B82F6;}
+  .pe-track-tab[data-kind="counter"] .track-dot{background:#10B981;}
+  .pe-track-tab[data-kind="click"]   .track-dot{background:#F59E0B;}
+  .pe-track-tab .track-count{
+    font-size:10px;color:var(--ink-4);font-weight:500;margin-left:2px;
+  }
+  .pe-track-tab.active .track-count{color:var(--ink-3);}
+
+  /* Track controls (instrument, volume, mute) */
+  .pe-track-controls{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 12px;background:var(--ink-6);
+    border:1px solid var(--ink-5);border-radius:var(--r10);margin-bottom:12px;
+    flex-wrap:wrap;
+  }
+  .pe-track-control-field{display:flex;align-items:center;gap:6px;}
+  .pe-track-control-field label{
+    font-size:10px;text-transform:uppercase;letter-spacing:0.5px;
+    color:var(--ink-4);font-weight:600;
+  }
+  .pe-track-control-field select, .pe-track-control-field input[type=range]{
+    font-family:inherit;font-size:12px;padding:4px 8px;
+    border:1px solid var(--ink-5);border-radius:var(--r8);background:var(--white);
+  }
+  .pe-mute-toggle{
+    padding:5px 10px;border:1px solid var(--ink-5);border-radius:var(--r8);
+    background:var(--white);cursor:pointer;font-family:inherit;font-size:11px;font-weight:600;
+    color:var(--ink-3);
+  }
+  .pe-mute-toggle.muted{background:var(--red);color:white;border-color:var(--red);}
+
+  /* Step list */
+  .pe-steps{display:flex;flex-direction:column;gap:4px;}
+  .pe-step{
+    display:grid;grid-template-columns:28px 1fr auto auto auto auto;
+    gap:10px;align-items:center;
+    padding:10px 12px;background:var(--ink-6);border:1px solid var(--ink-5);
+    border-radius:var(--r10);transition:border-color 0.1s;
+  }
+  .pe-step:hover{border-color:var(--red-mid);}
+  .pe-step-index{
+    font-size:11px;font-weight:700;color:var(--ink-4);
+    text-align:center;font-variant-numeric:tabular-nums;
+  }
+  .pe-step-body{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .pe-step-pitch{font-size:14px;font-weight:700;color:var(--ink);}
+  .pe-step-meta{font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+  .pe-step-lyric{
+    font-size:12px;color:var(--ink-2);font-style:italic;
+    max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .pe-step-duration-pill{
+    padding:2px 8px;background:var(--white);border:1px solid var(--ink-5);
+    border-radius:100px;font-size:11px;font-weight:600;color:var(--ink-2);
+    font-variant-numeric:tabular-nums;
+  }
+  .pe-step-action{
+    width:26px;height:26px;border-radius:var(--r8);
+    border:1px solid var(--ink-5);background:var(--white);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:var(--ink-3);
+    font-size:12px;
+  }
+  .pe-step-action:hover{border-color:var(--red);color:var(--red);}
+
+  .pe-empty{
+    padding:24px 16px;text-align:center;color:var(--ink-4);font-size:13px;
+    border:1.5px dashed var(--ink-5);border-radius:var(--r10);
+  }
+  .pe-empty-hint{font-size:11px;margin-top:4px;color:var(--ink-4);}
+
+  /* Add note button */
+  .pe-add-note{
+    margin-top:12px;width:100%;padding:11px;background:rgba(107,70,193,0.06);
+    border:1.5px dashed rgba(107,70,193,0.4);border-radius:var(--r10);
+    color:#6B46C1;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;
+    transition:all 0.1s;
+  }
+  .pe-add-note:hover{background:rgba(107,70,193,0.1);border-color:#6B46C1;}
+
+  /* Playback strip */
+  .pe-playback{
+    display:flex;align-items:center;gap:12px;
+    padding:14px 16px;background:var(--ink);color:white;
+    border-radius:var(--r12);margin-bottom:16px;flex-wrap:wrap;
+  }
+  .pe-play-btn{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg, #6B46C1, #3B82F6);
+    color:white;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:transform 0.1s;
+  }
+  .pe-play-btn:hover{transform:scale(1.05);}
+  .pe-play-btn:active{transform:scale(0.97);}
+  .pe-play-btn svg{width:14px;height:14px;fill:currentColor;}
+  .pe-playback-label{flex:1;font-size:13px;color:rgba(255,255,255,0.85);min-width:0;}
+  .pe-playback-toggles{display:flex;gap:8px;flex-wrap:wrap;}
+  .pe-toggle-chip{
+    padding:5px 11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+    border-radius:100px;color:rgba(255,255,255,0.75);font-family:inherit;font-size:11px;font-weight:600;
+    cursor:pointer;
+  }
+  .pe-toggle-chip.active{background:rgba(107,70,193,0.3);border-color:rgba(180,150,230,0.6);color:white;}
+
+  /* Save chip */
+  .save-chip{
+    position:fixed;bottom:24px;right:24px;padding:8px 14px;
+    background:var(--white);border:1px solid var(--ink-5);border-radius:100px;
+    font-size:12px;color:var(--ink-3);box-shadow:var(--shadow-md);
+    transform:translateY(80px);transition:transform 0.2s;z-index:50;
+  }
+  .save-chip.visible{transform:translateY(0);}
+  .save-chip.saved{color:var(--green);}
+  .save-chip.saving{color:var(--amber);}
+  .save-chip.error{color:var(--red);}
+
+  /* Add-note modal */
+  .pe-modal{
+    position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;
+    display:none;align-items:center;justify-content:center;padding:20px;
+  }
+  .pe-modal.open{display:flex;}
+  .pe-modal-card{
+    background:var(--white);border-radius:var(--r16);
+    padding:24px;max-width:440px;width:100%;box-shadow:var(--shadow-lg);
+  }
+  .pe-modal-card h3{font-family:'Lora',serif;font-size:18px;margin-bottom:4px;}
+  .pe-modal-sub{font-size:12px;color:var(--ink-3);margin-bottom:18px;}
+  .pe-modal .pe-field{margin-bottom:12px;}
+  .pe-modal .pe-field label{
+    display:block;font-size:10px;font-weight:600;color:var(--ink-4);
+    margin-bottom:4px;letter-spacing:0.5px;text-transform:uppercase;
+  }
+  .pe-modal .pe-field input, .pe-modal .pe-field select{
+    width:100%;padding:9px 11px;border:1px solid var(--ink-5);
+    background:var(--white);border-radius:var(--r8);
+    font-family:inherit;font-size:13px;color:var(--ink);
+  }
+  .pe-modal .pe-field input:focus, .pe-modal .pe-field select:focus{outline:none;border-color:#6B46C1;}
+  .pe-modal .pe-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .pe-modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+
+  @media(max-width:640px){
+    .pe-hero{padding:18px 20px;}
+    .pe-hero-title-input{font-size:22px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared pattern) ─────────────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <div class="topbar">
+    <a href="../dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">Phrase Editor</div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <div class="main">
+      <div class="page-body" style="max-width:1100px;">
+
+        <!-- Breadcrumb -->
+        <div class="pe-crumb">
+          <a href="index.html">Rehearsal Studio</a>
+          <span>›</span>
+          <span>Phrases</span>
+          <span>›</span>
+          <span id="crumb-phrase">Loading…</span>
+        </div>
+
+        <!-- Loading state -->
+        <div id="loading-box" style="padding:40px;text-align:center;color:var(--ink-3);">
+          <div style="margin-bottom:8px;">Loading phrase…</div>
+        </div>
+
+        <!-- Permission denied state -->
+        <div id="denied-box" style="display:none;padding:40px;text-align:center;color:var(--ink-3);">
+          <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Admin or Lead access only</div>
+          <div style="font-size:13px;">The phrase editor is available to admin and lead users. <a href="index.html" style="color:var(--red);">Back to Rehearsal Studio</a></div>
+        </div>
+
+        <!-- Error state -->
+        <div id="error-box" style="display:none;padding:40px;text-align:center;color:var(--ink-3);">
+          <div id="error-msg"></div>
+        </div>
+
+        <!-- Main editor body -->
+        <div id="editor-body" style="display:none;">
+
+          <!-- Hero -->
+          <div class="pe-hero">
+            <div class="pe-hero-eyebrow">🎼 Phrase</div>
+            <input type="text" class="pe-hero-title-input" id="phrase-name" placeholder="Name this phrase (e.g. Verse entry — Trading My Sorrows)">
+            <textarea class="pe-hero-description" id="phrase-description" rows="2" placeholder="What is this for? Who is it for? Optional teaching notes."></textarea>
+
+            <div class="pe-hero-meta">
+              <div class="pe-meta-cell">
+                <div class="pe-meta-label">Key</div>
+                <select class="pe-meta-select" id="phrase-key">
+                  <option>C</option><option>C#</option><option>Db</option>
+                  <option>D</option><option>D#</option><option>Eb</option>
+                  <option>E</option><option>F</option><option>F#</option>
+                  <option>Gb</option><option>G</option><option>G#</option>
+                  <option>Ab</option><option>A</option><option>A#</option>
+                  <option>Bb</option><option>B</option>
+                </select>
+              </div>
+              <div class="pe-meta-cell">
+                <div class="pe-meta-label">Tempo (BPM)</div>
+                <input type="number" class="pe-meta-input" id="phrase-tempo" min="30" max="280" value="120">
+              </div>
+              <div class="pe-meta-cell">
+                <div class="pe-meta-label">Time signature</div>
+                <select class="pe-meta-select" id="phrase-timesig">
+                  <option>4/4</option><option>3/4</option><option>6/8</option><option>12/8</option><option>2/4</option><option>5/4</option><option>7/8</option>
+                </select>
+              </div>
+              <div class="pe-meta-cell">
+                <div class="pe-meta-label">Grid (per beat)</div>
+                <select class="pe-meta-select" id="phrase-grid">
+                  <option value="4">16ths (4 per beat)</option>
+                  <option value="8">32nds (8 per beat)</option>
+                  <option value="3">Triplets (3 per beat)</option>
+                  <option value="6">Sextuplets (6 per beat)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pe-attach-row">
+              <div class="pe-attach-cell">
+                <div class="pe-meta-label">Attach to song (optional)</div>
+                <select class="pe-meta-select" id="phrase-song-id">
+                  <option value="">— None —</option>
+                </select>
+              </div>
+              <div class="pe-attach-cell">
+                <div class="pe-meta-label">Attach to arrangement (optional)</div>
+                <select class="pe-meta-select" id="phrase-arrangement-id">
+                  <option value="">— None —</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pe-hero-actions">
+              <div class="pe-mode-toggle">
+                <button class="pe-mode-btn active" data-mode="step">Step sequencer</button>
+                <button class="pe-mode-btn" data-mode="pianoroll" disabled title="Coming in phase 2">Piano-roll (phase 2)</button>
+              </div>
+              <div style="flex:1"></div>
+              <button class="pe-btn pe-btn-danger" id="btn-delete" style="display:none;">Delete</button>
+            </div>
+          </div>
+
+          <!-- Playback strip -->
+          <div class="pe-playback">
+            <button class="pe-play-btn" id="btn-play" title="Play phrase">
+              <svg class="svg-play" viewBox="0 0 10 12"><path d="M0 0 L10 6 L0 12 Z"/></svg>
+              <svg class="svg-pause" viewBox="0 0 10 12" fill="white" style="display:none;"><rect x="1" y="1" width="2.5" height="10"/><rect x="6.5" y="1" width="2.5" height="10"/></svg>
+            </button>
+            <div class="pe-playback-label" id="playback-label">Ready to play</div>
+            <div class="pe-playback-toggles">
+              <button class="pe-toggle-chip" id="toggle-click">Click track</button>
+              <button class="pe-toggle-chip" id="toggle-countin">1-bar count-in</button>
+              <button class="pe-toggle-chip" id="toggle-loop">Loop</button>
+            </div>
+          </div>
+
+          <!-- Tracks + notes panel -->
+          <div class="pe-panel">
+            <div class="pe-panel-head">
+              <h3>🎚️ Tracks</h3>
+              <div class="pe-panel-sub" style="margin:0;">Each track is a separate voice — melody, bass, counter-melody, or click. Switch tabs to edit.</div>
+            </div>
+
+            <div class="pe-track-tabs" id="track-tabs">
+              <button class="pe-track-tab active" data-kind="melody">
+                <span class="track-dot"></span>
+                <span>Melody</span>
+                <span class="track-count" id="count-melody">0</span>
+              </button>
+              <button class="pe-track-tab" data-kind="bass">
+                <span class="track-dot"></span>
+                <span>Bass</span>
+                <span class="track-count" id="count-bass">0</span>
+              </button>
+              <button class="pe-track-tab" data-kind="counter">
+                <span class="track-dot"></span>
+                <span>Counter</span>
+                <span class="track-count" id="count-counter">0</span>
+              </button>
+              <button class="pe-track-tab" data-kind="click">
+                <span class="track-dot"></span>
+                <span>Click</span>
+                <span class="track-count" id="count-click">0</span>
+              </button>
+            </div>
+
+            <div class="pe-track-controls" id="track-controls">
+              <div class="pe-track-control-field">
+                <label for="track-instrument">Voice</label>
+                <select id="track-instrument">
+                  <option value="synth_lead">Lead synth (triangle)</option>
+                  <option value="synth_bass">Bass synth (sine)</option>
+                  <option value="piano">Piano</option>
+                  <option value="click">Click (membrane)</option>
+                </select>
+              </div>
+              <div class="pe-track-control-field">
+                <label for="track-volume">Volume</label>
+                <input type="range" id="track-volume" min="-24" max="0" step="1" value="-6" style="width:100px;">
+                <span id="track-volume-val" style="font-size:11px;color:var(--ink-3);font-variant-numeric:tabular-nums;width:30px;text-align:right;">-6dB</span>
+              </div>
+              <button class="pe-mute-toggle" id="track-mute-btn">Unmuted</button>
+            </div>
+
+            <div id="steps-container">
+              <div class="pe-empty">
+                No notes yet on this track.
+                <div class="pe-empty-hint">Add notes below to build the phrase.</div>
+              </div>
+            </div>
+
+            <button class="pe-add-note" id="btn-add-note">+ Add note</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile nav placeholder -->
+  <nav class="mobile-nav">
+    <div class="mob-nav-items" id="mob-nav"></div>
+  </nav>
+</div>
+
+<!-- Save chip -->
+<div class="save-chip" id="save-chip">Saved</div>
+
+<!-- Add-note modal -->
+<div class="pe-modal" id="modal-add-note">
+  <div class="pe-modal-card">
+    <h3>Add note</h3>
+    <div class="pe-modal-sub">Pitch in scientific notation (e.g. <code>C4</code>, <code>F#3</code>). Start position is in grid units from the phrase start; duration is in grid units.</div>
+
+    <div class="pe-field">
+      <label>Pitch</label>
+      <input type="text" id="note-pitch" placeholder="e.g. C#4" autocomplete="off">
+    </div>
+    <div class="pe-row-2">
+      <div class="pe-field">
+        <label>Start position (grid units)</label>
+        <input type="number" id="note-start" min="0" value="0">
+      </div>
+      <div class="pe-field">
+        <label>Duration (grid units)</label>
+        <input type="number" id="note-duration" min="1" value="4">
+      </div>
+    </div>
+    <div class="pe-field">
+      <label>Lyric (optional)</label>
+      <input type="text" id="note-lyric" placeholder="e.g. sor, tra, my">
+    </div>
+    <div class="pe-modal-actions">
+      <button class="pe-btn" onclick="closeAddNoteModal()">Cancel</button>
+      <button class="pe-btn pe-btn-primary" onclick="submitAddNote()">Add note</button>
+    </div>
+  </div>
+</div>
+
+<script src="../shell.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// PHRASE EDITOR — PHASE 1, COMMIT 2
+// Skeleton with editor UI, save/load plumbing, track tabs, note list
+// rendering. Playback engine is stubbed and will be wired in commit 3.
+// ═══════════════════════════════════════════════════════════════════
+
+// ── STATE ────────────────────────────────────────────────────
+const state = {
+  phrase: null,       // rs_phrases row
+  tracks: [],         // rs_phrase_tracks[] ordered by position
+  notes: {},          // { trackId: [rs_phrase_notes rows] }
+  activeTrackKind: 'melody',
+  songs: [],          // lookup for attachment dropdown
+  arrangements: [],   // lookup for attachment dropdown
+  _loaded: false,     // guard: don't markDirty during initial renderAll
+  _dirty: false,
+  _saveTimer: null,
+  clickEnabled: false,
+  countInEnabled: true,
+  loopEnabled: false,
+  isPlaying: false,
+};
+
+// Short track-kind → default instrument map. Used when we auto-create
+// missing tracks for a new phrase — user can change the instrument after.
+const DEFAULT_INSTRUMENTS = {
+  melody: 'synth_lead',
+  bass:   'synth_bass',
+  counter:'synth_lead',
+  click:  'click'
+};
+
+// ── BOOT ─────────────────────────────────────────────────────
+function pageInit(){
+  buildSidebar();
+
+  // Admin/lead gate
+  if(!COS.currentUser || !(COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead')){
+    document.getElementById('loading-box').style.display = 'none';
+    document.getElementById('denied-box').style.display = 'block';
+    return;
+  }
+
+  loadPhrase();
+  wireListeners();
+}
+
+function buildSidebar(){
+  const sb = document.getElementById('sidebar');
+  const modules = [
+    { id:'dashboard',  label:'Dashboard',         href:'../dashboard.html',   icon:'🏠' },
+    { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
+    { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
+    { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
+    { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
+    { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
+    { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
+  ];
+  if(COS.currentUser && COS.currentUser.level === 'admin'){
+    modules.push({ id:'admin', label:'Admin', href:'../admin.html', icon:'⚙️' });
+  }
+  const accessible = modules.filter(m => COS.hasAccess(m.id));
+  sb.innerHTML = `
+    <div class="nav-section">
+      <div class="nav-section-label">Modules</div>
+      ${accessible.map(m => `
+        <a href="${m.href}" class="nav-item ${m.active ? 'active' : ''}">
+          <span class="nav-item-icon">${m.icon}</span>
+          <span class="nav-item-label">${m.label}</span>
+        </a>
+      `).join('')}
+    </div>
+  `;
+}
+
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadPhrase(){
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+
+  // Load attachment options in parallel with (possibly) the phrase
+  const [songs, arrangements] = await Promise.all([
+    sbFetch('rs_songs?status=eq.active&order=title.asc'),
+    sbFetch('rs_arrangements?status=in.(draft,ready)&order=name.asc')
+  ]);
+  state.songs = songs || [];
+  state.arrangements = arrangements || [];
+
+  if(id){
+    await loadExistingPhrase(id);
+  } else {
+    await createNewPhrase();
+  }
+}
+
+async function loadExistingPhrase(id){
+  const rows = await sbFetch(`rs_phrases?id=eq.${id}`);
+  if(!rows || rows.length === 0){
+    showError(`Phrase ${id} not found. It may have been deleted.`);
+    return;
+  }
+  state.phrase = rows[0];
+
+  // Load tracks + notes for this phrase
+  const tracks = await sbFetch(`rs_phrase_tracks?phrase_id=eq.${id}&order=position.asc`);
+  state.tracks = tracks || [];
+
+  // Ensure all four track kinds exist — if the phrase was created before
+  // a kind existed (or if a user removed the row manually in SQL), we
+  // insert a placeholder here. Most phrases will already have all four
+  // from createNewPhrase().
+  for(const kind of ['melody','bass','counter','click']){
+    if(!state.tracks.some(t => t.kind === kind)){
+      const created = await createTrack(state.phrase.id, kind);
+      if(created) state.tracks.push(created);
+    }
+  }
+  state.tracks.sort((a, b) => (a.position || 0) - (b.position || 0));
+
+  // Parallel-load notes per track
+  const noteFetches = state.tracks.map(t =>
+    sbFetch(`rs_phrase_notes?track_id=eq.${t.id}&order=start_position.asc`)
+      .then(notes => [t.id, notes || []])
+  );
+  const noteResults = await Promise.all(noteFetches);
+  state.notes = {};
+  for(const [tid, notes] of noteResults) state.notes[tid] = notes;
+
+  renderAll();
+}
+
+async function createNewPhrase(){
+  // Create a phrase row with sensible defaults and the 4 tracks,
+  // then redirect to the editor with the new id in the URL so refreshes
+  // work and the user can share the link.
+  const newRow = {
+    name: 'Untitled phrase',
+    key: 'C',
+    tempo: 120,
+    time_signature: '4/4',
+    grid_resolution: 16,
+    created_by: COS.currentUser ? COS.currentUser.name : null
+  };
+  const created = await sbPost('rs_phrases', newRow);
+  if(!created){
+    showError('Could not create a new phrase. Check your connection and try again.');
+    return;
+  }
+  const phraseId = Array.isArray(created) ? created[0].id : created.id;
+
+  // Create default tracks — one each of melody, bass, counter, click
+  const kinds = ['melody','bass','counter','click'];
+  const tracks = [];
+  for(let i = 0; i < kinds.length; i++){
+    const t = await createTrack(phraseId, kinds[i], i);
+    if(t) tracks.push(t);
+  }
+
+  // Redirect so the URL now has ?id=… — cleaner refresh behaviour
+  location.replace('phrase-editor.html?id=' + phraseId);
+}
+
+async function createTrack(phraseId, kind, position){
+  const row = {
+    phrase_id: phraseId,
+    kind: kind,
+    position: position == null ? 0 : position,
+    instrument: DEFAULT_INSTRUMENTS[kind] || 'synth_lead',
+    volume_db: kind === 'click' ? -14 : -6,
+    muted: false
+  };
+  const created = await sbPost('rs_phrase_tracks', row);
+  if(!created) return null;
+  return Array.isArray(created) ? created[0] : created;
+}
+
+// ── RENDER ───────────────────────────────────────────────────
+function renderAll(){
+  document.getElementById('loading-box').style.display = 'none';
+  document.getElementById('editor-body').style.display = 'block';
+
+  // Breadcrumb
+  document.getElementById('crumb-phrase').textContent = state.phrase.name || 'Untitled phrase';
+
+  // Hero fields (_loaded guard prevents markDirty firing on these programmatic sets)
+  document.getElementById('phrase-name').value        = state.phrase.name || '';
+  document.getElementById('phrase-description').value = state.phrase.description || '';
+  document.getElementById('phrase-key').value         = state.phrase.key || 'C';
+  document.getElementById('phrase-tempo').value       = state.phrase.tempo || 120;
+  document.getElementById('phrase-timesig').value     = state.phrase.time_signature || '4/4';
+  // Grid resolution select uses per-beat subdivision values (4, 8, 3, 6)
+  const gridPerBeat = deriveGridPerBeat(state.phrase.time_signature, state.phrase.grid_resolution);
+  document.getElementById('phrase-grid').value        = String(gridPerBeat);
+
+  // Attachments
+  renderAttachmentOptions();
+
+  // Track counts + controls + steps
+  renderTrackCounts();
+  renderTrackControls();
+  renderSteps();
+
+  // Delete button
+  document.getElementById('btn-delete').style.display = '';
+
+  state._loaded = true;
+}
+
+function renderAttachmentOptions(){
+  const songSel = document.getElementById('phrase-song-id');
+  songSel.innerHTML = '<option value="">— None —</option>' +
+    state.songs.map(s => `<option value="${s.id}">${escapeHtml(s.title)}${s.original_artist ? ' · ' + escapeHtml(s.original_artist) : ''}</option>`).join('');
+  songSel.value = state.phrase.song_id || '';
+
+  const arrSel = document.getElementById('phrase-arrangement-id');
+  arrSel.innerHTML = '<option value="">— None —</option>' +
+    state.arrangements.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join('');
+  arrSel.value = state.phrase.arrangement_id || '';
+}
+
+function renderTrackCounts(){
+  for(const kind of ['melody','bass','counter','click']){
+    const track = state.tracks.find(t => t.kind === kind);
+    const count = track ? (state.notes[track.id] || []).length : 0;
+    const el = document.getElementById('count-' + kind);
+    if(el) el.textContent = count;
+  }
+}
+
+function renderTrackControls(){
+  const track = getActiveTrack();
+  if(!track) return;
+  document.getElementById('track-instrument').value = track.instrument;
+  document.getElementById('track-volume').value = track.volume_db;
+  document.getElementById('track-volume-val').textContent = track.volume_db + 'dB';
+  const muteBtn = document.getElementById('track-mute-btn');
+  muteBtn.textContent = track.muted ? 'Muted' : 'Unmuted';
+  muteBtn.classList.toggle('muted', !!track.muted);
+}
+
+function renderSteps(){
+  const container = document.getElementById('steps-container');
+  const track = getActiveTrack();
+  if(!track){
+    container.innerHTML = '<div class="pe-empty">Track not loaded.</div>';
+    return;
+  }
+  const notes = state.notes[track.id] || [];
+  if(notes.length === 0){
+    container.innerHTML = `
+      <div class="pe-empty">
+        No notes yet on the <strong>${track.kind}</strong> track.
+        <div class="pe-empty-hint">Tap "+ Add note" below to build the phrase.</div>
+      </div>`;
+    return;
+  }
+
+  // Notes come back ordered by start_position. Render with sequential index numbers
+  // but keep the note's own "step" id intact for cross-reference.
+  container.innerHTML = notes.map((n, i) => `
+    <div class="pe-step" data-note-id="${n.id}">
+      <div class="pe-step-index">${i + 1}</div>
+      <div class="pe-step-body">
+        <div class="pe-step-pitch">${escapeHtml(n.pitch || '—')}</div>
+        <div class="pe-step-meta">start ${n.start_position} · dur ${n.duration}</div>
+      </div>
+      <div class="pe-step-lyric">${n.lyric ? escapeHtml(n.lyric) : ''}</div>
+      <div class="pe-step-duration-pill">${describeDuration(n.duration, state.phrase.grid_resolution)}</div>
+      <button class="pe-step-action" title="Edit" onclick="editNote('${n.id}')">✎</button>
+      <button class="pe-step-action" title="Delete" onclick="deleteNote('${n.id}')">✕</button>
+    </div>
+  `).join('');
+}
+
+// ── TRACK SWITCHING ─────────────────────────────────────────
+function getActiveTrack(){
+  return state.tracks.find(t => t.kind === state.activeTrackKind);
+}
+
+function switchTrack(kind){
+  state.activeTrackKind = kind;
+  document.querySelectorAll('.pe-track-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.kind === kind);
+  });
+  renderTrackControls();
+  renderSteps();
+}
+
+// ── WIRE UP LISTENERS ───────────────────────────────────────
+function wireListeners(){
+  // Hero metadata inputs — all trigger dirty/autosave on change
+  ['phrase-name','phrase-description','phrase-key','phrase-tempo','phrase-timesig','phrase-grid','phrase-song-id','phrase-arrangement-id'].forEach(id => {
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('input', markDirty);
+    el.addEventListener('change', markDirty);
+  });
+
+  // Track tabs
+  document.querySelectorAll('.pe-track-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchTrack(tab.dataset.kind));
+  });
+
+  // Track controls
+  document.getElementById('track-instrument').addEventListener('change', onTrackInstrumentChange);
+  document.getElementById('track-volume').addEventListener('input', onTrackVolumeChange);
+  document.getElementById('track-mute-btn').addEventListener('click', onTrackMuteToggle);
+
+  // Add note
+  document.getElementById('btn-add-note').addEventListener('click', openAddNoteModal);
+
+  // Delete phrase
+  document.getElementById('btn-delete').addEventListener('click', confirmDeletePhrase);
+
+  // Playback toggles (playback itself is wired in commit 3)
+  document.getElementById('toggle-click').addEventListener('click', () => {
+    state.clickEnabled = !state.clickEnabled;
+    document.getElementById('toggle-click').classList.toggle('active', state.clickEnabled);
+  });
+  document.getElementById('toggle-countin').addEventListener('click', () => {
+    state.countInEnabled = !state.countInEnabled;
+    document.getElementById('toggle-countin').classList.toggle('active', state.countInEnabled);
+  });
+  document.getElementById('toggle-loop').addEventListener('click', () => {
+    state.loopEnabled = !state.loopEnabled;
+    document.getElementById('toggle-loop').classList.toggle('active', state.loopEnabled);
+  });
+  // Default: count-in on
+  if(state.countInEnabled){
+    document.getElementById('toggle-countin').classList.add('active');
+  }
+
+  // Play button — stubbed for commit 2. Real playback in commit 3.
+  document.getElementById('btn-play').addEventListener('click', () => {
+    COS.toast('Playback wiring coming in the next commit.');
+  });
+}
+
+async function onTrackInstrumentChange(e){
+  const track = getActiveTrack();
+  if(!track) return;
+  const val = e.target.value;
+  const ok = await sbPatch('rs_phrase_tracks', `id=eq.${track.id}`, { instrument: val });
+  if(!ok){ COS.toast('Save failed'); return; }
+  track.instrument = val;
+  renderSaveStatus('saved');
+}
+
+let _volumeSaveTimer = null;
+async function onTrackVolumeChange(e){
+  const track = getActiveTrack();
+  if(!track) return;
+  const val = parseInt(e.target.value, 10);
+  document.getElementById('track-volume-val').textContent = val + 'dB';
+  track.volume_db = val;
+  // Debounce: volume sliders fire many events as the user drags
+  if(_volumeSaveTimer) clearTimeout(_volumeSaveTimer);
+  _volumeSaveTimer = setTimeout(async () => {
+    await sbPatch('rs_phrase_tracks', `id=eq.${track.id}`, { volume_db: val });
+    renderSaveStatus('saved');
+  }, 400);
+}
+
+async function onTrackMuteToggle(){
+  const track = getActiveTrack();
+  if(!track) return;
+  const newVal = !track.muted;
+  const ok = await sbPatch('rs_phrase_tracks', `id=eq.${track.id}`, { muted: newVal });
+  if(!ok){ COS.toast('Save failed'); return; }
+  track.muted = newVal;
+  renderTrackControls();
+  renderSaveStatus('saved');
+}
+
+// ── DIRTY / AUTOSAVE ────────────────────────────────────────
+function markDirty(){
+  if(!state._loaded) return;
+  state._dirty = true;
+  renderSaveStatus('saving');
+  if(state._saveTimer) clearTimeout(state._saveTimer);
+  state._saveTimer = setTimeout(saveMetadata, 700);
+}
+
+async function saveMetadata(){
+  if(!state.phrase) return;
+  state._saveTimer = null;
+
+  const name        = document.getElementById('phrase-name').value.trim() || 'Untitled phrase';
+  const description = document.getElementById('phrase-description').value.trim() || null;
+  const key         = document.getElementById('phrase-key').value;
+  const tempo       = parseInt(document.getElementById('phrase-tempo').value, 10) || 120;
+  const timeSig     = document.getElementById('phrase-timesig').value;
+  const gridPerBeat = parseInt(document.getElementById('phrase-grid').value, 10) || 4;
+  // grid_resolution is total subdivisions per bar. Derive from per-beat and time sig numerator.
+  const beatsPerBar = parseInt(timeSig.split('/')[0], 10) || 4;
+  const gridResolution = gridPerBeat * beatsPerBar;
+
+  const songId = document.getElementById('phrase-song-id').value || null;
+  const arrId  = document.getElementById('phrase-arrangement-id').value || null;
+
+  const patch = {
+    name,
+    description,
+    key,
+    tempo,
+    time_signature: timeSig,
+    grid_resolution: gridResolution,
+    song_id: songId,
+    arrangement_id: arrId
+  };
+
+  const ok = await sbPatch('rs_phrases', `id=eq.${state.phrase.id}`, patch);
+  if(!ok){ renderSaveStatus('error'); return; }
+  Object.assign(state.phrase, patch);
+  document.getElementById('crumb-phrase').textContent = state.phrase.name || 'Untitled phrase';
+  state._dirty = false;
+  renderSaveStatus('saved');
+}
+
+function renderSaveStatus(status){
+  const chip = document.getElementById('save-chip');
+  chip.classList.remove('saved','saving','error');
+  chip.classList.add('visible', status);
+  if(status === 'saved'){
+    chip.textContent = 'Saved';
+    setTimeout(() => chip.classList.remove('visible'), 1400);
+  } else if(status === 'saving'){
+    chip.textContent = 'Saving…';
+  } else if(status === 'error'){
+    chip.textContent = 'Save failed';
+  }
+}
+
+// ── NOTE EDITING (modal) ────────────────────────────────────
+let _editingNoteId = null;
+
+function openAddNoteModal(){
+  _editingNoteId = null;
+  document.getElementById('note-pitch').value    = 'C4';
+  document.getElementById('note-start').value    = nextDefaultStartPosition();
+  document.getElementById('note-duration').value = 4; // one beat at 16ths-per-bar grid
+  document.getElementById('note-lyric').value    = '';
+  document.getElementById('modal-add-note').classList.add('open');
+  setTimeout(() => document.getElementById('note-pitch').focus(), 40);
+}
+
+function editNote(noteId){
+  const track = getActiveTrack();
+  if(!track) return;
+  const note = (state.notes[track.id] || []).find(n => n.id === noteId);
+  if(!note) return;
+  _editingNoteId = noteId;
+  document.getElementById('note-pitch').value    = note.pitch || '';
+  document.getElementById('note-start').value    = note.start_position;
+  document.getElementById('note-duration').value = note.duration;
+  document.getElementById('note-lyric').value    = note.lyric || '';
+  document.getElementById('modal-add-note').classList.add('open');
+  setTimeout(() => document.getElementById('note-pitch').focus(), 40);
+}
+
+function closeAddNoteModal(){
+  document.getElementById('modal-add-note').classList.remove('open');
+  _editingNoteId = null;
+}
+
+async function submitAddNote(){
+  const track = getActiveTrack();
+  if(!track) return;
+
+  const pitch    = document.getElementById('note-pitch').value.trim() || null;
+  const start    = parseInt(document.getElementById('note-start').value, 10);
+  const duration = parseInt(document.getElementById('note-duration').value, 10);
+  const lyric    = document.getElementById('note-lyric').value.trim() || null;
+
+  if(isNaN(start) || start < 0){ COS.toast('Start position must be 0 or higher'); return; }
+  if(isNaN(duration) || duration < 1){ COS.toast('Duration must be at least 1 grid unit'); return; }
+  // Pitch optional for click tracks, required otherwise
+  if(!pitch && track.kind !== 'click'){ COS.toast('Pitch is required (click track can be empty)'); return; }
+
+  renderSaveStatus('saving');
+
+  if(_editingNoteId){
+    const ok = await sbPatch('rs_phrase_notes', `id=eq.${_editingNoteId}`, {
+      pitch, start_position: start, duration, lyric
+    });
+    if(!ok){ renderSaveStatus('error'); COS.toast('Save failed'); return; }
+    const note = (state.notes[track.id] || []).find(n => n.id === _editingNoteId);
+    if(note) Object.assign(note, { pitch, start_position: start, duration, lyric });
+  } else {
+    // step field is sequential within track — use existing max + 1
+    const existing = state.notes[track.id] || [];
+    const maxStep = existing.reduce((m, n) => Math.max(m, n.step || 0), 0);
+    const row = {
+      track_id: track.id,
+      step: maxStep + 1,
+      pitch,
+      start_position: start,
+      duration,
+      lyric
+    };
+    const created = await sbPost('rs_phrase_notes', row);
+    if(!created){ renderSaveStatus('error'); COS.toast('Save failed'); return; }
+    const newNote = Array.isArray(created) ? created[0] : created;
+    if(!state.notes[track.id]) state.notes[track.id] = [];
+    state.notes[track.id].push(newNote);
+  }
+
+  // Re-sort by start_position after add/edit
+  state.notes[track.id].sort((a, b) => a.start_position - b.start_position);
+
+  closeAddNoteModal();
+  renderSteps();
+  renderTrackCounts();
+  renderSaveStatus('saved');
+}
+
+async function deleteNote(noteId){
+  const track = getActiveTrack();
+  if(!track) return;
+  if(!confirm('Delete this note?')) return;
+
+  renderSaveStatus('saving');
+  const ok = await sbDelete('rs_phrase_notes', `id=eq.${noteId}`);
+  if(!ok){ renderSaveStatus('error'); COS.toast('Delete failed'); return; }
+
+  state.notes[track.id] = (state.notes[track.id] || []).filter(n => n.id !== noteId);
+  renderSteps();
+  renderTrackCounts();
+  renderSaveStatus('saved');
+}
+
+// ── DELETE PHRASE ───────────────────────────────────────────
+async function confirmDeletePhrase(){
+  if(!state.phrase) return;
+  const name = state.phrase.name || 'this phrase';
+  if(!confirm(`Delete "${name}" permanently?\n\nThis removes the phrase and all its tracks and notes. Cannot be undone.`)) return;
+  const ok = await sbDelete('rs_phrases', `id=eq.${state.phrase.id}`);
+  if(!ok){ COS.toast('Delete failed'); return; }
+  COS.toast(`Deleted "${name}"`);
+  location.href = 'index.html';
+}
+
+// ── HELPERS ──────────────────────────────────────────────────
+function nextDefaultStartPosition(){
+  // Suggest a start position at the end of the last note on the active track,
+  // so the user can "keep adding forward" without typing numbers.
+  const track = getActiveTrack();
+  if(!track) return 0;
+  const notes = state.notes[track.id] || [];
+  if(notes.length === 0) return 0;
+  const last = notes[notes.length - 1];
+  return (last.start_position || 0) + (last.duration || 0);
+}
+
+function deriveGridPerBeat(timeSig, totalGrid){
+  // grid_resolution is stored as total subdivisions per bar. Derive
+  // subdivisions-per-beat for the UI select.
+  const beatsPerBar = parseInt((timeSig || '4/4').split('/')[0], 10) || 4;
+  const perBeat = Math.round((totalGrid || 16) / beatsPerBar);
+  // Snap to one of our offered options — closest match wins
+  const options = [3, 4, 6, 8];
+  let best = 4, dist = Infinity;
+  for(const o of options){
+    const d = Math.abs(perBeat - o);
+    if(d < dist){ dist = d; best = o; }
+  }
+  return best;
+}
+
+function describeDuration(grid, totalGrid){
+  // Give a human-friendly label. grid units in terms of 16ths (our default).
+  // 1 = 16th, 2 = 8th, 3 = dotted 8th, 4 = quarter, 6 = dotted quarter,
+  // 8 = half, 16 = whole. Falls back to raw unit count.
+  const m = { 1:'16th', 2:'8th', 3:'dotted 8th', 4:'quarter', 6:'dotted quarter', 8:'half', 12:'dotted half', 16:'whole' };
+  return m[grid] || (grid + ' units');
+}
+
+function showError(msg){
+  document.getElementById('loading-box').style.display = 'none';
+  document.getElementById('error-box').style.display = 'block';
+  document.getElementById('error-msg').textContent = msg;
+}
+
+function escapeHtml(s){
+  if(s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+COS.init('rehearsal');
+</script>
+
+</body>
+</html>
