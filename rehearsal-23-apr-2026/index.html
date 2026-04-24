@@ -1984,7 +1984,7 @@
     var owsHold = beat * 2;             // resolution hold on "ows"
     return [
       { step: 0, note: 'D#4', dur: dottedEighth, restBefore: beat }, // I'm — after beat-1 rest
-      { step: 1, note: 'C#4', dur: eighth       },                   // tra
+      { step: 1, note: 'C#4', dur: eighth + beat },                  // tra — now eighth + quarter
       { step: 2, note: 'B3',  dur: eighth       },                   // ding
       { step: 3, note: 'B3',  dur: eighth       },                   // my
       { step: 4, note: 'B3',  dur: sorHold      },                   // sor — 9 clicks sustain
@@ -2007,7 +2007,7 @@
     var rowsHold = beat * 2;
     return [
       { step: 0, note: 'D#4', dur: dottedEighth, restBefore: beat },
-      { step: 1, note: 'C#4', dur: eighth       },
+      { step: 1, note: 'C#4', dur: eighth + beat },                  // tra — eighth + quarter
       { step: 2, note: 'B3',  dur: eighth       },
       { step: 3, note: 'B3',  dur: eighth       },
       { step: 4, note: 'B3',  dur: sorHold      },   // sor — 9 clicks, same as new
