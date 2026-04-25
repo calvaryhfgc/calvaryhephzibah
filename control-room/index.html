@@ -1365,6 +1365,10 @@
         <div id="img-grid-communion" class="img-grid"></div>
       </div>
       <div class="img-section">
+        <div class="img-section-label">Announcements</div>
+        <div id="img-grid-announcement" class="img-grid"></div>
+      </div>
+      <div class="img-section">
         <div class="img-section-label">Other</div>
         <div id="img-grid-general" class="img-grid"></div>
       </div>
@@ -2236,7 +2240,7 @@ function mediaSrc(img) {
 }
 
 function renderImageLibrary() {
-  const cats = ['offering', 'sermon', 'communion', 'general'];
+  const cats = ['offering', 'sermon', 'communion', 'announcement', 'general'];
   cats.forEach(cat => {
     const grid = document.getElementById('img-grid-' + cat);
     if (!grid) return;
