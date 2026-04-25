@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Anniversary Planning | THANKFUL 2026 | Calvary HFGC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1432,45 +1435,30 @@
     </div>
 
     <script>
-        // Countdown Timer
+        // Countdown Timer - matching anniversary site format
         function updateCountdown() {
-            const targetDate = new Date('2026-05-17T10:30:00').getTime();
-            const now = new Date().getTime();
-            const distance = targetDate - now;
+            const anniversaryDate = new Date('2026-05-17T10:30:00');
+            const now = new Date();
+            const diff = Math.max(0, anniversaryDate.getTime() - now.getTime());
             
-            if (distance > 0) {
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                
-                document.getElementById('countdown-display').textContent = `${days}d ${hours}h ${minutes}m`;
-                document.getElementById('days-left').textContent = `${days} days`;
-            } else {
-                document.getElementById('countdown-display').textContent = 'Event Started!';
-                document.getElementById('days-left').textContent = 'Today!';
-            }
-        }
-        
-        // Checkbox functionality
-        function toggleCheck(checkbox) {
-            checkbox.classList.toggle('checked');
-            updateProgress();
-        }
-        
-        // Progress tracking
-        function updateProgress() {
-            const checkboxes = document.querySelectorAll('.checkbox');
-            const checked = document.querySelectorAll('.checkbox.checked');
-            const total = checkboxes.length;
-            const completed = checked.length;
+            const days = Math.floor(diff / 86400000);
+            const hrs = Math.floor(diff / 3600000) % 24;
+            const mins = Math.floor(diff / 60000) % 60;
+            const secs = Math.floor(diff / 1000) % 60;
             
-            document.getElementById('completed-tasks').textContent = `${completed} / ${total}`;
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hrs).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(mins).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(secs).padStart(2, '0');
         }
         
-        // Initialize
         updateCountdown();
-        setInterval(updateCountdown, 60000); // Update every minute
-        updateProgress();
+        setInterval(updateCountdown, 1000);
+        
+        // Smooth scroll to planning section
+        function scrollToPlanning() {
+            document.getElementById('planning').scrollIntoView({ behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
