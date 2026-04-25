@@ -9,6 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
+    /* Halo glow stack — layered shadows from tight to soft for legibility on any backdrop */
+    --halo:
+      0 0 4px rgba(0, 0, 0, 0.95),
+      0 0 8px rgba(0, 0, 0, 0.85),
+      0 0 18px rgba(0, 0, 0, 0.7),
+      0 4px 28px rgba(0, 0, 0, 0.55);
+    /* Legacy alias (kept for the lower third banner) */
     --shadow: 0 4px 24px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -98,14 +105,15 @@
     opacity: 1;
   }
 
-  /* LYRIC MODE — two lines, huge, outlined for video legibility */
+  /* LYRIC MODE — two lines, huge, halo-glow + outline for video legibility */
   .lyric-line {
     font-weight: 700;
     font-size: calc(clamp(3.5rem, 6.5vw, 6rem) * var(--lyric-scale));
     line-height: 1.15;
     letter-spacing: -0.02em;
-    text-shadow: var(--shadow);
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.4);
+    text-shadow: var(--halo);
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.85);
+    paint-order: stroke fill;
     margin: 0 auto;
     max-width: 22ch;
   }
@@ -120,8 +128,9 @@
     font-size: calc(clamp(2.5rem, 4.5vw, 4rem) * var(--verse-scale));
     line-height: 1.35;
     letter-spacing: -0.015em;
-    text-shadow: var(--shadow);
-    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.4);
+    text-shadow: var(--halo);
+    -webkit-text-stroke: 2px rgba(0, 0, 0, 0.85);
+    paint-order: stroke fill;
     max-width: 30ch;
     margin: 0 auto 1.5rem;
   }
@@ -131,7 +140,12 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #C41E2A;
-    text-shadow: var(--shadow);
+    text-shadow:
+      0 0 4px rgba(0, 0, 0, 1),
+      0 0 10px rgba(0, 0, 0, 0.8),
+      0 2px 12px rgba(0, 0, 0, 0.7);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+    paint-order: stroke fill;
   }
 
   /* GRAPHIC MODE — full-bleed image, contained */
