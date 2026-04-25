@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;}
+  body { background: #0B0B0E; padding: 28px; }
+  .label { font-family: 'Inter Tight', sans-serif; font-size: 11px; color: #D0441C; text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 14px; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .row { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid rgba(244,239,230,0.08); border-radius: 4px; }
+  .dot { width: 18px; height: 18px; border-radius: 999px; flex: none; }
+  .name { font-family: 'Inter Tight'; font-size: 13px; color: #F4EFE6; font-weight: 600; }
+  .hex { font-family: ui-monospace; font-size: 11px; color: #A29C90; margin-left: auto; }
+</style></head>
+<body>
+  <div class="label">Semantic Tokens</div>
+  <div class="grid">
+    <div class="row"><div class="dot" style="background:#4F8A5B"></div><div class="name">Success</div><div class="hex">#4F8A5B</div></div>
+    <div class="row"><div class="dot" style="background:#E0A742"></div><div class="name">Warning</div><div class="hex">#E0A742</div></div>
+    <div class="row"><div class="dot" style="background:#D0441C"></div><div class="name">Danger / Critical</div><div class="hex">#D0441C</div></div>
+    <div class="row"><div class="dot" style="background:#F4EFE6"></div><div class="name">Foreground 1</div><div class="hex">#F4EFE6</div></div>
+    <div class="row"><div class="dot" style="background:#C9C3B6"></div><div class="name">Foreground 2</div><div class="hex">#C9C3B6</div></div>
+    <div class="row"><div class="dot" style="background:#A29C90"></div><div class="name">Foreground 3</div><div class="hex">#A29C90</div></div>
+  </div>
+</body></html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A1A0C"></stop>
+      <stop offset="40%" stop-color="#1A0B09"></stop>
+      <stop offset="100%" stop-color="#0B0B0E"></stop>
+    </linearGradient>
+    <radialGradient id="beam" cx="50%" cy="0%" r="80%">
+      <stop offset="0%" stop-color="#E55A30" stop-opacity="0.55"></stop>
+      <stop offset="35%" stop-color="#D0441C" stop-opacity="0.12"></stop>
+      <stop offset="100%" stop-color="#0B0B0E" stop-opacity="0"></stop>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#lg)"></rect>
+  <ellipse cx="800" cy="60" rx="900" ry="600" fill="url(#beam)"></ellipse>
+  <g fill="#0B0B0E" opacity="0.95">
+    <path d="M0 900 V760 Q120 720 200 750 T400 740 Q480 700 560 745 T760 730 Q860 690 940 740 T1140 745 Q1230 705 1320 740 T1500 745 Q1560 720 1600 740 V900 Z"></path>
+  </g>
+  <g fill="#1C1C22" opacity="0.85">
+    <rect x="180" y="540" width="6" height="220"></rect>
+    <rect x="380" y="500" width="6" height="260"></rect>
+    <rect x="620" y="520" width="6" height="240"></rect>
+    <rect x="900" y="480" width="6" height="280"></rect>
+    <rect x="1120" y="540" width="6" height="220"></rect>
+    <rect x="1380" y="510" width="6" height="250"></rect>
+    <circle cx="183" cy="530" r="14"></circle>
+    <circle cx="383" cy="490" r="14"></circle>
+    <circle cx="623" cy="510" r="14"></circle>
+    <circle cx="903" cy="470" r="14"></circle>
+    <circle cx="1123" cy="530" r="14"></circle>
+    <circle cx="1383" cy="500" r="14"></circle>
+  </g>
+</svg>

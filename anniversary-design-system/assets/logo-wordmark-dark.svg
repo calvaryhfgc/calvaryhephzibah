@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" width="800" height="240">
+  <rect width="800" height="240" fill="#0B0B0E"></rect>
+  <image href="../assets/logo-eagle.png" x="40" y="20" width="200" height="200" preserveAspectRatio="xMidYMid meet"></image>
+  <text x="280" y="130" font-family="Anton, Impact, sans-serif" font-size="96" letter-spacing="-2" fill="#F4EFE6">CALVARY</text>
+  <line x1="280" y1="152" x2="420" y2="152" stroke="#D0441C" stroke-width="1.5"></line>
+  <text x="280" y="184" font-family="Instrument Serif, Georgia, serif" font-style="italic" font-size="22" fill="#D0441C" letter-spacing="6">ANNIVERSARY · 2026</text>
+</svg>

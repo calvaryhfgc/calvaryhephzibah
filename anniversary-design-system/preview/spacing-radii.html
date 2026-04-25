@@ -1,0 +1,22 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0;padding:0;}
+  body { background: #0B0B0E; padding: 28px; }
+  .label { font-family: 'Inter Tight'; font-size: 11px; color: #D0441C; text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 18px; }
+  .row { display: flex; gap: 24px; align-items: center; }
+  .demo { width: 110px; height: 110px; background: #1C1C22; display: flex; align-items: center; justify-content: center; }
+  .name { font-family: 'Inter Tight'; font-size: 11px; color: #F4EFE6; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 10px; }
+  .px { font-family: ui-monospace; font-size: 10px; color: #A29C90; }
+  .col { display: flex; flex-direction: column; align-items: center; }
+</style></head>
+<body>
+  <div class="label">Corner Radii</div>
+  <div class="row">
+    <div class="col"><div class="demo" style="border-radius: 0"></div><div class="name">r-0</div><div class="px">0px · editorial</div></div>
+    <div class="col"><div class="demo" style="border-radius: 4px"></div><div class="name">r-1</div><div class="px">4px · cards</div></div>
+    <div class="col"><div class="demo" style="border-radius: 8px"></div><div class="name">r-2</div><div class="px">8px · inputs</div></div>
+    <div class="col"><div class="demo" style="border-radius: 999px"></div><div class="name">r-pill</div><div class="px">999px · chips</div></div>
+  </div>
+</body></html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  html,body{margin:0;padding:0;}
+  body { background: #0B0B0E; padding: 28px; }
+  .label { font-family: 'Inter Tight'; font-size: 11px; color: #D0441C; text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 18px; }
+  .grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; max-width: 600px; }
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border: 1px solid rgba(244,239,230,0.08); border-radius: 4px; }
+  .cell svg { color: #D0441C; }
+  .name { font-family: 'Inter Tight'; font-size: 10px; color: #A29C90; text-transform: uppercase; letter-spacing: 0.08em; }
+</style></head>
+<body>
+  <div class="label">Iconography · Lucide · 1.5px stroke</div>
+  <div class="grid">
+    <div class="cell"><i data-lucide="mic-vocal" stroke-width="1.5" width="28" height="28"></i><div class="name">mic-vocal</div></div>
+    <div class="cell"><i data-lucide="music" stroke-width="1.5" width="28" height="28"></i><div class="name">music</div></div>
+    <div class="cell"><i data-lucide="sparkles" stroke-width="1.5" width="28" height="28"></i><div class="name">sparkles</div></div>
+    <div class="cell"><i data-lucide="target" stroke-width="1.5" width="28" height="28"></i><div class="name">target</div></div>
+    <div class="cell"><i data-lucide="users-round" stroke-width="1.5" width="28" height="28"></i><div class="name">users</div></div>
+    <div class="cell"><i data-lucide="calendar" stroke-width="1.5" width="28" height="28"></i><div class="name">calendar</div></div>
+    <div class="cell"><i data-lucide="heart" stroke-width="1.5" width="28" height="28"></i><div class="name">heart</div></div>
+    <div class="cell"><i data-lucide="book-open" stroke-width="1.5" width="28" height="28"></i><div class="name">book</div></div>
+    <div class="cell"><i data-lucide="flame" stroke-width="1.5" width="28" height="28"></i><div class="name">flame</div></div>
+    <div class="cell"><i data-lucide="hand-helping" stroke-width="1.5" width="28" height="28"></i><div class="name">helping</div></div>
+    <div class="cell"><i data-lucide="play" stroke-width="1.5" width="28" height="28"></i><div class="name">play</div></div>
+    <div class="cell"><i data-lucide="arrow-right" stroke-width="1.5" width="28" height="28"></i><div class="name">arrow</div></div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body></html>

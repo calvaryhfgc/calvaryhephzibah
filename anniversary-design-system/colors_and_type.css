@@ -1,0 +1,385 @@
+/* ============================================================
+   Calvary Anniversary — Tokens
+   colors_and_type.css
+   ============================================================
+   Drop this file into <head> with a <link rel="stylesheet">,
+   then use the variables and semantic classes below.
+
+   Fonts are loaded from Google Fonts as a deliberate substitute
+   pending the real Calvary font files. Flagged in README.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---------- COLOR ---------- */
+
+  /* Surfaces */
+  --obsidian: #0B0B0E;       /* primary dark surface */
+  --slate:    #1C1C22;       /* elevated card on dark */
+  --graphite: #2A2A33;       /* hover state for slate */
+  --bone:     #F4EFE6;       /* primary surface for light theme / primary text on dark */
+  --paper:    #FBF8F2;       /* light theme alt */
+
+  /* Brand accent — Calvary Red (sampled from logo disc) */
+  --red:         #D0441C;    /* Calvary Red — primary accent */
+  --red-bright:  #E55A30;    /* hover */
+  --red-deep:    #9A2F11;    /* pressed / underline */
+
+  /* Legacy gold tokens kept as a subtle highlight only — do not use as primary */
+  --gold:        #C8A24B;
+  --gold-bright: #E0BB5C;
+  --gold-deep:   #9A7A33;
+
+  /* Secondary warm — deep ember used for urgency on red surfaces */
+  --ember:       #6E1A0F;
+  --ember-soft:  #8A2A1F;
+
+  /* Text */
+  --fg-1: #F4EFE6;           /* primary text on dark */
+  --fg-2: #C9C3B6;           /* secondary text on dark */
+  --fg-3: #A29C90;           /* ash — tertiary / captions */
+  --fg-1-on-light: #14141A;
+  --fg-2-on-light: #4A4A55;
+  --fg-3-on-light: #7A7A85;
+
+  /* Lines */
+  --line-soft:  rgba(244, 239, 230, 0.10);
+  --line-mid:   rgba(244, 239, 230, 0.20);
+  --line-gold:  #C8A24B;
+  --line-red:   #D0441C;
+
+  /* Semantic */
+  --success: #4F8A5B;
+  --warn:    #E0A742;
+  --danger:  #D0441C;
+
+  /* ---------- TYPE ---------- */
+
+  --font-display:    'Anton', 'Boldonse', 'Impact', sans-serif;
+  --font-serif:      'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --font-body:       'Inter Tight', 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Display scale (vw-driven for hero, px for floors) */
+  --fs-mega:    clamp(96px, 22vw, 360px);   /* THANKFUL hero */
+  --fs-display: clamp(64px, 12vw, 200px);
+  --fs-h1:      clamp(44px, 6vw, 88px);
+  --fs-h2:      clamp(32px, 4.4vw, 64px);
+  --fs-h3:      clamp(24px, 2.6vw, 40px);
+  --fs-eyebrow: 12px;
+  --fs-body:    16px;
+  --fs-body-lg: 18px;
+  --fs-small:   14px;
+  --fs-micro:   12px;
+
+  /* Tracking */
+  --track-tight:   -0.03em;
+  --track-display: -0.02em;
+  --track-eyebrow: 0.18em;
+  --track-button:  0.08em;
+
+  /* Leading */
+  --lh-display: 0.88;
+  --lh-heading: 1.05;
+  --lh-body:    1.55;
+  --lh-tight:   1.25;
+
+  /* ---------- SPACING ---------- */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 16px;
+  --s-4: 24px;
+  --s-5: 32px;
+  --s-6: 48px;
+  --s-7: 64px;
+  --s-8: 96px;
+  --s-9: 128px;
+  --s-10: 192px;
+
+  /* ---------- RADIUS ---------- */
+  --r-0: 0px;
+  --r-1: 4px;
+  --r-2: 8px;
+  --r-pill: 999px;
+
+  /* ---------- ELEVATION ---------- */
+  --shadow-1: 0 2px 12px rgba(0,0,0,0.35);
+  --shadow-2: 0 24px 64px rgba(0,0,0,0.55);
+  --inner-glow-gold: inset 0 0 120px rgba(200,162,75,0.08);
+
+  /* ---------- MOTION ---------- */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --t-micro:    160ms;
+  --t-standard: 320ms;
+  --t-hero:     820ms;
+}
+
+/* ============================================================
+   Semantic base — use directly or as @apply-style references
+   ============================================================ */
+
+html, body {
+  background: var(--obsidian);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Subtle spotlight + grain backdrop, the brand default */
+body.cv-stage {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(200,162,75,0.10), transparent 60%),
+    radial-gradient(ellipse 100% 80% at 50% 110%, rgba(138,42,31,0.06), transparent 60%),
+    var(--obsidian);
+  position: relative;
+}
+body.cv-stage::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.96  0 0 0 0 0.94  0 0 0 0 0.90  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
+
+/* Display & hero */
+.cv-mega {
+  font-family: var(--font-display);
+  font-size: var(--fs-mega);
+  line-height: var(--lh-display);
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  color: var(--fg-1);
+}
+
+.cv-display {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  line-height: var(--lh-display);
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+}
+
+h1, .cv-h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h1);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--track-tight);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h2, .cv-h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--track-tight);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h3, .cv-h3 {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-tight);
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.cv-eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  color: var(--red);
+}
+
+.cv-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.cv-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(24px, 3vw, 36px);
+  line-height: 1.35;
+  color: var(--fg-1);
+}
+
+p, .cv-body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--fg-2);
+  margin: 0;
+}
+
+.cv-body-lg { font-size: var(--fs-body-lg); }
+.cv-small   { font-size: var(--fs-small); color: var(--fg-3); }
+.cv-micro   { font-size: var(--fs-micro); color: var(--fg-3); letter-spacing: 0.02em; }
+
+code, .cv-mono {
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.9em;
+  color: var(--red);
+}
+
+/* Accent rule */
+.cv-rule-red {
+  display: inline-block;
+  width: 80px;
+  height: 1px;
+  background: var(--red);
+  vertical-align: middle;
+}
+.cv-rule-gold {
+  display: inline-block;
+  width: 80px;
+  height: 1px;
+  background: var(--gold);
+  vertical-align: middle;
+}
+
+/* ============================================================
+   Components — minimal token-driven primitives
+   ============================================================ */
+
+.cv-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: var(--track-button);
+  border-radius: var(--r-2);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform var(--t-micro) var(--ease-out-quint),
+              background var(--t-micro) var(--ease-out-quint),
+              color var(--t-micro) var(--ease-out-quint);
+  text-decoration: none;
+}
+.cv-btn:active { transform: scale(0.97); }
+.cv-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+.cv-btn-primary {
+  background: var(--red);
+  color: var(--bone);
+}
+.cv-btn-primary:hover { background: var(--red-bright); }
+
+.cv-btn-ghost {
+  background: transparent;
+  color: var(--fg-1);
+  border-color: var(--line-mid);
+}
+.cv-btn-ghost:hover { border-color: var(--red); color: var(--red); }
+
+.cv-btn-ember {
+  background: var(--red-deep);
+  color: var(--bone);
+}
+.cv-btn-ember:hover { background: var(--red); }
+
+/* Card */
+.cv-card {
+  background: var(--slate);
+  border-radius: var(--r-1);
+  padding: 40px;
+  box-shadow: var(--shadow-1);
+}
+
+.cv-card-eyebrow-rule {
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: var(--red);
+  margin-bottom: 16px;
+}
+
+/* Input */
+.cv-input {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line-mid);
+  padding: 12px 0;
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  width: 100%;
+  transition: border-color var(--t-micro) var(--ease-out-quint);
+}
+.cv-input:focus { outline: none; border-bottom-color: var(--red); }
+.cv-input::placeholder { color: var(--fg-3); }
+
+/* Pill / tag */
+.cv-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: var(--fs-micro);
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-mid);
+  color: var(--fg-2);
+}
+.cv-pill-gold { border-color: var(--gold); color: var(--gold); }
+.cv-pill-red { border-color: var(--red); color: var(--red-bright); }
+.cv-pill-ember { border-color: var(--ember); color: var(--ember-soft); }
+
+/* Date chip */
+.cv-date-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-family: var(--font-body);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--track-eyebrow);
+}
+.cv-date-chip .dow { font-size: 10px; opacity: 0.8; }
+.cv-date-chip .num { font-family: var(--font-display); font-size: 28px; line-height: 1; letter-spacing: -0.02em; }
+
+/* Section frame */
+.cv-section {
+  position: relative;
+  padding: var(--s-9) var(--s-7);
+  z-index: 1;
+}
+@media (max-width: 768px) {
+  .cv-section { padding: var(--s-8) var(--s-4); }
+}
+
+/* Reveal */
+.cv-reveal { opacity: 0; transform: translateY(24px); transition: opacity var(--t-hero) var(--ease-out-quint), transform var(--t-hero) var(--ease-out-quint); }
+.cv-reveal.in { opacity: 1; transform: none; }
+
+/* Light theme */
+.cv-light {
+  background: var(--bone);
+  color: var(--fg-1-on-light);
+}
+.cv-light p, .cv-light .cv-body { color: var(--fg-2-on-light); }
+.cv-light .cv-eyebrow { color: var(--red); }
+.cv-light .cv-card { background: var(--paper); box-shadow: 0 2px 12px rgba(20,20,26,0.08); }

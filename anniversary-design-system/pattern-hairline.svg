@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="80" height="80">
+  <defs>
+    <pattern id="hairline" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="40" x2="80" y2="40" stroke="#C8A24B" stroke-width="0.5" opacity="0.18"></line>
+    </pattern>
+  </defs>
+  <rect width="80" height="80" fill="url(#hairline)"></rect>
+</svg>
