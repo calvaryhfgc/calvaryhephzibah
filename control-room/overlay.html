@@ -415,8 +415,8 @@ function render(mode, payload) {
       [payload.reference, payload.version].filter(Boolean).join(' · ');
     requestAnimationFrame(() => stages.verse.classList.add('active'));
   } else if (mode === 'graphic') {
-    // Accepts payload.data_url (preferred — base64) or payload.image_url
-    const src = payload.data_url || payload.image_url;
+    // Accepts payload.media_url (Storage URL — preferred), payload.data_url (legacy base64), or payload.image_url
+    const src = payload.media_url || payload.data_url || payload.image_url;
     if (!src) return;
     const imgEl = document.getElementById('graphic-img');
     const videoEl = document.getElementById('graphic-video');

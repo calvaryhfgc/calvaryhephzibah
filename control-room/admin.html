@@ -287,7 +287,7 @@
             <p id="image-size-info" class="muted" style="font-size:12px;margin-top:8px"></p>
           </div>
 
-          <p class="muted" style="font-size:12px;margin-top:10px">Images auto-resized to 1920px wide, JPEG 85%. Videos kept as-is — must be under 10 MB and silent (no audio). MP4 or WebM recommended for best browser compatibility.</p>
+          <p class="muted" style="font-size:12px;margin-top:10px">Images auto-resized to 1920px wide, JPEG 85%. Videos kept as-is — must be under 50 MB and silent (no audio). MP4 or WebM recommended for best browser compatibility.</p>
 
           <div class="btn-row" style="margin-top:20px">
             <button class="btn primary" id="image-save-btn" onclick="saveImage()" disabled>Save image</button>
@@ -745,17 +745,27 @@ function toast(kind, msg) {
 // ============================================================
 let images = [];
 let editingImageId = null;
-let pendingImageDataUrl = null; // base64 data URL waiting to save
 let pendingImageDims = { width: null, height: null };
 
 async function loadImagesAdmin() {
   const { data, error } = await client
     .from('control_room_images')
-    .select('id, name, category, media_type, data_url, width, height, created_at')
+    .select('id, name, category, media_type, data_url, storage_path, width, height, created_at')
     .order('created_at', { ascending: false });
   if (error) { toast('error', 'Load media: ' + error.message); return; }
   images = data || [];
   renderImagesList();
+}
+
+// Helper: resolve the playable URL for a media row.
+// Prefers storage_path (new uploads), falls back to data_url (legacy base64).
+function mediaSrc(img) {
+  if (!img) return '';
+  if (img.storage_path) {
+    const { data } = client.storage.from('control-room-media').getPublicUrl(img.storage_path);
+    return data.publicUrl;
+  }
+  return img.data_url || '';
 }
 
 function renderImagesList() {
@@ -766,9 +776,10 @@ function renderImagesList() {
   }
   list.innerHTML = images.map(img => {
     const isVideo = img.media_type === 'video';
+    const src = mediaSrc(img);
     const thumb = isVideo
-      ? `<video src="${img.data_url}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video>`
-      : `<img src="${img.data_url}" style="width:100%;height:100%;object-fit:cover">`;
+      ? `<video src="${src}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video>`
+      : `<img src="${src}" style="width:100%;height:100%;object-fit:cover">`;
     return `
       <div class="song-list-item" onclick="window.editImage('${img.id}')" style="display:flex;gap:12px;align-items:center">
         <div style="width:60px;height:34px;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0;position:relative">
@@ -789,36 +800,43 @@ window.editImage = (id) => {
   if (!img) return;
   editingImageId = id;
   pendingMediaType = img.media_type || 'image';
+  pendingBlob = null;             // editing existing — no new blob until user picks a file
+  pendingImageDims = { width: img.width, height: img.height };
+  revokePreviewUrl();
+
   document.getElementById('image-editor-title').textContent = 'Edit ' + (pendingMediaType === 'video' ? 'video' : 'image');
   document.getElementById('image-name').value = img.name;
   document.getElementById('image-category').value = img.category;
-  pendingImageDataUrl = img.data_url;
-  pendingImageDims = { width: img.width, height: img.height };
+  document.getElementById('image-file').value = '';
 
+  const src = mediaSrc(img);
   const previewImg = document.getElementById('image-preview');
   const previewVid = document.getElementById('image-preview-video');
   if (pendingMediaType === 'video') {
     previewImg.style.display = 'none';
     previewVid.style.display = 'block';
-    previewVid.src = img.data_url;
+    previewVid.src = src;
   } else {
     previewVid.style.display = 'none';
     try { previewVid.pause(); previewVid.removeAttribute('src'); previewVid.load(); } catch (_) {}
     previewImg.style.display = 'block';
-    previewImg.src = img.data_url;
+    previewImg.src = src;
   }
 
   document.getElementById('image-preview-wrap').style.display = 'block';
-  document.getElementById('image-save-btn').disabled = false;
+  document.getElementById('image-save-btn').disabled = false;  // can save metadata changes even without new file
   document.getElementById('image-delete-btn').style.display = 'inline-flex';
   document.getElementById('image-attach-section').style.display = 'block';
 };
 
 window.resetImageForm = () => {
   editingImageId = null;
-  pendingImageDataUrl = null;
+  pendingBlob = null;
   pendingImageDims = { width: null, height: null };
   pendingMediaType = 'image';
+  pendingExtension = 'jpg';
+  revokePreviewUrl();
+
   document.getElementById('image-editor-title').textContent = 'Upload media';
   document.getElementById('image-name').value = '';
   document.getElementById('image-category').value = 'offering';
@@ -833,12 +851,24 @@ window.resetImageForm = () => {
 };
 
 let pendingMediaType = 'image'; // 'image' | 'video'
-const VIDEO_MAX_BYTES = 10 * 1024 * 1024; // 10 MB
+let pendingBlob = null;          // Blob ready to upload
+let pendingExtension = 'jpg';    // file extension for upload
+let pendingPreviewUrl = null;    // ObjectURL for preview, revoked on reset
+const VIDEO_MAX_BYTES = 50 * 1024 * 1024; // 50 MB
+const IMAGE_MAX_BYTES = 50 * 1024 * 1024; // 50 MB (rare for images post-resize, but enforced)
+const STORAGE_BUCKET = 'control-room-media';
 
 function formatBytes(b) {
   if (b < 1024) return b + ' B';
   if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
   return (b / 1024 / 1024).toFixed(2) + ' MB';
+}
+
+function revokePreviewUrl() {
+  if (pendingPreviewUrl) {
+    try { URL.revokeObjectURL(pendingPreviewUrl); } catch (_) {}
+    pendingPreviewUrl = null;
+  }
 }
 
 document.getElementById('image-file').addEventListener('change', async (e) => {
@@ -851,40 +881,39 @@ document.getElementById('image-file').addEventListener('change', async (e) => {
   const sizeInfo = document.getElementById('image-size-info');
 
   if (isVideo) {
-    // Enforce size limit before reading
     if (file.size > VIDEO_MAX_BYTES) {
-      toast('error', 'Video is ' + formatBytes(file.size) + ' — must be under 10 MB. Trim or re-encode and try again.');
+      toast('error', 'Video is ' + formatBytes(file.size) + ' — must be under 50 MB.');
       e.target.value = '';
       return;
     }
 
     pendingMediaType = 'video';
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      const dataUrl = ev.target.result;
-      pendingImageDataUrl = dataUrl;
-      pendingImageDims = { width: null, height: null };
+    pendingBlob = file;
+    pendingExtension = (file.name.split('.').pop() || 'mp4').toLowerCase();
+    if (!['mp4','webm','mov'].includes(pendingExtension)) pendingExtension = 'mp4';
 
-      // Show video preview, hide image
-      previewImg.style.display = 'none';
-      previewVid.style.display = 'block';
-      previewVid.src = dataUrl;
-      // Read dimensions when metadata loads
-      previewVid.onloadedmetadata = () => {
-        pendingImageDims = { width: previewVid.videoWidth, height: previewVid.videoHeight };
-        sizeInfo.textContent = '🎬 Video · ' + previewVid.videoWidth + '×' + previewVid.videoHeight +
-          ' · ' + formatBytes(file.size) + ' · ' + previewVid.duration.toFixed(1) + 's loop';
-      };
+    revokePreviewUrl();
+    pendingPreviewUrl = URL.createObjectURL(file);
 
-      document.getElementById('image-preview-wrap').style.display = 'block';
-      document.getElementById('image-save-btn').disabled = false;
+    previewImg.style.display = 'none';
+    previewVid.style.display = 'block';
+    previewVid.src = pendingPreviewUrl;
+
+    pendingImageDims = { width: null, height: null };
+    previewVid.onloadedmetadata = () => {
+      pendingImageDims = { width: previewVid.videoWidth, height: previewVid.videoHeight };
+      sizeInfo.textContent = '🎬 Video · ' + previewVid.videoWidth + '×' + previewVid.videoHeight +
+        ' · ' + formatBytes(file.size) + ' · ' + previewVid.duration.toFixed(1) + 's loop';
     };
-    reader.readAsDataURL(file);
+
+    document.getElementById('image-preview-wrap').style.display = 'block';
+    document.getElementById('image-save-btn').disabled = false;
     return;
   }
 
-  // Image path — auto-resize to 1920px wide, JPEG 85%
+  // Image path — resize to 1920px max width, JPEG 85%
   pendingMediaType = 'image';
+  pendingExtension = 'jpg';
   const reader = new FileReader();
   reader.onload = (ev) => {
     const img = new Image();
@@ -897,18 +926,28 @@ document.getElementById('image-file').addEventListener('change', async (e) => {
       canvas.width = w; canvas.height = h;
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-      pendingImageDataUrl = dataUrl;
-      pendingImageDims = { width: w, height: h };
 
-      previewVid.style.display = 'none';
-      try { previewVid.pause(); previewVid.removeAttribute('src'); previewVid.load(); } catch (_) {}
-      previewImg.style.display = 'block';
-      previewImg.src = dataUrl;
-      sizeInfo.textContent = '🖼 Image · ' + w + '×' + h + ' · ~' + formatBytes(Math.round(dataUrl.length * 0.75));
+      canvas.toBlob((blob) => {
+        if (!blob) { toast('error', 'Failed to encode image'); return; }
+        if (blob.size > IMAGE_MAX_BYTES) {
+          toast('error', 'Image is ' + formatBytes(blob.size) + ' after resize — too large');
+          return;
+        }
+        pendingBlob = blob;
+        pendingImageDims = { width: w, height: h };
 
-      document.getElementById('image-preview-wrap').style.display = 'block';
-      document.getElementById('image-save-btn').disabled = false;
+        revokePreviewUrl();
+        pendingPreviewUrl = URL.createObjectURL(blob);
+
+        previewVid.style.display = 'none';
+        try { previewVid.pause(); previewVid.removeAttribute('src'); previewVid.load(); } catch (_) {}
+        previewImg.style.display = 'block';
+        previewImg.src = pendingPreviewUrl;
+        sizeInfo.textContent = '🖼 Image · ' + w + '×' + h + ' · ' + formatBytes(blob.size);
+
+        document.getElementById('image-preview-wrap').style.display = 'block';
+        document.getElementById('image-save-btn').disabled = false;
+      }, 'image/jpeg', 0.85);
     };
     img.src = ev.target.result;
   };
@@ -918,39 +957,97 @@ document.getElementById('image-file').addEventListener('change', async (e) => {
 window.saveImage = async () => {
   const name = document.getElementById('image-name').value.trim();
   const category = document.getElementById('image-category').value;
-  if (!name || !pendingImageDataUrl) { toast('error', 'Need a name and a file'); return; }
+  if (!name) { toast('error', 'Name is required'); return; }
 
-  const payload = {
-    name,
-    category,
-    media_type: pendingMediaType,
-    data_url: pendingImageDataUrl,
-    width: pendingImageDims.width,
-    height: pendingImageDims.height
-  };
+  const saveBtn = document.getElementById('image-save-btn');
+  saveBtn.disabled = true;
+  saveBtn.textContent = pendingBlob ? 'Uploading…' : 'Saving…';
 
-  if (editingImageId) {
-    const { error } = await client.from('control_room_images').update(payload).eq('id', editingImageId);
-    if (error) { toast('error', 'Save: ' + error.message); return; }
-    toast('success', (pendingMediaType === 'video' ? 'Video' : 'Image') + ' updated');
-  } else {
-    const { data, error } = await client.from('control_room_images').insert(payload).select().single();
-    if (error) { toast('error', 'Save: ' + error.message); return; }
-    editingImageId = data.id;
-    toast('success', (pendingMediaType === 'video' ? 'Video' : 'Image') + ' saved');
+  try {
+    let storage_path = null;
+    let publicUrl = null;
+
+    // Only upload if we have a fresh blob (i.e. user picked a new file).
+    // If they're editing metadata only, pendingBlob will be null after editImage().
+    if (pendingBlob) {
+      // Generate a UUID-style filename. crypto.randomUUID() is widely supported.
+      const fileId = (crypto.randomUUID ? crypto.randomUUID() : (Date.now() + '-' + Math.random().toString(36).slice(2)));
+      const path = (pendingMediaType === 'video' ? 'videos/' : 'images/') + fileId + '.' + pendingExtension;
+      const contentType = pendingMediaType === 'video'
+        ? (pendingExtension === 'webm' ? 'video/webm' : (pendingExtension === 'mov' ? 'video/quicktime' : 'video/mp4'))
+        : 'image/jpeg';
+
+      const { error: upErr } = await client.storage.from(STORAGE_BUCKET).upload(path, pendingBlob, {
+        contentType,
+        cacheControl: '31536000', // 1 year
+        upsert: false
+      });
+      if (upErr) {
+        toast('error', 'Upload: ' + upErr.message);
+        return;
+      }
+      storage_path = path;
+      const { data: urlData } = client.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      publicUrl = urlData.publicUrl;
+
+      // If editing and replacing, mark the old file for cleanup
+      if (editingImageId) {
+        const old = images.find(x => x.id === editingImageId);
+        if (old && old.storage_path) {
+          // fire-and-forget delete; don't block save on it
+          client.storage.from(STORAGE_BUCKET).remove([old.storage_path]).catch(()=>{});
+        }
+      }
+    }
+
+    const basePayload = {
+      name,
+      category,
+      media_type: pendingMediaType,
+      width: pendingImageDims.width,
+      height: pendingImageDims.height
+    };
+    if (storage_path) {
+      basePayload.storage_path = storage_path;
+      basePayload.data_url = null; // clear legacy field on new uploads
+    }
+
+    if (editingImageId) {
+      const { error } = await client.from('control_room_images').update(basePayload).eq('id', editingImageId);
+      if (error) { toast('error', 'Save: ' + error.message); return; }
+      toast('success', (pendingMediaType === 'video' ? 'Video' : 'Image') + ' updated');
+    } else {
+      const { data, error } = await client.from('control_room_images').insert(basePayload).select().single();
+      if (error) { toast('error', 'Save: ' + error.message); return; }
+      editingImageId = data.id;
+      toast('success', (pendingMediaType === 'video' ? 'Video' : 'Image') + ' saved');
+    }
+
+    pendingBlob = null; // consumed
+    await loadImagesAdmin();
+    document.getElementById('image-delete-btn').style.display = 'inline-flex';
+    document.getElementById('image-attach-section').style.display = 'block';
+  } finally {
+    saveBtn.disabled = false;
+    saveBtn.textContent = 'Save';
   }
-  await loadImagesAdmin();
-  // Don't reset — keep editing context for attach-to-Sunday
-  document.getElementById('image-delete-btn').style.display = 'inline-flex';
-  document.getElementById('image-attach-section').style.display = 'block';
 };
 
 window.deleteImage = async () => {
   if (!editingImageId) return;
-  if (!confirm('Delete this image? Any sermon attachments to this image will be cleared.')) return;
+  if (!confirm('Delete this media? Any sermon attachments to it will be cleared.')) return;
+
+  const target = images.find(x => x.id === editingImageId);
+  // Delete the database row first so anything pointing to it gets nullified
   const { error } = await client.from('control_room_images').delete().eq('id', editingImageId);
   if (error) { toast('error', 'Delete: ' + error.message); return; }
-  toast('success', 'Image deleted');
+
+  // Then clean up the file in Storage if there is one
+  if (target && target.storage_path) {
+    await client.storage.from(STORAGE_BUCKET).remove([target.storage_path]).catch(()=>{});
+  }
+
+  toast('success', 'Deleted');
   await loadImagesAdmin();
   resetImageForm();
 };

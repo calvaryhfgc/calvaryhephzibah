@@ -2216,13 +2216,23 @@ window.onAnnInput = () => {
 async function loadImages() {
   const { data, error } = await client
     .from('control_room_images')
-    .select('id, name, category, media_type, data_url, created_at')
+    .select('id, name, category, media_type, data_url, storage_path, created_at')
     .order('created_at', { ascending: false });
   if (error) { console.error('images load:', error); return; }
   imageLibrary = data || [];
   renderImageLibrary();
   // OOS may have attached images that need re-rendering
   renderOrderOfService(orderOfService);
+}
+
+// Resolve playable URL for an image row. Prefers Storage path, falls back to legacy base64.
+function mediaSrc(img) {
+  if (!img) return '';
+  if (img.storage_path) {
+    const { data } = client.storage.from('control-room-media').getPublicUrl(img.storage_path);
+    return data.publicUrl;
+  }
+  return img.data_url || '';
 }
 
 function renderImageLibrary() {
@@ -2238,9 +2248,10 @@ function renderImageLibrary() {
     grid.innerHTML = items.map(img => {
       const isLive = currentImageId === img.id;
       const isVideo = img.media_type === 'video';
+      const src = mediaSrc(img);
       const thumbInner = isVideo
-        ? `<video src="${img.data_url}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video><div class="video-badge">▶ VIDEO</div>`
-        : `<img src="${img.data_url}" alt="">`;
+        ? `<video src="${src}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video><div class="video-badge">▶ VIDEO</div>`
+        : `<img src="${src}" alt="">`;
       return `
         <div class="img-card ${isLive ? 'live' : ''}" onclick="window.pushImage('${img.id}')">
           <div class="thumb">${thumbInner}</div>
@@ -2258,8 +2269,10 @@ window.pushImage = async (id) => {
   currentSlideIdx = -1;
   currentPassage = null;
   currentPassageSlideIdx = -1;
+  // Push the resolved URL — works for both Storage uploads and legacy base64.
+  // Realtime payload stays small because storage URLs are tiny.
   await pushLive('graphic', {
-    data_url: img.data_url,
+    media_url: mediaSrc(img),
     name: img.name,
     image_id: img.id,
     media_type: img.media_type || 'image'
