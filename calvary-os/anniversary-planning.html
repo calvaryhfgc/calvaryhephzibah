@@ -6,7 +6,7 @@
     <title>Anniversary Planning | THANKFUL 2026 | Calvary HFGC</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Instrument+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Anton:wght@400&family=Instrument+Serif:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -22,102 +22,222 @@
             --success: #16A34A;
             --warning: #F59E0B;
             --priority: #DC2626;
-            --complete: #059669;
-            --pending: #D97706;
-            --overdue: #DC2626;
+            --deep-charcoal: #1F1F23;
+            --warm-gray: #C9C3B6;
         }
         
         body { 
             font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: var(--obsidian);
+            color: var(--soft-cream);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+        
+        /* Hero Section - Same as anniversary site */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--obsidian) 0%, var(--deep-charcoal) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(208,68,28,0.08) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-20px, -10px) rotate(1deg); }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 24px;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: var(--calvary-red);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 32px;
+        }
+        
+        .hero-title {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 400;
+            color: var(--soft-cream);
+            margin-bottom: 24px;
+            letter-spacing: 0.02em;
+            text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 400;
+            color: var(--warm-gray);
+            margin-bottom: 12px;
+            letter-spacing: 0.02em;
+        }
+        
+        .hero-date {
+            font-size: 14px;
+            color: var(--warm-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-weight: 500;
+            margin-bottom: 56px;
+        }
+        
+        .countdown {
+            display: flex;
+            gap: 56px;
+            margin-bottom: 80px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-item {
+            text-align: center;
+        }
+        
+        .countdown-number {
+            font-family: 'Anton', sans-serif;
+            font-size: 48px;
+            font-weight: 400;
+            color: var(--calvary-red);
+            display: block;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        
+        .countdown-label {
+            font-size: 12px;
+            color: var(--warm-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+        }
+        
+        .hero-cta {
+            background: var(--calvary-red);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .hero-cta:hover {
+            background: #B8391A;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(208, 68, 28, 0.3);
+        }
+        
+        /* Planning Content */
+        .planning-content {
             background: var(--soft-cream);
             color: var(--obsidian);
-            line-height: 1.5;
-            font-weight: 400;
+            padding: 80px 0;
         }
         
         .container {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
         }
         
-        /* Header */
-        .header {
-            background: var(--obsidian);
-            padding: 24px 0;
-            margin-bottom: 32px;
-        }
-        
-        .header-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        
-        .header-title {
-            color: white;
-        }
-        
-        .header-title h1 {
-            font-family: 'Instrument Serif', serif;
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        
-        .header-subtitle {
-            color: #A1A1AA;
-            font-size: 16px;
-            font-weight: 400;
-        }
-        
-        .countdown-compact {
-            background: var(--calvary-red);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 12px;
+        .planning-header {
             text-align: center;
-            font-weight: 600;
+            margin-bottom: 64px;
         }
         
-        .countdown-days {
-            font-size: 24px;
+        .planning-header h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: var(--obsidian);
+            margin-bottom: 16px;
+        }
+        
+        .planning-header p {
+            font-size: 18px;
+            color: var(--sage-green);
+            font-weight: 500;
+        }
+        
+        /* Priority Banner */
+        .priority-banner {
+            background: linear-gradient(135deg, var(--priority), #EF4444);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .priority-banner h3 {
+            font-size: 20px;
             font-weight: 700;
-            display: block;
+            margin-bottom: 8px;
         }
         
         /* Status Overview */
         .status-overview {
             background: white;
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 32px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             border-left: 4px solid var(--calvary-red);
         }
         
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
         }
         
         .status-card {
             text-align: center;
-            padding: 16px;
+            padding: 20px;
             border-radius: 12px;
             background: var(--warm-beige);
         }
         
         .status-number {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
-            font-family: 'Instrument Serif', serif;
+            font-family: 'Anton', sans-serif;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
         
         .status-label {
@@ -128,37 +248,38 @@
             color: var(--charcoal);
         }
         
-        .status-card.complete .status-number { color: var(--complete); }
-        .status-card.pending .status-number { color: var(--pending); }
+        .status-card.complete .status-number { color: var(--success); }
+        .status-card.pending .status-number { color: var(--warning); }
         .status-card.priority .status-number { color: var(--priority); }
+        .status-card.total .status-number { color: var(--sage-green); }
         
         /* Planning Sections */
         .planning-section {
             background: white;
             border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         
         .section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border-light);
         }
         
         .section-title {
             font-family: 'Instrument Serif', serif;
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 600;
             color: var(--obsidian);
         }
         
         .section-status {
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
@@ -168,12 +289,12 @@
         
         .section-status.complete {
             background: #DCFCE7;
-            color: var(--complete);
+            color: var(--success);
         }
         
         .section-status.in-progress {
             background: #FEF3C7;
-            color: var(--pending);
+            color: var(--warning);
         }
         
         .section-status.not-started {
@@ -181,7 +302,7 @@
             color: var(--priority);
         }
         
-        /* Checklist Items */
+        /* Checklist */
         .checklist {
             list-style: none;
         }
@@ -189,8 +310,8 @@
         .checklist-item {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            padding: 12px 0;
+            gap: 16px;
+            padding: 16px 0;
             border-bottom: 1px solid #F3F4F6;
         }
         
@@ -199,29 +320,34 @@
         }
         
         .checkbox {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border: 2px solid var(--border-light);
-            border-radius: 4px;
+            border-radius: 6px;
             margin-top: 2px;
             position: relative;
             cursor: pointer;
             flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox:hover {
+            border-color: var(--calvary-red);
         }
         
         .checkbox.checked {
-            background: var(--complete);
-            border-color: var(--complete);
+            background: var(--success);
+            border-color: var(--success);
         }
         
         .checkbox.checked::after {
             content: "✓";
             position: absolute;
-            top: -2px;
-            left: 3px;
+            top: -1px;
+            left: 4px;
             color: white;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
         }
         
         .item-content {
@@ -229,63 +355,85 @@
         }
         
         .item-title {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--obsidian);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
+            font-size: 16px;
         }
         
         .item-details {
             font-size: 14px;
             color: var(--silver);
+            line-height: 1.5;
         }
         
         .item-owner {
             font-size: 12px;
-            background: var(--warm-beige);
-            color: var(--charcoal);
-            padding: 4px 8px;
-            border-radius: 6px;
+            background: var(--sage-green);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 12px;
             font-weight: 500;
             margin-left: auto;
             flex-shrink: 0;
         }
         
-        /* Priority Items */
-        .priority-banner {
-            background: linear-gradient(135deg, var(--priority), #EF4444);
-            color: white;
-            padding: 16px 24px;
+        /* Department Grid */
+        .dept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+        
+        .dept-card {
+            background: var(--warm-beige);
+            padding: 20px;
             border-radius: 12px;
-            margin-bottom: 32px;
-            text-align: center;
+            border-left: 4px solid var(--sage-green);
         }
         
-        .priority-banner h3 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
+        .dept-name {
+            font-weight: 600;
+            color: var(--obsidian);
+            margin-bottom: 8px;
+            font-size: 16px;
         }
         
-        /* Key Info */
+        .dept-status {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 8px;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .dept-status.interested { color: var(--success); }
+        .dept-status.awaiting { color: var(--warning); }
+        .dept-status.declined { color: var(--silver); }
+        
+        /* Key Info Box */
         .key-info {
             background: var(--sage-green);
             color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 32px;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
         }
         
         .key-info h3 {
             font-family: 'Instrument Serif', serif;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
         
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
         }
         
         .info-item {
@@ -293,9 +441,9 @@
         }
         
         .info-value {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
         
         .info-label {
@@ -305,441 +453,389 @@
             letter-spacing: 0.5px;
         }
         
-        /* Department Presentations */
-        .dept-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 16px;
-        }
-        
-        .dept-card {
-            background: var(--warm-beige);
-            padding: 16px;
-            border-radius: 12px;
-            border-left: 4px solid var(--sage-green);
-        }
-        
-        .dept-name {
-            font-weight: 600;
-            color: var(--obsidian);
-            margin-bottom: 4px;
-        }
-        
-        .dept-status {
-            font-size: 12px;
-            color: var(--silver);
-            text-transform: uppercase;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        
         /* Responsive */
         @media (max-width: 768px) {
-            .container { padding: 0 16px; }
-            
-            .header-content {
-                flex-direction: column;
-                text-align: center;
+            .hero-title {
+                font-size: clamp(3rem, 15vw, 5rem);
             }
             
-            .status-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            .countdown {
+                gap: 32px;
+            }
+            
+            .countdown-number {
+                font-size: 36px;
+            }
+            
+            .container {
+                padding: 0 16px;
             }
             
             .planning-section {
-                padding: 20px;
-                margin-bottom: 20px;
+                padding: 24px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .checklist-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .item-owner {
+                align-self: flex-start;
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header">
+    <!-- Hero Section - Same as anniversary site -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">Anniversary Planning</div>
+            <h1 class="hero-title">THANKFUL</h1>
+            <div class="hero-subtitle">Reasons to be Thankful</div>
+            <div class="hero-date">May 17, 2026 · 10:30 AM</div>
+            
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">--</span>
+                    <span class="countdown-label">Days</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">--</span>
+                    <span class="countdown-label">Hours</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">--</span>
+                    <span class="countdown-label">Minutes</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">--</span>
+                    <span class="countdown-label">Seconds</span>
+                </div>
+            </div>
+            
+            <button class="hero-cta" onclick="scrollToPlanning()">View Planning Checklist</button>
+        </div>
+    </section>
+
+    <!-- Planning Content -->
+    <section class="planning-content">
         <div class="container">
-            <div class="header-content">
-                <div class="header-title">
-                    <h1>Anniversary Planning</h1>
-                    <div class="header-subtitle">THANKFUL 2026 • May 17, 2026 at 10:30 AM</div>
-                </div>
-                <div class="countdown-compact">
-                    <span class="countdown-days" id="daysLeft">--</span>
-                    <span>days to go</span>
-                </div>
+            <div class="planning-header">
+                <h2>Anniversary Planning Dashboard</h2>
+                <p>Operational checklist and progress tracking for THANKFUL 2026</p>
             </div>
-        </div>
-    </div>
 
-    <div class="container">
-        <!-- Priority Banner -->
-        <div class="priority-banner">
-            <h3>🚨 URGENT: Announcement Tomorrow</h3>
-            <p>Department participation announcement needs to be made tomorrow (per Pastor Shade)</p>
-        </div>
-
-        <!-- Key Info -->
-        <div class="key-info">
-            <h3>Key Anniversary Details</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-value">May 17</div>
-                    <div class="info-label">Date</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-value">10:30 AM</div>
-                    <div class="info-label">Time</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-value">THANKFUL</div>
-                    <div class="info-label">Theme</div>
-                </div>
-                <div class="info-item">
-                    <div class="info-value">5 min</div>
-                    <div class="info-label">Dept. Slots</div>
-                </div>
+            <!-- Priority Banner -->
+            <div class="priority-banner">
+                <h3>🚨 URGENT: Announcement Tomorrow</h3>
+                <p>Department participation announcement needs to be made tomorrow (per Pastor Shade)</p>
             </div>
-        </div>
 
-        <!-- Status Overview -->
-        <div class="status-overview">
-            <h3 style="font-family: 'Instrument Serif', serif; font-size: 20px; margin-bottom: 8px;">Planning Progress</h3>
-            <p style="color: var(--silver); margin-bottom: 16px;">Overall view of where we are with anniversary preparations</p>
-            
-            <div class="status-grid">
-                <div class="status-card complete">
-                    <span class="status-number">5</span>
-                    <span class="status-label">Complete</span>
-                </div>
-                <div class="status-card pending">
-                    <span class="status-number">12</span>
-                    <span class="status-label">In Progress</span>
-                </div>
-                <div class="status-card priority">
-                    <span class="status-number">7</span>
-                    <span class="status-label">Urgent</span>
-                </div>
-                <div class="status-card">
-                    <span class="status-number">24</span>
-                    <span class="status-label">Total Tasks</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Backdrop & Visuals -->
-        <div class="planning-section">
-            <div class="section-header">
-                <h3 class="section-title">🎨 Backdrop & Stage Visuals</h3>
-                <span class="section-status not-started">Not Started</span>
-            </div>
-            <ul class="checklist">
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Design two-piece movable backdrop</div>
-                        <div class="item-details">Left and right stage positioning, works when worship team partially covers</div>
+            <!-- Key Info -->
+            <div class="key-info">
+                <h3>Key Anniversary Details</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-value">May 17</div>
+                        <div class="info-label">Date</div>
                     </div>
-                    <span class="item-owner">Bolaji</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Position text elements at top of backdrop</div>
-                        <div class="item-details">Ensure readability when team is on stage</div>
+                    <div class="info-item">
+                        <div class="info-value">10:30 AM</div>
+                        <div class="info-label">Time</div>
                     </div>
-                    <span class="item-owner">Bolaji</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Budget approval for backdrop production</div>
-                        <div class="item-details">Get cost estimates and Pastor Shade approval</div>
+                    <div class="info-item">
+                        <div class="info-value">THANKFUL</div>
+                        <div class="info-label">Theme</div>
                     </div>
-                    <span class="item-owner">Pastor Kayode</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Source backdrop printing/production</div>
-                        <div class="item-details">Find supplier for large format printing</div>
+                    <div class="info-item">
+                        <div class="info-value">5 min</div>
+                        <div class="info-label">Dept. Slots</div>
                     </div>
-                    <span class="item-owner">TBA</span>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Department Presentations -->
-        <div class="planning-section">
-            <div class="section-header">
-                <h3 class="section-title">🏛️ Department Presentations</h3>
-                <span class="section-status in-progress">In Progress</span>
-            </div>
-            <ul class="checklist">
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Make announcement tomorrow about 5-minute department slots</div>
-                        <div class="item-details">Any department can showcase what they've accomplished this year</div>
-                    </div>
-                    <span class="item-owner">Pastor Shade</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Create presentation templates for departments</div>
-                        <div class="item-details">5-minute slot guidelines and slide templates</div>
-                    </div>
-                    <span class="item-owner">Bolaji</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Collect department participation confirmations</div>
-                        <div class="item-details">Track which departments want to present</div>
-                    </div>
-                    <span class="item-owner">Pastor Kayode</span>
-                </li>
-            </ul>
-            
-            <div style="margin-top: 20px;">
-                <h4 style="font-weight: 600; margin-bottom: 16px; color: var(--charcoal);">Department Interest Status</h4>
-                <div class="dept-grid">
-                    <div class="dept-card">
-                        <div class="dept-name">Media Ministry</div>
-                        <div class="dept-status">Interested</div>
-                    </div>
-                    <div class="dept-card">
-                        <div class="dept-name">Worship Ministry</div>
-                        <div class="dept-status">Awaiting Response</div>
-                    </div>
-                    <div class="dept-card">
-                        <div class="dept-name">Children's Ministry</div>
-                        <div class="dept-status">Awaiting Response</div>
-                    </div>
-                    <div class="dept-card">
-                        <div class="dept-name">Hospitality</div>
-                        <div class="dept-status">Awaiting Response</div>
-                    </div>
-                    <div class="dept-card">
-                        <div class="dept-name">Prayer Ministry</div>
-                        <div class="dept-status">Awaiting Response</div>
-                    </div>
-                    <div class="dept-card">
-                        <div class="dept-name">Evangelism</div>
-                        <div class="dept-status">Awaiting Response</div>
+                    <div class="info-item">
+                        <div class="info-value">2-piece</div>
+                        <div class="info-label">Backdrop</div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Order of Service -->
-        <div class="planning-section">
-            <div class="section-header">
-                <h3 class="section-title">📋 Service Order & Logistics</h3>
-                <span class="section-status not-started">Not Started</span>
+            <!-- Status Overview -->
+            <div class="status-overview">
+                <h3 style="font-family: 'Instrument Serif', serif; font-size: 24px; margin-bottom: 8px;">Planning Progress</h3>
+                <p style="color: var(--silver); margin-bottom: 16px;">Overall view of where we are with anniversary preparations</p>
+                
+                <div class="status-grid">
+                    <div class="status-card complete">
+                        <span class="status-number">5</span>
+                        <span class="status-label">Complete</span>
+                    </div>
+                    <div class="status-card pending">
+                        <span class="status-number">12</span>
+                        <span class="status-label">In Progress</span>
+                    </div>
+                    <div class="status-card priority">
+                        <span class="status-number">7</span>
+                        <span class="status-label">Urgent</span>
+                    </div>
+                    <div class="status-card total">
+                        <span class="status-number">24</span>
+                        <span class="status-label">Total Tasks</span>
+                    </div>
+                </div>
             </div>
-            <ul class="checklist">
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Draft full order of service</div>
-                        <div class="item-details">Including department presentations and worship flow</div>
-                    </div>
-                    <span class="item-owner">Pastor Shade</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Assign MC/hosting duties</div>
-                        <div class="item-details">Who will introduce departments and manage transitions</div>
-                    </div>
-                    <span class="item-owner">Pastor Shade</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Plan worship set for anniversary</div>
-                        <div class="item-details">Extended worship time with thanksgiving theme</div>
-                    </div>
-                    <span class="item-owner">Caster</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Prepare anniversary sermon</div>
-                        <div class="item-details">THANKFUL theme - Reasons to be Thankful</div>
-                    </div>
-                    <span class="item-owner">Pastor Shade</span>
-                </li>
-            </ul>
-        </div>
 
-        <!-- Media & Technical -->
-        <div class="planning-section">
-            <div class="section-header">
-                <h3 class="section-title">🎥 Media & Technical</h3>
-                <span class="section-status in-progress">In Progress</span>
+            <!-- Backdrop & Visuals -->
+            <div class="planning-section" id="planning">
+                <div class="section-header">
+                    <h3 class="section-title">🎨 Backdrop & Stage Visuals</h3>
+                    <span class="section-status not-started">Not Started</span>
+                </div>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Design two-piece movable backdrop (left/right positioning)</div>
+                            <div class="item-details">As per Pastor Shade: works when worship team partially covers, text at top, visuals at bottom</div>
+                        </div>
+                        <span class="item-owner">Bolaji</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Budget approval for backdrop production</div>
+                            <div class="item-details">Get cost estimates and Pastor Shade approval for advertising and backdrop</div>
+                        </div>
+                        <span class="item-owner">Pastor Kayode</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Source backdrop printing/production</div>
+                            <div class="item-details">Find supplier for large format printing, movable design</div>
+                        </div>
+                        <span class="item-owner">TBA</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Test backdrop setup and positioning</div>
+                            <div class="item-details">Ensure it works with current stage layout and is truly movable</div>
+                        </div>
+                        <span class="item-owner">Operations</span>
+                    </li>
+                </ul>
             </div>
-            <ul class="checklist">
-                <li class="checklist-item">
-                    <div class="checkbox checked" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Anniversary website and design system</div>
-                        <div class="item-details">Complete branding and online presence</div>
-                    </div>
-                    <span class="item-owner">Bolaji</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Create department presentation slides template</div>
-                        <div class="item-details">Branded template for all department presentations</div>
-                    </div>
-                    <span class="item-owner">Bolaji</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Plan additional livestream setup</div>
-                        <div class="item-details">Enhanced coverage for anniversary service</div>
-                    </div>
-                    <span class="item-owner">Scott</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Prepare media briefing for anniversary</div>
-                        <div class="item-details">Detailed technical runsheet for media team</div>
-                    </div>
-                    <span class="item-owner">Scott</span>
-                </li>
-            </ul>
-        </div>
 
-        <!-- Hospitality & Logistics -->
-        <div class="planning-section">
-            <div class="section-header">
-                <h3 class="section-title">🤝 Hospitality & Logistics</h3>
-                <span class="section-status not-started">Not Started</span>
+            <!-- Department Presentations -->
+            <div class="planning-section">
+                <div class="section-header">
+                    <h3 class="section-title">🏛️ Department Presentations</h3>
+                    <span class="section-status in-progress">In Progress</span>
+                </div>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Make announcement tomorrow about 5-minute department slots</div>
+                            <div class="item-details">Any department can showcase what they've accomplished this year</div>
+                        </div>
+                        <span class="item-owner">Pastor Shade</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Create presentation templates for departments</div>
+                            <div class="item-details">5-minute slot guidelines and branded slide templates</div>
+                        </div>
+                        <span class="item-owner">Bolaji</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Collect department participation confirmations</div>
+                            <div class="item-details">Track which departments want to present by deadline</div>
+                        </div>
+                        <span class="item-owner">Pastor Kayode</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Schedule department presentation rehearsals</div>
+                            <div class="item-details">Ensure smooth transitions and time management</div>
+                        </div>
+                        <span class="item-owner">Pastor Kayode</span>
+                    </li>
+                </ul>
+                
+                <div style="margin-top: 24px;">
+                    <h4 style="font-weight: 600; margin-bottom: 16px; color: var(--charcoal);">Department Interest Status</h4>
+                    <div class="dept-grid">
+                        <div class="dept-card">
+                            <div class="dept-name">Media Ministry</div>
+                            <div class="dept-status interested">Interested</div>
+                        </div>
+                        <div class="dept-card">
+                            <div class="dept-name">Worship Ministry</div>
+                            <div class="dept-status awaiting">Awaiting Response</div>
+                        </div>
+                        <div class="dept-card">
+                            <div class="dept-name">Children's Ministry</div>
+                            <div class="dept-status awaiting">Awaiting Response</div>
+                        </div>
+                        <div class="dept-card">
+                            <div class="dept-name">Hospitality</div>
+                            <div class="dept-status awaiting">Awaiting Response</div>
+                        </div>
+                        <div class="dept-card">
+                            <div class="dept-name">Prayer Ministry</div>
+                            <div class="dept-status awaiting">Awaiting Response</div>
+                        </div>
+                        <div class="dept-card">
+                            <div class="dept-name">Evangelism</div>
+                            <div class="dept-status awaiting">Awaiting Response</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <ul class="checklist">
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Plan anniversary refreshments</div>
-                        <div class="item-details">Special menu for anniversary celebration</div>
-                    </div>
-                    <span class="item-owner">Deaconess Janet</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Coordinate extra seating if needed</div>
-                        <div class="item-details">Anticipate higher attendance</div>
-                    </div>
-                    <span class="item-owner">Tolu</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Prepare welcome materials</div>
-                        <div class="item-details">Anniversary bulletins and special materials</div>
-                    </div>
-                    <span class="item-owner">Auntie Pauline</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Coordinate anniversary photography</div>
-                        <div class="item-details">Capture key moments and group photos</div>
-                    </div>
-                    <span class="item-owner">Scott</span>
-                </li>
-            </ul>
-        </div>
 
-        <!-- Communications & Promotion -->
-        <div class="planning-section">
-            <div class="section-header">
-                <h3 class="section-title">📢 Communications & Promotion</h3>
-                <span class="section-status in-progress">In Progress</span>
+            <!-- Service Order & Logistics -->
+            <div class="planning-section">
+                <div class="section-header">
+                    <h3 class="section-title">📋 Service Order & Logistics</h3>
+                    <span class="section-status not-started">Not Started</span>
+                </div>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Draft full order of service with department slots</div>
+                            <div class="item-details">Including department presentations and worship flow timing</div>
+                        </div>
+                        <span class="item-owner">Pastor Shade</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Assign MC/hosting duties for department transitions</div>
+                            <div class="item-details">Who will introduce departments and manage smooth flow</div>
+                        </div>
+                        <span class="item-owner">Pastor Shade</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Plan extended worship set for anniversary</div>
+                            <div class="item-details">Special thanksgiving-themed worship experience</div>
+                        </div>
+                        <span class="item-owner">Caster</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Prepare anniversary sermon: THANKFUL</div>
+                            <div class="item-details">Reasons to be Thankful - key anniversary message</div>
+                        </div>
+                        <span class="item-owner">Pastor Shade</span>
+                    </li>
+                </ul>
             </div>
-            <ul class="checklist">
-                <li class="checklist-item">
-                    <div class="checkbox checked" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Launch anniversary website</div>
-                        <div class="item-details">Live countdown and event information</div>
-                    </div>
-                    <span class="item-owner">Bolaji</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Create promotional materials</div>
-                        <div class="item-details">Flyers, social media graphics, banners</div>
-                    </div>
-                    <span class="item-owner">Bolaji</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Social media campaign launch</div>
-                        <div class="item-details">Build excitement and awareness</div>
-                    </div>
-                    <span class="item-owner">Media Team</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Invite extended church family</div>
-                        <div class="item-details">Personal outreach to previous members and friends</div>
-                    </div>
-                    <span class="item-owner">Leadership Team</span>
-                </li>
-            </ul>
-        </div>
 
-        <!-- Special Preparations -->
-        <div class="planning-section">
-            <div class="section-header">
-                <h3 class="section-title">⭐ Special Preparations</h3>
-                <span class="section-status not-started">Not Started</span>
+            <!-- Media & Technical -->
+            <div class="planning-section">
+                <div class="section-header">
+                    <h3 class="section-title">🎥 Media & Technical</h3>
+                    <span class="section-status in-progress">In Progress</span>
+                </div>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <div class="checkbox checked" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Anniversary website and design system complete</div>
+                            <div class="item-details">THANKFUL branding and online presence live</div>
+                        </div>
+                        <span class="item-owner">Bolaji</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Create department presentation slide templates</div>
+                            <div class="item-details">Branded templates for all 5-minute department presentations</div>
+                        </div>
+                        <span class="item-owner">Bolaji</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Plan enhanced livestream setup for anniversary</div>
+                            <div class="item-details">Additional coverage and improved quality for special service</div>
+                        </div>
+                        <span class="item-owner">Scott</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Create comprehensive anniversary media briefing</div>
+                            <div class="item-details">Detailed technical runsheet for extended service format</div>
+                        </div>
+                        <span class="item-owner">Scott</span>
+                    </li>
+                </ul>
             </div>
-            <ul class="checklist">
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Prepare anniversary testimony video</div>
-                        <div class="item-details">Members sharing what God has done through Calvary</div>
-                    </div>
-                    <span class="item-owner">Scott</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Church history presentation</div>
-                        <div class="item-details">Journey of Calvary Hephzibah over the years</div>
-                    </div>
-                    <span class="item-owner">Pastor Shade</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Anniversary offering project</div>
-                        <div class="item-details">Special fundraising goal for church growth</div>
-                    </div>
-                    <span class="item-owner">Pastor Kayode</span>
-                </li>
-                <li class="checklist-item">
-                    <div class="checkbox" onclick="toggleCheck(this)"></div>
-                    <div class="item-content">
-                        <div class="item-title">Special anniversary booklet/program</div>
-                        <div class="item-details">Commemorative program with church journey highlights</div>
-                    </div>
-                    <span class="item-owner">Auntie Pauline</span>
-                </li>
-            </ul>
+
+            <!-- Hospitality & Special Preparations -->
+            <div class="planning-section">
+                <div class="section-header">
+                    <h3 class="section-title">🤝 Hospitality & Special Preparations</h3>
+                    <span class="section-status not-started">Not Started</span>
+                </div>
+                <ul class="checklist">
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Plan anniversary celebration refreshments</div>
+                            <div class="item-details">Special menu and setup for post-service fellowship</div>
+                        </div>
+                        <span class="item-owner">Deaconess Janet</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Prepare anniversary testimony video</div>
+                            <div class="item-details">Members sharing what God has done through Calvary</div>
+                        </div>
+                        <span class="item-owner">Scott</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Coordinate anniversary photography</div>
+                            <div class="item-details">Professional photos of departments and celebration</div>
+                        </div>
+                        <span class="item-owner">Scott</span>
+                    </li>
+                    <li class="checklist-item">
+                        <div class="checkbox" onclick="toggleCheck(this)"></div>
+                        <div class="item-content">
+                            <div class="item-title">Anniversary offering project planning</div>
+                            <div class="item-details">Special fundraising goal for future church growth</div>
+                        </div>
+                        <span class="item-owner">Pastor Kayode</span>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </section>
 
     <script>
         // Countdown Timer
@@ -747,27 +843,36 @@
             const anniversaryDate = new Date('2026-05-17T10:30:00');
             const now = new Date();
             const diff = anniversaryDate - now;
-            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-            document.getElementById('daysLeft').textContent = days > 0 ? days : 0;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
         }
         
         updateCountdown();
-        setInterval(updateCountdown, 3600000); // Update every hour
+        setInterval(updateCountdown, 1000);
         
-        // Checkbox Toggle
+        // Smooth scroll to planning section
+        function scrollToPlanning() {
+            document.getElementById('planning').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Checkbox toggle
         function toggleCheck(checkbox) {
             checkbox.classList.toggle('checked');
             updateProgress();
         }
         
-        // Update Progress Counters
+        // Update progress counters
         function updateProgress() {
-            const totalItems = document.querySelectorAll('.checkbox').length;
-            const completedItems = document.querySelectorAll('.checkbox.checked').length;
-            const pendingItems = totalItems - completedItems;
-            
-            // You could update the status cards here
-            // This is just a basic implementation
+            // This would update the status cards based on checked items
+            // Implementation depends on how you want to track progress
         }
         
         // Initialize
