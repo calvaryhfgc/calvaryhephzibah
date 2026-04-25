@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HERO TEST - Anniversary Planning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Anton:wght@400&family=Instrument+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: #0B0B0E;
+            color: #F4EFE6;
+            line-height: 1.6;
+            font-weight: 400;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 120px 32px 80px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        
+        .hero-logo {
+            width: 96px; 
+            height: 96px; 
+            object-fit: contain; 
+            margin-bottom: 24px;
+            filter: drop-shadow(0 8px 24px rgba(208,68,28,0.35));
+        }
+        
+        .hero-badge {
+            font-family: 'Inter Tight'; 
+            font-size: 12px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+            margin-bottom: 32px;
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+        }
+        
+        .hero-badge::before,
+        .hero-badge::after {
+            content: '';
+            width: 32px; 
+            height: 1px; 
+            background: #D0441C;
+        }
+        
+        .hero-title {
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: clamp(96px, 22vw, 360px);
+            line-height: 0.85; 
+            letter-spacing: -0.04em;
+            color: #F4EFE6; 
+            text-transform: uppercase;
+            margin: 0; 
+            text-align: center;
+        }
+        
+        .hero-subtitle {
+            font-family: 'Instrument Serif'; 
+            font-style: italic;
+            font-size: clamp(20px, 2.4vw, 32px); 
+            color: #D0441C;
+            margin-top: 24px; 
+            margin-bottom: 12px; 
+            letter-spacing: 0.02em;
+        }
+        
+        .hero-date {
+            font-family: 'Inter Tight'; 
+            font-size: 14px; 
+            color: #C9C3B6;
+            text-transform: uppercase; 
+            letter-spacing: 0.18em; 
+            font-weight: 500;
+            margin-bottom: 56px;
+        }
+        
+        .countdown {
+            display: flex; 
+            gap: 56px; 
+            margin-bottom: 80px;
+        }
+        
+        .countdown-item {
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 6px;
+        }
+        
+        .countdown-number {
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: 56px; 
+            line-height: 1; 
+            color: #F4EFE6;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .countdown-label {
+            font-family: 'Inter Tight'; 
+            font-size: 10px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+        }
+        
+        .planning-content {
+            background: #FEFCFA;
+            color: #0B0B0E;
+            padding: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <img src="../anniversary-design-system/assets/logo-eagle.png" alt="Calvary" class="hero-logo" />
+        
+        <div class="hero-badge">
+            Anniversary Planning 2026
+        </div>
+        
+        <h1 class="hero-title">THANKFUL</h1>
+        
+        <div class="hero-subtitle">Reasons to be Thankful</div>
+        
+        <div class="hero-date">May 17, 2026 · 10:30 AM</div>
+        
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">22</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">05</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">30</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">15</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="planning-content">
+        <h2>If you see this hero section properly styled, the issue is in our planning content CSS!</h2>
+        <p>Hero test complete - next we'll add the planning content step by step.</p>
+    </section>
+
+    <script>
+        function updateCountdown() {
+            const anniversaryDate = new Date('2026-05-17T10:30:00');
+            const now = new Date();
+            const diff = Math.max(0, anniversaryDate.getTime() - now.getTime());
+            
+            const days = Math.floor(diff / 86400000);
+            const hrs = Math.floor(diff / 3600000) % 24;
+            const mins = Math.floor(diff / 60000) % 60;
+            const secs = Math.floor(diff / 1000) % 60;
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hrs).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(mins).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(secs).padStart(2, '0');
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
