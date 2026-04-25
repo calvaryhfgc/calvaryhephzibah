@@ -277,15 +277,17 @@
             <option value="general">General / other</option>
           </select>
 
-          <label style="margin-top:14px">Image file (JPG / PNG, ideally 1920x1080 or 16:9)</label>
-          <input id="image-file" type="file" accept="image/*" class="input" style="padding:10px 12px;cursor:pointer">
+          <label style="margin-top:14px">Image or video file</label>
+          <input id="image-file" type="file" accept="image/*,video/mp4,video/webm,video/quicktime" class="input" style="padding:10px 12px;cursor:pointer">
 
           <div id="image-preview-wrap" style="margin-top:14px;display:none">
-            <label>Preview</label>
-            <img id="image-preview" style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:400px;object-fit:contain;background:#000;">
+            <label id="image-preview-label">Preview</label>
+            <img id="image-preview" style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:400px;object-fit:contain;background:#000;display:none">
+            <video id="image-preview-video" style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:400px;object-fit:contain;background:#000;display:none" muted loop autoplay playsinline></video>
+            <p id="image-size-info" class="muted" style="font-size:12px;margin-top:8px"></p>
           </div>
 
-          <p class="muted" style="font-size:12px;margin-top:10px">Files are auto-resized to 1920px max width. JPEG quality 85% to keep size sensible.</p>
+          <p class="muted" style="font-size:12px;margin-top:10px">Images auto-resized to 1920px wide, JPEG 85%. Videos kept as-is — must be under 10 MB and silent (no audio). MP4 or WebM recommended for best browser compatibility.</p>
 
           <div class="btn-row" style="margin-top:20px">
             <button class="btn primary" id="image-save-btn" onclick="saveImage()" disabled>Save image</button>
@@ -749,9 +751,9 @@ let pendingImageDims = { width: null, height: null };
 async function loadImagesAdmin() {
   const { data, error } = await client
     .from('control_room_images')
-    .select('id, name, category, data_url, width, height, created_at')
+    .select('id, name, category, media_type, data_url, width, height, created_at')
     .order('created_at', { ascending: false });
-  if (error) { toast('error', 'Load images: ' + error.message); return; }
+  if (error) { toast('error', 'Load media: ' + error.message); return; }
   images = data || [];
   renderImagesList();
 }
@@ -759,32 +761,53 @@ async function loadImagesAdmin() {
 function renderImagesList() {
   const list = document.getElementById('images-list');
   if (!images.length) {
-    list.innerHTML = '<div style="padding:14px;color:var(--text-muted);text-align:center;border:1px dashed var(--border-strong);border-radius:8px;font-size:13px">No images yet. Upload your first one.</div>';
+    list.innerHTML = '<div style="padding:14px;color:var(--text-muted);text-align:center;border:1px dashed var(--border-strong);border-radius:8px;font-size:13px">No media yet. Upload your first image or video.</div>';
     return;
   }
-  list.innerHTML = images.map(img => `
-    <div class="song-list-item" onclick="window.editImage('${img.id}')" style="display:flex;gap:12px;align-items:center">
-      <div style="width:60px;height:34px;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0">
-        <img src="${img.data_url}" style="width:100%;height:100%;object-fit:cover">
+  list.innerHTML = images.map(img => {
+    const isVideo = img.media_type === 'video';
+    const thumb = isVideo
+      ? `<video src="${img.data_url}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video>`
+      : `<img src="${img.data_url}" style="width:100%;height:100%;object-fit:cover">`;
+    return `
+      <div class="song-list-item" onclick="window.editImage('${img.id}')" style="display:flex;gap:12px;align-items:center">
+        <div style="width:60px;height:34px;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0;position:relative">
+          ${thumb}
+          ${isVideo ? '<div style="position:absolute;bottom:1px;right:1px;background:rgba(0,0,0,0.8);color:white;font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px">▶</div>' : ''}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(img.name)}</div>
+          <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${img.category}${isVideo ? ' · video' : ''}</div>
+        </div>
       </div>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(img.name)}</div>
-        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${img.category}</div>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 window.editImage = (id) => {
   const img = images.find(x => x.id === id);
   if (!img) return;
   editingImageId = id;
-  document.getElementById('image-editor-title').textContent = 'Edit image';
+  pendingMediaType = img.media_type || 'image';
+  document.getElementById('image-editor-title').textContent = 'Edit ' + (pendingMediaType === 'video' ? 'video' : 'image');
   document.getElementById('image-name').value = img.name;
   document.getElementById('image-category').value = img.category;
   pendingImageDataUrl = img.data_url;
   pendingImageDims = { width: img.width, height: img.height };
-  document.getElementById('image-preview').src = img.data_url;
+
+  const previewImg = document.getElementById('image-preview');
+  const previewVid = document.getElementById('image-preview-video');
+  if (pendingMediaType === 'video') {
+    previewImg.style.display = 'none';
+    previewVid.style.display = 'block';
+    previewVid.src = img.data_url;
+  } else {
+    previewVid.style.display = 'none';
+    try { previewVid.pause(); previewVid.removeAttribute('src'); previewVid.load(); } catch (_) {}
+    previewImg.style.display = 'block';
+    previewImg.src = img.data_url;
+  }
+
   document.getElementById('image-preview-wrap').style.display = 'block';
   document.getElementById('image-save-btn').disabled = false;
   document.getElementById('image-delete-btn').style.display = 'inline-flex';
@@ -795,7 +818,8 @@ window.resetImageForm = () => {
   editingImageId = null;
   pendingImageDataUrl = null;
   pendingImageDims = { width: null, height: null };
-  document.getElementById('image-editor-title').textContent = 'Upload image';
+  pendingMediaType = 'image';
+  document.getElementById('image-editor-title').textContent = 'Upload media';
   document.getElementById('image-name').value = '';
   document.getElementById('image-category').value = 'offering';
   document.getElementById('image-file').value = '';
@@ -804,16 +828,67 @@ window.resetImageForm = () => {
   document.getElementById('image-delete-btn').style.display = 'none';
   document.getElementById('image-attach-section').style.display = 'none';
   document.getElementById('image-attach-status').textContent = '';
+  const previewVid = document.getElementById('image-preview-video');
+  try { previewVid.pause(); previewVid.removeAttribute('src'); previewVid.load(); } catch (_) {}
 };
+
+let pendingMediaType = 'image'; // 'image' | 'video'
+const VIDEO_MAX_BYTES = 10 * 1024 * 1024; // 10 MB
+
+function formatBytes(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / 1024 / 1024).toFixed(2) + ' MB';
+}
 
 document.getElementById('image-file').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
+
+  const isVideo = file.type.startsWith('video/');
+  const previewImg = document.getElementById('image-preview');
+  const previewVid = document.getElementById('image-preview-video');
+  const sizeInfo = document.getElementById('image-size-info');
+
+  if (isVideo) {
+    // Enforce size limit before reading
+    if (file.size > VIDEO_MAX_BYTES) {
+      toast('error', 'Video is ' + formatBytes(file.size) + ' — must be under 10 MB. Trim or re-encode and try again.');
+      e.target.value = '';
+      return;
+    }
+
+    pendingMediaType = 'video';
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      pendingImageDataUrl = dataUrl;
+      pendingImageDims = { width: null, height: null };
+
+      // Show video preview, hide image
+      previewImg.style.display = 'none';
+      previewVid.style.display = 'block';
+      previewVid.src = dataUrl;
+      // Read dimensions when metadata loads
+      previewVid.onloadedmetadata = () => {
+        pendingImageDims = { width: previewVid.videoWidth, height: previewVid.videoHeight };
+        sizeInfo.textContent = '🎬 Video · ' + previewVid.videoWidth + '×' + previewVid.videoHeight +
+          ' · ' + formatBytes(file.size) + ' · ' + previewVid.duration.toFixed(1) + 's loop';
+      };
+
+      document.getElementById('image-preview-wrap').style.display = 'block';
+      document.getElementById('image-save-btn').disabled = false;
+    };
+    reader.readAsDataURL(file);
+    return;
+  }
+
+  // Image path — auto-resize to 1920px wide, JPEG 85%
+  pendingMediaType = 'image';
   const reader = new FileReader();
   reader.onload = (ev) => {
     const img = new Image();
     img.onload = () => {
-      // Resize to max 1920px wide, JPEG quality 85
       const maxW = 1920;
       const scale = img.width > maxW ? maxW / img.width : 1;
       const w = Math.round(img.width * scale);
@@ -825,7 +900,13 @@ document.getElementById('image-file').addEventListener('change', async (e) => {
       const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
       pendingImageDataUrl = dataUrl;
       pendingImageDims = { width: w, height: h };
-      document.getElementById('image-preview').src = dataUrl;
+
+      previewVid.style.display = 'none';
+      try { previewVid.pause(); previewVid.removeAttribute('src'); previewVid.load(); } catch (_) {}
+      previewImg.style.display = 'block';
+      previewImg.src = dataUrl;
+      sizeInfo.textContent = '🖼 Image · ' + w + '×' + h + ' · ~' + formatBytes(Math.round(dataUrl.length * 0.75));
+
       document.getElementById('image-preview-wrap').style.display = 'block';
       document.getElementById('image-save-btn').disabled = false;
     };
@@ -837,23 +918,26 @@ document.getElementById('image-file').addEventListener('change', async (e) => {
 window.saveImage = async () => {
   const name = document.getElementById('image-name').value.trim();
   const category = document.getElementById('image-category').value;
-  if (!name || !pendingImageDataUrl) { toast('error', 'Need a name and image'); return; }
+  if (!name || !pendingImageDataUrl) { toast('error', 'Need a name and a file'); return; }
+
+  const payload = {
+    name,
+    category,
+    media_type: pendingMediaType,
+    data_url: pendingImageDataUrl,
+    width: pendingImageDims.width,
+    height: pendingImageDims.height
+  };
 
   if (editingImageId) {
-    const { error } = await client.from('control_room_images').update({
-      name, category, data_url: pendingImageDataUrl,
-      width: pendingImageDims.width, height: pendingImageDims.height
-    }).eq('id', editingImageId);
+    const { error } = await client.from('control_room_images').update(payload).eq('id', editingImageId);
     if (error) { toast('error', 'Save: ' + error.message); return; }
-    toast('success', 'Image updated');
+    toast('success', (pendingMediaType === 'video' ? 'Video' : 'Image') + ' updated');
   } else {
-    const { data, error } = await client.from('control_room_images').insert({
-      name, category, data_url: pendingImageDataUrl,
-      width: pendingImageDims.width, height: pendingImageDims.height
-    }).select().single();
+    const { data, error } = await client.from('control_room_images').insert(payload).select().single();
     if (error) { toast('error', 'Save: ' + error.message); return; }
     editingImageId = data.id;
-    toast('success', 'Image saved');
+    toast('success', (pendingMediaType === 'video' ? 'Video' : 'Image') + ' saved');
   }
   await loadImagesAdmin();
   // Don't reset — keep editing context for attach-to-Sunday

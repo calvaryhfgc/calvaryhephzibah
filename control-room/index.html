@@ -902,11 +902,25 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    position: relative;
   }
   .img-card .thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  .video-badge {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    pointer-events: none;
   }
   .img-card .img-name {
     padding: 6px 10px;
@@ -1329,7 +1343,7 @@
   <!-- Graphics: images + announcements -->
   <div class="gfx-panel">
     <h3>Graphics</h3>
-    <p class="helper">Push full-screen images or announcement banners.</p>
+    <p class="helper">Push full-screen images, looping videos, or announcement banners.</p>
 
     <div class="gfx-tabs">
       <button class="gfx-tab active" data-tab="images" onclick="switchGfxTab('images')">Images</button>
@@ -1354,7 +1368,7 @@
         <div class="img-section-label">Other</div>
         <div id="img-grid-general" class="img-grid"></div>
       </div>
-      <p class="helper" style="margin-top: 12px; font-size: 12px;">Upload images via the <a href="admin.html" style="color: var(--text-muted); text-decoration: underline;">admin page →</a></p>
+      <p class="helper" style="margin-top: 12px; font-size: 12px;">Upload images and silent looping videos via the <a href="admin.html" style="color: var(--text-muted); text-decoration: underline;">admin page →</a></p>
     </div>
 
     <!-- Announcements tab -->
@@ -2202,7 +2216,7 @@ window.onAnnInput = () => {
 async function loadImages() {
   const { data, error } = await client
     .from('control_room_images')
-    .select('id, name, category, data_url, created_at')
+    .select('id, name, category, media_type, data_url, created_at')
     .order('created_at', { ascending: false });
   if (error) { console.error('images load:', error); return; }
   imageLibrary = data || [];
@@ -2218,14 +2232,18 @@ function renderImageLibrary() {
     if (!grid) return;
     const items = imageLibrary.filter(i => i.category === cat);
     if (!items.length) {
-      grid.innerHTML = '<div class="img-empty">No ' + cat + ' images yet.</div>';
+      grid.innerHTML = '<div class="img-empty">No ' + cat + ' media yet.</div>';
       return;
     }
     grid.innerHTML = items.map(img => {
       const isLive = currentImageId === img.id;
+      const isVideo = img.media_type === 'video';
+      const thumbInner = isVideo
+        ? `<video src="${img.data_url}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video><div class="video-badge">▶ VIDEO</div>`
+        : `<img src="${img.data_url}" alt="">`;
       return `
         <div class="img-card ${isLive ? 'live' : ''}" onclick="window.pushImage('${img.id}')">
-          <div class="thumb"><img src="${img.data_url}" alt=""></div>
+          <div class="thumb">${thumbInner}</div>
           <div class="img-name">${escapeHtml(img.name)}</div>
         </div>
       `;
@@ -2240,7 +2258,12 @@ window.pushImage = async (id) => {
   currentSlideIdx = -1;
   currentPassage = null;
   currentPassageSlideIdx = -1;
-  await pushLive('graphic', { data_url: img.data_url, name: img.name, image_id: img.id });
+  await pushLive('graphic', {
+    data_url: img.data_url,
+    name: img.name,
+    image_id: img.id,
+    media_type: img.media_type || 'image'
+  });
   renderSetlist();
 };
 

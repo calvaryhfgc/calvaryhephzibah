@@ -161,7 +161,7 @@
     paint-order: stroke fill;
   }
 
-  /* GRAPHIC MODE — full-bleed image, contained */
+  /* GRAPHIC MODE — full-bleed image OR silent looping video */
   .graphic-stage {
     top: 0;
     left: 0;
@@ -172,11 +172,14 @@
     align-items: center;
     justify-content: center;
   }
-  .graphic-stage img {
+  .graphic-stage img,
+  .graphic-stage video {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
   }
+  .graphic-stage img.hidden,
+  .graphic-stage video.hidden { display: none; }
 
   /* ANNOUNCEMENT MODE — templated text card with Calvary branding */
   .announcement-stage {
@@ -332,6 +335,7 @@
 
 <div id="graphic-stage" class="stage graphic-stage">
   <img id="graphic-img" src="" alt="">
+  <video id="graphic-video" class="hidden" autoplay loop muted playsinline></video>
 </div>
 
 <div id="announcement-stage" class="stage announcement-stage">
@@ -414,7 +418,25 @@ function render(mode, payload) {
     // Accepts payload.data_url (preferred — base64) or payload.image_url
     const src = payload.data_url || payload.image_url;
     if (!src) return;
-    document.getElementById('graphic-img').src = src;
+    const imgEl = document.getElementById('graphic-img');
+    const videoEl = document.getElementById('graphic-video');
+    const isVideo = (payload.media_type === 'video') || /^data:video\//i.test(src);
+    if (isVideo) {
+      imgEl.classList.add('hidden');
+      videoEl.classList.remove('hidden');
+      // Only reset if src actually changed — avoids restarting a looping video on every minor update
+      if (videoEl.src !== src) {
+        videoEl.src = src;
+        videoEl.load();
+      }
+      videoEl.play().catch(() => {/* autoplay should work because muted */});
+    } else {
+      videoEl.classList.add('hidden');
+      // Pause to free decoder when switching back to images
+      try { videoEl.pause(); videoEl.removeAttribute('src'); videoEl.load(); } catch (_) {}
+      imgEl.classList.remove('hidden');
+      imgEl.src = src;
+    }
     requestAnimationFrame(() => stages.graphic.classList.add('active'));
   } else if (mode === 'announcement') {
     const card = document.getElementById('announcement-card');
