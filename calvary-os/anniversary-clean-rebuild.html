@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anniversary Planning | THANKFUL 2026 | Calvary HFGC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Anton:wght@400&family=Instrument+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: #0B0B0E;
+            color: #F4EFE6;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Background texture */
+        body::before {
+            content: ""; 
+            position: fixed; 
+            inset: 0; 
+            pointer-events: none; 
+            z-index: -1;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.96  0 0 0 0 0.94  0 0 0 0 0.90  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+            opacity: 0.5; 
+            mix-blend-mode: overlay;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 120px 32px 80px;
+            overflow: hidden;
+            isolation: isolate;
+        }
+        
+        .hero-logo {
+            width: 96px; 
+            height: 96px; 
+            object-fit: contain; 
+            margin-bottom: 24px;
+            filter: drop-shadow(0 8px 24px rgba(208,68,28,0.35));
+        }
+        
+        .hero-badge {
+            font-family: 'Inter Tight'; 
+            font-size: 12px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+            margin-bottom: 32px;
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+        }
+        
+        .hero-badge::before,
+        .hero-badge::after {
+            content: '';
+            width: 32px; 
+            height: 1px; 
+            background: #D0441C;
+        }
+        
+        .hero-title {
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: clamp(96px, 22vw, 360px);
+            line-height: 0.85; 
+            letter-spacing: -0.04em;
+            color: #F4EFE6; 
+            text-transform: uppercase;
+            margin: 0; 
+            text-align: center;
+        }
+        
+        .hero-subtitle {
+            font-family: 'Instrument Serif'; 
+            font-style: italic;
+            font-size: clamp(20px, 2.4vw, 32px); 
+            color: #D0441C;
+            margin-top: 24px; 
+            margin-bottom: 12px; 
+            letter-spacing: 0.02em;
+        }
+        
+        .hero-date {
+            font-family: 'Inter Tight'; 
+            font-size: 14px; 
+            color: #C9C3B6;
+            text-transform: uppercase; 
+            letter-spacing: 0.18em; 
+            font-weight: 500;
+            margin-bottom: 56px;
+        }
+        
+        .countdown {
+            display: flex; 
+            gap: 56px; 
+            margin-bottom: 80px;
+        }
+        
+        .countdown-item {
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 6px;
+        }
+        
+        .countdown-number {
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: 56px; 
+            line-height: 1; 
+            color: #F4EFE6;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .countdown-label {
+            font-family: 'Inter Tight'; 
+            font-size: 10px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+        }
+        
+        .hero-scroll {
+            position: absolute; 
+            bottom: 32px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px;
+            font-family: 'Inter Tight'; 
+            font-size: 11px; 
+            color: #A29C90;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .hero-scroll-line {
+            width: 1px; 
+            height: 48px;
+            background: linear-gradient(to bottom, #D0441C, transparent);
+            animation: pulse 2.4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        
+        /* Planning Content */
+        .planning-content {
+            background: #FEFCFA;
+            color: #0B0B0E;
+            padding: 80px 0;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .planning-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        .planning-header h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: #0B0B0E;
+            margin-bottom: 16px;
+        }
+        
+        .planning-header p {
+            font-size: 18px;
+            color: #7D8471;
+            font-weight: 500;
+        }
+        
+        .priority-banner {
+            background: linear-gradient(135deg, #DC2626, #EF4444);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .priority-banner h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .key-info {
+            background: #7D8471;
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .key-info h3 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            text-align: center;
+        }
+        
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-overview {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #D0441C;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        
+        .status-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: #F5F3F0;
+        }
+        
+        .status-number {
+            font-size: 36px;
+            font-weight: 700;
+            font-family: 'Anton', sans-serif;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .status-label {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #2A2A2A;
+        }
+        
+        .planning-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E5E5E5;
+        }
+        
+        .section-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #0B0B0E;
+        }
+        
+        .simple-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .simple-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            border-left: 4px solid #7D8471;
+        }
+        
+        .simple-item.priority {
+            border-left-color: #DC2626;
+            background: #FEF2F2;
+        }
+        
+        .simple-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .simple-content {
+            flex: 1;
+        }
+        
+        .simple-content h4 {
+            font-weight: 600;
+            color: #0B0B0E;
+            margin-bottom: 6px;
+            font-size: 18px;
+        }
+        
+        .simple-content p {
+            color: #8B8B8B;
+            margin-bottom: 8px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        
+        .simple-owner {
+            font-size: 12px;
+            background: #7D8471;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .dept-grid-simple {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .dept-card-simple {
+            background: white;
+            border: 2px solid #E5E7EB;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .dept-card-simple.interested {
+            border-color: #16A34A;
+            background: #F0FDF4;
+        }
+        
+        .dept-card-simple.waiting {
+            border-color: #D1D5DB;
+            background: #F9FAFB;
+        }
+        
+        .dept-card-simple .dept-name {
+            font-weight: 600;
+            color: #0B0B0E;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .dept-status-simple {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .dept-card-simple.interested .dept-status-simple {
+            color: #16A34A;
+        }
+        
+        .dept-card-simple.waiting .dept-status-simple {
+            color: #6B7280;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 24px 80px;
+            }
+            
+            .countdown {
+                gap: 32px;
+            }
+            
+            .countdown-number {
+                font-size: 48px;
+            }
+            
+            .container {
+                padding: 0 16px;
+            }
+            
+            .planning-section {
+                padding: 24px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+            
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .simple-item {
+                padding: 16px;
+            }
+            
+            .simple-content h4 {
+                font-size: 16px;
+            }
+            
+            .dept-grid-simple {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <img src="../anniversary-design-system/assets/logo-eagle.png" alt="Calvary" class="hero-logo" />
+        <div class="hero-badge">Anniversary Planning 2026</div>
+        <h1 class="hero-title">THANKFUL</h1>
+        <div class="hero-subtitle">Reasons to be Thankful</div>
+        <div class="hero-date">May 17, 2026 · 10:30 AM</div>
+        
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">--</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">--</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">--</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">--</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+
+        <div class="hero-scroll" onclick="scrollToPlanning()">
+            Scroll to planning
+            <div class="hero-scroll-line"></div>
+        </div>
+    </section>
+
+    <section class="planning-content">
+        <div class="container">
+            <div class="planning-header">
+                <h2>Anniversary Planning Overview</h2>
+                <p>Simple view of what needs to happen for our THANKFUL celebration</p>
+            </div>
+
+            <div class="priority-banner">
+                <h3>📋 For Tomorrow's Service</h3>
+                <p><strong>Pastor Shade:</strong> Announce that departments can present what they've accomplished this year (5 minutes each)</p>
+            </div>
+
+            <div class="key-info">
+                <h3>Key Details for May 17th</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-value">10:30 AM</div>
+                        <div class="info-label">Service Time</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value">THANKFUL</div>
+                        <div class="info-label">Theme</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value">5 minutes</div>
+                        <div class="info-label">Department Slots</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-value">22 days</div>
+                        <div class="info-label">To Go</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="status-overview">
+                <h3>How Are We Doing?</h3>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <span class="status-number">✅</span>
+                        <span class="status-label">Website Ready</span>
+                    </div>
+                    <div class="status-card">
+                        <span class="status-number">⏳</span>
+                        <span class="status-label">Backdrop Design</span>
+                    </div>
+                    <div class="status-card">
+                        <span class="status-number">📋</span>
+                        <span class="status-label">Department Interest</span>
+                    </div>
+                    <div class="status-card">
+                        <span class="status-number">📅</span>
+                        <span class="status-label">Service Planning</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="planning-section" id="planning">
+                <div class="section-header">
+                    <h3 class="section-title">🎯 What's Next (This Week)</h3>
+                </div>
+                
+                <div class="simple-list">
+                    <div class="simple-item priority">
+                        <div class="simple-icon">📢</div>
+                        <div class="simple-content">
+                            <h4>Tomorrow: Department Announcement</h4>
+                            <p>Let departments know they can present what they've accomplished (5 minutes each)</p>
+                            <span class="simple-owner">Pastor Shade</span>
+                        </div>
+                    </div>
+                    
+                    <div class="simple-item">
+                        <div class="simple-icon">🎨</div>
+                        <div class="simple-content">
+                            <h4>Design Anniversary Backdrop</h4>
+                            <p>Two-piece backdrop for stage (left and right side, movable for future)</p>
+                            <span class="simple-owner">Bolaji</span>
+                        </div>
+                    </div>
+                    
+                    <div class="simple-item">
+                        <div class="simple-icon">💰</div>
+                        <div class="simple-content">
+                            <h4>Approve Anniversary Budget</h4>
+                            <p>Budget for backdrop and any anniversary advertising</p>
+                            <span class="simple-owner">Pastor Kayode</span>
+                        </div>
+                    </div>
+                    
+                    <div class="simple-item">
+                        <div class="simple-icon">🏛️</div>
+                        <div class="simple-content">
+                            <h4>Collect Department Responses</h4>
+                            <p>See which departments want to present (deadline TBD)</p>
+                            <span class="simple-owner">Pastor Kayode</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="planning-section">
+                <div class="section-header">
+                    <h3 class="section-title">🏛️ Departments: Who's Interested?</h3>
+                </div>
+                
+                <div class="dept-grid-simple">
+                    <div class="dept-card-simple interested">
+                        <div class="dept-name">Media Ministry</div>
+                        <div class="dept-status-simple">✅ Interested</div>
+                    </div>
+                    <div class="dept-card-simple waiting">
+                        <div class="dept-name">Worship Ministry</div>
+                        <div class="dept-status-simple">⏳ Waiting</div>
+                    </div>
+                    <div class="dept-card-simple waiting">
+                        <div class="dept-name">Children's Ministry</div>
+                        <div class="dept-status-simple">⏳ Waiting</div>
+                    </div>
+                    <div class="dept-card-simple waiting">
+                        <div class="dept-name">Hospitality</div>
+                        <div class="dept-status-simple">⏳ Waiting</div>
+                    </div>
+                    <div class="dept-card-simple waiting">
+                        <div class="dept-name">Prayer Ministry</div>
+                        <div class="dept-status-simple">⏳ Waiting</div>
+                    </div>
+                    <div class="dept-card-simple waiting">
+                        <div class="dept-name">Evangelism</div>
+                        <div class="dept-status-simple">⏳ Waiting</div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 24px; padding: 16px; background: #F0F9FF; border-radius: 8px; border-left: 4px solid #3B82F6;">
+                    <p style="color: #1E40AF; font-weight: 500;">📝 After tomorrow's announcement, we'll update this list with who wants to participate</p>
+                </div>
+            </div>
+
+            <div style="background: #7D8471; color: white; padding: 32px; border-radius: 16px; text-align: center; margin-top: 40px;">
+                <h3 style="font-family: 'Instrument Serif', serif; font-size: 24px; margin-bottom: 16px;">🙏 Simple Summary</h3>
+                <p style="font-size: 18px; margin-bottom: 24px;">We're celebrating what God has done through Calvary Hephzibah</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 32px;">
+                    <div>
+                        <div style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">Tomorrow</div>
+                        <div style="opacity: 0.9;">Announce department presentations</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">This Week</div>
+                        <div style="opacity: 0.9;">Design backdrop & collect responses</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 20px; font-weight: 700; margin-bottom: 4px;">Next Steps</div>
+                        <div style="opacity: 0.9;">Plan service & prepare celebration</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function updateCountdown() {
+            const anniversaryDate = new Date('2026-05-17T10:30:00');
+            const now = new Date();
+            const diff = Math.max(0, anniversaryDate.getTime() - now.getTime());
+            
+            const days = Math.floor(diff / 86400000);
+            const hrs = Math.floor(diff / 3600000) % 24;
+            const mins = Math.floor(diff / 60000) % 60;
+            const secs = Math.floor(diff / 1000) % 60;
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hrs).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(mins).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(secs).padStart(2, '0');
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        function scrollToPlanning() {
+            document.getElementById('planning').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
