@@ -15,7 +15,7 @@ const TIMELINE = [
   { dow: 'Wed', num: '07', tag: 'Lock', tagKind: 'gold',
     title: 'Presentation Lock',
     body: 'All ministry presentations polished. Tech requirements confirmed. Seamless flow guaranteed.' },
-  { dow: 'Sun', num: '11', tag: 'Day Of', tagKind: 'ember',
+  { dow: 'Sun', num: '17', tag: 'Day Of', tagKind: 'ember',
     title: 'ANNIVERSARY CELEBRATION',
     body: 'Excellence executed. Vision realized. God glorified through every detail of this milestone celebration.',
     isFinal: true },
