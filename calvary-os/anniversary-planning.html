@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calvary Anniversary 2026 | Planning Package</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --red: #C41E2A;
+            --ink: #1d1d1f;
+            --ink-2: #424245;
+            --ink-3: #6e6e73;
+            --ink-4: #98989d;
+            --ink-5: #d2d2d7;
+            --white: #ffffff;
+            --bg: #f5f5f7;
+            --gold: #BF9B30;
+            --r8: 8px;
+            --r12: 12px;
+            --r16: 16px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; 
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.47;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .wrap { 
+            max-width: 440px; 
+            margin: 0 auto; 
+            padding: 20px 16px 60px;
+        }
+        
+        /* Header */
+        .header{background:linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);border-radius:var(--r16);padding:24px 24px 20px;margin-bottom:16px;position:relative;overflow:hidden;}
+        .header::after{content:'✨';position:absolute;bottom:10px;right:20px;font-size:40px;opacity:0.3;}
+        .header-label{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:4px;}
+        .header-title{font-family:'Instrument Serif',serif;font-size:24px;color:white;line-height:1.2;margin-bottom:6px;}
+        .header-date{font-size:13px;color:rgba(255,255,255,0.8);}
+        
+        /* Cards */
+        .card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);padding:18px 20px;margin-bottom:12px;box-shadow:var(--shadow);}
+        .card-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+        
+        /* Navigation */
+        .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+        .nav-item{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r12);padding:14px 16px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s ease;}
+        .nav-item:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+        .nav-item.active{border-color:var(--red);background:rgba(196,30,42,0.02);}
+        .nav-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+        .nav-desc{font-size:11px;color:var(--ink-4);}
+        
+        /* Content */
+        .content{display:none;}
+        .content.active{display:block;}
+        
+        /* Text styles */
+        .section-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:16px;}
+        
+        /* Theme banner */
+        .theme-banner{background:linear-gradient(135deg, var(--gold) 0%, #D4AF37 100%);color:white;border-radius:var(--r12);padding:20px;margin:12px 0;text-align:center;}
+        .theme-main{font-family:'Instrument Serif',serif;font-size:28px;font-weight:600;margin-bottom:8px;}
+        .theme-sub{font-size:14px;opacity:0.9;}
+        
+        /* Bullet list */
+        .bullet-list{display:flex;flex-direction:column;gap:8px;margin:12px 0;}
+        .bullet-item{display:flex;align-items:flex-start;gap:10px;font-size:15px;color:var(--ink-2);line-height:1.5;}
+        .bullet-item .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:7px;}
+        .dot-red{background:var(--red);}
+        .dot-gold{background:var(--gold);}
+        .dot-grey{background:var(--ink-4);}
+        
+        /* Timeline item */
+        .timeline-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ink-5);}
+        .timeline-item:last-child{border-bottom:none;}
+        .timeline-date{background:var(--red);color:white;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:600;flex-shrink:0;margin-top:2px;}
+        .timeline-content{flex:1;}
+        .timeline-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+        .timeline-desc{font-size:13px;color:var(--ink-3);line-height:1.4;}
+        
+        /* Key points */
+        .key-point{background:rgba(196,30,42,0.04);border:1px solid rgba(196,30,42,0.1);border-radius:var(--r12);padding:16px;margin:12px 0;}
+        .key-point-title{font-size:14px;font-weight:600;color:var(--red);margin-bottom:8px;}
+        .key-point-text{font-size:14px;color:var(--ink-2);line-height:1.55;}
+        
+        /* Action box */
+        .action-box{background:var(--bg);border:2px solid var(--ink-5);border-radius:var(--r12);padding:16px;margin:12px 0;}
+        .action-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+        .action-text{font-size:14px;color:var(--ink-2);line-height:1.55;}
+        
+        /* Status tags */
+        .status{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;}
+        .status-pending{background:rgba(255,149,0,0.1);color:#FF9500;}
+        .status-confirmed{background:rgba(52,199,89,0.1);color:#34C759;}
+        .status-urgent{background:rgba(255,59,48,0.1);color:#FF3B30;}
+        
+        /* Contact info */
+        .contact{background:rgba(191,155,48,0.05);border-left:3px solid var(--gold);padding:14px 16px;margin:12px 0;border-radius:0 var(--r8) var(--r8) 0;}
+        .contact-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+        .contact-detail{font-size:13px;color:var(--ink-3);}
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-label">Calvary Anniversary 2026</div>
+        <div class="header-title">Planning Package</div>
+        <div class="header-date">Theme: Reasons to be Thankful | One Word: THANKFUL</div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-grid">
+        <div class="nav-item active" onclick="showContent('overview')">
+            <div class="nav-title">Overview</div>
+            <div class="nav-desc">Theme & vision</div>
+        </div>
+        <div class="nav-item" onclick="showContent('timeline')">
+            <div class="nav-title">Timeline</div>
+            <div class="nav-desc">Key dates & actions</div>
+        </div>
+        <div class="nav-item" onclick="showContent('ministry')">
+            <div class="nav-title">Ministry Teams</div>
+            <div class="nav-desc">Worship, visuals, presentations</div>
+        </div>
+        <div class="nav-item" onclick="showContent('logistics')">
+            <div class="nav-title">Logistics</div>
+            <div class="nav-desc">Setup, coordination, details</div>
+        </div>
+    </div>
+
+    <!-- Content 1: Overview -->
+    <div class="content active" id="overview">
+        <div class="theme-banner">
+            <div class="theme-main">THANKFUL</div>
+            <div class="theme-sub">Reasons to be Thankful | Celebrating God's Faithfulness</div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Anniversary vision</div>
+            <div class="key-point">
+                <div class="key-point-text">This is not just celebration. This is declaration. We acknowledge what God has done through Calvary and position for what He's building. Excellence in every detail because this honors Him and shows the community who we are.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Core elements</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Sermon:</strong> "Reasons to be Thankful" — Pastor Gbenga Adebanjo</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Worship:</strong> Enhanced band + special guest vocalist</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Visuals:</strong> "THANKFUL" banners for ongoing use</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Ministry presentations:</strong> Departments showcasing God's work</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Special guest:</strong> Singer from Pastor Shade's birthday</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Expected outcome</div>
+            <div class="action-box">
+                <div class="action-title">People leave with:</div>
+                <div class="action-text">• Clear understanding of God's faithfulness to Calvary<br>• Personal reasons to be thankful<br>• Vision for what God is building<br>• Commitment to the church's future</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content 2: Timeline -->
+    <div class="content" id="timeline">
+        <div class="card">
+            <div class="card-label">Key deadlines</div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Sun 26</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Ministry Presentation Deadline <span class="status status-urgent">URGENT</span></div>
+                    <div class="timeline-desc">All department leaders confirm if doing special presentation. Final answer required this Sunday.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Wed 29</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Guest Vocalist Confirmation</div>
+                    <div class="timeline-desc">Reach out to singer from Pastor Shade's birthday. Confirm availability and song selection.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Fri 1</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Banner Design & Production</div>
+                    <div class="timeline-desc">"THANKFUL" banners designed, printed, and ready for setup. Reusable for ongoing Sundays.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Sun 4</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Final Worship Rehearsal</div>
+                    <div class="timeline-desc">Full band + guest vocalist rehearsal. All songs confirmed, transitions smooth.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Wed 7</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Ministry Presentation Prep</div>
+                    <div class="timeline-desc">All confirmed presentations rehearsed. Tech requirements confirmed with media team.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-date">Sun 11</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">ANNIVERSARY SERVICE</div>
+                    <div class="timeline-desc">Complete anniversary celebration. Excellence in every detail.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content 3: Ministry Teams -->
+    <div class="content" id="ministry">
+        <div class="card">
+            <div class="card-label">Worship team enhancement</div>
+            <div class="key-point">
+                <div class="key-point-title">Building on current progress:</div>
+                <div class="key-point-text">Caster Martins leading + current team members. Enhanced with guest vocalist for anniversary. Full band setup to showcase growth in worship ministry.</div>
+            </div>
+            
+            <div class="contact">
+                <div class="contact-name">Action Required:</div>
+                <div class="contact-detail">Confirm guest vocalist availability + song selection. Coordinate with Caster for integration with worship set.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Ministry presentations</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Children's Ministry</strong> — Adeola Awojobi <span class="status status-pending">Response due Sun 26</span></div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Hospitality</strong> — Deaconess Janet Oviri <span class="status status-pending">Response due Sun 26</span></div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Prayer Ministry</strong> — Pastor Gbenga Adebanjo <span class="status status-pending">Response due Sun 26</span></div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Evangelism & Outreach</strong> — Pastor Gbenga Adebanjo <span class="status status-pending">Response due Sun 26</span></div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Operations</strong> — Auntie Pauline Tulloch <span class="status status-pending">Response due Sun 26</span></div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-gold"></div>
+                    <div><strong>Media Ministry</strong> — Bolaji Olatoye <span class="status status-pending">Response due Sun 26</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Visual elements</div>
+            <div class="action-box">
+                <div class="action-title">"THANKFUL" Stage Banners:</div>
+                <div class="action-text">• Large format banners for stage backdrop<br>• Professional quality for reuse on regular Sundays<br>• Calvary brand colors (red, gold, cream)<br>• Modern typography matching church aesthetic<br>• Easy setup/takedown system</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Media coordination</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Livestream:</strong> Enhanced setup for anniversary broadcast</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Photography:</strong> Document all presentations and moments</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Audio:</strong> Guest vocalist integration + department presentations</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Visuals:</strong> Banner display + presentation support</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content 4: Logistics -->
+    <div class="content" id="logistics">
+        <div class="card">
+            <div class="card-label">Immediate actions</div>
+            
+            <div class="action-box">
+                <div class="action-title">This Sunday (26th April):</div>
+                <div class="action-text">• Announce anniversary to congregation<br>• Request department presentation confirmations<br>• Set clear deadline: responses due same day<br>• Brief leadership on their role in department decisions</div>
+            </div>
+            
+            <div class="action-box">
+                <div class="action-title">This Week:</div>
+                <div class="action-text">• Contact guest vocalist from Pastor Shade's birthday<br>• Begin banner design and production process<br>• Coordinate with Caster on enhanced worship planning<br>• Confirm media team availability for anniversary coverage</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Service flow considerations</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div><strong>Extended service time:</strong> Allow 90 minutes for presentations + guest ministry</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div><strong>Tech rehearsal:</strong> All presentations tested beforehand</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div><strong>Smooth transitions:</strong> MC script prepared for seamless flow</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div><strong>Guest integration:</strong> Special vocalist woven into worship, not separate slot</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Additional considerations</div>
+            <div class="key-point">
+                <div class="key-point-title">Other elements to consider:</div>
+                <div class="key-point-text">• **Refreshments** — Enhanced post-service fellowship<br>• **Guest welcome** — Special greeting for visitors<br>• **Testimonies** — Pre-selected member testimonies<br>• **Offering emphasis** — Anniversary thanksgiving offering<br>• **Photography stations** — Branded backdrop for member photos<br>• **Anniversary program** — Printed program as keepsake</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Success metrics</div>
+            <div class="action-box">
+                <div class="action-title">We know it worked when:</div>
+                <div class="action-text">• Congregation leaves inspired and grateful<br>• Clear sense of God's faithfulness to Calvary<br>• Ministry departments feel valued and recognized<br>• Visitor experience reflects excellence<br>• Social media engagement increases<br>• Members invite others to future services</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function showContent(contentId) {
+    // Hide all content
+    document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    
+    // Show selected content
+    document.getElementById(contentId).classList.add('active');
+    event.target.closest('.nav-item').classList.add('active');
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
