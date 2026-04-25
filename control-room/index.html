@@ -364,6 +364,149 @@
   }
   .slide-text .l2 { color: var(--text-muted); }
 
+  /* ============ LOWER THIRD PANEL ============ */
+  .lt-panel {
+    margin: 16px 20px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .lt-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0 0 4px;
+  }
+  .lt-panel p.helper {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin: 0 0 14px;
+  }
+  .lt-current {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    display: none;
+  }
+  .lt-current.show { display: block; }
+  .lt-current .live-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--red-glow);
+    color: #ff6b74;
+    margin-bottom: 8px;
+  }
+  .lt-current .lt-cur-name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    font-weight: 400;
+  }
+  .lt-current .lt-cur-role {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .lt-clear {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .lt-clear:hover { color: var(--text); border-color: var(--text-muted); }
+  .lt-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 260px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+  }
+  .lt-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .lt-item:hover { border-color: var(--border-strong); }
+  .lt-item .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .lt-item .name { font-weight: 600; font-size: 14px; }
+  .lt-item .role {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .lt-item .push-btn {
+    background: var(--red);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+  }
+  .lt-item .push-btn:hover { background: #e02b38; }
+  .lt-custom {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .lt-custom-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .lt-input {
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .lt-input:focus { border-color: var(--red); outline: none; }
+  .lt-push-custom {
+    background: var(--red);
+    color: white;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .lt-push-custom:hover { background: #e02b38; }
+  .lt-push-custom:disabled {
+    background: var(--surface-2);
+    color: var(--text-dim);
+    cursor: not-allowed;
+  }
+
   /* ============ DISPLAY SETTINGS ============ */
   .display-panel {
     margin: 24px 20px 0;
@@ -637,6 +780,30 @@
     <button onclick="next()" class="next" id="btn-next">Next →</button>
   </div>
 
+  <!-- Lower Third panel — coexists with lyrics/verses -->
+  <div class="lt-panel">
+    <h3>Speaker name (lower third)</h3>
+    <p class="helper">Push a name banner. Stays visible alongside lyrics and verses until cleared.</p>
+
+    <div id="lt-current" class="lt-current">
+      <div class="live-tag">On screen</div>
+      <div class="lt-cur-name" id="lt-cur-name">—</div>
+      <div class="lt-cur-role" id="lt-cur-role"></div>
+      <button class="lt-clear" onclick="clearLowerThird()">Clear lower third</button>
+    </div>
+
+    <div id="lt-list" class="lt-list"></div>
+
+    <div class="lt-custom">
+      <p class="helper" style="margin-bottom: 8px;">Or type a custom one (for guest speakers):</p>
+      <div class="lt-custom-fields">
+        <input id="lt-name-input" class="lt-input" placeholder="Name" oninput="onLtCustomChange()">
+        <input id="lt-role-input" class="lt-input" placeholder="Role (optional)" oninput="onLtCustomChange()">
+      </div>
+      <button id="lt-push-btn" class="lt-push-custom" onclick="pushCustomLowerThird()" disabled>Push to overlay</button>
+    </div>
+  </div>
+
   <!-- Setlist -->
   <div class="section-head">
     <h3>Today's set list</h3>
@@ -680,6 +847,33 @@
           <button class="preset-btn" data-size="small" onclick="setPresetSize('small')">Small</button>
           <button class="preset-btn" data-size="medium" onclick="setPresetSize('medium')">Medium</button>
           <button class="preset-btn" data-size="large" onclick="setPresetSize('large')">Large</button>
+        </div>
+      </div>
+
+      <div class="display-field" style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 6px;">
+        <span class="display-label">Logo bug corner</span>
+        <div class="preset-row" style="grid-template-columns: repeat(5, 1fr);">
+          <button class="preset-btn" data-corner="off" onclick="setLogoCorner('off')">Off</button>
+          <button class="preset-btn" data-corner="tl" onclick="setLogoCorner('tl')">TL</button>
+          <button class="preset-btn" data-corner="tr" onclick="setLogoCorner('tr')">TR</button>
+          <button class="preset-btn" data-corner="bl" onclick="setLogoCorner('bl')">BL</button>
+          <button class="preset-btn" data-corner="br" onclick="setLogoCorner('br')">BR</button>
+        </div>
+      </div>
+
+      <div class="display-field">
+        <span class="display-label">Logo size</span>
+        <div class="slider-row">
+          <input type="range" id="logo-size-slider" min="40" max="200" value="80" oninput="onLogoSizeChange()">
+          <span class="slider-value" id="logo-size-value">80px</span>
+        </div>
+      </div>
+
+      <div class="display-field">
+        <span class="display-label">Logo opacity</span>
+        <div class="slider-row">
+          <input type="range" id="logo-opacity-slider" min="20" max="100" value="80" oninput="onLogoOpacityChange()">
+          <span class="slider-value" id="logo-opacity-value">80%</span>
         </div>
       </div>
 
@@ -823,6 +1017,7 @@ async function enterApp() {
   document.getElementById('overlay-link').href = 'overlay.html';
   await loadPlan();
   await loadDisplaySettings();
+  await loadSpeakers();
   subscribeLive();
 }
 
@@ -1066,18 +1261,18 @@ function parseRef(q) {
 // ============================================================
 // DISPLAY SETTINGS
 // ============================================================
-let displaySaved = { position: 'bottom', vertical_offset: 8, size: 'medium' };
-let displayDraft = { position: 'bottom', vertical_offset: 8, size: 'medium' };
+let displaySaved = { position: 'bottom', vertical_offset: 8, size: 'medium', logo_corner: 'off', logo_opacity: 80, logo_size: 80 };
+let displayDraft = { position: 'bottom', vertical_offset: 8, size: 'medium', logo_corner: 'off', logo_opacity: 80, logo_size: 80 };
 
 async function loadDisplaySettings() {
   const { data, error } = await client
     .from('control_room_display')
-    .select('position, vertical_offset, size')
+    .select('position, vertical_offset, size, logo_corner, logo_opacity, logo_size')
     .eq('id', 1)
     .single();
   if (error || !data) { console.error('display load:', error); return; }
-  displaySaved = { ...data };
-  displayDraft = { ...data };
+  displaySaved = { ...displaySaved, ...data };
+  displayDraft = { ...displayDraft, ...data };
   renderDisplayPanel();
 }
 
@@ -1088,8 +1283,15 @@ function renderDisplayPanel() {
   document.querySelectorAll('.preset-btn[data-size]').forEach(b => {
     b.classList.toggle('active', b.dataset.size === displayDraft.size);
   });
+  document.querySelectorAll('.preset-btn[data-corner]').forEach(b => {
+    b.classList.toggle('active', b.dataset.corner === displayDraft.logo_corner);
+  });
   document.getElementById('offset-slider').value = displayDraft.vertical_offset;
   document.getElementById('offset-value').textContent = displayDraft.vertical_offset + '%';
+  document.getElementById('logo-size-slider').value = displayDraft.logo_size;
+  document.getElementById('logo-size-value').textContent = displayDraft.logo_size + 'px';
+  document.getElementById('logo-opacity-slider').value = displayDraft.logo_opacity;
+  document.getElementById('logo-opacity-value').textContent = displayDraft.logo_opacity + '%';
 
   // Dirty indicator
   const dirty = JSON.stringify(displayDraft) !== JSON.stringify(displaySaved);
@@ -1121,6 +1323,25 @@ window.onOffsetChange = () => {
   renderDisplayPanel();
 };
 
+window.setLogoCorner = (corner) => {
+  displayDraft.logo_corner = corner;
+  renderDisplayPanel();
+};
+
+window.onLogoSizeChange = () => {
+  const v = parseInt(document.getElementById('logo-size-slider').value);
+  displayDraft.logo_size = v;
+  document.getElementById('logo-size-value').textContent = v + 'px';
+  renderDisplayPanel();
+};
+
+window.onLogoOpacityChange = () => {
+  const v = parseInt(document.getElementById('logo-opacity-slider').value);
+  displayDraft.logo_opacity = v;
+  document.getElementById('logo-opacity-value').textContent = v + '%';
+  renderDisplayPanel();
+};
+
 window.revertDisplay = () => {
   displayDraft = { ...displaySaved };
   renderDisplayPanel();
@@ -1133,6 +1354,9 @@ window.applyDisplay = async () => {
       position: displayDraft.position,
       vertical_offset: displayDraft.vertical_offset,
       size: displayDraft.size,
+      logo_corner: displayDraft.logo_corner,
+      logo_opacity: displayDraft.logo_opacity,
+      logo_size: displayDraft.logo_size,
       updated_at: new Date().toISOString(),
       updated_by: currentUser.name
     })
@@ -1141,6 +1365,89 @@ window.applyDisplay = async () => {
   displaySaved = { ...displayDraft };
   renderDisplayPanel();
 };
+
+// ============================================================
+// LOWER THIRD
+// ============================================================
+let speakers = [];
+let currentLowerThird = null;
+
+async function loadSpeakers() {
+  const { data, error } = await client
+    .from('control_room_speakers')
+    .select('id, name, role, position')
+    .eq('active', true)
+    .order('position');
+  if (error) { console.error('speakers load:', error); return; }
+  speakers = data || [];
+  renderSpeakersList();
+}
+
+function renderSpeakersList() {
+  const list = document.getElementById('lt-list');
+  if (!speakers.length) {
+    list.innerHTML = '<div style="padding:14px;color:var(--text-muted);font-size:13px;text-align:center;border:1px dashed var(--border-strong);border-radius:var(--radius);">No speakers in library yet.</div>';
+    return;
+  }
+  list.innerHTML = speakers.map(s => `
+    <div class="lt-item" onclick="window.pushSpeakerById('${s.id}')">
+      <div class="meta">
+        <div class="name">${escapeHtml(s.name)}</div>
+        ${s.role ? `<div class="role">${escapeHtml(s.role)}</div>` : ''}
+      </div>
+      <button class="push-btn" onclick="event.stopPropagation(); window.pushSpeakerById('${s.id}')">Push</button>
+    </div>
+  `).join('');
+}
+
+window.pushSpeakerById = async (id) => {
+  const s = speakers.find(x => x.id === id);
+  if (!s) return;
+  await pushLowerThird({ name: s.name, role: s.role || '' });
+};
+
+window.onLtCustomChange = () => {
+  const name = document.getElementById('lt-name-input').value.trim();
+  document.getElementById('lt-push-btn').disabled = !name;
+};
+
+window.pushCustomLowerThird = async () => {
+  const name = document.getElementById('lt-name-input').value.trim();
+  const role = document.getElementById('lt-role-input').value.trim();
+  if (!name) return;
+  await pushLowerThird({ name, role });
+};
+
+window.clearLowerThird = async () => {
+  await pushLowerThird(null);
+  document.getElementById('lt-name-input').value = '';
+  document.getElementById('lt-role-input').value = '';
+  document.getElementById('lt-push-btn').disabled = true;
+};
+
+async function pushLowerThird(lt) {
+  const { error } = await client
+    .from('control_room_live')
+    .update({
+      lower_third: lt,
+      updated_at: new Date().toISOString(),
+      updated_by: currentUser.name
+    })
+    .eq('id', 1);
+  if (error) { console.error('lt push:', error); alert('Failed: ' + error.message); return; }
+}
+
+function renderLowerThirdCurrent(lt) {
+  currentLowerThird = lt;
+  const el = document.getElementById('lt-current');
+  if (!lt || !lt.name) {
+    el.classList.remove('show');
+    return;
+  }
+  document.getElementById('lt-cur-name').textContent = lt.name;
+  document.getElementById('lt-cur-role').textContent = lt.role || '';
+  el.classList.add('show');
+}
 
 // ============================================================
 // LIVE STATE (push + subscribe)
@@ -1162,13 +1469,20 @@ function subscribeLive() {
   const text = document.getElementById('live-text');
 
   // Initial fetch
-  client.from('control_room_live').select('mode, payload').eq('id', 1).single()
-    .then(({ data }) => { if (data) renderNowPlaying(data.mode, data.payload); });
+  client.from('control_room_live').select('mode, payload, lower_third').eq('id', 1).single()
+    .then(({ data }) => {
+      if (!data) return;
+      renderNowPlaying(data.mode, data.payload);
+      renderLowerThirdCurrent(data.lower_third);
+    });
 
   client.channel('control-room-live-operator')
     .on('postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'control_room_live', filter: 'id=eq.1' },
-      ({ new: row }) => renderNowPlaying(row.mode, row.payload))
+      ({ new: row }) => {
+        renderNowPlaying(row.mode, row.payload);
+        renderLowerThirdCurrent(row.lower_third);
+      })
     .subscribe((status) => {
       indicator.classList.remove('connected', 'error');
       if (status === 'SUBSCRIBED') { indicator.classList.add('connected'); text.textContent = 'live'; }
