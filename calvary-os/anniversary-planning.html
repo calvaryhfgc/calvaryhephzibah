@@ -3,392 +3,582 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calvary Anniversary 2026 | Planning Package</title>
+    <title>THANKFUL 2026 | Calvary Anniversary</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         :root {
-            --red: #C41E2A;
-            --ink: #1d1d1f;
-            --ink-2: #424245;
-            --ink-3: #6e6e73;
-            --ink-4: #98989d;
-            --ink-5: #d2d2d7;
-            --white: #ffffff;
-            --bg: #f5f5f7;
-            --gold: #BF9B30;
-            --r8: 8px;
-            --r12: 12px;
-            --r16: 16px;
-            --shadow: 0 2px 8px rgba(0,0,0,0.04);
+            --calvary-red: #C41E2A;
+            --calvary-gold: #D4AF37;
+            --deep-black: #000000;
+            --rich-charcoal: #0A0A0A;
+            --warm-white: #FAFAFA;
+            --pure-white: #FFFFFF;
+            --silver: #E5E5E7;
+            --platinum: #F5F5F7;
+            --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+            --shadow-premium: 0 32px 64px rgba(0, 0, 0, 0.35);
+            --gradient-gold: linear-gradient(135deg, #FFD700 0%, #D4AF37 40%, #B8860B 100%);
+            --gradient-red: linear-gradient(135deg, #FF4444 0%, #C41E2A 50%, #8B0000 100%);
+            --gradient-premium: linear-gradient(135deg, #C41E2A 0%, #D4AF37 50%, #C41E2A 100%);
         }
         
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; 
-            background: var(--bg);
-            color: var(--ink);
-            line-height: 1.47;
-            -webkit-font-smoothing: antialiased;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: var(--deep-black);
+            color: var(--warm-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-weight: 400;
         }
         
-        .wrap { 
-            max-width: 440px; 
-            margin: 0 auto; 
-            padding: 20px 16px 60px;
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: var(--deep-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        /* Header */
-        .header{background:linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);border-radius:var(--r16);padding:24px 24px 20px;margin-bottom:16px;position:relative;overflow:hidden;}
-        .header::after{content:'✨';position:absolute;bottom:10px;right:20px;font-size:40px;opacity:0.3;}
-        .header-label{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:4px;}
-        .header-title{font-family:'Instrument Serif',serif;font-size:24px;color:white;line-height:1.2;margin-bottom:6px;}
-        .header-date{font-size:13px;color:rgba(255,255,255,0.8);}
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--gradient-premium);
+            opacity: 0.15;
+            animation: pulseGlow 6s ease-in-out infinite alternate;
+        }
         
-        /* Cards */
-        .card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);padding:18px 20px;margin-bottom:12px;box-shadow:var(--shadow);}
-        .card-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; right: -50%; bottom: -50%;
+            background: radial-gradient(circle at center, rgba(212,175,55,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
         
-        /* Navigation */
-        .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
-        .nav-item{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r12);padding:14px 16px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s ease;}
-        .nav-item:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.08);}
-        .nav-item.active{border-color:var(--red);background:rgba(196,30,42,0.02);}
-        .nav-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
-        .nav-desc{font-size:11px;color:var(--ink-4);}
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            max-width: 800px;
+            padding: 0 24px;
+        }
         
-        /* Content */
-        .content{display:none;}
-        .content.active{display:block;}
+        .hero-badge {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(20px);
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--calvary-gold);
+            margin-bottom: 40px;
+            display: inline-block;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
         
-        /* Text styles */
-        .section-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:16px;}
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 900;
+            background: var(--gradient-gold);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 20px rgba(212,175,55,0.3);
+        }
         
-        /* Theme banner */
-        .theme-banner{background:linear-gradient(135deg, var(--gold) 0%, #D4AF37 100%);color:white;border-radius:var(--r12);padding:20px;margin:12px 0;text-align:center;}
-        .theme-main{font-family:'Instrument Serif',serif;font-size:28px;font-weight:600;margin-bottom:8px;}
-        .theme-sub{font-size:14px;opacity:0.9;}
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-weight: 300;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+        }
         
-        /* Bullet list */
-        .bullet-list{display:flex;flex-direction:column;gap:8px;margin:12px 0;}
-        .bullet-item{display:flex;align-items:flex-start;gap:10px;font-size:15px;color:var(--ink-2);line-height:1.5;}
-        .bullet-item .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:7px;}
-        .dot-red{background:var(--red);}
-        .dot-gold{background:var(--gold);}
-        .dot-grey{background:var(--ink-4);}
+        .hero-date {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--calvary-red);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
         
-        /* Timeline item */
-        .timeline-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ink-5);}
-        .timeline-item:last-child{border-bottom:none;}
-        .timeline-date{background:var(--red);color:white;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:600;flex-shrink:0;margin-top:2px;}
-        .timeline-content{flex:1;}
-        .timeline-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
-        .timeline-desc{font-size:13px;color:var(--ink-3);line-height:1.4;}
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
         
-        /* Key points */
-        .key-point{background:rgba(196,30,42,0.04);border:1px solid rgba(196,30,42,0.1);border-radius:var(--r12);padding:16px;margin:12px 0;}
-        .key-point-title{font-size:14px;font-weight:600;color:var(--red);margin-bottom:8px;}
-        .key-point-text{font-size:14px;color:var(--ink-2);line-height:1.55;}
+        .scroll-indicator::after {
+            content: '↓';
+            display: block;
+            text-align: center;
+            margin-top: 8px;
+            animation: bounce 2s infinite;
+        }
         
-        /* Action box */
-        .action-box{background:var(--bg);border:2px solid var(--ink-5);border-radius:var(--r12);padding:16px;margin:12px 0;}
-        .action-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:8px;}
-        .action-text{font-size:14px;color:var(--ink-2);line-height:1.55;}
+        /* Main Content */
+        .main-content {
+            background: var(--rich-charcoal);
+            position: relative;
+            z-index: 5;
+        }
         
-        /* Status tags */
-        .status{display:inline-block;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:600;}
-        .status-pending{background:rgba(255,149,0,0.1);color:#FF9500;}
-        .status-confirmed{background:rgba(52,199,89,0.1);color:#34C759;}
-        .status-urgent{background:rgba(255,59,48,0.1);color:#FF3B30;}
+        .section {
+            padding: 120px 0;
+            position: relative;
+        }
         
-        /* Contact info */
-        .contact{background:rgba(191,155,48,0.05);border-left:3px solid var(--gold);padding:14px 16px;margin:12px 0;border-radius:0 var(--r8) var(--r8) 0;}
-        .contact-name{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
-        .contact-detail{font-size:13px;color:var(--ink-3);}
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .section-badge {
+            background: rgba(196,30,42,0.1);
+            border: 1px solid rgba(196,30,42,0.2);
+            color: var(--calvary-red);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--pure-white);
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        
+        .section-desc {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.7);
+            font-weight: 300;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+        }
+        
+        .premium-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--gradient-premium);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+        
+        .premium-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(212,175,55,0.3);
+            box-shadow: var(--shadow-premium);
+        }
+        
+        .premium-card:hover::before {
+            opacity: 0.05;
+        }
+        
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-gold);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(212,175,55,0.3);
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pure-white);
+            margin-bottom: 16px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .card-desc {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0; bottom: 0;
+            width: 2px;
+            background: var(--gradient-gold);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(even) { flex-direction: row-reverse; }
+        
+        .timeline-content {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 32px;
+            margin: 0 40px;
+            width: calc(50% - 40px);
+            position: relative;
+        }
+        
+        .timeline-date {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--calvary-red);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 8px 32px rgba(196,30,42,0.4);
+            z-index: 10;
+        }
+        
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--pure-white);
+            margin-bottom: 12px;
+        }
+        
+        .timeline-desc {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+        }
+        
+        /* Status badges */
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-left: 8px;
+        }
+        
+        .status-urgent {
+            background: rgba(255,59,48,0.2);
+            color: #FF3B30;
+            border: 1px solid rgba(255,59,48,0.3);
+        }
+        
+        .status-pending {
+            background: rgba(255,149,0,0.2);
+            color: #FF9500;
+            border: 1px solid rgba(255,149,0,0.3);
+        }
+        
+        /* Call to Action */
+        .cta-section {
+            background: var(--deep-black);
+            padding: 120px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--gradient-premium);
+            opacity: 0.1;
+        }
+        
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: var(--pure-white);
+            margin-bottom: 24px;
+        }
+        
+        .cta-desc {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            background: var(--gradient-gold);
+            color: var(--deep-black);
+            padding: 18px 48px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(212,175,55,0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 48px rgba(212,175,55,0.4);
+        }
+        
+        /* Animations */
+        @keyframes pulseGlow {
+            from { opacity: 0.1; }
+            to { opacity: 0.25; }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-8px); }
+            70% { transform: translateY(-4px); }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero { height: 80vh; padding: 0 20px; }
+            .hero-content { max-width: 100%; }
+            .section { padding: 80px 0; }
+            .container { padding: 0 20px; }
+            .cards-grid { grid-template-columns: 1fr; gap: 24px; }
+            .premium-card { padding: 32px 24px; }
+            .timeline::before { left: 20px; }
+            .timeline-item { flex-direction: column !important; }
+            .timeline-content { width: calc(100% - 60px); margin: 20px 0 20px 60px; }
+            .timeline-date { left: 20px; transform: translateX(-50%); }
+        }
     </style>
 </head>
 <body>
-<div class="wrap">
 
-    <!-- Header -->
-    <div class="header">
-        <div class="header-label">Calvary Anniversary 2026</div>
-        <div class="header-title">Planning Package</div>
-        <div class="header-date">Theme: Reasons to be Thankful | One Word: THANKFUL</div>
+<!-- Hero Section -->
+<div class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">Calvary Anniversary 2026</div>
+        <h1 class="hero-title">THANKFUL</h1>
+        <div class="hero-subtitle">Reasons to be Thankful</div>
+        <div class="hero-date">May 11, 2026</div>
     </div>
-
-    <!-- Navigation -->
-    <div class="nav-grid">
-        <div class="nav-item active" onclick="showContent('overview')">
-            <div class="nav-title">Overview</div>
-            <div class="nav-desc">Theme & vision</div>
-        </div>
-        <div class="nav-item" onclick="showContent('timeline')">
-            <div class="nav-title">Timeline</div>
-            <div class="nav-desc">Key dates & actions</div>
-        </div>
-        <div class="nav-item" onclick="showContent('ministry')">
-            <div class="nav-title">Ministry Teams</div>
-            <div class="nav-desc">Worship, visuals, presentations</div>
-        </div>
-        <div class="nav-item" onclick="showContent('logistics')">
-            <div class="nav-title">Logistics</div>
-            <div class="nav-desc">Setup, coordination, details</div>
-        </div>
-    </div>
-
-    <!-- Content 1: Overview -->
-    <div class="content active" id="overview">
-        <div class="theme-banner">
-            <div class="theme-main">THANKFUL</div>
-            <div class="theme-sub">Reasons to be Thankful | Celebrating God's Faithfulness</div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Anniversary vision</div>
-            <div class="key-point">
-                <div class="key-point-text">This is not just celebration. This is declaration. We acknowledge what God has done through Calvary and position for what He's building. Excellence in every detail because this honors Him and shows the community who we are.</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Core elements</div>
-            <div class="bullet-list">
-                <div class="bullet-item">
-                    <div class="dot dot-red"></div>
-                    <div><strong>Sermon:</strong> "Reasons to be Thankful" — Pastor Gbenga Adebanjo</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Worship:</strong> Enhanced band + special guest vocalist</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-red"></div>
-                    <div><strong>Visuals:</strong> "THANKFUL" banners for ongoing use</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Ministry presentations:</strong> Departments showcasing God's work</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-red"></div>
-                    <div><strong>Special guest:</strong> Singer from Pastor Shade's birthday</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Expected outcome</div>
-            <div class="action-box">
-                <div class="action-title">People leave with:</div>
-                <div class="action-text">• Clear understanding of God's faithfulness to Calvary<br>• Personal reasons to be thankful<br>• Vision for what God is building<br>• Commitment to the church's future</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Content 2: Timeline -->
-    <div class="content" id="timeline">
-        <div class="card">
-            <div class="card-label">Key deadlines</div>
-            
-            <div class="timeline-item">
-                <div class="timeline-date">Sun 26</div>
-                <div class="timeline-content">
-                    <div class="timeline-title">Ministry Presentation Deadline <span class="status status-urgent">URGENT</span></div>
-                    <div class="timeline-desc">All department leaders confirm if doing special presentation. Final answer required this Sunday.</div>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-date">Wed 29</div>
-                <div class="timeline-content">
-                    <div class="timeline-title">Guest Vocalist Confirmation</div>
-                    <div class="timeline-desc">Reach out to singer from Pastor Shade's birthday. Confirm availability and song selection.</div>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-date">Fri 1</div>
-                <div class="timeline-content">
-                    <div class="timeline-title">Banner Design & Production</div>
-                    <div class="timeline-desc">"THANKFUL" banners designed, printed, and ready for setup. Reusable for ongoing Sundays.</div>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-date">Sun 4</div>
-                <div class="timeline-content">
-                    <div class="timeline-title">Final Worship Rehearsal</div>
-                    <div class="timeline-desc">Full band + guest vocalist rehearsal. All songs confirmed, transitions smooth.</div>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-date">Wed 7</div>
-                <div class="timeline-content">
-                    <div class="timeline-title">Ministry Presentation Prep</div>
-                    <div class="timeline-desc">All confirmed presentations rehearsed. Tech requirements confirmed with media team.</div>
-                </div>
-            </div>
-            
-            <div class="timeline-item">
-                <div class="timeline-date">Sun 11</div>
-                <div class="timeline-content">
-                    <div class="timeline-title">ANNIVERSARY SERVICE</div>
-                    <div class="timeline-desc">Complete anniversary celebration. Excellence in every detail.</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Content 3: Ministry Teams -->
-    <div class="content" id="ministry">
-        <div class="card">
-            <div class="card-label">Worship team enhancement</div>
-            <div class="key-point">
-                <div class="key-point-title">Building on current progress:</div>
-                <div class="key-point-text">Caster Martins leading + current team members. Enhanced with guest vocalist for anniversary. Full band setup to showcase growth in worship ministry.</div>
-            </div>
-            
-            <div class="contact">
-                <div class="contact-name">Action Required:</div>
-                <div class="contact-detail">Confirm guest vocalist availability + song selection. Coordinate with Caster for integration with worship set.</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Ministry presentations</div>
-            <div class="bullet-list">
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Children's Ministry</strong> — Adeola Awojobi <span class="status status-pending">Response due Sun 26</span></div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Hospitality</strong> — Deaconess Janet Oviri <span class="status status-pending">Response due Sun 26</span></div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Prayer Ministry</strong> — Pastor Gbenga Adebanjo <span class="status status-pending">Response due Sun 26</span></div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Evangelism & Outreach</strong> — Pastor Gbenga Adebanjo <span class="status status-pending">Response due Sun 26</span></div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Operations</strong> — Auntie Pauline Tulloch <span class="status status-pending">Response due Sun 26</span></div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-gold"></div>
-                    <div><strong>Media Ministry</strong> — Bolaji Olatoye <span class="status status-pending">Response due Sun 26</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Visual elements</div>
-            <div class="action-box">
-                <div class="action-title">"THANKFUL" Stage Banners:</div>
-                <div class="action-text">• Large format banners for stage backdrop<br>• Professional quality for reuse on regular Sundays<br>• Calvary brand colors (red, gold, cream)<br>• Modern typography matching church aesthetic<br>• Easy setup/takedown system</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Media coordination</div>
-            <div class="bullet-list">
-                <div class="bullet-item">
-                    <div class="dot dot-red"></div>
-                    <div><strong>Livestream:</strong> Enhanced setup for anniversary broadcast</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-red"></div>
-                    <div><strong>Photography:</strong> Document all presentations and moments</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-red"></div>
-                    <div><strong>Audio:</strong> Guest vocalist integration + department presentations</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-red"></div>
-                    <div><strong>Visuals:</strong> Banner display + presentation support</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Content 4: Logistics -->
-    <div class="content" id="logistics">
-        <div class="card">
-            <div class="card-label">Immediate actions</div>
-            
-            <div class="action-box">
-                <div class="action-title">This Sunday (26th April):</div>
-                <div class="action-text">• Announce anniversary to congregation<br>• Request department presentation confirmations<br>• Set clear deadline: responses due same day<br>• Brief leadership on their role in department decisions</div>
-            </div>
-            
-            <div class="action-box">
-                <div class="action-title">This Week:</div>
-                <div class="action-text">• Contact guest vocalist from Pastor Shade's birthday<br>• Begin banner design and production process<br>• Coordinate with Caster on enhanced worship planning<br>• Confirm media team availability for anniversary coverage</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Service flow considerations</div>
-            <div class="bullet-list">
-                <div class="bullet-item">
-                    <div class="dot dot-grey"></div>
-                    <div><strong>Extended service time:</strong> Allow 90 minutes for presentations + guest ministry</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-grey"></div>
-                    <div><strong>Tech rehearsal:</strong> All presentations tested beforehand</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-grey"></div>
-                    <div><strong>Smooth transitions:</strong> MC script prepared for seamless flow</div>
-                </div>
-                <div class="bullet-item">
-                    <div class="dot dot-grey"></div>
-                    <div><strong>Guest integration:</strong> Special vocalist woven into worship, not separate slot</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Additional considerations</div>
-            <div class="key-point">
-                <div class="key-point-title">Other elements to consider:</div>
-                <div class="key-point-text">• **Refreshments** — Enhanced post-service fellowship<br>• **Guest welcome** — Special greeting for visitors<br>• **Testimonies** — Pre-selected member testimonies<br>• **Offering emphasis** — Anniversary thanksgiving offering<br>• **Photography stations** — Branded backdrop for member photos<br>• **Anniversary program** — Printed program as keepsake</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-label">Success metrics</div>
-            <div class="action-box">
-                <div class="action-title">We know it worked when:</div>
-                <div class="action-text">• Congregation leaves inspired and grateful<br>• Clear sense of God's faithfulness to Calvary<br>• Ministry departments feel valued and recognized<br>• Visitor experience reflects excellence<br>• Social media engagement increases<br>• Members invite others to future services</div>
-            </div>
-        </div>
-    </div>
-
+    <div class="scroll-indicator">Scroll to explore</div>
 </div>
 
+<!-- Main Content -->
+<div class="main-content">
+    
+    <!-- Vision Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Our Vision</div>
+                <h2 class="section-title">More Than Celebration</h2>
+                <p class="section-desc">This is declaration. We acknowledge what God has done through Calvary and position for what He's building. Excellence in every detail because this honors Him.</p>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="premium-card">
+                    <div class="card-icon">🎤</div>
+                    <div class="card-title">Powerful Proclamation</div>
+                    <div class="card-desc">"Reasons to be Thankful" delivered with authority by Pastor Gbenga Adebanjo. Biblical foundation for confident thanksgiving.</div>
+                </div>
+                
+                <div class="premium-card">
+                    <div class="card-icon">🎵</div>
+                    <div class="card-title">Worship Excellence</div>
+                    <div class="card-desc">Enhanced band with special guest vocalist. Building on worship team progress with elevated artistry and anointing.</div>
+                </div>
+                
+                <div class="premium-card">
+                    <div class="card-icon">✨</div>
+                    <div class="card-title">Visual Impact</div>
+                    <div class="card-desc">Professional "THANKFUL" banners designed for lasting impact. Premium staging that reflects our commitment to excellence.</div>
+                </div>
+                
+                <div class="premium-card">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Ministry Showcase</div>
+                    <div class="card-desc">Department presentations highlighting God's work through every area. Demonstrating kingdom impact across all ministries.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Timeline Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Critical Path</div>
+                <h2 class="section-title">Countdown to Excellence</h2>
+                <p class="section-desc">Every detail planned, every deadline strategic. This timeline ensures flawless execution worthy of the celebration.</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Ministry Confirmation Deadline <span class="status status-urgent">Critical</span></div>
+                        <div class="timeline-desc">All department leaders confirm special presentations. No extensions. Final answers required this Sunday.</div>
+                    </div>
+                    <div class="timeline-date">Sun 26</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Guest Vocalist Secured</div>
+                        <div class="timeline-desc">Contact and confirm singer from Pastor Shade's birthday. Song selection and integration planned.</div>
+                    </div>
+                    <div class="timeline-date">Wed 29</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Visual Production Complete</div>
+                        <div class="timeline-desc">Professional THANKFUL banners designed, produced, and tested. Premium quality for lasting impact.</div>
+                    </div>
+                    <div class="timeline-date">Fri 1</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Final Rehearsal</div>
+                        <div class="timeline-desc">Full production rehearsal. Enhanced band, guest vocalist, all elements synchronized to perfection.</div>
+                    </div>
+                    <div class="timeline-date">Sun 4</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">Presentation Lock</div>
+                        <div class="timeline-desc">All ministry presentations polished. Tech requirements confirmed. Seamless flow guaranteed.</div>
+                    </div>
+                    <div class="timeline-date">Wed 7</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-title">ANNIVERSARY CELEBRATION</div>
+                        <div class="timeline-desc">Excellence executed. Vision realized. God glorified through every detail of this milestone celebration.</div>
+                    </div>
+                    <div class="timeline-date">Sun 11</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+</div>
+
+<!-- Call to Action -->
+<section class="cta-section">
+    <div class="container">
+        <h2 class="cta-title">Ready to Build Something Extraordinary?</h2>
+        <p class="cta-desc">This anniversary sets the standard for everything that follows. Excellence is not optional—it's our calling.</p>
+        <a href="#" class="cta-button">Begin Planning Now</a>
+    </div>
+</section>
+
 <script>
-function showContent(contentId) {
-    // Hide all content
-    document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    
-    // Show selected content
-    document.getElementById(contentId).classList.add('active');
-    event.target.closest('.nav-item').classList.add('active');
-    
-    // Scroll to top
-    window.scrollTo(0, 0);
-}
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
+    });
+});
+
+// Add scroll-based animations
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+    }
+});
 </script>
 
 </body>
