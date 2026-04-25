@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MINIMAL TEST - Anniversary Planning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0B0B0E;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .test {
+            background: #D0441C;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>THANKFUL 2026</h1>
+    <div class="test">
+        <h2>Anniversary Planning - MINIMAL TEST VERSION</h2>
+        <p>If you can see this with proper styling, the issue is with the complex CSS.</p>
+        <p>Current time: <span id="time"></span></p>
+    </div>
+    
+    <div style="background: white; color: black; padding: 20px; border-radius: 10px;">
+        <h3>🎯 What's Next This Week</h3>
+        <p><strong>Tomorrow:</strong> Pastor Shade announces department presentations (5 min slots)</p>
+        <p><strong>This Week:</strong> Design backdrop & collect department responses</p>
+        <p><strong>May 17:</strong> THANKFUL Anniversary Service at 10:30 AM</p>
+    </div>
+
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleTimeString();
+        setInterval(() => {
+            document.getElementById('time').textContent = new Date().toLocaleTimeString();
+        }, 1000);
+    </script>
+</body>
+</html>
