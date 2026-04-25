@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calvary Media Control | Live Service Interface</title>
+    <style>
+        :root {
+            --calvary-red: #C41E2A;
+            --dark-bg: #0A0A0A;
+            --card-bg: #141414;
+            --border: rgba(255,255,255,0.1);
+            --text: #FFFFFF;
+            --text-dim: rgba(255,255,255,0.7);
+            --success: #22C55E;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status.live {
+            background: var(--danger);
+        }
+
+        .status.ready {
+            background: var(--success);
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .control-panel {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .preview-panel {
+            background: var(--card-bg);
+            border-left: 1px solid var(--border);
+            padding: 1.5rem;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--calvary-red);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--calvary-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #A03622;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-active {
+            background: var(--calvary-red) !important;
+            color: white !important;
+            box-shadow: 0 0 0 2px rgba(196, 68, 42, 0.3);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .preview-screen {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .preview-screen.has-content .preview-overlay {
+            opacity: 1;
+        }
+
+        .queue-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .queue-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .queue-item:last-child {
+            border-bottom: none;
+        }
+
+        .queue-item.active {
+            background: rgba(196, 68, 42, 0.1);
+            border-left: 3px solid var(--calvary-red);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--calvary-red);
+            box-shadow: 0 0 0 2px rgba(196, 68, 42, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .overlay-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .overlay-option {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .overlay-option:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .overlay-option.selected {
+            background: var(--calvary-red);
+            border-color: var(--calvary-red);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto;
+            }
+
+            .preview-panel {
+                border-left: none;
+                border-top: 1px solid var(--border);
+                max-height: 50vh;
+            }
+
+            .button-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .quick-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: rgba(0,0,0,0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--success);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background: var(--danger);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>🎥 Calvary Media Control</h1>
+        <div class="status-bar">
+            <div class="status live" id="liveStatus">
+                <span>🔴</span> LIVE
+            </div>
+            <div class="timer-display" id="timer">00:00</div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="btn btn-danger" onclick="showBlank()">📺 BLANK</button>
+                <button class="btn btn-warning" onclick="lyricsOff()">🎵 LYRICS OFF</button>
+                <button class="btn btn-success" onclick="showLive()">📹 LIVE</button>
+            </div>
+
+            <!-- Announcements Section -->
+            <div class="section">
+                <div class="section-title">📢 Announcements</div>
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="showAnnouncement('birthdays')">🎂 Birthdays</button>
+                    <button class="btn btn-primary" onclick="showAnnouncement('anniversaries')">💒 Anniversaries</button>
+                    <button class="btn btn-primary" onclick="showAnnouncement('midweek')">📅 Midweek</button>
+                    <button class="btn btn-primary" onclick="showAnnouncement('special')">📣 Special</button>
+                </div>
+            </div>
+
+            <!-- Offering Section -->
+            <div class="section">
+                <div class="section-title">💰 Offering</div>
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="showOffering('full')">💳 Bank Details</button>
+                    <button class="btn btn-secondary" onclick="showOffering('lower')">📊 Lower Third</button>
+                </div>
+                <div class="overlay-options">
+                    <div class="overlay-option" onclick="selectOfferingStyle('modern')" data-style="modern">Modern</div>
+                    <div class="overlay-option selected" onclick="selectOfferingStyle('classic')" data-style="classic">Classic</div>
+                </div>
+            </div>
+
+            <!-- Communion Section -->
+            <div class="section">
+                <div class="section-title">🍞 Communion</div>
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="showCommunion('full')">✝️ Full Overlay</button>
+                    <button class="btn btn-secondary" onclick="showCommunion('lower')">📊 Lower Third</button>
+                </div>
+                <div class="overlay-options">
+                    <div class="overlay-option selected" onclick="selectCommunionStyle('reverent')" data-style="reverent">Reverent</div>
+                    <div class="overlay-option" onclick="selectCommunionStyle('scripture')" data-style="scripture">Scripture</div>
+                </div>
+            </div>
+
+            <!-- Sermon Section -->
+            <div class="section">
+                <div class="section-title">📖 Sermon</div>
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="showSermon('thumbnail')">👤 Thumbnail</button>
+                    <button class="btn btn-secondary" onclick="showSermon('scripture')">📜 Scripture</button>
+                    <button class="btn btn-secondary" onclick="showSermon('points')">📝 Points</button>
+                </div>
+            </div>
+
+            <!-- Worship Section -->
+            <div class="section">
+                <div class="section-title">🎵 Worship</div>
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="showLyrics()">🎤 Lyrics</button>
+                    <button class="btn btn-secondary" onclick="lyricsOff()">❌ Lyrics Off</button>
+                    <button class="btn btn-secondary" onclick="showBlank()">⚫ Blank</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <h3 style="margin-bottom: 1rem;">🖥️ Live Preview</h3>
+            
+            <div class="preview-screen" id="previewScreen">
+                <div class="preview-overlay" id="previewOverlay">BLANK SCREEN</div>
+                <span>16:9 Preview</span>
+            </div>
+
+            <div class="form-group">
+                <label>Current Display:</label>
+                <div class="form-control" id="currentDisplay" style="background: rgba(0,0,0,0.3); cursor: default;">Blank Screen</div>
+            </div>
+
+            <div class="form-group">
+                <label>Auto Timer (seconds):</label>
+                <input type="number" class="form-control" id="autoTimer" value="10" min="0" max="300">
+            </div>
+
+            <h4 style="margin: 1.5rem 0 0.5rem 0;">📋 Queue</h4>
+            <div class="queue-list" id="queueList">
+                <div class="queue-item">
+                    <span>No items queued</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="showQueueManager()">
+                📝 Manage Queue
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Global state
+        let currentDisplay = 'blank';
+        let currentTimer = null;
+        let queue = [];
+        let offeringStyle = 'classic';
+        let communionStyle = 'reverent';
+
+        // Timer functionality
+        function updateTimer() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('timer').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // Display functions
+        function showBlank() {
+            setDisplay('blank', 'Blank Screen');
+            updatePreview('BLANK SCREEN');
+            clearActiveButtons();
+        }
+
+        function showLive() {
+            setDisplay('live', 'Live Camera Feed');
+            updatePreview('LIVE CAMERA');
+            clearActiveButtons();
+        }
+
+        function lyricsOff() {
+            if (currentDisplay.includes('lyrics')) {
+                showBlank();
+                showNotification('Lyrics removed', 'success');
+            } else {
+                showNotification('No lyrics currently showing', 'warning');
+            }
+        }
+
+        function showLyrics() {
+            setDisplay('lyrics', 'Song Lyrics');
+            updatePreview('SONG LYRICS');
+            clearActiveButtons();
+            document.querySelector('button[onclick="showLyrics()"]').classList.add('btn-active');
+        }
+
+        function showAnnouncement(type) {
+            const titles = {
+                'birthdays': 'Birthday Celebrations',
+                'anniversaries': 'Anniversary Celebrations', 
+                'midweek': 'Midweek Meetings',
+                'special': 'Special Announcement'
+            };
+            
+            setDisplay(`announcement_${type}`, titles[type]);
+            updatePreview(titles[type].toUpperCase());
+            clearActiveButtons();
+            document.querySelector(`button[onclick="showAnnouncement('${type}')"]`).classList.add('btn-active');
+        }
+
+        function showOffering(displayType) {
+            const title = displayType === 'full' ? 'Offering - Bank Details' : 'Offering - Lower Third';
+            setDisplay(`offering_${displayType}_${offeringStyle}`, title);
+            updatePreview(title.toUpperCase());
+            clearActiveButtons();
+            document.querySelector(`button[onclick="showOffering('${displayType}')"]`).classList.add('btn-active');
+        }
+
+        function showCommunion(displayType) {
+            const title = displayType === 'full' ? 'Communion - Full Overlay' : 'Communion - Lower Third';
+            setDisplay(`communion_${displayType}_${communionStyle}`, title);
+            updatePreview(title.toUpperCase());
+            clearActiveButtons();
+            document.querySelector(`button[onclick="showCommunion('${displayType}')"]`).classList.add('btn-active');
+        }
+
+        function showSermon(type) {
+            const titles = {
+                'thumbnail': 'Sermon Thumbnail',
+                'scripture': 'Sermon Scripture',
+                'points': 'Sermon Points'
+            };
+            
+            setDisplay(`sermon_${type}`, titles[type]);
+            updatePreview(titles[type].toUpperCase());
+            clearActiveButtons();
+            document.querySelector(`button[onclick="showSermon('${type}')"]`).classList.add('btn-active');
+        }
+
+        // Style selection functions
+        function selectOfferingStyle(style) {
+            offeringStyle = style;
+            document.querySelectorAll('.overlay-option[data-style]').forEach(el => {
+                if (el.closest('.section').querySelector('.section-title').textContent.includes('Offering')) {
+                    el.classList.toggle('selected', el.dataset.style === style);
+                }
+            });
+            showNotification(`Offering style: ${style}`, 'success');
+        }
+
+        function selectCommunionStyle(style) {
+            communionStyle = style;
+            document.querySelectorAll('.overlay-option[data-style]').forEach(el => {
+                if (el.closest('.section').querySelector('.section-title').textContent.includes('Communion')) {
+                    el.classList.toggle('selected', el.dataset.style === style);
+                }
+            });
+            showNotification(`Communion style: ${style}`, 'success');
+        }
+
+        // Helper functions
+        function setDisplay(type, title) {
+            currentDisplay = type;
+            document.getElementById('currentDisplay').textContent = title;
+            
+            // Auto timer logic
+            const autoTimer = parseInt(document.getElementById('autoTimer').value);
+            if (autoTimer > 0 && !type.includes('lyrics') && type !== 'blank') {
+                clearTimeout(currentTimer);
+                currentTimer = setTimeout(() => {
+                    showBlank();
+                    showNotification(`Auto-cleared after ${autoTimer}s`, 'success');
+                }, autoTimer * 1000);
+            }
+        }
+
+        function updatePreview(text) {
+            const preview = document.getElementById('previewScreen');
+            const overlay = document.getElementById('previewOverlay');
+            overlay.textContent = text;
+            preview.classList.add('has-content');
+            
+            setTimeout(() => {
+                preview.classList.remove('has-content');
+            }, 2000);
+        }
+
+        function clearActiveButtons() {
+            document.querySelectorAll('.btn-active').forEach(btn => {
+                btn.classList.remove('btn-active');
+            });
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function showQueueManager() {
+            showNotification('Queue manager coming soon!', 'warning');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) return; // Ignore system shortcuts
+            
+            switch(e.key.toLowerCase()) {
+                case 'b':
+                    showBlank();
+                    break;
+                case 'l':
+                    showLyrics();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    lyricsOff();
+                    break;
+                case '1':
+                    showAnnouncement('birthdays');
+                    break;
+                case '2':
+                    showAnnouncement('anniversaries');
+                    break;
+                case '3':
+                    showAnnouncement('midweek');
+                    break;
+                case 'o':
+                    showOffering('full');
+                    break;
+                case 'c':
+                    showCommunion('full');
+                    break;
+                case 's':
+                    showSermon('thumbnail');
+                    break;
+            }
+        });
+
+        // Initialize
+        showBlank();
+    </script>
+</body>
+</html>
