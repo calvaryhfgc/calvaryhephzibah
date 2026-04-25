@@ -28,136 +28,167 @@
         
         body { 
             font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif; 
-            background: var(--obsidian);
-            color: var(--soft-cream);
+            background: #0B0B0E;
+            color: #F4EFE6;
             line-height: 1.6;
             font-weight: 400;
+            margin: 0;
+            padding: 0;
         }
         
-        /* Hero Section - Same as anniversary site */
+        /* Background texture - exactly like anniversary site */
+        body::before {
+            content: ""; 
+            position: fixed; 
+            inset: 0; 
+            pointer-events: none; 
+            z-index: -1;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.96  0 0 0 0 0.94  0 0 0 0 0.90  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+            opacity: 0.5; 
+            mix-blend-mode: overlay;
+        }
+        
+        /* Hero Section - EXACT copy from anniversary site */
         .hero {
+            position: relative;
             min-height: 100vh;
-            background: linear-gradient(135deg, var(--obsidian) 0%, var(--deep-charcoal) 100%);
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            text-align: center;
-            position: relative;
+            align-items: center;
+            padding: 120px 32px 80px;
             overflow: hidden;
+            isolation: isolate;
         }
         
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(208,68,28,0.08) 0%, transparent 70%);
-            animation: float 20s ease-in-out infinite;
+        .hero-bg-stage {
+            position: absolute; 
+            inset: 0; 
+            width: 100%; 
+            height: 100%;
+            object-fit: cover; 
+            z-index: -1;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            50% { transform: translate(-20px, -10px) rotate(1deg); }
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 0 24px;
+        .hero-logo {
+            width: 96px; 
+            height: 96px; 
+            object-fit: contain; 
+            margin-bottom: 24px;
+            filter: drop-shadow(0 8px 24px rgba(208,68,28,0.35));
         }
         
         .hero-badge {
-            display: inline-block;
-            background: var(--calvary-red);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
+            font-family: 'Inter Tight'; 
+            font-size: 12px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
             margin-bottom: 32px;
+            display: flex; 
+            align-items: center; 
+            gap: 14px;
+        }
+        
+        .hero-badge::before,
+        .hero-badge::after {
+            content: '';
+            width: 32px; 
+            height: 1px; 
+            background: #D0441C;
         }
         
         .hero-title {
-            font-family: 'Anton', sans-serif;
-            font-size: clamp(4rem, 12vw, 8rem);
-            font-weight: 400;
-            color: var(--soft-cream);
-            margin-bottom: 24px;
-            letter-spacing: 0.02em;
-            text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: clamp(96px, 22vw, 360px);
+            line-height: 0.85; 
+            letter-spacing: -0.04em;
+            color: #F4EFE6; 
+            text-transform: uppercase;
+            margin: 0; 
+            text-align: center;
         }
         
         .hero-subtitle {
-            font-family: 'Instrument Serif', serif;
-            font-size: clamp(1.5rem, 4vw, 2.5rem);
-            font-weight: 400;
-            color: var(--warm-gray);
-            margin-bottom: 12px;
+            font-family: 'Instrument Serif'; 
+            font-style: italic;
+            font-size: clamp(20px, 2.4vw, 32px); 
+            color: #D0441C;
+            margin-top: 24px; 
+            margin-bottom: 12px; 
             letter-spacing: 0.02em;
         }
         
         .hero-date {
-            font-size: 14px;
-            color: var(--warm-gray);
-            text-transform: uppercase;
-            letter-spacing: 0.18em;
+            font-family: 'Inter Tight'; 
+            font-size: 14px; 
+            color: #C9C3B6;
+            text-transform: uppercase; 
+            letter-spacing: 0.18em; 
             font-weight: 500;
             margin-bottom: 56px;
         }
         
         .countdown {
-            display: flex;
-            gap: 56px;
+            display: flex; 
+            gap: 56px; 
             margin-bottom: 80px;
-            justify-content: center;
-            flex-wrap: wrap;
         }
         
         .countdown-item {
-            text-align: center;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 6px;
         }
         
         .countdown-number {
-            font-family: 'Anton', sans-serif;
-            font-size: 48px;
-            font-weight: 400;
-            color: var(--calvary-red);
-            display: block;
-            line-height: 1;
-            margin-bottom: 8px;
+            font-family: 'Anton', Impact, sans-serif;
+            font-size: 56px; 
+            line-height: 1; 
+            color: #F4EFE6;
+            letter-spacing: -0.02em;
+            font-variant-numeric: tabular-nums;
         }
         
         .countdown-label {
-            font-size: 12px;
-            color: var(--warm-gray);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            font-weight: 500;
+            font-family: 'Inter Tight'; 
+            font-size: 10px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
         }
         
-        .hero-cta {
-            background: var(--calvary-red);
-            color: white;
-            padding: 16px 32px;
-            border-radius: 12px;
+        .hero-scroll {
+            position: absolute; 
+            bottom: 32px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px;
+            font-family: 'Inter Tight'; 
+            font-size: 11px; 
+            color: #A29C90;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
             font-weight: 600;
-            text-decoration: none;
-            font-size: 16px;
-            display: inline-block;
-            transition: all 0.3s ease;
-            border: none;
             cursor: pointer;
         }
         
-        .hero-cta:hover {
-            background: #B8391A;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(208, 68, 28, 0.3);
+        .hero-scroll-line {
+            width: 1px; 
+            height: 48px;
+            background: linear-gradient(to bottom, #D0441C, transparent);
+            animation: pulse 2.4s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
         }
         
         /* Planning Content */
@@ -455,8 +486,8 @@
         
         /* Responsive */
         @media (max-width: 768px) {
-            .hero-title {
-                font-size: clamp(3rem, 15vw, 5rem);
+            .hero {
+                padding: 120px 24px 80px;
             }
             
             .countdown {
@@ -464,7 +495,7 @@
             }
             
             .countdown-number {
-                font-size: 36px;
+                font-size: 48px;
             }
             
             .container {
@@ -498,34 +529,72 @@
     </style>
 </head>
 <body>
-    <!-- Hero Section - Same as anniversary site -->
+    <!-- Hero Section - EXACT copy from anniversary site -->
     <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge">Anniversary Planning</div>
-            <h1 class="hero-title">THANKFUL</h1>
-            <div class="hero-subtitle">Reasons to be Thankful</div>
-            <div class="hero-date">May 17, 2026 · 10:30 AM</div>
-            
-            <div class="countdown">
-                <div class="countdown-item">
-                    <span class="countdown-number" id="days">--</span>
-                    <span class="countdown-label">Days</span>
-                </div>
-                <div class="countdown-item">
-                    <span class="countdown-number" id="hours">--</span>
-                    <span class="countdown-label">Hours</span>
-                </div>
-                <div class="countdown-item">
-                    <span class="countdown-number" id="minutes">--</span>
-                    <span class="countdown-label">Minutes</span>
-                </div>
-                <div class="countdown-item">
-                    <span class="countdown-number" id="seconds">--</span>
-                    <span class="countdown-label">Seconds</span>
-                </div>
+        <!-- Background Stage SVG -->
+        <svg class="hero-bg-stage" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" fill="none">
+            <rect width="1920" height="1080" fill="#0B0B0E"/>
+            <g opacity="0.4">
+                <path d="M0 800C320 750 640 850 960 800C1280 750 1600 850 1920 800V1080H0V800Z" fill="url(#gradient1)"/>
+                <path d="M0 900C320 850 640 950 960 900C1280 850 1600 950 1920 900V1080H0V900Z" fill="url(#gradient2)"/>
+            </g>
+            <defs>
+                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#D0441C" stop-opacity="0.1"/>
+                    <stop offset="50%" stop-color="#D0441C" stop-opacity="0.2"/>
+                    <stop offset="100%" stop-color="#D0441C" stop-opacity="0.1"/>
+                </linearGradient>
+                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#7D8471" stop-opacity="0.1"/>
+                    <stop offset="50%" stop-color="#7D8471" stop-opacity="0.15"/>
+                    <stop offset="100%" stop-color="#7D8471" stop-opacity="0.1"/>
+                </linearGradient>
+            </defs>
+        </svg>
+
+        <!-- Eagle Logo (using similar styling) -->
+        <div class="hero-logo" style="width: 96px; height: 96px; background: #D0441C; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; filter: drop-shadow(0 8px 24px rgba(208,68,28,0.35));">
+            <span style="color: white; font-size: 36px; font-weight: bold;">C</span>
+        </div>
+
+        <!-- Anniversary Badge -->
+        <div class="hero-badge">
+            Anniversary Planning 2026
+        </div>
+
+        <!-- Main Title -->
+        <h1 class="hero-title">THANKFUL</h1>
+
+        <!-- Subtitle -->
+        <div class="hero-subtitle">Reasons to be Thankful</div>
+
+        <!-- Date -->
+        <div class="hero-date">May 17, 2026 · 10:30 AM</div>
+
+        <!-- Countdown -->
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">--</div>
+                <div class="countdown-label">Days</div>
             </div>
-            
-            <button class="hero-cta" onclick="scrollToPlanning()">View Planning Checklist</button>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">--</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">--</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">--</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="hero-scroll" onclick="scrollToPlanning()">
+            Scroll to planning
+            <div class="hero-scroll-line"></div>
         </div>
     </section>
 
@@ -838,21 +907,21 @@
     </section>
 
     <script>
-        // Countdown Timer
+        // Countdown Timer - matching anniversary site format
         function updateCountdown() {
             const anniversaryDate = new Date('2026-05-17T10:30:00');
             const now = new Date();
-            const diff = anniversaryDate - now;
+            const diff = Math.max(0, anniversaryDate.getTime() - now.getTime());
             
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            const days = Math.floor(diff / 86400000);
+            const hrs = Math.floor(diff / 3600000) % 24;
+            const mins = Math.floor(diff / 60000) % 60;
+            const secs = Math.floor(diff / 1000) % 60;
             
-            document.getElementById('days').textContent = days;
-            document.getElementById('hours').textContent = hours;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds;
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hrs).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(mins).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(secs).padStart(2, '0');
         }
         
         updateCountdown();
