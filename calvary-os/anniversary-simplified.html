@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anniversary Planning | THANKFUL 2026 | Simplified</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800&family=Anton:wght@400&family=Instrument+Serif:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter Tight', sans-serif; 
+            background: #0B0B0E;
+            color: #F4EFE6;
+            line-height: 1.6;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 120px 32px 80px;
+            text-align: center;
+        }
+        
+        .hero-logo {
+            width: 96px; 
+            height: 96px; 
+            margin-bottom: 24px;
+            filter: drop-shadow(0 8px 24px rgba(208,68,28,0.35));
+        }
+        
+        .hero-badge {
+            font-size: 12px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+        
+        .hero-title {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(96px, 22vw, 360px);
+            line-height: 0.85; 
+            letter-spacing: -0.04em;
+            color: #F4EFE6; 
+            text-transform: uppercase;
+            margin: 0; 
+        }
+        
+        .hero-subtitle {
+            font-family: 'Instrument Serif', serif; 
+            font-style: italic;
+            font-size: clamp(20px, 2.4vw, 32px); 
+            color: #D0441C;
+            margin: 24px 0 12px 0; 
+            letter-spacing: 0.02em;
+        }
+        
+        .hero-date {
+            font-size: 14px; 
+            color: #C9C3B6;
+            text-transform: uppercase; 
+            letter-spacing: 0.18em; 
+            font-weight: 500;
+            margin-bottom: 56px;
+        }
+        
+        .countdown {
+            display: flex; 
+            gap: 56px; 
+            margin-bottom: 80px;
+        }
+        
+        .countdown-item {
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 6px;
+        }
+        
+        .countdown-number {
+            font-family: 'Anton', sans-serif;
+            font-size: 56px; 
+            line-height: 1; 
+            color: #F4EFE6;
+            letter-spacing: -0.02em;
+        }
+        
+        .countdown-label {
+            font-size: 10px; 
+            color: #D0441C;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+        }
+        
+        .hero-scroll {
+            position: absolute; 
+            bottom: 32px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px;
+            font-size: 11px; 
+            color: #A29C90;
+            text-transform: uppercase; 
+            letter-spacing: 0.24em; 
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Planning Content */
+        .planning-content {
+            background: #FEFCFA;
+            color: #0B0B0E;
+            padding: 80px 0;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .planning-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+        
+        .planning-header h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 36px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .planning-header p {
+            font-size: 18px;
+            color: #7D8471;
+            font-weight: 500;
+        }
+        
+        /* Priority Banner */
+        .priority-banner {
+            background: linear-gradient(135deg, #DC2626, #EF4444);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .priority-banner h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        /* Simple Items */
+        .simple-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 20px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            border-left: 4px solid #7D8471;
+            margin-bottom: 20px;
+        }
+        
+        .simple-item.priority {
+            border-left-color: #DC2626;
+            background: #FEF2F2;
+        }
+        
+        .simple-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .simple-content h4 {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 18px;
+        }
+        
+        .simple-content p {
+            color: #6B7280;
+            margin-bottom: 8px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        
+        .simple-owner {
+            font-size: 12px;
+            background: #7D8471;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        /* Summary Box */
+        .summary-box {
+            background: #7D8471;
+            color: white;
+            padding: 32px;
+            border-radius: 16px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .summary-box h3 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero { padding: 120px 24px 80px; }
+            .countdown { gap: 32px; }
+            .countdown-number { font-size: 48px; }
+            .container { padding: 0 16px; }
+            .simple-item { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="../anniversary-design-system/assets/logo-eagle.png" alt="Calvary" class="hero-logo" />
+        
+        <div class="hero-badge">Anniversary Planning 2026</div>
+        
+        <h1 class="hero-title">THANKFUL</h1>
+        
+        <div class="hero-subtitle">Reasons to be Thankful</div>
+        
+        <div class="hero-date">May 17, 2026 · 10:30 AM</div>
+        
+        <div class="countdown">
+            <div class="countdown-item">
+                <div class="countdown-number" id="days">--</div>
+                <div class="countdown-label">Days</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="hours">--</div>
+                <div class="countdown-label">Hours</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="minutes">--</div>
+                <div class="countdown-label">Minutes</div>
+            </div>
+            <div class="countdown-item">
+                <div class="countdown-number" id="seconds">--</div>
+                <div class="countdown-label">Seconds</div>
+            </div>
+        </div>
+        
+        <div class="hero-scroll" onclick="scrollToPlanning()">
+            Scroll to planning
+        </div>
+    </section>
+
+    <!-- Planning Content -->
+    <section class="planning-content">
+        <div class="container">
+            <div class="planning-header">
+                <h2>Anniversary Planning Overview</h2>
+                <p>Simple view of what needs to happen for our THANKFUL celebration</p>
+            </div>
+
+            <!-- Today's Priority -->
+            <div class="priority-banner">
+                <h3>📋 For Tomorrow's Service</h3>
+                <p><strong>Pastor Shade:</strong> Announce that departments can present what they've accomplished this year (5 minutes each)</p>
+            </div>
+
+            <!-- What's Next -->
+            <div id="planning">
+                <h3 style="font-family: 'Instrument Serif', serif; font-size: 24px; margin-bottom: 24px;">🎯 What's Next This Week</h3>
+                
+                <div class="simple-item priority">
+                    <div class="simple-icon">📢</div>
+                    <div class="simple-content">
+                        <h4>Tomorrow: Department Announcement</h4>
+                        <p>Let departments know they can present what they've accomplished (5 minutes each)</p>
+                        <span class="simple-owner">Pastor Shade</span>
+                    </div>
+                </div>
+                
+                <div class="simple-item">
+                    <div class="simple-icon">🎨</div>
+                    <div class="simple-content">
+                        <h4>Design Anniversary Backdrop</h4>
+                        <p>Two-piece backdrop for stage (left and right side, movable for future)</p>
+                        <span class="simple-owner">Bolaji</span>
+                    </div>
+                </div>
+                
+                <div class="simple-item">
+                    <div class="simple-icon">💰</div>
+                    <div class="simple-content">
+                        <h4>Approve Anniversary Budget</h4>
+                        <p>Budget for backdrop and any anniversary advertising</p>
+                        <span class="simple-owner">Pastor Kayode</span>
+                    </div>
+                </div>
+                
+                <div class="simple-item">
+                    <div class="simple-icon">🏛️</div>
+                    <div class="simple-content">
+                        <h4>Collect Department Responses</h4>
+                        <p>See which departments want to present (deadline TBD)</p>
+                        <span class="simple-owner">Pastor Kayode</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary-box">
+                <h3>🙏 Simple Summary</h3>
+                <p style="font-size: 18px; margin-bottom: 24px;">We're celebrating what God has done through Calvary Hephzibah</p>
+                <div style="font-size: 20px; font-weight: 700;">May 17, 2026 at 10:30 AM</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const anniversaryDate = new Date('2026-05-17T10:30:00');
+            const now = new Date();
+            const diff = Math.max(0, anniversaryDate.getTime() - now.getTime());
+            
+            const days = Math.floor(diff / 86400000);
+            const hrs = Math.floor(diff / 3600000) % 24;
+            const mins = Math.floor(diff / 60000) % 60;
+            const secs = Math.floor(diff / 1000) % 60;
+            
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hrs).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(mins).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(secs).padStart(2, '0');
+        }
+        
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // Smooth scroll
+        function scrollToPlanning() {
+            document.getElementById('planning').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
