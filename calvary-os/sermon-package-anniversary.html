@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anniversary Sermon Package | Pastor Shade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --red: #C41E2A;
+            --ink: #1d1d1f;
+            --ink-2: #424245;
+            --ink-3: #6e6e73;
+            --ink-4: #98989d;
+            --ink-5: #d2d2d7;
+            --white: #ffffff;
+            --bg: #f5f5f7;
+            --r8: 8px;
+            --r12: 12px;
+            --r16: 16px;
+            --shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; 
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.47;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .wrap { 
+            max-width: 440px; 
+            margin: 0 auto; 
+            padding: 20px 16px 60px;
+        }
+        
+        /* Header */
+        .header{background:var(--red);border-radius:var(--r16);padding:24px 24px 20px;margin-bottom:16px;position:relative;overflow:hidden;}
+        .header::after{content:'';position:absolute;bottom:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.06);}
+        .header-label{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.65);margin-bottom:4px;}
+        .header-title{font-family:'Instrument Serif',serif;font-size:22px;color:white;line-height:1.2;margin-bottom:6px;}
+        .header-date{font-size:13px;color:rgba(255,255,255,0.7);}
+        
+        /* Cards */
+        .card{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r16);padding:18px 20px;margin-bottom:12px;box-shadow:var(--shadow);}
+        .card-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:12px;}
+        
+        /* Navigation */
+        .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+        .nav-item{background:var(--white);border:1px solid var(--ink-5);border-radius:var(--r12);padding:14px 16px;text-decoration:none;color:var(--ink);box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s ease;}
+        .nav-item:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,0.08);}
+        .nav-item.active{border-color:var(--red);background:rgba(196,30,42,0.02);}
+        .nav-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+        .nav-desc{font-size:11px;color:var(--ink-4);}
+        
+        /* Content */
+        .content{display:none;}
+        .content.active{display:block;}
+        
+        /* Text styles */
+        .section-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);margin-bottom:16px;}
+        .verse{background:var(--bg);border-radius:var(--r12);padding:16px;margin:12px 0;border-left:3px solid var(--red);}
+        .verse-text{font-size:15px;color:var(--ink-2);line-height:1.65;font-style:italic;}
+        .verse-ref{font-size:12px;color:var(--ink-4);margin-top:8px;font-weight:600;}
+        
+        /* Bullet list */
+        .bullet-list{display:flex;flex-direction:column;gap:8px;margin:12px 0;}
+        .bullet-item{display:flex;align-items:flex-start;gap:10px;font-size:15px;color:var(--ink-2);line-height:1.5;}
+        .bullet-item .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:7px;}
+        .dot-red{background:var(--red);}
+        .dot-grey{background:var(--ink-4);}
+        
+        /* Key points */
+        .key-point{background:rgba(196,30,42,0.04);border:1px solid rgba(196,30,42,0.1);border-radius:var(--r12);padding:16px;margin:12px 0;}
+        .key-point-title{font-size:14px;font-weight:600;color:var(--red);margin-bottom:8px;}
+        .key-point-text{font-size:14px;color:var(--ink-2);line-height:1.55;}
+        
+        /* Main points */
+        .main-point{margin:20px 0;}
+        .main-point-num{width:24px;height:24px;border-radius:50%;background:var(--red);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:white;margin-right:8px;}
+        .main-point-title{font-size:16px;font-weight:600;color:var(--ink);display:inline;}
+        
+        /* Emphasis box */
+        .emphasis{background:var(--red);color:white;border-radius:var(--r12);padding:16px;margin:16px 0;text-align:center;}
+        .emphasis-text{font-size:15px;font-weight:500;line-height:1.5;}
+        
+        /* Checklist */
+        .checklist{margin:12px 0;}
+        .checklist-item{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--ink-2);line-height:1.55;padding:6px 0;}
+        .checklist-item .check{width:16px;height:16px;border-radius:4px;border:2px solid var(--ink-5);flex-shrink:0;margin-top:2px;position:relative;}
+        .checklist-item .check::after{content:'✓';position:absolute;top:-2px;left:1px;font-size:11px;color:var(--red);font-weight:bold;}
+        
+        /* Print styles */
+        @media print {
+            .nav-grid { display: none; }
+            .content { display: block !important; page-break-after: always; }
+            .content:last-child { page-break-after: auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-label">Anniversary Sermon Package</div>
+        <div class="header-title">Reasons to be Thankful</div>
+        <div class="header-date">For Pastor Gbenga · Prepared by Pastor Shade</div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-grid">
+        <div class="nav-item active" onclick="showContent('overview')">
+            <div class="nav-title">Overview</div>
+            <div class="nav-desc">Main theme & notes</div>
+        </div>
+        <div class="nav-item" onclick="showContent('outline')">
+            <div class="nav-title">Full Outline</div>
+            <div class="nav-desc">Four main points</div>
+        </div>
+        <div class="nav-item" onclick="showContent('brief')">
+            <div class="nav-title">Quick Brief</div>
+            <div class="nav-desc">Key messages</div>
+        </div>
+        <div class="nav-item" onclick="showContent('prep')">
+            <div class="nav-title">Preparation</div>
+            <div class="nav-desc">Implementation guide</div>
+        </div>
+    </div>
+
+    <!-- Content 1: Overview -->
+    <div class="content active" id="overview">
+        <div class="card">
+            <div class="card-label">Theme</div>
+            <div class="verse">
+                <div class="verse-text">"Enter his gates with thanksgiving and his courts with praise; give thanks to him and praise his name."</div>
+                <div class="verse-ref">Psalm 100:4</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Your job</div>
+            <div class="key-point">
+                <div class="key-point-text">People need to understand why we can be thankful with confidence. Too many Christians base their thanksgiving on feelings or circumstances. That's not biblical.<br><br><strong>Show them the biblical foundation.</strong> We have actual reasons to be grateful. Historical facts. Not wishful thinking.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Four reasons</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>The Resurrection Happened</strong> — Historical fact, not religious theory</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Look Around This Room</strong> — Multi-ethnic family as Kingdom preview</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>God Keeps His Word</strong> — Faithful through Calvary's challenges</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Lives Get Changed</strong> — Visible proof of God's power</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Expected outcome</div>
+            <div class="emphasis">
+                <div class="emphasis-text">People leave living thankfully, not just feeling thankful</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content 2: Full Outline -->
+    <div class="content" id="outline">
+        <div class="card">
+            <div class="card-label">Introduction</div>
+            <div class="section-title">We Stand on Solid Ground</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div>Calvary exists because God called us</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div>We're here because something actually happened in history</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div>The resurrection of Jesus Christ is not religious theory</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div>Today we look at facts that make thanksgiving reasonable</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Main Point 1</div>
+            <div class="main-point">
+                <span class="main-point-num">1</span>
+                <span class="main-point-title">The Resurrection Happened</span>
+            </div>
+            <div class="verse">
+                <div class="verse-text">"If Christ has not been raised, your faith is futile; you are still in your sins. But Christ has indeed been raised from the dead."</div>
+                <div class="verse-ref">1 Corinthians 15:17-19</div>
+            </div>
+            <div class="key-point">
+                <div class="key-point-title">The Facts:</div>
+                <div class="key-point-text">Paul stakes everything on one historical event. Either Jesus rose or Christianity is worthless. He didn't rise spiritually or metaphorically — bodily resurrection. Empty tomb. Witnesses. Changed lives. Historical record.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Main Point 2</div>
+            <div class="main-point">
+                <span class="main-point-num">2</span>
+                <span class="main-point-title">Look Around This Room</span>
+            </div>
+            <div class="verse">
+                <div class="verse-text">"Their fish will be of many kinds—like the fish of the Great Sea."</div>
+                <div class="verse-ref">Ezekiel 47:10</div>
+            </div>
+            <div class="key-point">
+                <div class="key-point-title">What You See:</div>
+                <div class="key-point-text">Different countries represented in this room. Different languages, different backgrounds. This isn't accident or good marketing. This is the vision God gave us for Calvary.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Main Point 3</div>
+            <div class="main-point">
+                <span class="main-point-num">3</span>
+                <span class="main-point-title">God Keeps His Word</span>
+            </div>
+            <div class="verse">
+                <div class="verse-text">"And we know that in all things God works for the good of those who love him"</div>
+                <div class="verse-ref">Romans 8:28</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Main Point 4</div>
+            <div class="main-point">
+                <span class="main-point-num">4</span>
+                <span class="main-point-title">Lives Get Changed</span>
+            </div>
+            <div class="verse">
+                <div class="verse-text">"Therefore go and make disciples of all nations"</div>
+                <div class="verse-ref">Matthew 28:19-20</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Conclusion</div>
+            <div class="section-title">Live What You Know</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Stop complaining</strong> about what you don't have</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Start acknowledging</strong> what He's done</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Live differently</strong> because you know the truth</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Tell others</strong> why you have reason to be grateful</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content 3: Quick Brief -->
+    <div class="content" id="brief">
+        <div class="card">
+            <div class="card-label">The point</div>
+            <div class="key-point">
+                <div class="key-point-text">Anniversary sermon: "Reasons to be Thankful." Not warm feelings about blessings. Actual biblical reasons why thanksgiving makes sense.<br><br><strong>We believe because something happened.</strong> The resurrection is historical fact. That changes everything.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Key messages</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>1 Corinthians 15</strong> — either Christ rose or we're wasting our time</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Ezekiel 47:10</strong> — many kinds of fish, different nations here every Sunday</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Romans 8:28</strong> — He works all things for good</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div><strong>Matthew 28</strong> — look at the testimonies from this church</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Tone</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div><strong>Say it like you mean it.</strong> We have historical facts on our side.</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div><strong>Make them think.</strong> Don't just make them feel good.</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-grey"></div>
+                    <div><strong>Challenge them.</strong> Thanksgiving should change how they live.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">The challenge</div>
+            <div class="emphasis">
+                <div class="emphasis-text">If you really believe Christ rose from the dead, it shows in how you handle problems, whether you actually serve in this church, and how much you give back to God.<br><br><strong>Stop talking about being grateful. Start living like it.</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content 4: Preparation -->
+    <div class="content" id="prep">
+        <div class="card">
+            <div class="card-label">3 days before</div>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Read through all primary texts 3 times</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Study 1 Corinthians 15 context and argument</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Review Ezekiel 47:10 and church vision connection</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Memorize key verses for confident delivery</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">2 days before</div>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Pray through sermon outline asking for anointing</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Identify personal testimonies that support each point</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Practice transitions between main sections</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">1 day before</div>
+            <div class="checklist">
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Print sermon notes in large font (backup copies)</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Confirm verse displays with media team</div>
+                </div>
+                <div class="checklist-item">
+                    <div class="check"></div>
+                    <div>Practice opening and closing with confidence</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Key phrases to include</div>
+            <div class="bullet-list">
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div>"We stand on solid ground, not shifting sand"</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div>"This is historical fact, not wishful thinking"</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div>"Look around this room - this is God's design"</div>
+                </div>
+                <div class="bullet-item">
+                    <div class="dot dot-red"></div>
+                    <div>"Stop talking about being grateful. Start living like it"</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-label">Success metrics</div>
+            <div class="key-point">
+                <div class="key-point-text">People should leave understanding: (1) Why their faith is solid, (2) Why Calvary's diversity matters, (3) Why their future is secure, (4) What to do with their thanksgiving.<br><br><strong>Expected outcome:</strong> Transformed perspective leading to transformed living.</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function showContent(contentId) {
+    // Hide all content
+    document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    
+    // Show selected content
+    document.getElementById(contentId).classList.add('active');
+    event.target.closest('.nav-item').classList.add('active');
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+</script>
+
+</body>
+</html>
