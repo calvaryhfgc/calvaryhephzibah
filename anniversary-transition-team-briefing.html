@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transition Team Meeting | Anniversary Update | Pastor Shade</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0B0B0E;
+            color: #F4EFE6;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            max-width: 900px;
+            padding: 60px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #F4EFE6;
+            line-height: 1.1;
+        }
+
+        .slide h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #D0441C;
+            line-height: 1.2;
+        }
+
+        .slide h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #F4EFE6;
+        }
+
+        .slide p {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #C9C3B6;
+        }
+
+        .slide ul {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .slide li {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: #C9C3B6;
+        }
+
+        .slide li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #D0441C;
+            font-weight: bold;
+        }
+
+        .highlight {
+            background: #D0441C;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .accent {
+            color: #D0441C;
+            font-weight: 600;
+        }
+
+        .action-box {
+            background: rgba(208, 68, 28, 0.1);
+            border: 2px solid #D0441C;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .action-box h3 {
+            color: #D0441C;
+            margin-bottom: 1rem;
+        }
+
+        .decision-box {
+            background: rgba(125, 132, 113, 0.1);
+            border: 2px solid #7D8471;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .decision-box h3 {
+            color: #7D8471;
+            margin-bottom: 1rem;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: #D0441C;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: #B8391A;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #4A4A4A;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #C9C3B6;
+        }
+
+        .title-slide {
+            background: linear-gradient(135deg, #0B0B0E 0%, #1F1F23 100%);
+        }
+
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .key-point {
+            background: rgba(208, 68, 28, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #D0441C;
+        }
+
+        .key-point h4 {
+            color: #D0441C;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .key-point p {
+            font-size: 1rem;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-counter">
+        <span id="slide-number">1</span> / <span id="total-slides">7</span>
+    </div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide active title-slide">
+        <h1>Anniversary Update</h1>
+        <h2>Transition Team Meeting</h2>
+        <p>Key decisions for <span class="accent">THANKFUL 2026</span></p>
+        <p style="margin-top: 3rem; font-size: 1.1rem; opacity: 0.7;">May 17, 2026 • 22 days to go</p>
+    </div>
+
+    <!-- Slide 2: Agenda -->
+    <div class="slide">
+        <h2>Tonight's Agenda</h2>
+        <ul>
+            <li><strong>Anniversary Date Confirmed:</strong> May 17 at 10:30 AM</li>
+            <li><strong>Main Decision:</strong> Creative department presentations</li>
+            <li><strong>Budget Discussion:</strong> Backdrop and preparations</li>
+            <li><strong>Next Steps:</strong> Action items and timeline</li>
+        </ul>
+        <p style="margin-top: 2rem;"><span class="highlight">15 minutes total</span></p>
+    </div>
+
+    <!-- Slide 3: Anniversary Confirmed -->
+    <div class="slide">
+        <h2>Anniversary Details</h2>
+        <div class="key-points">
+            <div class="key-point">
+                <h4>Date & Time</h4>
+                <p>May 17, 2026<br>10:30 AM</p>
+            </div>
+            <div class="key-point">
+                <h4>Theme</h4>
+                <p>THANKFUL<br>Reasons to be Thankful</p>
+            </div>
+            <div class="key-point">
+                <h4>Focus</h4>
+                <p>Celebrating what God<br>has done through Calvary</p>
+            </div>
+        </div>
+        <p>Invites will go out to our mailing list. Planning is underway.</p>
+    </div>
+
+    <!-- Slide 4: Department Presentations Proposal -->
+    <div class="slide">
+        <h2>Department Presentations</h2>
+        <h3>The Proposal</h3>
+        <ul>
+            <li><strong>What:</strong> Creative presentations aligned with THANKFUL theme</li>
+            <li><strong>Format:</strong> Poem, song, drama, or any creative expression</li>
+            <li><strong>How long:</strong> 5 minutes maximum per department</li>
+            <li><strong>Theme focus:</strong> Reasons to be thankful - express gratitude creatively</li>
+        </ul>
+        <div class="action-box">
+            <h3>Announcement Needed</h3>
+            <p>Someone needs to announce this <strong>this Sunday</strong> (I'll be abroad)</p>
+            <p><strong>Deadline:</strong> Departments must respond by <span class="highlight">May 3rd</span></p>
+        </div>
+    </div>
+
+
+
+    <!-- Slide 5: Decisions Needed -->
+    <div class="slide">
+        <h2>Decisions Tonight</h2>
+        <div class="decision-box">
+            <h3>Key Questions</h3>
+            <ul>
+                <li><strong>Are we doing creative department presentations?</strong> (Yes/No)</li>
+                <li><strong>Budget approval:</strong> Rough amount for preparations?</li>
+                <li><strong>Coordination:</strong> Who collects department responses?</li>
+                <li><strong>Announcement:</strong> Who announces this Sunday?</li>
+                <li><strong>Logistics teams:</strong> Who coordinates refreshments, decorations, etc?</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 6: Other Anniversary Needs -->
+    <div class="slide">
+        <h2>Other Preparations</h2>
+        <ul>
+            <li><strong>Backdrop:</strong> Two-piece design (movable for future venues)</li>
+            <li><strong>Service Order:</strong> Extended format with presentations</li>
+            <li><strong>Worship:</strong> Special anniversary set</li>
+            <li><strong>Refreshments:</strong> Post-service celebration meal/reception</li>
+            <li><strong>Decorations:</strong> Anniversary theme throughout building</li>
+            <li><strong>Photography:</strong> Professional photos/video of the service</li>
+            <li><strong>Invitations:</strong> Mailing list, social media, personal invites</li>
+            <li><strong>Seating:</strong> Extra chairs for increased attendance</li>
+            <li><strong>Sound/Media:</strong> Enhanced setup for presentations</li>
+        </ul>
+        <p>Each area needs a coordinator. Budget approval required for most items.</p>
+    </div>
+
+    <!-- Slide 7: Action Items -->
+    <div class="slide">
+        <h2>Next Steps</h2>
+        <div class="action-box">
+            <h3>If Approved Tonight</h3>
+            <ul>
+                <li><strong>This Sunday:</strong> Announce creative presentation option to departments</li>
+                <li><strong>By May 3rd:</strong> Departments respond with creative ideas</li>
+                <li><strong>Next week:</strong> Finalize service order and timeline</li>
+                <li><strong>2 weeks:</strong> Begin backdrop production</li>
+            </ul>
+        </div>
+        <p style="margin-top: 2rem;">
+            <span class="accent">22 days</span> to celebrate God's faithfulness through Calvary Hephzibah
+        </p>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="previousSlide()" disabled>Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+        
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('slide-number').textContent = currentSlide + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+            
+            if (currentSlide === totalSlides - 1) {
+                document.getElementById('next-btn').textContent = 'Finish';
+            } else {
+                document.getElementById('next-btn').textContent = 'Next';
+            }
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+        
+        function previousSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                showSlide(0);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                showSlide(totalSlides - 1);
+            }
+        });
+        
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
