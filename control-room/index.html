@@ -1087,10 +1087,10 @@
   <div class="bible-panel">
     <h3>Scripture search</h3>
     <div class="bible-input-row">
-      <input id="bible-input" class="bible-input" type="text" placeholder="e.g. John 3:16" autocomplete="off">
+      <input id="bible-input" class="bible-input" type="text" placeholder="e.g. John 3:16  or  Romans 6:1-23" autocomplete="off">
       <button class="bible-go" onclick="searchVerse()">Find</button>
     </div>
-    <div class="bible-hint">Type a reference like <em>John 3:16</em> or <em>1 Cor 13:4</em></div>
+    <div class="bible-hint">Single verse <em>(John 3:16)</em> or a range <em>(Romans 6:1-23)</em>. Use Next/Prev to walk through.</div>
     <div id="bible-result" class="bible-result">
       <div id="bible-ref" class="bible-ref"></div>
       <div id="bible-text" class="bible-text"></div>
@@ -1365,6 +1365,8 @@ window.toggleSong = (i) => {
 window.goto = async (songIdx, slideIdx) => {
   currentSongIdx = songIdx;
   currentSlideIdx = slideIdx;
+  currentPassage = null;
+  currentPassageSlideIdx = -1;
   const item = plan.items[songIdx];
   const slide = item.slides[slideIdx];
   await pushLive('lyric', {
@@ -1379,6 +1381,13 @@ window.goto = async (songIdx, slideIdx) => {
 // TRANSPORT
 // ============================================================
 window.next = async () => {
+  // If we're walking a passage, advance to the next verse slide
+  if (currentPassage && currentPassageSlideIdx >= 0) {
+    if (currentPassageSlideIdx + 1 < currentPassage.slides.length) {
+      return pushPassageSlide(currentPassageSlideIdx + 1);
+    }
+    // End of passage — fall through to song flow
+  }
   if (!plan) return;
   if (currentSongIdx === -1) return goto(0, 0);
   const song = plan.items[currentSongIdx];
@@ -1392,6 +1401,10 @@ window.next = async () => {
 };
 
 window.prev = async () => {
+  // If we're walking a passage, go to the previous verse slide
+  if (currentPassage && currentPassageSlideIdx > 0) {
+    return pushPassageSlide(currentPassageSlideIdx - 1);
+  }
   if (!plan || currentSongIdx === -1) return;
   if (currentSlideIdx > 0) return goto(currentSongIdx, currentSlideIdx - 1);
   if (currentSongIdx > 0) {
@@ -1403,6 +1416,8 @@ window.prev = async () => {
 window.blank = async () => {
   currentSongIdx = -1;
   currentSlideIdx = -1;
+  currentPassage = null;
+  currentPassageSlideIdx = -1;
   await pushLive('blank', {});
   renderSetlist();
 };
@@ -1424,7 +1439,7 @@ window.searchVerse = async () => {
 
   const parsed = parseRef(q);
   if (!parsed) {
-    err.textContent = 'Couldn\'t parse that reference. Try "John 3:16" or "1 Cor 13:4".';
+    err.textContent = 'Couldn\'t parse that. Try "John 3:16" or "Romans 6:1-23".';
     return;
   }
 
@@ -1434,32 +1449,107 @@ window.searchVerse = async () => {
     .eq('version', 'KJV')
     .ilike('book', parsed.book + '%')
     .eq('chapter', parsed.chapter)
-    .eq('verse', parsed.verse)
-    .limit(1);
+    .gte('verse', parsed.verseStart)
+    .lte('verse', parsed.verseEnd)
+    .order('verse');
 
   if (error || !data || data.length === 0) {
-    err.textContent = 'Verse not found. Check the reference and try again.';
+    err.textContent = 'Passage not found. Check the reference and try again.';
     return;
   }
 
-  const v = data[0];
+  // Pack into slides: pair short consecutive verses, single-verse for long ones
+  const slides = packVersesIntoSlides(data);
+  const isRange = data.length > 1;
+
   verseResult = {
-    reference: `${v.book} ${v.chapter}:${v.verse}`,
-    text: v.text,
-    version: v.version
+    book: data[0].book,
+    chapter: data[0].chapter,
+    version: data[0].version,
+    slides,                              // [{ verses: [{n,text}], rangeLabel }]
+    rangeLabel: isRange
+      ? `${data[0].book} ${data[0].chapter}:${data[0].verse}-${data[data.length-1].verse}`
+      : `${data[0].book} ${data[0].chapter}:${data[0].verse}`
   };
-  document.getElementById('bible-ref').textContent = verseResult.reference + ' · ' + v.version;
-  document.getElementById('bible-text').textContent = v.text;
+
+  // Render preview
+  document.getElementById('bible-ref').textContent = verseResult.rangeLabel + ' · ' + verseResult.version;
+  document.getElementById('bible-text').innerHTML = renderPassagePreview(verseResult);
   res.classList.add('show');
 };
 
+// Auto-pack verses into slides.
+// Threshold: if a verse alone is < THRESH chars, try to pair it with the next.
+// Otherwise it gets its own slide.
+function packVersesIntoSlides(verses) {
+  const PAIR_THRESHOLD = 110;  // combined char count to allow pairing
+  const slides = [];
+  let i = 0;
+  while (i < verses.length) {
+    const cur = verses[i];
+    const next = verses[i + 1];
+    const combinedLen = cur.text.length + (next ? next.text.length : 0);
+    if (next && combinedLen <= PAIR_THRESHOLD * 2 && cur.text.length < PAIR_THRESHOLD) {
+      // Pair them
+      slides.push({
+        verses: [{ n: cur.verse, text: cur.text }, { n: next.verse, text: next.text }],
+        rangeLabel: `v.${cur.verse}-${next.verse}`
+      });
+      i += 2;
+    } else {
+      slides.push({
+        verses: [{ n: cur.verse, text: cur.text }],
+        rangeLabel: `v.${cur.verse}`
+      });
+      i += 1;
+    }
+  }
+  return slides;
+}
+
+function renderPassagePreview(vr) {
+  if (!vr.slides) return '';
+  if (vr.slides.length === 1) {
+    // Single verse — keep tidy
+    return vr.slides[0].verses.map(v => escapeHtml(v.text)).join(' ');
+  }
+  // Multi-slide: show count + first verse preview
+  const totalVerses = vr.slides.reduce((acc, s) => acc + s.verses.length, 0);
+  const firstVerse = vr.slides[0].verses[0];
+  return `<div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${vr.slides.length} slides · ${totalVerses} verses</div>${escapeHtml(firstVerse.text)}<div style="font-size: 12px; color: var(--text-dim); margin-top: 8px; font-style: italic;">…walks through the passage with Next/Prev</div>`;
+}
+
 window.pushVerse = async () => {
-  if (!verseResult) return;
+  if (!verseResult || !verseResult.slides || !verseResult.slides.length) return;
+  // For a passage, push slide 0; transport advances through the rest
   currentSongIdx = -1;
   currentSlideIdx = -1;
-  await pushLive('verse', verseResult);
+  currentPassage = verseResult;
+  currentPassageSlideIdx = 0;
+  await pushPassageSlide(0);
   renderSetlist();
 };
+
+let currentPassage = null;       // the passage being walked
+let currentPassageSlideIdx = -1; // current slide in passage
+
+async function pushPassageSlide(idx) {
+  if (!currentPassage || idx < 0 || idx >= currentPassage.slides.length) return;
+  currentPassageSlideIdx = idx;
+  const slide = currentPassage.slides[idx];
+  // Compose payload: combine multi-verse slide text with verse-number prefixes
+  const text = slide.verses.map(v => v.text).join('  ');
+  const verseNumbers = slide.verses.map(v => v.n);
+  await pushLive('verse', {
+    text,
+    reference: `${currentPassage.book} ${currentPassage.chapter}:${slide.rangeLabel.replace(/^v\./, '')}`,
+    version: currentPassage.version,
+    verses: slide.verses,           // for overlay to render verse-number indicators
+    rangeLabel: slide.rangeLabel,    // e.g. "v.3-4"
+    slideIdx: idx,
+    slideCount: currentPassage.slides.length
+  });
+}
 
 // Book name aliases — lets operator type "1 cor" or "jn"
 const BOOK_ALIASES = {
@@ -1512,15 +1602,23 @@ const BOOK_ALIASES = {
   'rev': 'Revelation'
 };
 
+// Parses references like:
+//   "John 3:16"           → { book, chapter, verseStart: 16, verseEnd: 16 }
+//   "John 3:16-17"        → { book, chapter, verseStart: 16, verseEnd: 17 }
+//   "Romans 6:1-23"       → { book, chapter, verseStart: 1,  verseEnd: 23 }
+//   "1 Cor 13:4"          → { book, chapter, verseStart: 4,  verseEnd: 4 }
 function parseRef(q) {
-  // "John 3:16", "1 Cor 13:4", "jn 3:16"
-  const m = q.match(/^\s*(\d?\s?[a-z]+)\s*(\d+)\s*[:\.]\s*(\d+)\s*$/i);
+  const m = q.match(/^\s*(\d?\s?[a-z]+)\s*(\d+)\s*[:\.]\s*(\d+)(?:\s*[-–—]\s*(\d+))?\s*$/i);
   if (!m) return null;
   const rawBook = m[1].trim().toLowerCase().replace(/\s+/g, ' ');
   const book = BOOK_ALIASES[rawBook]
             || BOOK_ALIASES[rawBook.replace(/\s/g, '')]
             || (rawBook.charAt(0).toUpperCase() + rawBook.slice(1));
-  return { book, chapter: parseInt(m[2]), verse: parseInt(m[3]) };
+  const chapter = parseInt(m[2]);
+  const verseStart = parseInt(m[3]);
+  const verseEnd = m[4] ? parseInt(m[4]) : verseStart;
+  if (verseEnd < verseStart) return null; // sanity check
+  return { book, chapter, verseStart, verseEnd };
 }
 
 // ============================================================
@@ -1831,7 +1929,11 @@ function renderNowPlaying(mode, payload) {
     l1.textContent = payload.line1 || '';
     l2.textContent = payload.line2 || '';
   } else if (mode === 'verse') {
-    title.textContent = (payload.reference || '') + (payload.version ? ' · ' + payload.version : '');
+    let titleText = (payload.reference || '') + (payload.version ? ' · ' + payload.version : '');
+    if (payload.slideCount && payload.slideCount > 1) {
+      titleText += '  ·  Slide ' + (payload.slideIdx + 1) + ' of ' + payload.slideCount;
+    }
+    title.textContent = titleText;
     l1.textContent = payload.text || '';
     l2.textContent = '';
   } else if (mode === 'graphic') {

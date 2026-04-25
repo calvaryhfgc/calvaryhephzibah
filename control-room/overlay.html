@@ -134,6 +134,19 @@
     max-width: 30ch;
     margin: 0 auto 1.5rem;
   }
+  .verse-text .vnum {
+    display: inline-block;
+    font-size: 0.5em;
+    font-weight: 600;
+    color: rgba(196, 30, 42, 0.95);
+    margin-right: 0.35em;
+    vertical-align: 0.45em;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.6);
+    text-shadow:
+      0 0 4px rgba(0, 0, 0, 0.95),
+      0 0 8px rgba(0, 0, 0, 0.7);
+  }
+  .verse-text .vnum + * { margin-left: 0; }
   .verse-ref {
     font-weight: 500;
     font-size: calc(clamp(1.25rem, 1.8vw, 1.75rem) * var(--verse-scale));
@@ -298,6 +311,10 @@ function hideAll() {
   Object.values(stages).forEach(s => s.classList.remove('active'));
 }
 
+function escapeHtmlForOverlay(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 function render(mode, payload) {
   hideAll();
 
@@ -308,7 +325,16 @@ function render(mode, payload) {
     document.getElementById('lyric-line2').textContent = payload.line2 || '';
     requestAnimationFrame(() => stages.lyric.classList.add('active'));
   } else if (mode === 'verse') {
-    document.getElementById('verse-text').textContent = payload.text || '';
+    // If payload includes a `verses` array, render each verse with a small inline number marker.
+    // Otherwise fall back to plain text (for back-compat with single-verse pushes).
+    const versesEl = document.getElementById('verse-text');
+    if (Array.isArray(payload.verses) && payload.verses.length) {
+      versesEl.innerHTML = payload.verses.map(v =>
+        `<span class="vnum">${v.n}</span>${escapeHtmlForOverlay(v.text)}`
+      ).join(' ');
+    } else {
+      versesEl.textContent = payload.text || '';
+    }
     document.getElementById('verse-ref').textContent =
       [payload.reference, payload.version].filter(Boolean).join(' · ');
     requestAnimationFrame(() => stages.verse.classList.add('active'));
