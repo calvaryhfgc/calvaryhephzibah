@@ -38,7 +38,9 @@
         /* Hero Section */
         .hero {
             height: 100vh;
-            background: var(--deep-black);
+            background: 
+                linear-gradient(rgba(0,0,0,0.5), rgba(196,30,42,0.4)),
+                url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2940&q=80') center/cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -51,7 +53,7 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background: var(--gradient-premium);
-            opacity: 0.15;
+            opacity: 0.2;
             animation: pulseGlow 6s ease-in-out infinite alternate;
         }
         
@@ -59,7 +61,7 @@
             content: '';
             position: absolute;
             top: -50%; left: -50%; right: -50%; bottom: -50%;
-            background: radial-gradient(circle at center, rgba(212,175,55,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle at center, rgba(212,175,55,0.15) 0%, transparent 70%);
             animation: rotate 20s linear infinite;
         }
         
@@ -69,6 +71,10 @@
             position: relative;
             max-width: 800px;
             padding: 0 24px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 60px 40px;
         }
         
         .hero-badge {
