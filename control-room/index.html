@@ -482,6 +482,137 @@
     overflow-y: auto;
     margin-bottom: 12px;
   }
+
+  /* Order of service block */
+  #oos-section { margin-bottom: 14px; }
+  .oos-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .oos-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+  }
+  .oos-date {
+    font-size: 12px;
+  }
+  .oos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .oos-empty {
+    padding: 14px;
+    background: var(--bg);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+  }
+  .oos-item {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.12s;
+  }
+  .oos-item.live {
+    border-color: var(--red);
+    background: var(--surface-2);
+  }
+  .oos-pos {
+    font-family: 'DM Sans', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    min-width: 18px;
+    font-weight: 700;
+  }
+  .oos-meta {
+    flex: 1;
+    min-width: 0;
+  }
+  .oos-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+  }
+  .oos-name {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.25;
+  }
+  .oos-name.placeholder {
+    color: var(--text-dim);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .oos-notes {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .oos-push {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .oos-push:hover { background: #e02b38; }
+  .oos-push:disabled {
+    background: var(--surface-2);
+    color: var(--text-dim);
+    cursor: not-allowed;
+  }
+  .oos-item.live .oos-push {
+    background: var(--surface-2);
+    color: var(--text-muted);
+    border: 1px solid var(--border-strong);
+    cursor: default;
+  }
+
+  /* Speaker library collapsible fallback */
+  .lib-details {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+    margin-bottom: 12px;
+  }
+  .lib-details summary {
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    padding: 4px 0;
+    user-select: none;
+    list-style: none;
+  }
+  .lib-details summary::-webkit-details-marker { display: none; }
+  .lib-details summary::before {
+    content: '▸';
+    color: var(--text-muted);
+    margin-right: 6px;
+    display: inline-block;
+    transition: transform 0.15s;
+  }
+  .lib-details[open] summary::before {
+    transform: rotate(90deg);
+  }
   .lt-item {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -840,10 +971,23 @@
       <button class="lt-clear" onclick="clearLowerThird()">Clear lower third</button>
     </div>
 
-    <div id="lt-list" class="lt-list"></div>
+    <!-- Order of Service for the loaded date -->
+    <div id="oos-section">
+      <div class="oos-head">
+        <span class="oos-label">Order of service</span>
+        <span class="oos-date muted" id="oos-date-label">—</span>
+      </div>
+      <div id="oos-list" class="oos-list"></div>
+    </div>
+
+    <!-- Speaker library — collapsible fallback -->
+    <details class="lib-details">
+      <summary>Speaker library <span class="muted" style="font-weight: 400; font-size: 12px;">— for anyone not in the running order</span></summary>
+      <div id="lt-list" class="lt-list" style="margin-top: 10px;"></div>
+    </details>
 
     <div class="lt-custom">
-      <p class="helper" style="margin-bottom: 8px;">Or type a custom one (for guest speakers):</p>
+      <p class="helper" style="margin-bottom: 8px;">Or type a custom one:</p>
       <div class="lt-custom-fields">
         <input id="lt-name-input" class="lt-input" placeholder="Name" oninput="onLtCustomChange()">
         <input id="lt-role-input" class="lt-input" placeholder="Role (optional)" oninput="onLtCustomChange()">
@@ -1120,6 +1264,7 @@ async function loadPlan(targetDate) {
   if (!plans || plans.length === 0) {
     plan = null;
     renderEmptyPlan();
+    renderOrderOfService([]);
     return;
   }
 
@@ -1134,6 +1279,9 @@ async function loadPlan(targetDate) {
   currentSongIdx = -1;
   currentSlideIdx = -1;
   renderSetlist();
+
+  // Load order of service for this plan
+  await loadOrderOfService(plans[0].id);
 }
 
 window.navigateDate = (deltaDays) => {
@@ -1488,6 +1636,58 @@ window.applyDisplay = async () => {
 // ============================================================
 let speakers = [];
 let currentLowerThird = null;
+let orderOfService = [];
+
+async function loadOrderOfService(planId) {
+  if (!planId) {
+    renderOrderOfService([]);
+    return;
+  }
+  const { data, error } = await client
+    .from('control_room_plan_speakers')
+    .select('id, position, role, name, notes')
+    .eq('plan_id', planId)
+    .order('position');
+  if (error) { console.error('OOS load:', error); return; }
+  orderOfService = data || [];
+  renderOrderOfService(orderOfService);
+}
+
+function renderOrderOfService(items) {
+  const list = document.getElementById('oos-list');
+  const dateLabel = document.getElementById('oos-date-label');
+  dateLabel.textContent = formatPlanDate(currentPlanDate);
+  if (!items.length) {
+    list.innerHTML = '<div class="oos-empty">No order of service for this date.</div>';
+    return;
+  }
+  list.innerHTML = items.map(item => {
+    const isLive = currentLowerThird
+      && currentLowerThird.name === (item.name || '')
+      && currentLowerThird.role === item.role;
+    const hasName = !!item.name;
+    return `
+      <div class="oos-item ${isLive ? 'live' : ''}">
+        <div class="oos-pos">${item.position}</div>
+        <div class="oos-meta">
+          <div class="oos-role">${escapeHtml(item.role)}</div>
+          <div class="oos-name ${hasName ? '' : 'placeholder'}">${escapeHtml(item.name || (item.notes || '—'))}</div>
+          ${item.notes && hasName ? `<div class="oos-notes">${escapeHtml(item.notes)}</div>` : ''}
+        </div>
+        ${hasName
+          ? `<button class="oos-push" onclick="window.pushOrderItem('${item.id}')" ${isLive ? 'disabled' : ''}>${isLive ? 'On screen' : 'Push'}</button>`
+          : ''
+        }
+      </div>
+    `;
+  }).join('');
+}
+
+window.pushOrderItem = async (itemId) => {
+  const item = orderOfService.find(x => x.id === itemId);
+  if (!item || !item.name) return;
+  await pushLowerThird({ name: item.name, role: item.role });
+};
 
 async function loadSpeakers() {
   const { data, error } = await client
@@ -1559,11 +1759,13 @@ function renderLowerThirdCurrent(lt) {
   const el = document.getElementById('lt-current');
   if (!lt || !lt.name) {
     el.classList.remove('show');
-    return;
+  } else {
+    document.getElementById('lt-cur-name').textContent = lt.name;
+    document.getElementById('lt-cur-role').textContent = lt.role || '';
+    el.classList.add('show');
   }
-  document.getElementById('lt-cur-name').textContent = lt.name;
-  document.getElementById('lt-cur-role').textContent = lt.role || '';
-  el.classList.add('show');
+  // Re-render OOS so the "On screen" highlight updates
+  renderOrderOfService(orderOfService);
 }
 
 // ============================================================
