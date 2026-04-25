@@ -33,7 +33,7 @@ function HeroCountdownChip({ label, value }) {
 }
 
 function Hero() {
-  const { days, hrs, mins, secs } = useCountdown('2026-05-17T10:00:00');
+  const { days, hrs, mins, secs } = useCountdown('2026-05-17T10:30:00');
 
   return (
     <section id="top" style={{
@@ -84,7 +84,7 @@ function Hero() {
         fontFamily: "'Inter Tight'", fontSize: 14, color: '#C9C3B6',
         textTransform: 'uppercase', letterSpacing: '0.18em', fontWeight: 500,
         marginBottom: 56,
-      }}>May 17, 2026 · 10:00 AM</div>
+      }}>May 17, 2026 · 10:30 AM</div>
 
       <div style={{ display: 'flex', gap: 56, marginBottom: 80 }}>
         <HeroCountdownChip label="Days" value={days}/>
