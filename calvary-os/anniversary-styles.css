@@ -1,0 +1,50 @@
+/* Anniversary Planning Styles */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif; 
+    background: #0B0B0E;
+    color: #F4EFE6;
+    line-height: 1.6;
+}
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 120px 32px 80px;
+    text-align: center;
+}
+
+.hero-title {
+    font-family: 'Anton', Impact, sans-serif;
+    font-size: clamp(96px, 22vw, 360px);
+    line-height: 0.85; 
+    letter-spacing: -0.04em;
+    color: #F4EFE6; 
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.planning-content {
+    background: #FEFCFA;
+    color: #0B0B0E;
+    padding: 80px 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.simple-item {
+    background: #F8F9FA;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 12px;
+    border-left: 4px solid #7D8471;
+}
