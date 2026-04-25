@@ -116,6 +116,11 @@ const COS = {
     if(this.currentUser.level === 'admin') return true;
     // Rehearsal Studio is available to anyone with worship access
     if(section === 'rehearsal') return (this.currentUser.sections||[]).includes('worship');
+    // Control Room is available to anyone with media or sunday access
+    if(section === 'controlroom') {
+      const s = this.currentUser.sections || [];
+      return s.includes('media') || s.includes('sunday') || s.includes('worship');
+    }
     return (this.currentUser.sections||[]).includes(section);
   },
 

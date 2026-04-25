@@ -146,6 +146,7 @@ const MODULES = [
   { id:'worship',     label:'Worship',           icon:'🎵', desc:'Songs, lyrics, team and guidance',          href:'worship.html',             color:'#7C3AED' },
   { id:'rehearsal',   label:'Rehearsal Studio',  icon:'🎶', desc:'References, arrangements, practice & sets', href:'rehearsal/index.html',     color:'#EC4899' },
   { id:'media',       label:'Media',             icon:'🎥', desc:'Briefings, training, setup and checklist',  href:'media.html',               color:'#2563EB' },
+  { id:'controlroom', label:'Control Room',      icon:'🎬', desc:'Live OBS overlay — lyrics, verses, graphics',href:'../control-room/',        color:'#DC2626', external:true },
   { id:'midweek',     label:'Mid-week',          icon:'📅', desc:'Wednesday & Friday meetings',               href:'midweek.html',             color:'#059669' },
   { id:'departments', label:'Departments',       icon:'🏛️', desc:'All ministry teams and coordinators',       href:'departments.html',         color:'#D97706' },
   { id:'admin',       label:'Admin',             icon:'⚙️', desc:'Users, access, settings',                  href:'admin.html',               color:'#64748B' },
@@ -172,14 +173,18 @@ function pageInit(){
 
   // Module grid
   const grid = document.getElementById('module-grid');
-  grid.innerHTML = MODULES.filter(m=>COS.hasAccess(m.id)).map(m=>`
-    <a href="${m.href}" style="text-decoration:none;">
+  grid.innerHTML = MODULES.filter(m=>COS.hasAccess(m.id)).map(m=>{
+    const tgt = m.external ? ' target="_blank" rel="noopener"' : '';
+    const ext = m.external ? '<span style="display:inline-block;margin-left:6px;color:var(--ink-4);font-size:11px;vertical-align:middle;">↗</span>' : '';
+    return `
+    <a href="${m.href}"${tgt} style="text-decoration:none;">
       <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r16);padding:18px 20px;cursor:pointer;transition:all 0.15s;display:block;" onmouseover="this.style.borderColor='var(--border-hover)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
         <div style="font-size:24px;margin-bottom:10px;">${m.icon}</div>
-        <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">${m.label}</div>
+        <div style="font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;">${m.label}${ext}</div>
         <div style="font-size:12px;color:var(--ink-4);line-height:1.4;">${m.desc}</div>
       </div>
-    </a>`).join('');
+    </a>`;
+  }).join('');
 
   // Quick actions
   const qa = document.getElementById('quick-actions');
@@ -248,11 +253,14 @@ function buildSidebar(){
     </div>
     <div class="nav-section">
       <div class="nav-section-label">Modules</div>
-      ${accessible.map(m=>`
-        <a href="${m.href}" class="nav-item" style="text-decoration:none;">
+      ${accessible.map(m=>{
+        const tgt = m.external ? ' target="_blank" rel="noopener"' : '';
+        return `
+        <a href="${m.href}"${tgt} class="nav-item" style="text-decoration:none;">
           <span style="font-size:13px;">${m.icon}</span>
-          ${m.label}
-        </a>`).join('')}
+          ${m.label}${m.external ? ' <span style="margin-left:auto;color:var(--ink-4);font-size:10px;">↗</span>' : ''}
+        </a>`;
+      }).join('')}
     </div>
     <div style="margin-top:auto;padding:16px 20px;border-top:1px solid var(--border);">
       <div style="font-size:11px;color:var(--ink-4);line-height:1.6;">
@@ -264,11 +272,14 @@ function buildSidebar(){
   // Mobile nav
   const mob = document.getElementById('mob-nav');
   const mobItems = accessible.slice(0,5);
-  mob.innerHTML = mobItems.map(m=>`
-    <a href="${m.href}" class="mob-nav-btn" style="text-decoration:none;">
+  mob.innerHTML = mobItems.map(m=>{
+    const tgt = m.external ? ' target="_blank" rel="noopener"' : '';
+    return `
+    <a href="${m.href}"${tgt} class="mob-nav-btn" style="text-decoration:none;">
       <span style="font-size:18px;">${m.icon}</span>
       <span>${m.label.split(' ')[0]}</span>
-    </a>`).join('');
+    </a>`;
+  }).join('');
 }
 
 COS.init();
