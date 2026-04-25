@@ -170,8 +170,10 @@
     </div>
 
     <div class="tabs">
-      <button class="tab active" onclick="switchTab('songs')" data-tab="songs">Song library</button>
-      <button class="tab" onclick="switchTab('setlist')" data-tab="setlist">Today's set list</button>
+      <button class="tab active" onclick="switchTab('songs')"   data-tab="songs">Song library</button>
+      <button class="tab"        onclick="switchTab('setlist')" data-tab="setlist">Today's set list</button>
+      <button class="tab"        onclick="switchTab('images')"  data-tab="images">Images</button>
+      <button class="tab"        onclick="switchTab('people')"  data-tab="people">People</button>
     </div>
 
     <!-- SONGS PANEL -->
@@ -246,6 +248,100 @@
           <div class="btn-row" style="margin-top:20px">
             <button class="btn primary" onclick="savePlan()">Save set list</button>
             <button class="btn danger" onclick="clearPlan()" style="margin-left:auto">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGES PANEL -->
+    <div id="panel-images" class="panel">
+      <div class="two-col">
+        <div class="card">
+          <h2>Image library</h2>
+          <p class="muted" style="font-size:13px;margin-bottom:14px">Upload images for offering, sermon thumbnails, communion, and other graphics.</p>
+          <div id="images-list" class="song-list"></div>
+        </div>
+
+        <div class="card">
+          <h2 id="image-editor-title">Upload image</h2>
+
+          <label>Name</label>
+          <input id="image-name" class="input" placeholder="e.g. Bank Details — April 2026">
+
+          <label style="margin-top:14px">Category</label>
+          <select id="image-category" class="input" style="cursor:pointer">
+            <option value="offering">Offering (e.g. bank details)</option>
+            <option value="sermon">Sermon thumbnail</option>
+            <option value="communion">Communion</option>
+            <option value="announcement">Announcement</option>
+            <option value="general">General / other</option>
+          </select>
+
+          <label style="margin-top:14px">Image file (JPG / PNG, ideally 1920x1080 or 16:9)</label>
+          <input id="image-file" type="file" accept="image/*" class="input" style="padding:10px 12px;cursor:pointer">
+
+          <div id="image-preview-wrap" style="margin-top:14px;display:none">
+            <label>Preview</label>
+            <img id="image-preview" style="width:100%;border-radius:8px;border:1px solid var(--border);max-height:400px;object-fit:contain;background:#000;">
+          </div>
+
+          <p class="muted" style="font-size:12px;margin-top:10px">Files are auto-resized to 1920px max width. JPEG quality 85% to keep size sensible.</p>
+
+          <div class="btn-row" style="margin-top:20px">
+            <button class="btn primary" id="image-save-btn" onclick="saveImage()" disabled>Save image</button>
+            <button class="btn" onclick="resetImageForm()">Reset</button>
+            <button class="btn danger" id="image-delete-btn" onclick="deleteImage()" style="margin-left:auto;display:none">Delete</button>
+          </div>
+
+          <div id="image-attach-section" style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:none">
+            <h3 style="margin:0 0 8px">Attach to a Sunday</h3>
+            <p class="muted" style="font-size:13px;margin-bottom:12px">Pin this image to the Sermon row in a service's order of service. Operator will see a "Push image" button.</p>
+
+            <label>Service date</label>
+            <input id="image-attach-date" type="date" class="input">
+
+            <button class="btn primary" onclick="attachImageToSermon()" style="width:100%;margin-top:8px">Attach to Sermon row</button>
+            <p id="image-attach-status" class="muted" style="font-size:12px;margin-top:8px"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PEOPLE PANEL -->
+    <div id="panel-people" class="panel">
+      <div class="two-col">
+        <div class="card">
+          <h2>People</h2>
+          <p class="muted" style="font-size:13px;margin-bottom:14px">Birthdays and anniversaries surface in the operator app's announcements panel.</p>
+          <div id="people-list" class="song-list"></div>
+          <button class="btn primary" style="width:100%;margin-top:14px" onclick="newPerson()">+ New person</button>
+        </div>
+
+        <div class="card">
+          <h2 id="person-editor-title">New person</h2>
+
+          <label>Name</label>
+          <input id="person-name" class="input" placeholder="e.g. Auntie Pauline">
+
+          <label style="margin-top:14px">Birthday — month / day</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <input id="person-bd-month" class="input" type="number" min="1" max="12" placeholder="Month (1-12)">
+            <input id="person-bd-day"   class="input" type="number" min="1" max="31" placeholder="Day (1-31)">
+          </div>
+
+          <label style="margin-top:14px">Anniversary — month / day / year</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+            <input id="person-an-month" class="input" type="number" min="1" max="12" placeholder="Month">
+            <input id="person-an-day"   class="input" type="number" min="1" max="31" placeholder="Day">
+            <input id="person-an-year"  class="input" type="number" min="1950" max="2100" placeholder="Year (e.g. 2010)">
+          </div>
+
+          <label style="margin-top:14px">Spouse name (for anniversaries)</label>
+          <input id="person-spouse" class="input" placeholder="e.g. Uncle Pauline">
+
+          <div class="btn-row" style="margin-top:20px">
+            <button class="btn primary" onclick="savePerson()">Save person</button>
+            <button class="btn danger" id="person-delete-btn" onclick="deletePerson()" style="margin-left:auto;display:none">Delete</button>
           </div>
         </div>
       </div>
@@ -350,6 +446,8 @@ window.switchTab = (name) => {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
   if (name === 'setlist') renderSetlistSongs();
+  if (name === 'images')  loadImagesAdmin();
+  if (name === 'people')  loadPeopleAdmin();
 };
 
 // ============ SONGS: LOAD ============
@@ -639,6 +737,261 @@ function toast(kind, msg) {
   }
   await loadUsers();
 })();
+
+// ============================================================
+// IMAGES
+// ============================================================
+let images = [];
+let editingImageId = null;
+let pendingImageDataUrl = null; // base64 data URL waiting to save
+let pendingImageDims = { width: null, height: null };
+
+async function loadImagesAdmin() {
+  const { data, error } = await client
+    .from('control_room_images')
+    .select('id, name, category, data_url, width, height, created_at')
+    .order('created_at', { ascending: false });
+  if (error) { toast('error', 'Load images: ' + error.message); return; }
+  images = data || [];
+  renderImagesList();
+}
+
+function renderImagesList() {
+  const list = document.getElementById('images-list');
+  if (!images.length) {
+    list.innerHTML = '<div style="padding:14px;color:var(--text-muted);text-align:center;border:1px dashed var(--border-strong);border-radius:8px;font-size:13px">No images yet. Upload your first one.</div>';
+    return;
+  }
+  list.innerHTML = images.map(img => `
+    <div class="song-list-item" onclick="window.editImage('${img.id}')" style="display:flex;gap:12px;align-items:center">
+      <div style="width:60px;height:34px;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0">
+        <img src="${img.data_url}" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(img.name)}</div>
+        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${img.category}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+window.editImage = (id) => {
+  const img = images.find(x => x.id === id);
+  if (!img) return;
+  editingImageId = id;
+  document.getElementById('image-editor-title').textContent = 'Edit image';
+  document.getElementById('image-name').value = img.name;
+  document.getElementById('image-category').value = img.category;
+  pendingImageDataUrl = img.data_url;
+  pendingImageDims = { width: img.width, height: img.height };
+  document.getElementById('image-preview').src = img.data_url;
+  document.getElementById('image-preview-wrap').style.display = 'block';
+  document.getElementById('image-save-btn').disabled = false;
+  document.getElementById('image-delete-btn').style.display = 'inline-flex';
+  document.getElementById('image-attach-section').style.display = 'block';
+};
+
+window.resetImageForm = () => {
+  editingImageId = null;
+  pendingImageDataUrl = null;
+  pendingImageDims = { width: null, height: null };
+  document.getElementById('image-editor-title').textContent = 'Upload image';
+  document.getElementById('image-name').value = '';
+  document.getElementById('image-category').value = 'offering';
+  document.getElementById('image-file').value = '';
+  document.getElementById('image-preview-wrap').style.display = 'none';
+  document.getElementById('image-save-btn').disabled = true;
+  document.getElementById('image-delete-btn').style.display = 'none';
+  document.getElementById('image-attach-section').style.display = 'none';
+  document.getElementById('image-attach-status').textContent = '';
+};
+
+document.getElementById('image-file').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const img = new Image();
+    img.onload = () => {
+      // Resize to max 1920px wide, JPEG quality 85
+      const maxW = 1920;
+      const scale = img.width > maxW ? maxW / img.width : 1;
+      const w = Math.round(img.width * scale);
+      const h = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      pendingImageDataUrl = dataUrl;
+      pendingImageDims = { width: w, height: h };
+      document.getElementById('image-preview').src = dataUrl;
+      document.getElementById('image-preview-wrap').style.display = 'block';
+      document.getElementById('image-save-btn').disabled = false;
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+window.saveImage = async () => {
+  const name = document.getElementById('image-name').value.trim();
+  const category = document.getElementById('image-category').value;
+  if (!name || !pendingImageDataUrl) { toast('error', 'Need a name and image'); return; }
+
+  if (editingImageId) {
+    const { error } = await client.from('control_room_images').update({
+      name, category, data_url: pendingImageDataUrl,
+      width: pendingImageDims.width, height: pendingImageDims.height
+    }).eq('id', editingImageId);
+    if (error) { toast('error', 'Save: ' + error.message); return; }
+    toast('success', 'Image updated');
+  } else {
+    const { data, error } = await client.from('control_room_images').insert({
+      name, category, data_url: pendingImageDataUrl,
+      width: pendingImageDims.width, height: pendingImageDims.height
+    }).select().single();
+    if (error) { toast('error', 'Save: ' + error.message); return; }
+    editingImageId = data.id;
+    toast('success', 'Image saved');
+  }
+  await loadImagesAdmin();
+  // Don't reset — keep editing context for attach-to-Sunday
+  document.getElementById('image-delete-btn').style.display = 'inline-flex';
+  document.getElementById('image-attach-section').style.display = 'block';
+};
+
+window.deleteImage = async () => {
+  if (!editingImageId) return;
+  if (!confirm('Delete this image? Any sermon attachments to this image will be cleared.')) return;
+  const { error } = await client.from('control_room_images').delete().eq('id', editingImageId);
+  if (error) { toast('error', 'Delete: ' + error.message); return; }
+  toast('success', 'Image deleted');
+  await loadImagesAdmin();
+  resetImageForm();
+};
+
+window.attachImageToSermon = async () => {
+  if (!editingImageId) return;
+  const date = document.getElementById('image-attach-date').value;
+  const status = document.getElementById('image-attach-status');
+  if (!date) { status.textContent = 'Pick a service date.'; return; }
+
+  // Find plan for that date
+  const { data: plans } = await client.from('control_room_plans')
+    .select('id').eq('service_date', date).limit(1);
+  if (!plans || !plans.length) { status.textContent = 'No set list exists for ' + date + '. Build one first in the Set list tab.'; return; }
+
+  // Find Sermon row
+  const { data: rows } = await client.from('control_room_plan_speakers')
+    .select('id, role').eq('plan_id', plans[0].id);
+  const sermonRow = (rows || []).find(r => r.role.toLowerCase().includes('sermon'));
+  if (!sermonRow) { status.textContent = 'No Sermon row in the order of service for that date.'; return; }
+
+  const { error } = await client.from('control_room_plan_speakers')
+    .update({ image_id: editingImageId }).eq('id', sermonRow.id);
+  if (error) { status.textContent = 'Failed: ' + error.message; return; }
+  status.textContent = '✓ Attached to Sermon row for ' + date + '. Operator can push it from the order of service.';
+  status.style.color = '#22c55e';
+  setTimeout(() => { status.style.color = ''; }, 3000);
+};
+
+// ============================================================
+// PEOPLE
+// ============================================================
+let peopleAdmin = [];
+let editingPersonId = null;
+
+async function loadPeopleAdmin() {
+  const { data, error } = await client.from('control_room_people')
+    .select('*').eq('active', true).order('name');
+  if (error) { toast('error', 'Load people: ' + error.message); return; }
+  peopleAdmin = data || [];
+  renderPeopleList();
+}
+
+function renderPeopleList() {
+  const list = document.getElementById('people-list');
+  if (!peopleAdmin.length) {
+    list.innerHTML = '<div style="padding:14px;color:var(--text-muted);text-align:center;border:1px dashed var(--border-strong);border-radius:8px;font-size:13px">No people yet. Add the first one.</div>';
+    return;
+  }
+  const months = ['','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  list.innerHTML = peopleAdmin.map(p => {
+    const bd = (p.birthday_month && p.birthday_day) ? `🎂 ${months[p.birthday_month]} ${p.birthday_day}` : '';
+    const an = (p.anniversary_month && p.anniversary_day) ? `💍 ${months[p.anniversary_month]} ${p.anniversary_day}` : '';
+    const meta = [bd, an].filter(Boolean).join(' · ');
+    return `
+      <div class="song-list-item" onclick="window.editPerson('${p.id}')">
+        <div style="font-weight:600;font-size:14px">${escapeHtml(p.name)}</div>
+        ${meta ? `<div style="font-size:11px;color:var(--text-muted);margin-top:2px">${meta}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+window.newPerson = () => {
+  editingPersonId = null;
+  document.getElementById('person-editor-title').textContent = 'New person';
+  ['person-name','person-bd-month','person-bd-day','person-an-month','person-an-day','person-an-year','person-spouse'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('person-delete-btn').style.display = 'none';
+};
+
+window.editPerson = (id) => {
+  const p = peopleAdmin.find(x => x.id === id);
+  if (!p) return;
+  editingPersonId = id;
+  document.getElementById('person-editor-title').textContent = 'Edit person';
+  document.getElementById('person-name').value = p.name || '';
+  document.getElementById('person-bd-month').value = p.birthday_month || '';
+  document.getElementById('person-bd-day').value = p.birthday_day || '';
+  document.getElementById('person-an-month').value = p.anniversary_month || '';
+  document.getElementById('person-an-day').value = p.anniversary_day || '';
+  document.getElementById('person-an-year').value = p.anniversary_year || '';
+  document.getElementById('person-spouse').value = p.spouse_name || '';
+  document.getElementById('person-delete-btn').style.display = 'inline-flex';
+};
+
+window.savePerson = async () => {
+  const name = document.getElementById('person-name').value.trim();
+  if (!name) { toast('error', 'Name is required'); return; }
+  const v = (id) => {
+    const x = document.getElementById(id).value;
+    return x === '' ? null : parseInt(x);
+  };
+  const payload = {
+    name,
+    birthday_month: v('person-bd-month'),
+    birthday_day:   v('person-bd-day'),
+    anniversary_month: v('person-an-month'),
+    anniversary_day:   v('person-an-day'),
+    anniversary_year:  v('person-an-year'),
+    spouse_name: document.getElementById('person-spouse').value.trim() || null
+  };
+  if (editingPersonId) {
+    const { error } = await client.from('control_room_people').update(payload).eq('id', editingPersonId);
+    if (error) { toast('error', 'Save: ' + error.message); return; }
+    toast('success', 'Person updated');
+  } else {
+    const { error } = await client.from('control_room_people').insert(payload);
+    if (error) { toast('error', 'Save: ' + error.message); return; }
+    toast('success', 'Person added');
+    newPerson();
+  }
+  await loadPeopleAdmin();
+};
+
+window.deletePerson = async () => {
+  if (!editingPersonId) return;
+  if (!confirm('Delete this person?')) return;
+  const { error } = await client.from('control_room_people').delete().eq('id', editingPersonId);
+  if (error) { toast('error', 'Delete: ' + error.message); return; }
+  toast('success', 'Person deleted');
+  await loadPeopleAdmin();
+  newPerson();
+};
 </script>
 </body>
 </html>

@@ -814,6 +814,249 @@
     vertical-align: middle;
   }
 
+  /* ============ GRAPHICS PANEL ============ */
+  .gfx-panel {
+    margin: 16px 20px 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+  .gfx-panel h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0 0 4px;
+  }
+  .gfx-panel p.helper {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin: 0 0 14px;
+  }
+  .gfx-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .gfx-tab {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .gfx-tab:hover { color: var(--text); }
+  .gfx-tab.active {
+    color: var(--text);
+    border-bottom-color: var(--red);
+  }
+  .gfx-tab-body {
+    display: none;
+  }
+  .gfx-tab-body.active {
+    display: block;
+  }
+
+  /* Image grid */
+  .img-section {
+    margin-bottom: 16px;
+  }
+  .img-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .img-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .img-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.12s;
+    position: relative;
+  }
+  .img-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+  .img-card.live {
+    border-color: var(--red);
+    box-shadow: 0 0 0 2px rgba(196,30,42,0.35);
+  }
+  .img-card .thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .img-card .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .img-card .img-name {
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .img-card.live::after {
+    content: 'On screen';
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: var(--red);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .img-empty {
+    padding: 20px 14px;
+    background: var(--bg);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: center;
+  }
+
+  /* Announcement composer */
+  .ann-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .ann-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .ann-suggest {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .ann-suggest .meta { flex: 1; min-width: 0; }
+  .ann-suggest .ann-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-dim);
+    margin-bottom: 2px;
+  }
+  .ann-suggest .ann-title {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .ann-suggest .ann-body {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .ann-suggest .push-btn {
+    background: var(--red);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .ann-suggest .push-btn:hover { background: #e02b38; }
+  .ann-custom {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    margin-top: 14px;
+  }
+  .ann-fields {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .ann-input {
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--text);
+  }
+  .ann-input:focus { border-color: var(--red); outline: none; }
+  .ann-kind-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .ann-kind-btn {
+    padding: 8px 4px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .ann-kind-btn:hover { color: var(--text); border-color: var(--border-strong); }
+  .ann-kind-btn.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+  .ann-push {
+    background: var(--red);
+    color: white;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .ann-push:hover { background: #e02b38; }
+  .ann-push:disabled {
+    background: var(--surface-2);
+    color: var(--text-dim);
+    cursor: not-allowed;
+  }
+
   /* ============ BIBLE SEARCH ============ */
   .bible-panel {
     margin: 24px 20px 40px;
@@ -1083,6 +1326,58 @@
     </div>
   </div>
 
+  <!-- Graphics: images + announcements -->
+  <div class="gfx-panel">
+    <h3>Graphics</h3>
+    <p class="helper">Push full-screen images or announcement banners.</p>
+
+    <div class="gfx-tabs">
+      <button class="gfx-tab active" data-tab="images" onclick="switchGfxTab('images')">Images</button>
+      <button class="gfx-tab" data-tab="announcements" onclick="switchGfxTab('announcements')">Announcements</button>
+    </div>
+
+    <!-- Images tab -->
+    <div id="gfx-tab-images" class="gfx-tab-body active">
+      <div class="img-section">
+        <div class="img-section-label">Offering</div>
+        <div id="img-grid-offering" class="img-grid"></div>
+      </div>
+      <div class="img-section">
+        <div class="img-section-label">Sermon thumbnails</div>
+        <div id="img-grid-sermon" class="img-grid"></div>
+      </div>
+      <div class="img-section">
+        <div class="img-section-label">Communion</div>
+        <div id="img-grid-communion" class="img-grid"></div>
+      </div>
+      <div class="img-section">
+        <div class="img-section-label">Other</div>
+        <div id="img-grid-general" class="img-grid"></div>
+      </div>
+      <p class="helper" style="margin-top: 12px; font-size: 12px;">Upload images via the <a href="admin.html" style="color: var(--text-muted); text-decoration: underline;">admin page →</a></p>
+    </div>
+
+    <!-- Announcements tab -->
+    <div id="gfx-tab-announcements" class="gfx-tab-body">
+      <div id="ann-suggestions" class="ann-suggestions"></div>
+
+      <div class="ann-custom">
+        <div class="img-section-label">Custom announcement</div>
+        <div class="ann-kind-row">
+          <button class="ann-kind-btn active" data-kind="midweek"     onclick="setAnnKind('midweek')">Mid-week</button>
+          <button class="ann-kind-btn"        data-kind="birthday"    onclick="setAnnKind('birthday')">Birthday</button>
+          <button class="ann-kind-btn"        data-kind="anniversary" onclick="setAnnKind('anniversary')">Anniversary</button>
+          <button class="ann-kind-btn"        data-kind="special"     onclick="setAnnKind('special')">Special</button>
+        </div>
+        <div class="ann-fields">
+          <input id="ann-title" class="ann-input" placeholder="Title (e.g. Happy Birthday Auntie Pauline)" oninput="onAnnInput()">
+          <input id="ann-body"  class="ann-input" placeholder="Subtitle / details (optional)" oninput="onAnnInput()">
+        </div>
+        <button id="ann-push-btn" class="ann-push" onclick="pushCustomAnn()" disabled>Push to overlay</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Bible -->
   <div class="bible-panel">
     <h3>Scripture search</h3>
@@ -1216,6 +1511,9 @@ async function enterApp() {
   await loadPlan();
   await loadDisplaySettings();
   await loadSpeakers();
+  await loadImages();
+  await loadAnnouncements();
+  await loadPeople();
   subscribeLive();
 }
 
@@ -1418,6 +1716,8 @@ window.blank = async () => {
   currentSlideIdx = -1;
   currentPassage = null;
   currentPassageSlideIdx = -1;
+  currentImageId = null;
+  currentAnnouncementKey = null;
   await pushLive('blank', {});
   renderSetlist();
 };
@@ -1743,7 +2043,7 @@ async function loadOrderOfService(planId) {
   }
   const { data, error } = await client
     .from('control_room_plan_speakers')
-    .select('id, position, role, name, notes')
+    .select('id, position, role, name, notes, image_id')
     .eq('plan_id', planId)
     .order('position');
   if (error) { console.error('OOS load:', error); return; }
@@ -1764,6 +2064,9 @@ function renderOrderOfService(items) {
       && currentLowerThird.name === (item.name || '')
       && currentLowerThird.role === item.role;
     const hasName = !!item.name;
+    // Look up attached image (sermon thumbnail typically)
+    const attachedImage = item.image_id ? imageLibrary.find(i => i.id === item.image_id) : null;
+    const isImageLive = attachedImage && currentImageId === attachedImage.id;
     return `
       <div class="oos-item ${isLive ? 'live' : ''}">
         <div class="oos-pos">${item.position}</div>
@@ -1771,11 +2074,16 @@ function renderOrderOfService(items) {
           <div class="oos-role">${escapeHtml(item.role)}</div>
           <div class="oos-name ${hasName ? '' : 'placeholder'}">${escapeHtml(item.name || (item.notes || '—'))}</div>
           ${item.notes && hasName ? `<div class="oos-notes">${escapeHtml(item.notes)}</div>` : ''}
+          ${attachedImage ? `<div class="oos-notes" style="color: var(--text-muted);">📺 ${escapeHtml(attachedImage.name)}</div>` : ''}
         </div>
-        ${hasName
-          ? `<button class="oos-push" onclick="window.pushOrderItem('${item.id}')" ${isLive ? 'disabled' : ''}>${isLive ? 'On screen' : 'Push'}</button>`
-          : ''
-        }
+        <div style="display: flex; flex-direction: column; gap: 4px; flex-shrink: 0;">
+          ${hasName
+            ? `<button class="oos-push" onclick="window.pushOrderItem('${item.id}')" ${isLive ? 'disabled' : ''}>${isLive ? 'On screen' : 'Push name'}</button>`
+            : ''}
+          ${attachedImage
+            ? `<button class="oos-push" style="background: ${isImageLive ? 'var(--surface-2)' : 'var(--surface-2)'}; color: ${isImageLive ? 'var(--text-muted)' : 'var(--text)'}; border: 1px solid var(--border-strong);" onclick="window.pushImage('${attachedImage.id}')" ${isImageLive ? 'disabled' : ''}>${isImageLive ? 'Image on' : 'Push image'}</button>`
+            : ''}
+        </div>
       </div>
     `;
   }).join('');
@@ -1867,6 +2175,256 @@ function renderLowerThirdCurrent(lt) {
 }
 
 // ============================================================
+// GRAPHICS — Images + Announcements
+// ============================================================
+let imageLibrary = [];          // all images
+let savedAnnouncements = [];    // saved announcement templates
+let people = [];                // people for birthdays/anniversaries
+let annKind = 'midweek';        // selected kind for custom announcement
+let currentImageId = null;      // image currently on screen (if any)
+let currentAnnouncementKey = null; // 'ann:<id>' or 'birthday:<id>' or 'anniversary:<id>' for highlight
+
+window.switchGfxTab = (tab) => {
+  document.querySelectorAll('.gfx-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.gfx-tab-body').forEach(b => b.classList.toggle('active', b.id === 'gfx-tab-' + tab));
+};
+
+window.setAnnKind = (kind) => {
+  annKind = kind;
+  document.querySelectorAll('.ann-kind-btn').forEach(b => b.classList.toggle('active', b.dataset.kind === kind));
+};
+
+window.onAnnInput = () => {
+  const title = document.getElementById('ann-title').value.trim();
+  document.getElementById('ann-push-btn').disabled = !title;
+};
+
+async function loadImages() {
+  const { data, error } = await client
+    .from('control_room_images')
+    .select('id, name, category, data_url, created_at')
+    .order('created_at', { ascending: false });
+  if (error) { console.error('images load:', error); return; }
+  imageLibrary = data || [];
+  renderImageLibrary();
+  // OOS may have attached images that need re-rendering
+  renderOrderOfService(orderOfService);
+}
+
+function renderImageLibrary() {
+  const cats = ['offering', 'sermon', 'communion', 'general'];
+  cats.forEach(cat => {
+    const grid = document.getElementById('img-grid-' + cat);
+    if (!grid) return;
+    const items = imageLibrary.filter(i => i.category === cat);
+    if (!items.length) {
+      grid.innerHTML = '<div class="img-empty">No ' + cat + ' images yet.</div>';
+      return;
+    }
+    grid.innerHTML = items.map(img => {
+      const isLive = currentImageId === img.id;
+      return `
+        <div class="img-card ${isLive ? 'live' : ''}" onclick="window.pushImage('${img.id}')">
+          <div class="thumb"><img src="${img.data_url}" alt=""></div>
+          <div class="img-name">${escapeHtml(img.name)}</div>
+        </div>
+      `;
+    }).join('');
+  });
+}
+
+window.pushImage = async (id) => {
+  const img = imageLibrary.find(x => x.id === id);
+  if (!img) return;
+  currentSongIdx = -1;
+  currentSlideIdx = -1;
+  currentPassage = null;
+  currentPassageSlideIdx = -1;
+  await pushLive('graphic', { data_url: img.data_url, name: img.name, image_id: img.id });
+  renderSetlist();
+};
+
+async function loadAnnouncements() {
+  const { data, error } = await client
+    .from('control_room_announcements')
+    .select('id, title, body, category, position')
+    .eq('active', true)
+    .order('position');
+  if (error) { console.error('announcements load:', error); return; }
+  savedAnnouncements = data || [];
+  renderAnnouncementSuggestions();
+}
+
+async function loadPeople() {
+  const { data, error } = await client
+    .from('control_room_people')
+    .select('id, name, birthday_month, birthday_day, anniversary_month, anniversary_day, anniversary_year, spouse_name')
+    .eq('active', true);
+  if (error) { console.error('people load:', error); return; }
+  people = data || [];
+  renderAnnouncementSuggestions();
+}
+
+// Returns people whose birthday/anniversary falls within ±N days of currentPlanDate
+function nearDate(items, monthKey, dayKey) {
+  const target = new Date(currentPlanDate + 'T00:00:00');
+  const out = [];
+  for (const p of items) {
+    if (!p[monthKey] || !p[dayKey]) continue;
+    // Compute the most recent occurrence relative to target year
+    const occ = new Date(target.getFullYear(), p[monthKey] - 1, p[dayKey]);
+    const diffDays = Math.round((occ - target) / 86400000);
+    // Within 6 days before or 1 day after — covers "this week" and "today"
+    if (diffDays >= -1 && diffDays <= 6) {
+      out.push({ ...p, daysFromNow: diffDays });
+    }
+  }
+  return out.sort((a, b) => a.daysFromNow - b.daysFromNow);
+}
+
+function ordinal(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return n + (s[(v-20)%10] || s[v] || s[0]);
+}
+
+function dateLabel(month, day, daysFromNow) {
+  if (daysFromNow === 0) return 'TODAY';
+  if (daysFromNow === 1) return 'TOMORROW';
+  if (daysFromNow === -1) return 'YESTERDAY';
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[month - 1] + ' ' + day;
+}
+
+function renderAnnouncementSuggestions() {
+  const list = document.getElementById('ann-suggestions');
+  if (!list) return;
+  const out = [];
+
+  // Birthdays this week
+  const bdays = nearDate(people, 'birthday_month', 'birthday_day');
+  for (const p of bdays) {
+    const key = 'birthday:' + p.id;
+    const isLive = currentAnnouncementKey === key;
+    out.push(`
+      <div class="ann-suggest ${isLive ? 'live' : ''}">
+        <div class="meta">
+          <div class="ann-eyebrow">🎂 Birthday · ${dateLabel(p.birthday_month, p.birthday_day, p.daysFromNow)}</div>
+          <div class="ann-title">${escapeHtml(p.name)}</div>
+        </div>
+        <button class="push-btn" onclick="window.pushBirthday('${p.id}')">${isLive ? 'On screen' : 'Push'}</button>
+      </div>
+    `);
+  }
+
+  // Anniversaries this week
+  const anns = nearDate(people, 'anniversary_month', 'anniversary_day');
+  for (const p of anns) {
+    if (!p.spouse_name) continue;
+    const years = p.anniversary_year ? (new Date().getFullYear() - p.anniversary_year) : null;
+    const key = 'anniversary:' + p.id;
+    const isLive = currentAnnouncementKey === key;
+    out.push(`
+      <div class="ann-suggest ${isLive ? 'live' : ''}">
+        <div class="meta">
+          <div class="ann-eyebrow">💍 Anniversary · ${dateLabel(p.anniversary_month, p.anniversary_day, p.daysFromNow)}${years ? ' · ' + ordinal(years) : ''}</div>
+          <div class="ann-title">${escapeHtml(p.name)} & ${escapeHtml(p.spouse_name)}</div>
+        </div>
+        <button class="push-btn" onclick="window.pushAnniversary('${p.id}')">${isLive ? 'On screen' : 'Push'}</button>
+      </div>
+    `);
+  }
+
+  // Saved midweek/special announcements
+  for (const a of savedAnnouncements) {
+    const key = 'ann:' + a.id;
+    const isLive = currentAnnouncementKey === key;
+    const eyebrow = a.category === 'midweek' ? '📅 Mid-week meeting' : '⭐ Announcement';
+    out.push(`
+      <div class="ann-suggest ${isLive ? 'live' : ''}">
+        <div class="meta">
+          <div class="ann-eyebrow">${eyebrow}</div>
+          <div class="ann-title">${escapeHtml(a.title)}</div>
+          ${a.body ? `<div class="ann-body">${escapeHtml(a.body)}</div>` : ''}
+        </div>
+        <button class="push-btn" onclick="window.pushSavedAnn('${a.id}')">${isLive ? 'On screen' : 'Push'}</button>
+      </div>
+    `);
+  }
+
+  if (!out.length) {
+    list.innerHTML = '<div class="img-empty">No announcements set up yet. Use the form below to push a custom one.</div>';
+    return;
+  }
+  list.innerHTML = out.join('');
+}
+
+window.pushBirthday = async (personId) => {
+  const p = people.find(x => x.id === personId);
+  if (!p) return;
+  currentAnnouncementKey = 'birthday:' + personId;
+  await pushAnnouncement({
+    kind: 'birthday',
+    eyebrow: 'Happy Birthday',
+    title: p.name,
+    body: p.daysFromNow === 0 ? 'Celebrating today' : ''
+  });
+};
+
+window.pushAnniversary = async (personId) => {
+  const p = people.find(x => x.id === personId);
+  if (!p || !p.spouse_name) return;
+  const years = p.anniversary_year ? (new Date().getFullYear() - p.anniversary_year) : null;
+  currentAnnouncementKey = 'anniversary:' + personId;
+  await pushAnnouncement({
+    kind: 'anniversary',
+    eyebrow: years ? ordinal(years) + ' Wedding Anniversary' : 'Wedding Anniversary',
+    title: p.name + ' & ' + p.spouse_name,
+    body: p.daysFromNow === 0 ? 'Celebrating today' : ''
+  });
+};
+
+window.pushSavedAnn = async (annId) => {
+  const a = savedAnnouncements.find(x => x.id === annId);
+  if (!a) return;
+  currentAnnouncementKey = 'ann:' + annId;
+  await pushAnnouncement({
+    kind: a.category === 'midweek' ? 'midweek' : 'special',
+    eyebrow: a.category === 'midweek' ? 'Join Us' : 'Announcement',
+    title: a.title,
+    body: a.body || ''
+  });
+};
+
+window.pushCustomAnn = async () => {
+  const title = document.getElementById('ann-title').value.trim();
+  const body  = document.getElementById('ann-body').value.trim();
+  if (!title) return;
+  const eyebrowMap = {
+    midweek:     'Join Us',
+    birthday:    'Happy Birthday',
+    anniversary: 'Anniversary',
+    special:     'Announcement'
+  };
+  currentAnnouncementKey = null;
+  await pushAnnouncement({
+    kind: annKind,
+    eyebrow: eyebrowMap[annKind] || 'Announcement',
+    title,
+    body
+  });
+};
+
+async function pushAnnouncement(payload) {
+  currentSongIdx = -1;
+  currentSlideIdx = -1;
+  currentPassage = null;
+  currentPassageSlideIdx = -1;
+  await pushLive('announcement', payload);
+  renderSetlist();
+  renderAnnouncementSuggestions();
+}
+
+// ============================================================
 // LIVE STATE (push + subscribe)
 // ============================================================
 async function pushLive(mode, payload) {
@@ -1920,6 +2478,22 @@ function renderNowPlaying(mode, payload) {
   tag.className = 'mode-tag ' + mode;
   tag.textContent = mode.charAt(0).toUpperCase() + mode.slice(1);
 
+  // Track currently-on-screen image / announcement for grid/list highlight
+  const prevImageId = currentImageId;
+  const prevAnnKey = currentAnnouncementKey;
+  if (mode === 'graphic') {
+    currentImageId = payload.image_id || null;
+    currentAnnouncementKey = null;
+  } else if (mode === 'announcement') {
+    currentImageId = null;
+    // currentAnnouncementKey is set by the push handler; only clear if push came from elsewhere
+  } else {
+    currentImageId = null;
+    currentAnnouncementKey = null;
+  }
+  if (prevImageId !== currentImageId) { renderImageLibrary(); renderOrderOfService(orderOfService); }
+  if (prevAnnKey !== currentAnnouncementKey) renderAnnouncementSuggestions();
+
   if (mode === 'blank') {
     title.textContent = 'Nothing on screen';
     l1.textContent = '—';
@@ -1940,6 +2514,10 @@ function renderNowPlaying(mode, payload) {
     title.textContent = payload.name || 'Graphic';
     l1.textContent = '(image on screen)';
     l2.textContent = '';
+  } else if (mode === 'announcement') {
+    title.textContent = payload.eyebrow || 'Announcement';
+    l1.textContent = payload.title || '';
+    l2.textContent = payload.body || '';
   }
 }
 

@@ -178,6 +178,69 @@
     object-fit: contain;
   }
 
+  /* ANNOUNCEMENT MODE — templated text card with Calvary branding */
+  .announcement-stage {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .announcement-card {
+    width: min(70vw, 1100px);
+    padding: clamp(40px, 6vw, 80px) clamp(48px, 8vw, 120px);
+    background: linear-gradient(135deg, rgba(196, 30, 42, 0.95) 0%, rgba(150, 22, 32, 0.95) 100%);
+    border-radius: 24px;
+    border-left: 6px solid rgba(255, 255, 255, 0.92);
+    box-shadow: 0 20px 80px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    color: white;
+  }
+  .announcement-eyebrow {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: clamp(0.95rem, 1.5vw, 1.4rem);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 0.8em;
+  }
+  .announcement-title {
+    font-family: 'Instrument Serif', 'Playfair Display', serif;
+    font-weight: 400;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.3em;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  .announcement-body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.4rem, 2.5vw, 2.4rem);
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+  .announcement-body:empty {
+    display: none;
+  }
+  .announcement-card.kind-birthday {
+    background: linear-gradient(135deg, #c41e2a 0%, #9c1822 60%, #6b1018 100%);
+  }
+  .announcement-card.kind-anniversary {
+    background: linear-gradient(135deg, #b8336a 0%, #8b2752 60%, #5a1837 100%);
+  }
+  .announcement-card.kind-midweek {
+    background: linear-gradient(135deg, #2d4a8c 0%, #1e3470 60%, #122247 100%);
+  }
+  .announcement-card.kind-special {
+    background: linear-gradient(135deg, #c41e2a 0%, #9c1822 60%, #6b1018 100%);
+  }
+
   /* ============ LOWER THIRD ============ */
   .lower-third {
     position: absolute;
@@ -271,6 +334,14 @@
   <img id="graphic-img" src="" alt="">
 </div>
 
+<div id="announcement-stage" class="stage announcement-stage">
+  <div id="announcement-card" class="announcement-card">
+    <div id="announcement-eyebrow" class="announcement-eyebrow"></div>
+    <div id="announcement-title" class="announcement-title"></div>
+    <div id="announcement-body" class="announcement-body"></div>
+  </div>
+</div>
+
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -302,9 +373,10 @@ function setStatus(state, label) {
 // STAGES
 // ============================================================
 const stages = {
-  lyric:   document.getElementById('lyric-stage'),
-  verse:   document.getElementById('verse-stage'),
-  graphic: document.getElementById('graphic-stage'),
+  lyric:        document.getElementById('lyric-stage'),
+  verse:        document.getElementById('verse-stage'),
+  graphic:      document.getElementById('graphic-stage'),
+  announcement: document.getElementById('announcement-stage'),
 };
 
 function hideAll() {
@@ -338,9 +410,21 @@ function render(mode, payload) {
     document.getElementById('verse-ref').textContent =
       [payload.reference, payload.version].filter(Boolean).join(' · ');
     requestAnimationFrame(() => stages.verse.classList.add('active'));
-  } else if (mode === 'graphic' && payload.image_url) {
-    document.getElementById('graphic-img').src = payload.image_url;
+  } else if (mode === 'graphic') {
+    // Accepts payload.data_url (preferred — base64) or payload.image_url
+    const src = payload.data_url || payload.image_url;
+    if (!src) return;
+    document.getElementById('graphic-img').src = src;
     requestAnimationFrame(() => stages.graphic.classList.add('active'));
+  } else if (mode === 'announcement') {
+    const card = document.getElementById('announcement-card');
+    // Reset kind classes
+    card.className = 'announcement-card';
+    if (payload.kind) card.classList.add('kind-' + payload.kind);
+    document.getElementById('announcement-eyebrow').textContent = payload.eyebrow || '';
+    document.getElementById('announcement-title').textContent   = payload.title   || '';
+    document.getElementById('announcement-body').textContent    = payload.body    || '';
+    requestAnimationFrame(() => stages.announcement.classList.add('active'));
   }
 }
 
