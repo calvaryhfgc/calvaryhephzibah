@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transition Team Meeting Summary | Calvary Anniversary Planning</title>
+    <style>
+        :root {
+            /* Anniversary Design System Colors */
+            --obsidian: #0B0B0E;
+            --charcoal: #1F1F23;
+            --slate: #2D2D32;
+            --smoke: #8A8A8F;
+            --pearl: #F4EFE6;
+            --calvary-red: #D0441C;
+            --calvary-red-light: #E55A2B;
+            --calvary-red-dark: #B8391A;
+            --accent-gold: #BF9B30;
+            --accent-sage: #7D8471;
+            
+            /* Typography */
+            --font-display: 'Anton', sans-serif;
+            --font-editorial: 'Instrument Serif', serif;
+            --font-ui: 'Inter Tight', sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Anton:wght@400&family=Instrument+Serif:ital,wght@0,400;0,500;1,400&family=Inter+Tight:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background: var(--obsidian);
+            color: var(--pearl);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--obsidian) 0%, var(--charcoal) 100%);
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--slate);
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--calvary-red) 0%, var(--calvary-red-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header .subtitle {
+            font-family: var(--font-editorial);
+            font-size: 1.25rem;
+            color: var(--smoke);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .date {
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--smoke);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content */
+        .main {
+            padding: 3rem 0;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background: rgba(45, 45, 50, 0.3);
+            border: 1px solid var(--slate);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-family: var(--font-editorial);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--calvary-red);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--calvary-red);
+            border-radius: 2px;
+        }
+
+        /* Key Decisions Grid */
+        .decisions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .decision-card {
+            background: rgba(208, 68, 28, 0.1);
+            border: 1px solid var(--calvary-red);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .decision-card h4 {
+            font-family: var(--font-editorial);
+            color: var(--calvary-red);
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .decision-card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .decision-card .highlight {
+            background: var(--calvary-red);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* Action Items */
+        .action-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: rgba(125, 132, 113, 0.1);
+            border-left: 3px solid var(--accent-sage);
+            border-radius: 6px;
+        }
+
+        .action-person {
+            font-weight: 600;
+            color: var(--accent-sage);
+            min-width: 140px;
+            font-size: 0.9rem;
+        }
+
+        .action-task {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--calvary-red);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.5rem;
+            top: 0.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--calvary-red);
+            border-radius: 50%;
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--calvary-red);
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-task {
+            font-size: 0.95rem;
+            color: var(--pearl);
+        }
+
+        /* Anniversary Details */
+        .anniversary-banner {
+            background: linear-gradient(135deg, var(--calvary-red) 0%, var(--calvary-red-light) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .anniversary-banner h2 {
+            font-family: var(--font-editorial);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .anniversary-banner .theme {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            letter-spacing: 0.05em;
+            opacity: 0.95;
+        }
+
+        .anniversary-banner .countdown {
+            font-family: var(--font-ui);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--charcoal);
+            border-top: 1px solid var(--slate);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            color: var(--smoke);
+        }
+
+        .footer .logo {
+            color: var(--calvary-red);
+            font-weight: 600;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .decisions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-item {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .action-person {
+                min-width: auto;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <h1>Meeting Summary</h1>
+            <div class="subtitle">Transition Team · Anniversary Planning</div>
+            <div class="date">April 25, 2026</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Anniversary Banner -->
+        <div class="anniversary-banner">
+            <h2>THANKFUL 2026</h2>
+            <div class="theme">Reasons to be Thankful</div>
+            <div class="countdown">May 17, 2026 · 10:30 AM · 22 days to go</div>
+        </div>
+
+        <div class="main">
+            <!-- Key Decisions -->
+            <div class="section">
+                <div class="section-title">✅ Key Decisions Made</div>
+                <div class="decisions-grid">
+                    <div class="decision-card">
+                        <h4>Department Presentations</h4>
+                        <p><strong>APPROVED:</strong> Creative presentations (poems, songs, drama) aligned with THANKFUL theme. <span class="highlight">3-5 minutes each</span></p>
+                    </div>
+                    <div class="decision-card">
+                        <h4>Backdrop Investment</h4>
+                        <p><strong>APPROVED:</strong> Two pull-up banners (~£100 each). Reusable Calvary-themed design, movable for future venues.</p>
+                    </div>
+                    <div class="decision-card">
+                        <h4>Refreshments Format</h4>
+                        <p><strong>DECIDED:</strong> Takeaway format to manage service timing. Sit-down fellowship consideration for future events.</p>
+                    </div>
+                    <div class="decision-card">
+                        <h4>Service Management</h4>
+                        <p><strong>CONFIRMED:</strong> Strict time limits, church pastor preaching (30 min max), celebratory worship atmosphere.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Items -->
+            <div class="section">
+                <div class="section-title">📋 Action Items Assigned</div>
+                <ul class="action-list">
+                    <li class="action-item">
+                        <div class="action-person">Pastor Kayode</div>
+                        <div class="action-task">Announce department presentations this Sunday + speak individually to department heads. Get refreshment budget from Janet. Announce importance of early arrival.</div>
+                    </li>
+                    <li class="action-item">
+                        <div class="action-person">Bolaji</div>
+                        <div class="action-task">Get quotes for backdrop banners. Send email invitations to mailing list. Prepare service order/media briefing.</div>
+                    </li>
+                    <li class="action-item">
+                        <div class="action-person">Brother Ernest</div>
+                        <div class="action-task">Coordinate ushering and recruit "crew" volunteers for worship team setup/pack-down. Focus on early-arriving members.</div>
+                    </li>
+                    <li class="action-item">
+                        <div class="action-person">All Leadership</div>
+                        <div class="action-task">Personal invitations to friends and family. Support department coordination as needed.</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Timeline -->
+            <div class="section">
+                <div class="section-title">📅 Critical Timeline</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">This Sunday (April 28)</div>
+                        <div class="timeline-task">Announce department presentations. Begin volunteer recruitment.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">May 3rd (Deadline)</div>
+                        <div class="timeline-task">Departments submit creative presentation ideas and confirm participation.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">May 5th - May 10th</div>
+                        <div class="timeline-task">Finalize service order, begin backdrop production, department rehearsals.</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">May 17th - Anniversary</div>
+                        <div class="timeline-task">Celebrate God's faithfulness through Calvary Hephzibah!</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Preparations -->
+            <div class="section">
+                <div class="section-title">🎯 Additional Preparations Needed</div>
+                <div class="decisions-grid">
+                    <div class="decision-card">
+                        <h4>Enhanced Worship</h4>
+                        <p>Regular worship team + special guest praise/worship leader for celebratory atmosphere.</p>
+                    </div>
+                    <div class="decision-card">
+                        <h4>Technical Setup</h4>
+                        <p>Enhanced sound/media for presentations. Professional photography/video of service.</p>
+                    </div>
+                    <div class="decision-card">
+                        <h4>Facility Preparation</h4>
+                        <p>Anniversary decorations throughout building. Extra seating for increased attendance.</p>
+                    </div>
+                    <div class="decision-card">
+                        <h4>Outreach</h4>
+                        <p>Email mailing list invitations. Social media promotion. Personal family/friend invites.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meeting Attendance -->
+            <div class="section">
+                <div class="section-title">👥 Meeting Participants</div>
+                <p><strong>Present:</strong> Pastor Shade Olatoye (General Overseer), Sister Petty, Pastor Kayode Ogungbenro, Brother Ernest, Bolaji Olatoye</p>
+                <p><strong>Apologies:</strong> Pastor Gbenga Adebanjo (away in Chester/Cheshire)</p>
+                <p><strong>Meeting Duration:</strong> 47 minutes · Effective decision-making achieved</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="container">
+            <p>Calvary Hephzibah Full Gospel Church · <span class="logo">Building Together in Faith</span></p>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem;">Transition Team Meeting Summary · April 25, 2026</p>
+        </div>
+    </div>
+</body>
+</html>
