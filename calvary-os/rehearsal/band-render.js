@@ -182,20 +182,21 @@
       });
     });
 
-    // ── Pill nav: one continuous strip, but section breaks visible
-    var listHtml = groups.map(function(g, gi){
-      var separator = gi > 0
-        ? '<span class="bv-pill-sep" aria-hidden="true"></span>'
-        : '';
-      var label = '<span class="bv-pill-section" aria-hidden="false">' + escapeHtml(g.label) + '</span>';
-      var pillsForGroup = g.items.map(function(it){
-        return '<a href="#song-' + it._number + '" class="bv-pill" data-song="' + it._number + '">' +
-          '<span class="bv-pill-num">' + it._number + '</span>' +
-          '<span class="bv-pill-title">' + escapeHtml(it.song.title) + '</span>' +
-          '<span class="bv-pill-key">' + escapeHtml(it.arrangement.key || '') + '</span>' +
-          '</a>';
+    // ── At-a-glance grid: section label to the left, song chips to the right.
+    // One compact view of the whole set, designed to be absorbed in a glance
+    // without horizontal scrolling.
+    var glanceHtml = groups.map(function(g){
+      var chipsForGroup = g.items.map(function(it){
+        return '<a href="#song-' + it._number + '" class="bv-glance-chip" data-song="' + it._number + '">' +
+          '<span class="bv-glance-num">' + it._number + '</span>' +
+          '<span class="bv-glance-title">' + escapeHtml(it.song.title) + '</span>' +
+          '<span class="bv-glance-key">' + escapeHtml(it.arrangement.key || '') + '</span>' +
+        '</a>';
       }).join('');
-      return separator + label + pillsForGroup;
+      return '<div class="bv-glance-row">' +
+        '<div class="bv-glance-section">' + escapeHtml(g.label) + '</div>' +
+        '<div class="bv-glance-chips">' + chipsForGroup + '</div>' +
+      '</div>';
     }).join('');
 
     // ── Cards: rendered in section blocks with a heading per section
@@ -226,7 +227,7 @@
         '<div class="bv-date">' + escapeHtml(dateLabel) + '</div>' +
         editLink +
       '</header>' +
-      (items.length > 0 ? '<nav class="bv-list" id="bv-list">' + listHtml + '</nav>' : '') +
+      (items.length > 0 ? '<section class="bv-glance" id="bv-glance">' + glanceHtml + '</section>' : '') +
       '<main class="bv-cards">' + cardsHtml + emptyState + '</main>';
 
     wireScrollSpy(container);
@@ -271,36 +272,36 @@
   }
 
   function wireScrollSpy(container){
-    var pills = container.querySelectorAll('.bv-pill');
+    var chips = container.querySelectorAll('.bv-glance-chip');
     var cards = container.querySelectorAll('.bv-card');
-    if(!pills.length || !cards.length) return;
+    if(!chips.length || !cards.length) return;
 
-    var pillByNum = {};
-    pills.forEach(function(p){ pillByNum[p.getAttribute('data-song')] = p; });
+    var chipByNum = {};
+    chips.forEach(function(p){ chipByNum[p.getAttribute('data-song')] = p; });
 
-    // Smooth scroll on pill tap (avoids hash jump-to behaviour)
-    pills.forEach(function(p){
+    // Smooth scroll on chip tap (avoids hash jump-to behaviour)
+    chips.forEach(function(p){
       p.addEventListener('click', function(e){
         e.preventDefault();
         var num = p.getAttribute('data-song');
         var card = container.querySelector('#song-' + num);
         if(card){
-          var headerOffset = 90; // approx height of sticky list
+          var headerOffset = 16;
           var top = card.getBoundingClientRect().top + window.scrollY - headerOffset;
           window.scrollTo({ top: top, behavior: 'smooth' });
         }
       });
     });
 
-    // Scroll-spy: highlight the pill matching the most-visible card
+    // Scroll-spy: emphasise the chip whose card is currently in view
     if('IntersectionObserver' in window){
       var observer = new IntersectionObserver(function(entries){
         entries.forEach(function(entry){
           if(entry.isIntersecting){
             var card = entry.target;
             var num = (card.id || '').replace('song-', '');
-            pills.forEach(function(p){ p.classList.remove('active'); });
-            if(pillByNum[num]) pillByNum[num].classList.add('active');
+            chips.forEach(function(p){ p.classList.remove('active'); });
+            if(chipByNum[num]) chipByNum[num].classList.add('active');
           }
         });
       }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
