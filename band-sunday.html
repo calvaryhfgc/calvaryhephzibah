@@ -95,21 +95,28 @@ body {
 /* ── At-a-glance grid ──────────────────────────────── */
 /* Compact overview of the whole set, designed to be absorbed in a glance.
    Section label sits to the left, song chips to the right. On mobile,
-   the label moves above its row to free up horizontal space. */
+   the label moves above its row to free up horizontal space.
+   Sticks to top of viewport on scroll for constant orientation. */
 .bv-glance {
   margin-bottom: 32px;
-  padding: 18px 18px 14px;
+  padding: 14px 18px 10px;
   background: var(--surface);
   border: 1px solid var(--ink-5);
   border-radius: var(--r14);
   box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 8px;
+  z-index: 20;
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  backdrop-filter: saturate(1.4) blur(10px);
+  background: rgba(255, 255, 254, 0.92);
 }
 .bv-glance-row {
   display: grid;
   grid-template-columns: 130px 1fr;
   gap: 16px;
   align-items: center;
-  padding: 8px 0;
+  padding: 6px 0;
   border-bottom: 1px solid var(--ink-6);
 }
 .bv-glance-row:last-child { border-bottom: 0; }
@@ -175,6 +182,15 @@ body {
 .bv-glance-chip.active .bv-glance-key { color: #FF8087; }
 
 @media (max-width: 600px) {
+  .bv-glance {
+    /* On phones the grid grows tall (labels stack above chips). Sticky
+       would eat too much of the viewport — release it at this breakpoint
+       and let the grid scroll away with the rest of the page. */
+    position: static;
+    background: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
   .bv-glance-row {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -219,7 +235,7 @@ body {
   border-radius: var(--r20);
   padding: 28px 26px;
   position: relative;
-  scroll-margin-top: 88px;
+  scroll-margin-top: 220px; /* clears sticky at-a-glance grid on desktop */
   box-shadow: var(--shadow-sm);
 }
 .bv-card-num {
@@ -355,7 +371,10 @@ body {
 /* ── Mobile tightening ─────────────────────────────── */
 @media (max-width: 480px) {
   .bv-header { padding: 36px 4px 18px; }
-  .bv-card { padding: 22px 20px; }
+  .bv-card {
+    padding: 22px 20px;
+    scroll-margin-top: 12px; /* no sticky grid on mobile, just breathe a bit */
+  }
   .bv-card-body {
     grid-template-columns: 1fr;
     gap: 4px;

@@ -54,18 +54,24 @@
   /* ── At-a-glance grid ──────────────────────────────── */
   .bv-glance {
     margin-bottom: 28px;
-    padding: 16px 18px 12px;
+    padding: 14px 18px 10px;
     background: var(--white);
     border: 1px solid var(--ink-5);
     border-radius: var(--r14);
     box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 8px;
+    z-index: 20;
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    backdrop-filter: saturate(1.4) blur(10px);
+    background: rgba(255, 255, 255, 0.92);
   }
   .bv-glance-row {
     display: grid;
     grid-template-columns: 130px 1fr;
     gap: 16px;
     align-items: center;
-    padding: 8px 0;
+    padding: 6px 0;
     border-bottom: 1px solid var(--ink-6);
   }
   .bv-glance-row:last-child { border-bottom: 0; }
@@ -113,6 +119,12 @@
   }
   .bv-glance-chip.active .bv-glance-key { color: #FF8087; }
   @media (max-width: 600px) {
+    .bv-glance {
+      position: static;
+      background: var(--white);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
     .bv-glance-row {
       grid-template-columns: 1fr;
       gap: 6px;
@@ -142,7 +154,7 @@
     border-radius: var(--r20);
     padding: 28px 26px;
     position: relative;
-    scroll-margin-top: 88px;
+    scroll-margin-top: 220px; /* clears sticky at-a-glance grid on desktop */
     box-shadow: var(--shadow-sm);
   }
   .bv-card-num {
@@ -234,7 +246,10 @@
   .bv-public-callout a:hover { text-decoration: underline; }
 
   @media (max-width: 480px) {
-    .bv-card { padding: 22px 20px; }
+    .bv-card {
+      padding: 22px 20px;
+      scroll-margin-top: 12px; /* sticky grid is off on mobile */
+    }
     .bv-card-body { grid-template-columns: 1fr; gap: 4px; }
     .bv-card-titleblock { grid-row: 2; align-self: start; }
     .bv-card-keyblock { grid-row: 1; align-items: flex-start; }
