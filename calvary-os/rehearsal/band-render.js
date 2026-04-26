@@ -279,15 +279,58 @@
     var chipByNum = {};
     chips.forEach(function(p){ chipByNum[p.getAttribute('data-song')] = p; });
 
+    // Find the sticky grid element so we can measure it at jump time.
+    // If sticky is not active (mobile, or browser without support), this
+    // element still exists but its position style will be 'static' — handled below.
+    var glance = container.querySelector('.bv-glance');
+
+    // Find the actual scroll container. In Calvary OS the scrollable region
+    // is .page-body, not window. On the public page, window scrolls.
+    function findScrollContainer(){
+      var el = container.parentElement;
+      while(el && el !== document.body){
+        var style = window.getComputedStyle(el);
+        var oy = style.overflowY;
+        if((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight){
+          return el;
+        }
+        el = el.parentElement;
+      }
+      return null; // null means: scroll the window
+    }
+    var scrollEl = findScrollContainer();
+
+    // Live offset measurement. When the sticky grid is pinned, its bounding
+    // rect's top equals its 'top' CSS value (8px). When not pinned (e.g. user
+    // scrolled to top, or sticky disabled on mobile), it's somewhere else.
+    // We always offset by the grid's height + a small buffer when sticky is
+    // on; otherwise just a small breathing-space buffer.
+    function measureStickyOffset(){
+      if(!glance) return 12;
+      var pos = window.getComputedStyle(glance).position;
+      if(pos !== 'sticky' && pos !== 'fixed') return 12;
+      // Sticky is active. Use rendered height + 16px breathing room.
+      return glance.offsetHeight + 16;
+    }
+
     // Smooth scroll on chip tap (avoids hash jump-to behaviour)
     chips.forEach(function(p){
       p.addEventListener('click', function(e){
         e.preventDefault();
         var num = p.getAttribute('data-song');
         var card = container.querySelector('#song-' + num);
-        if(card){
-          var headerOffset = 16;
-          var top = card.getBoundingClientRect().top + window.scrollY - headerOffset;
+        if(!card) return;
+        var offset = measureStickyOffset();
+
+        if(scrollEl){
+          // Scroll within a containing scroll element (Calvary OS page-body).
+          // Card's top relative to the scroll element = current rect delta + scrollTop.
+          var cardTop = card.getBoundingClientRect().top - scrollEl.getBoundingClientRect().top;
+          var newTop = scrollEl.scrollTop + cardTop - offset;
+          scrollEl.scrollTo({ top: newTop, behavior: 'smooth' });
+        } else {
+          // Window scrolls (public page).
+          var top = card.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: 'smooth' });
         }
       });
