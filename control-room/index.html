@@ -1265,18 +1265,11 @@
     <p>Lyrics · Verses · Graphics</p>
   </div>
 
-  <div id="user-picker">
-    <div class="user-list" id="user-list">
-      <!-- populated by JS -->
-    </div>
-  </div>
-
-  <div id="pin-entry" class="pin-entry">
+  <div id="pin-entry" class="pin-entry show">
     <h2>Enter PIN</h2>
-    <p class="for">for <span id="pin-for">...</span></p>
+    <p class="for">to access Control Room</p>
     <input id="pin-input" class="pin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="• • • •">
     <div id="pin-error" class="pin-error"></div>
-    <button class="link-btn" onclick="resetLogin()">← Back to users</button>
   </div>
 </div>
 
@@ -1555,66 +1548,16 @@ let allUsers = [];
 let verseResult = null;        // { reference, text, version }
 
 // ============================================================
-// LOGIN
+// LOGIN — single shared PIN gate
 // ============================================================
-async function loadUsers() {
-  const list = document.getElementById('user-list');
-  list.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 14px;">Loading users…</div>';
-  try {
-    const { data, error } = await client
-      .from('bridge_users_v2')
-      .select('id, name, pin_hash, active')
-      .eq('active', true)
-      .order('name');
-    if (error) throw error;
-    if (!data || data.length === 0) {
-      list.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 14px; border: 1px dashed var(--border-strong); border-radius: var(--radius);">No users found. Did the schema run?</div>';
-      return;
-    }
-    allUsers = data;
-    list.innerHTML = data.map(u => `
-      <button class="user-btn" onclick="window.pickUser('${u.id}')">
-        <span class="name">${u.name}</span>
-        <span class="role">${u.role}</span>
-      </button>
-    `).join('');
-  } catch (err) {
-    console.error('loadUsers failed:', err);
-    list.innerHTML = `
-      <div style="padding: 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius); font-size: 13px; color: #fca5a5; line-height: 1.5;">
-        <div style="font-weight: 700; margin-bottom: 6px;">Couldn't load users</div>
-        <div style="font-family: monospace; font-size: 12px; word-break: break-word;">${(err.message || err).toString().slice(0, 300)}</div>
-        <div style="margin-top: 8px; color: var(--text-muted);">Open browser DevTools → Console for full error.</div>
-      </div>`;
-  }
-}
-
-window.pickUser = (id) => {
-  const u = allUsers.find(x => x.id === id);
-  if (!u) return;
-  document.getElementById('user-picker').classList.add('hidden');
-  document.getElementById('pin-entry').classList.add('show');
-  document.getElementById('pin-for').textContent = u.name;
-  document.getElementById('pin-input').dataset.userId = id;
-  document.getElementById('pin-input').focus();
-};
-
-window.resetLogin = () => {
-  document.getElementById('user-picker').classList.remove('hidden');
-  document.getElementById('pin-entry').classList.remove('show');
-  document.getElementById('pin-input').value = '';
-  document.getElementById('pin-error').textContent = '';
-};
+const SHARED_PIN = '1234';
 
 document.getElementById('pin-input').addEventListener('input', (e) => {
   const pin = e.target.value;
   if (pin.length !== 4) return;
-  const uid = e.target.dataset.userId;
-  const user = allUsers.find(x => x.id === uid);
-  if (!user) return;
-  if (hashPin(pin) === user.pin_hash) {
-    currentUser = user;
-    sessionStorage.setItem('cr_user', JSON.stringify(user));
+  if (pin === SHARED_PIN) {
+    currentUser = { name: 'Calvary Operator' };
+    sessionStorage.setItem('cr_user', JSON.stringify(currentUser));
     enterApp();
   } else {
     document.getElementById('pin-error').textContent = 'Wrong PIN. Try again.';
@@ -2686,7 +2629,7 @@ function escapeHtml(s) {
     currentUser = JSON.parse(saved);
     await enterApp();
   } else {
-    await loadUsers();
+    document.getElementById('pin-input').focus();
   }
 })();
 
