@@ -649,7 +649,79 @@
             .sermon-card { padding: 32px 24px; }
         }
 
-        /* Animations */
+        /* Role Filter Bar */
+        .role-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(250,250,250,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            padding: 12px 24px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .role-bar-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-tertiary);
+            margin-right: 4px;
+            white-space: nowrap;
+        }
+
+        .role-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1.5px solid var(--border-light);
+            background: white;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .role-pill:hover { border-color: #C41E2A; color: #C41E2A; }
+
+        .role-pill.active {
+            background: #C41E2A;
+            border-color: #C41E2A;
+            color: white;
+            box-shadow: 0 4px 12px rgba(196,30,42,0.25);
+        }
+
+        /* Section role tags */
+        .role-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 100px;
+            margin-bottom: 16px;
+        }
+
+        .role-tag.leaders { background: #FFF3E0; color: #E65100; }
+        .role-tag.worship { background: #EDE7F6; color: #4527A0; }
+        .role-tag.media { background: #E3F2FD; color: #1565C0; }
+        .role-tag.readers { background: #E8F5E9; color: #2E7D32; }
+        .role-tag.all { background: #F5F5F5; color: #616161; }
+
+        .section-hidden { display: none !important; }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -676,10 +748,21 @@
         </div>
     </div>
 
+    <!-- Role Filter Bar -->
+    <div class="role-bar">
+        <span class="role-bar-label">View as:</span>
+        <button class="role-pill active" data-role="all" onclick="setRole('all')">👁 Everyone</button>
+        <button class="role-pill" data-role="leaders" onclick="setRole('leaders')">🏛 Leaders & Ushers</button>
+        <button class="role-pill" data-role="worship" onclick="setRole('worship')">🎶 Worship Team</button>
+        <button class="role-pill" data-role="media" onclick="setRole('media')">🎥 Media Team</button>
+        <button class="role-pill" data-role="readers" onclick="setRole('readers')">📖 Bible Readers</button>
+    </div>
+
     <div class="container">
 
         <!-- Order of Service -->
-        <div class="card">
+        <div class="card" data-roles="all leaders">
+            <span class="role-tag all">👁 Everyone</span>
             <div class="section-header">
                 <div class="section-icon">📋</div>
                 <h2 class="section-title">Order of Service</h2>
@@ -759,7 +842,8 @@
         </div>
 
         <!-- Phone Camera Checklist -->
-        <div class="card">
+        <div class="card" data-roles="media">
+            <span class="role-tag media">🎥 Media Team</span>
             <div class="section-header">
                 <div class="section-icon">📱</div>
                 <h2 class="section-title">Phone Camera Setup</h2>
@@ -797,6 +881,7 @@
         </div>
 
         <!-- Camera Framing Guide -->
+        <div data-roles="media">
         <div class="camera-guide">
             <div class="camera-guide-content">
                 <div class="section-header">
@@ -819,9 +904,11 @@
                 <div class="camera-visual-label">Correct framing</div>
             </div>
         </div>
+        </div><!-- end media wrapper -->
 
         <!-- Worship Songs -->
-        <div class="card">
+        <div class="card" data-roles="worship media">
+            <span class="role-tag worship">🎶 Worship & Media</span>
             <div class="section-header">
                 <div class="section-icon">🎶</div>
                 <h2 class="section-title">Today's Worship Songs</h2>
@@ -904,7 +991,8 @@
             </div>
         </div>
         <!-- Scripture Reading -->
-        <div class="scripture-card">
+        <div class="scripture-card" data-roles="readers leaders media">
+            <span class="role-tag readers" style="background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);">📖 Bible Readers & Leaders</span>
             <div class="section-header">
                 <div class="section-icon">📖</div>
                 <h2 class="section-title">Scripture Reading</h2>
@@ -925,7 +1013,8 @@
         </div>
 
         <!-- Sermon Section -->
-        <div class="sermon-card">
+        <div class="sermon-card" data-roles="media leaders">
+            <span class="role-tag media" style="background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);">🎥 Media & Leaders</span>
             <div class="sermon-preacher">Brother Michael Kabalu</div>
             <h3 class="sermon-title">The Hope and Power of the Resurrection of Jesus Christ</h3>
 
@@ -940,7 +1029,8 @@
         </div>
 
         <!-- Generate Lyrics On The Fly -->
-        <div class="formatter-card">
+        <div class="formatter-card" data-roles="media worship">
+            <span class="role-tag worship" style="background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);">🎶 Worship & Media</span>
             <div class="section-header">
                 <div class="section-icon">🔧</div>
                 <h2 class="section-title">Generate Lyrics On The Fly</h2>
@@ -975,7 +1065,8 @@ Let the earth hear His voice</pre>
         </div>
 
         <!-- Final Checklist -->
-        <div class="final-checklist">
+        <div class="final-checklist" data-roles="media">
+            <span class="role-tag media">🎥 Media Team</span>
             <div class="section-header">
                 <div class="section-icon">✅</div>
                 <h2 class="section-title">Media Team Checklist</h2>
@@ -1025,6 +1116,32 @@ Let the earth hear His voice</pre>
         </div>
 
     </div>
+    <script>
+        function setRole(role) {
+            // Update pills
+            document.querySelectorAll('.role-pill').forEach(p => {
+                p.classList.toggle('active', p.dataset.role === role);
+            });
 
+            // Show/hide sections
+            document.querySelectorAll('[data-roles]').forEach(section => {
+                if (role === 'all') {
+                    section.classList.remove('section-hidden');
+                } else {
+                    const roles = section.dataset.roles.split(' ');
+                    section.classList.toggle('section-hidden', !roles.includes(role) && !roles.includes('all'));
+                }
+            });
+
+            // Save preference
+            sessionStorage.setItem('calvary-role', role);
+        }
+
+        // Restore on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = sessionStorage.getItem('calvary-role');
+            if (saved) setRole(saved);
+        });
+    </script>
 </body>
 </html>
