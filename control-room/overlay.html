@@ -28,6 +28,21 @@
     font-smooth: always;
     -webkit-font-smoothing: antialiased;
   }
+
+  /* ===========================================================
+     CANVAS — fixed 1920x1080 reference frame.
+     Scaled visually with transform:scale() to fit any viewport
+     so OBS, preview iframe, fullscreen all show identical layout.
+     =========================================================== */
+  #canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1920px;
+    height: 1080px;
+    transform-origin: top left;
+    /* JS sets transform: scale(N) on resize */
+  }
   /* Live status indicator (dev only — hidden with ?hud=off) */
   .hud {
     position: fixed;
@@ -60,7 +75,10 @@
   /* Stage — positioning controlled by CSS variables set via JS */
   :root {
     --stage-anchor: bottom;
-    --stage-offset: 8vh;
+  /* Stage — positioning controlled by CSS variables set via JS */
+  :root {
+    --stage-anchor: bottom;
+    --stage-offset: 86px;          /* fixed within 1920x1080 canvas */
     --lyric-scale: 1;
     --verse-scale: 1;
   }
@@ -68,7 +86,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    padding: 0 6vw;
+    padding: 0 80px;               /* fixed gutter, ~6% of 1920 */
     text-align: center;
     opacity: 0;
     transition: opacity 0.4s ease, transform 0.4s ease, bottom 0.3s ease, top 0.3s ease;
@@ -109,34 +127,36 @@
     opacity: 1;
   }
 
-  /* LYRIC MODE — two lines, huge, halo-glow + outline for video legibility */
+  /* LYRIC MODE — two lines in a centred band (lower-third style, but middle-aligned) */
   .lyric-line {
     font-weight: 700;
-    font-size: calc(clamp(3.5rem, 6.5vw, 6rem) * var(--lyric-scale));
-    line-height: 1.15;
+    font-size: calc(80px * var(--lyric-scale));
+    line-height: 1.2;
     letter-spacing: -0.02em;
     text-shadow: var(--halo);
     -webkit-text-stroke: 2px rgba(0, 0, 0, 0.85);
     paint-order: stroke fill;
     margin: 0 auto;
-    max-width: 22ch;
+    width: 60%;                    /* 60% of 1920 = 1152px band */
+    max-width: 1100px;
   }
   .lyric-line + .lyric-line {
-    margin-top: 0.2em;
+    margin-top: 0.15em;
   }
 
-  /* VERSE MODE — centred, serif for scripture, with reference below */
+  /* VERSE MODE — slightly smaller than lyrics, scripture-friendly */
   .verse-text {
     font-family: 'Inter', serif;
     font-weight: 600;
-    font-size: calc(clamp(2.5rem, 4.5vw, 4rem) * var(--verse-scale));
+    font-size: calc(64px * var(--verse-scale));
     line-height: 1.35;
     letter-spacing: -0.015em;
     text-shadow: var(--halo);
     -webkit-text-stroke: 2px rgba(0, 0, 0, 0.85);
     paint-order: stroke fill;
-    max-width: 30ch;
-    margin: 0 auto 1.5rem;
+    width: 65%;
+    max-width: 1200px;
+    margin: 0 auto 32px;
   }
   .verse-text .vnum {
     display: inline-block;
@@ -153,7 +173,7 @@
   .verse-text .vnum + * { margin-left: 0; }
   .verse-ref {
     font-weight: 500;
-    font-size: calc(clamp(1.25rem, 1.8vw, 1.75rem) * var(--verse-scale));
+    font-size: calc(28px * var(--verse-scale));
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #C41E2A;
@@ -197,8 +217,9 @@
     justify-content: center;
   }
   .announcement-card {
-    width: min(70vw, 1100px);
-    padding: clamp(40px, 6vw, 80px) clamp(48px, 8vw, 120px);
+    width: 1100px;
+    max-width: 70%;
+    padding: 80px 100px;
     background: linear-gradient(135deg, rgba(196, 30, 42, 0.95) 0%, rgba(150, 22, 32, 0.95) 100%);
     border-radius: 24px;
     border-left: 6px solid rgba(255, 255, 255, 0.92);
@@ -209,25 +230,25 @@
   .announcement-eyebrow {
     font-family: 'Inter', sans-serif;
     font-weight: 600;
-    font-size: clamp(0.95rem, 1.5vw, 1.4rem);
+    font-size: 22px;
     letter-spacing: 0.4em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 0.8em;
+    margin-bottom: 18px;
   }
   .announcement-title {
     font-family: 'Instrument Serif', 'Playfair Display', serif;
     font-weight: 400;
-    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-size: 88px;
     line-height: 1.1;
     letter-spacing: -0.01em;
-    margin-bottom: 0.3em;
+    margin-bottom: 14px;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
   .announcement-body {
     font-family: 'Inter', sans-serif;
     font-weight: 500;
-    font-size: clamp(1.4rem, 2.5vw, 2.4rem);
+    font-size: 38px;
     line-height: 1.4;
     color: rgba(255, 255, 255, 0.95);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
@@ -251,15 +272,15 @@
   /* ============ LOWER THIRD ============ */
   .lower-third {
     position: absolute;
-    left: 4vw;
-    bottom: calc(var(--lt-bottom, 4vh));
+    left: 60px;
+    bottom: calc(var(--lt-bottom, 50px));
     background: linear-gradient(135deg, rgba(196, 30, 42, 0.95) 0%, rgba(150, 22, 32, 0.95) 100%);
-    padding: 14px 22px 14px 18px;
-    border-radius: 0 6px 6px 0;
-    border-left: 4px solid rgba(255, 255, 255, 0.9);
-    min-width: 280px;
-    max-width: 50vw;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    padding: 18px 28px 18px 22px;
+    border-radius: 0 8px 8px 0;
+    border-left: 5px solid rgba(255, 255, 255, 0.9);
+    min-width: 320px;
+    max-width: 800px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     opacity: 0;
     transform: translateX(-20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
@@ -271,15 +292,15 @@
   }
   .lt-name {
     font-weight: 700;
-    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    font-size: 36px;
     line-height: 1.1;
     letter-spacing: -0.01em;
-    margin-bottom: 2px;
+    margin-bottom: 4px;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   }
   .lt-role {
     font-weight: 500;
-    font-size: clamp(0.95rem, 1.4vw, 1.3rem);
+    font-size: 22px;
     color: rgba(255, 255, 255, 0.9);
     line-height: 1.2;
     letter-spacing: 0.5px;
@@ -304,15 +325,17 @@
     object-fit: contain;
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
   }
-  .logo-bug[data-corner="tl"] { display: block; top: 3vh;    left: 3vw;    right: auto; bottom: auto; }
-  .logo-bug[data-corner="tr"] { display: block; top: 3vh;    right: 3vw;   left: auto;  bottom: auto; }
-  .logo-bug[data-corner="bl"] { display: block; bottom: 3vh; left: 3vw;    right: auto; top: auto; }
-  .logo-bug[data-corner="br"] { display: block; bottom: 3vh; right: 3vw;   left: auto;  top: auto; }
+  .logo-bug[data-corner="tl"] { display: block; top: 40px;    left: 60px;    right: auto; bottom: auto; }
+  .logo-bug[data-corner="tr"] { display: block; top: 40px;    right: 60px;   left: auto;  bottom: auto; }
+  .logo-bug[data-corner="bl"] { display: block; bottom: 40px; left: 60px;    right: auto; top: auto; }
+  .logo-bug[data-corner="br"] { display: block; bottom: 40px; right: 60px;   left: auto;  top: auto; }
 </style>
 </head>
 <body>
 
 <div id="hud" class="hud"><span class="dot"></span><span id="hud-text">connecting…</span></div>
+
+<div id="canvas">
 
 <!-- Logo bug — set via display settings, persists across modes -->
 <div id="logo-bug" class="logo-bug" data-corner="off">
@@ -350,8 +373,31 @@
   </div>
 </div>
 
+</div><!-- /canvas -->
+
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+// ============================================================
+// CANVAS FIT — scale fixed 1920x1080 canvas to viewport, letterboxed
+// Ensures identical layout whether running fullscreen in OBS or
+// inside a tiny preview iframe. All internal pixel sizes stay literal.
+// ============================================================
+(function fitCanvas() {
+  const canvas = document.getElementById('canvas');
+  if (!canvas) return;
+  function fit() {
+    const sx = window.innerWidth  / 1920;
+    const sy = window.innerHeight / 1080;
+    const s  = Math.min(sx, sy);
+    // Letterbox: centre the canvas if viewport aspect doesn't match
+    const offsetX = (window.innerWidth  - 1920 * s) / 2;
+    const offsetY = (window.innerHeight - 1080 * s) / 2;
+    canvas.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${s})`;
+  }
+  fit();
+  window.addEventListener('resize', fit);
+})();
 
 // ============================================================
 // CONFIG
@@ -464,8 +510,9 @@ function applyDisplaySettings(settings) {
   const offset = typeof settings.vertical_offset === 'number' ? settings.vertical_offset : 8;
   const scale = SIZE_SCALE[settings.size] || 1.0;
 
-  // Update CSS variables
-  document.documentElement.style.setProperty('--stage-offset', offset + 'vh');
+  // Convert offset from "vh percentage" to pixels against the 1080 canvas height
+  const offsetPx = Math.round(offset * 10.8); // 8 → 86px, 20 → 216px
+  document.documentElement.style.setProperty('--stage-offset', offsetPx + 'px');
   document.documentElement.style.setProperty('--lyric-scale', scale);
   document.documentElement.style.setProperty('--verse-scale', scale);
 
@@ -515,8 +562,8 @@ function renderLowerThird(lt) {
   document.getElementById('lt-name').textContent = lt.name;
   document.getElementById('lt-role').textContent = lt.role || '';
   requestAnimationFrame(() => stage.classList.add('active'));
-  // Reserve ~14vh of space at the bottom so bottom-anchored lyrics don't collide
-  document.documentElement.style.setProperty('--lt-pad', '14vh');
+  // Reserve ~150px of space at the bottom (14% of 1080) so bottom-anchored lyrics don't collide
+  document.documentElement.style.setProperty('--lt-pad', '150px');
 }
 
 // ============================================================
