@@ -387,16 +387,29 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const canvas = document.getElementById('canvas');
   if (!canvas) return;
   function fit() {
-    const sx = window.innerWidth  / 1920;
-    const sy = window.innerHeight / 1080;
+    // document.documentElement.clientWidth/Height is more reliable than
+    // window.innerWidth/Height inside iframes, especially during load
+    const w = document.documentElement.clientWidth  || window.innerWidth;
+    const h = document.documentElement.clientHeight || window.innerHeight;
+    if (w === 0 || h === 0) return;            // not laid out yet, skip
+    const sx = w / 1920;
+    const sy = h / 1080;
     const s  = Math.min(sx, sy);
-    // Letterbox: centre the canvas if viewport aspect doesn't match
-    const offsetX = (window.innerWidth  - 1920 * s) / 2;
-    const offsetY = (window.innerHeight - 1080 * s) / 2;
+    const offsetX = (w - 1920 * s) / 2;
+    const offsetY = (h - 1080 * s) / 2;
     canvas.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${s})`;
   }
   fit();
   window.addEventListener('resize', fit);
+  // ResizeObserver catches iframe resizes that 'resize' event misses
+  if (window.ResizeObserver) {
+    new ResizeObserver(fit).observe(document.documentElement);
+  }
+  // Belt-and-braces: re-run a couple of times during early load,
+  // since iframe geometry can shift after the parent finishes layout
+  setTimeout(fit, 50);
+  setTimeout(fit, 250);
+  setTimeout(fit, 1000);
 })();
 
 // ============================================================
@@ -507,11 +520,13 @@ const SIZE_SCALE = { small: 0.8, medium: 1.0, large: 1.25 };
 
 function applyDisplaySettings(settings) {
   const anchor = settings.position || 'bottom';
-  const offset = typeof settings.vertical_offset === 'number' ? settings.vertical_offset : 8;
+  // Default offset is now 14 (matches a comfortable lower-third position).
+  // 14 * 10.8 = 151px from canvas edge — sits lyrics in lower third without crowding edge.
+  const offset = typeof settings.vertical_offset === 'number' ? settings.vertical_offset : 14;
   const scale = SIZE_SCALE[settings.size] || 1.0;
 
-  // Convert offset from "vh percentage" to pixels against the 1080 canvas height
-  const offsetPx = Math.round(offset * 10.8); // 8 → 86px, 20 → 216px
+  // Convert offset to pixels against the 1080 canvas height
+  const offsetPx = Math.round(offset * 10.8);
   document.documentElement.style.setProperty('--stage-offset', offsetPx + 'px');
   document.documentElement.style.setProperty('--lyric-scale', scale);
   document.documentElement.style.setProperty('--verse-scale', scale);
