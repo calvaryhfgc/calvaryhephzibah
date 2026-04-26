@@ -322,28 +322,6 @@
         if(!card) return;
         var offset = measureStickyOffset();
 
-        // ── DIAGNOSTIC LOGGING (temporary) ─────────────────────
-        // Logs what the scroll handler is seeing. Once we've narrowed
-        // down why the card lands behind the sticky grid, this can come out.
-        try {
-          var glDiag = container.querySelector('.bv-glance');
-          var glPos = glDiag ? window.getComputedStyle(glDiag).position : '(no grid)';
-          var glH = glDiag ? glDiag.offsetHeight : 0;
-          var cardRect = card.getBoundingClientRect();
-          console.log('[BandView] chip tap:', {
-            song: num,
-            stickyOffsetUsed: offset,
-            glanceComputedPosition: glPos,
-            glanceOffsetHeight: glH,
-            scrollContainer: scrollEl ? (scrollEl.tagName + '.' + (scrollEl.className || '?')) : 'window',
-            cardRectTop: cardRect.top,
-            cardRectBottom: cardRect.bottom,
-            windowScrollY: window.scrollY,
-            documentScrollingElementScrollTop: document.scrollingElement ? document.scrollingElement.scrollTop : '?'
-          });
-        } catch(diagErr){ console.warn('diag failed', diagErr); }
-        // ── END DIAGNOSTIC ─────────────────────────────────────
-
         if(scrollEl){
           // Scroll within a containing scroll element (Calvary OS page-body).
           // Card's top relative to the scroll element = current rect delta + scrollTop.
