@@ -71,17 +71,23 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(11, 11, 14, 0.9), var(--obsidian));
-            padding: 3rem 0 2rem;
+            background: linear-gradient(transparent, transparent 30%, rgba(11, 11, 14, 0.7) 70%, var(--obsidian));
+            padding: 1rem 0 2rem;
             z-index: 2;
+            height: 40%;
         }
 
         .header-content {
-            position: relative;
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 3;
             text-align: center;
             color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            width: 100%;
+            max-width: 800px;
         }
 
         .header h1 {
@@ -340,12 +346,25 @@
                 min-height: 300px;
             }
 
+            .header-overlay {
+                height: 50%;
+            }
+
+            .header-content {
+                bottom: 1.5rem;
+                padding: 0 1rem;
+            }
+
             .header h1 {
-                font-size: clamp(2rem, 8vw, 3.5rem);
+                font-size: clamp(1.8rem, 7vw, 3rem);
             }
 
             .header .subtitle {
-                font-size: 1.1rem;
+                font-size: 1rem;
+            }
+
+            .header .date {
+                font-size: 0.9rem;
             }
 
             .decisions-grid {
@@ -373,14 +392,11 @@
         <video class="header-video" autoplay muted loop playsinline>
             <source src="https://calvaryhfgc.github.io/calvaryhephzibah/assets/THANKFUL.mp4" type="video/mp4">
         </video>
-        <div class="header-overlay">
-            <div class="container">
-                <div class="header-content">
-                    <h1>Meeting Summary</h1>
-                    <div class="subtitle">Transition Team · Anniversary Planning</div>
-                    <div class="date">April 25, 2026</div>
-                </div>
-            </div>
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <h1>Meeting Summary</h1>
+            <div class="subtitle">Transition Team · Anniversary Planning</div>
+            <div class="date">April 25, 2026</div>
         </div>
     </div>
 
