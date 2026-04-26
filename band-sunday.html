@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Band — Calvary Hephzibah</title>
+<meta name="theme-color" content="#FFFFFE">
+<meta property="og:title" content="Calvary Hephzibah — Sunday Set for the Band">
+<meta property="og:description" content="The set list, keys, and one-line direction for Sunday's worship band.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:        #FAFAF7;
+  --surface:   #FFFFFE;
+  --ink:       #1A1A1A;
+  --ink-2:     #3A3A3A;
+  --ink-3:     #6B6B6B;
+  --ink-4:     #A0A0A0;
+  --ink-5:     #DCDCD8;
+  --ink-6:     #F1F0EC;
+  --red:       #C41E2A;
+  --red-deep:  #9C1622;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md: 0 8px 28px rgba(0,0,0,0.06);
+  --r10: 10px;
+  --r14: 14px;
+  --r20: 20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#bv-root {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+/* ── Header ────────────────────────────────────────── */
+.bv-header {
+  padding: 56px 4px 28px;
+  text-align: left;
+}
+.bv-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 12px;
+}
+.bv-title {
+  font-family: 'Lora', serif;
+  font-size: clamp(28px, 7vw, 40px);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.bv-date {
+  font-size: 15px;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+.bv-edit-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-3);
+  text-decoration: none;
+  border: 1px solid var(--ink-5);
+  padding: 5px 12px;
+  border-radius: 100px;
+  transition: all 0.15s;
+}
+.bv-edit-link:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+}
+
+/* ── Sticky song-list ──────────────────────────────── */
+.bv-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 12px 4px;
+  margin: 0 -4px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(to bottom, var(--bg) 78%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.bv-list::-webkit-scrollbar { display: none; }
+.bv-pill {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--ink-5);
+  border-radius: 100px;
+  text-decoration: none;
+  color: var(--ink-2);
+  scroll-snap-align: start;
+  transition: all 0.18s;
+  white-space: nowrap;
+  box-shadow: var(--shadow-sm);
+}
+.bv-pill:hover { border-color: var(--ink-3); color: var(--ink); }
+.bv-pill.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surface);
+}
+.bv-pill-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink-6);
+  color: var(--ink-3);
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.bv-pill.active .bv-pill-num {
+  background: rgba(255,255,255,0.18);
+  color: var(--surface);
+}
+.bv-pill-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+.bv-pill-key {
+  font-family: 'Lora', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--red);
+  margin-left: 2px;
+}
+.bv-pill.active .bv-pill-key {
+  color: #FF8087;
+}
+
+/* ── Cards ─────────────────────────────────────────── */
+.bv-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.bv-card {
+  background: var(--surface);
+  border: 1px solid var(--ink-5);
+  border-radius: var(--r20);
+  padding: 28px 26px;
+  position: relative;
+  scroll-margin-top: 88px;
+  box-shadow: var(--shadow-sm);
+}
+.bv-card-num {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.bv-card-body {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px 24px;
+  align-items: end;
+}
+
+.bv-card-titleblock {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  min-width: 0;
+}
+.bv-card-title {
+  font-family: 'Lora', serif;
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.bv-card-artist {
+  font-size: 13px;
+  color: var(--ink-4);
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+/* The hero element of each card: the key */
+.bv-card-keyblock {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.bv-card-key {
+  font-family: 'Lora', serif;
+  font-weight: 700;
+  font-size: clamp(64px, 18vw, 110px);
+  color: var(--red);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.bv-card-tempo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--ink-4);
+  text-transform: uppercase;
+}
+
+.bv-card-direction {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-top: 22px;
+  padding: 16px 18px;
+  background: var(--ink-6);
+  border-left: 3px solid var(--red);
+  border-radius: 0 var(--r10) var(--r10) 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.bv-card-direction-empty {
+  background: transparent;
+  border-left-color: var(--ink-5);
+  color: var(--ink-4);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Transition note between songs (rare; shown when set_arrangement.transition_note is set) */
+.bv-card-transition {
+  margin: 4px 12px 4px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--ink-3);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.bv-card-transition-arrow {
+  color: var(--red);
+  font-weight: 700;
+  font-size: 16px;
+  font-style: normal;
+}
+
+/* ── Loading + empty ──────────────────────────────── */
+.bv-loading, .bv-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--ink-3);
+}
+.bv-empty h2 {
+  font-family: 'Lora', serif;
+  font-size: 22px;
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-weight: 600;
+}
+.bv-empty p { margin: 0; font-size: 14px; }
+
+/* ── Footer ────────────────────────────────────────── */
+.bv-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--ink-5);
+  text-align: center;
+  font-size: 12px;
+  color: var(--ink-4);
+}
+
+/* ── Mobile tightening ─────────────────────────────── */
+@media (max-width: 480px) {
+  .bv-header { padding: 36px 4px 18px; }
+  .bv-card { padding: 22px 20px; }
+  .bv-card-body {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .bv-card-titleblock { grid-row: 2; align-self: start; }
+  .bv-card-keyblock { grid-row: 1; align-items: flex-start; }
+  .bv-card-key { font-size: 84px; }
+  .bv-card-direction { margin-top: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div id="bv-root"></div>
+
+<footer class="bv-footer">
+  Calvary Hephzibah Full Gospel Church · Built for the band
+</footer>
+
+<script src="calvary-os/rehearsal/band-render.js"></script>
+<script>
+  BandView.render({ container: document.getElementById('bv-root') });
+</script>
+
+</body>
+</html>

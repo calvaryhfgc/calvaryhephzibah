@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary OS — Band View</title>
+<meta name="theme-color" content="#FFFFFF">
+
+<link rel="stylesheet" href="../shell.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Band view local styles. The renderer ships its own class names
+     (bv-*); we restate them here so the design works identically inside
+     the Calvary OS shell (which has different defaults). */
+
+  #bv-root { max-width: 760px; margin: 0 auto; padding: 0 4px 60px; }
+
+  .bv-header { padding: 36px 4px 18px; text-align: left; }
+  .bv-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 12px;
+  }
+  .bv-title {
+    font-family: 'Lora', serif;
+    font-size: clamp(26px, 6vw, 36px);
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 6px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .bv-date { font-size: 14px; color: var(--ink-3); font-weight: 500; }
+  .bv-edit-link {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-3);
+    text-decoration: none;
+    border: 1px solid var(--ink-5);
+    padding: 5px 12px;
+    border-radius: 100px;
+  }
+  .bv-edit-link:hover { color: var(--ink); border-color: var(--ink-3); }
+
+  .bv-list {
+    display: flex; gap: 8px; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px 4px;
+    margin: 0 -4px 20px;
+    position: sticky; top: 0; z-index: 10;
+    background: linear-gradient(to bottom, var(--white) 78%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .bv-list::-webkit-scrollbar { display: none; }
+  .bv-pill {
+    flex: 0 0 auto;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 14px 8px 10px;
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: 100px;
+    text-decoration: none;
+    color: var(--ink-2);
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.18s;
+  }
+  .bv-pill:hover { border-color: var(--ink-3); color: var(--ink); }
+  .bv-pill.active { background: var(--ink); border-color: var(--ink); color: var(--white); }
+  .bv-pill-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--ink-6); color: var(--ink-3);
+    font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
+  }
+  .bv-pill.active .bv-pill-num {
+    background: rgba(255,255,255,0.18); color: var(--white);
+  }
+  .bv-pill-title { font-size: 13px; font-weight: 600; }
+  .bv-pill-key {
+    font-family: 'Lora', serif; font-size: 14px; font-weight: 700;
+    color: var(--red); margin-left: 2px;
+  }
+  .bv-pill.active .bv-pill-key { color: #FF8087; }
+
+  .bv-cards { display: flex; flex-direction: column; gap: 14px; }
+  .bv-card {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: var(--r20);
+    padding: 28px 26px;
+    position: relative;
+    scroll-margin-top: 88px;
+    box-shadow: var(--shadow-sm);
+  }
+  .bv-card-num {
+    position: absolute; top: 18px; right: 22px;
+    font-family: 'Lora', serif;
+    font-size: 13px; font-weight: 600;
+    color: var(--ink-4); font-variant-numeric: tabular-nums;
+  }
+  .bv-card-body {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 24px;
+    align-items: end;
+  }
+  .bv-card-titleblock { grid-column: 1; grid-row: 1; align-self: end; min-width: 0; }
+  .bv-card-title {
+    font-family: 'Lora', serif;
+    font-size: clamp(20px, 4.5vw, 28px);
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .bv-card-artist { font-size: 13px; color: var(--ink-4); font-weight: 500; margin-top: 4px; }
+
+  .bv-card-keyblock {
+    grid-column: 2; grid-row: 1;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  }
+  .bv-card-key {
+    font-family: 'Lora', serif;
+    font-weight: 700;
+    font-size: clamp(60px, 16vw, 96px);
+    color: var(--red);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+  .bv-card-tempo {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--ink-4); text-transform: uppercase;
+  }
+  .bv-card-direction {
+    grid-column: 1 / -1; grid-row: 2;
+    margin-top: 22px;
+    padding: 16px 18px;
+    background: var(--ink-6);
+    border-left: 3px solid var(--red);
+    border-radius: 0 var(--r10) var(--r10) 0;
+    font-size: 15px; line-height: 1.5;
+    color: var(--ink-2); font-weight: 500;
+  }
+  .bv-card-direction-empty {
+    background: transparent;
+    border-left-color: var(--ink-5);
+    color: var(--ink-4);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .bv-card-transition {
+    margin: 4px 12px 4px;
+    padding: 10px 14px;
+    font-size: 13px; color: var(--ink-3); font-style: italic;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .bv-card-transition-arrow {
+    color: var(--red); font-weight: 700; font-size: 16px; font-style: normal;
+  }
+
+  .bv-loading, .bv-empty {
+    text-align: center; padding: 60px 20px; color: var(--ink-3);
+  }
+  .bv-empty h2 { font-family: 'Lora', serif; font-size: 22px; margin: 0 0 8px; color: var(--ink); }
+  .bv-empty p { margin: 0; font-size: 14px; }
+
+  /* Public-page link callout for admins/leads */
+  .bv-public-callout {
+    margin: 0 4px 22px;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #FFF8E5 0%, #FFEFC9 100%);
+    border: 1px solid #F0D88B;
+    border-radius: var(--r10);
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+  .bv-public-callout strong { color: var(--ink); font-weight: 700; }
+  .bv-public-callout a { color: var(--red); text-decoration: none; font-weight: 600; }
+  .bv-public-callout a:hover { text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    .bv-card { padding: 22px 20px; }
+    .bv-card-body { grid-template-columns: 1fr; gap: 4px; }
+    .bv-card-titleblock { grid-row: 2; align-self: start; }
+    .bv-card-keyblock { grid-row: 1; align-items: flex-start; }
+    .bv-card-key { font-size: 80px; }
+    .bv-card-direction { margin-top: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── AUTH SCREEN (shared shell pattern) ─────────────────────── -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-logo-block">
+      <div class="auth-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div><div class="auth-logo-name">Calvary OS</div><div class="auth-logo-church">Calvary Hephzibah</div></div>
+    </div>
+    <div class="auth-step active" id="step-who">
+      <div class="auth-h">Good to see you 👋</div>
+      <div class="auth-sub">Select your name to get started.</div>
+      <div class="user-grid" id="user-grid"></div>
+    </div>
+    <div class="auth-step" id="step-pin">
+      <button class="pin-back" onclick="COS._goBack()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 2L4 7l5 5"/></svg> Back</button>
+      <div class="pin-name" id="pin-user-name">Enter your PIN</div>
+      <div class="pin-sub">4-digit PIN to continue</div>
+      <div class="pin-dots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
+      <div class="pin-pad">
+        <button class="pkey" onclick="COS.pk('1')">1</button><button class="pkey" onclick="COS.pk('2')">2</button><button class="pkey" onclick="COS.pk('3')">3</button>
+        <button class="pkey" onclick="COS.pk('4')">4</button><button class="pkey" onclick="COS.pk('5')">5</button><button class="pkey" onclick="COS.pk('6')">6</button>
+        <button class="pkey" onclick="COS.pk('7')">7</button><button class="pkey" onclick="COS.pk('8')">8</button><button class="pkey" onclick="COS.pk('9')">9</button>
+        <button class="pkey" style="visibility:hidden"></button><button class="pkey" onclick="COS.pk('0')">0</button><button class="pkey del" onclick="COS.pdel()">⌫</button>
+      </div>
+      <div class="pin-msg" id="pin-msg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── APP ────────────────────────────────────────────────── -->
+<div id="app">
+  <div class="topbar">
+    <a href="../dashboard.html" class="topbar-logo" style="text-decoration:none;">
+      <div class="topbar-logo-icon"><svg viewBox="0 0 16 16" fill="none"><rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/><rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/></svg></div>
+      <div class="topbar-logo-name">Calvary OS</div>
+    </a>
+    <div class="topbar-divider"></div>
+    <div class="topbar-section">Band View</div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <div class="topbar-user-av" id="tb-av">?</div>
+        <div class="topbar-user-name" id="tb-name"></div>
+      </div>
+      <button class="topbar-signout" onclick="COS.signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <nav class="sidebar" id="sidebar"></nav>
+
+    <div class="main">
+      <div class="page-body" style="max-width:840px;">
+
+        <div id="public-callout-slot"></div>
+        <div id="bv-root"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="mob-nav-items" id="mob-nav"></div>
+  </nav>
+</div>
+
+<script src="../shell.js"></script>
+<script src="band-render.js"></script>
+<script>
+function pageInit(){
+  buildSidebar();
+
+  // Show the public-page callout to admin/lead so they can copy a link
+  // for the band's WhatsApp group. Team-level users see the band view directly.
+  if(COS.currentUser && (COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead')){
+    var origin = location.origin;
+    // Resolve repo path: this page lives at /…/calvary-os/rehearsal/band.html;
+    // public band-sunday.html lives at /…/band-sunday.html (two levels up).
+    var publicPath = location.pathname.replace(/calvary-os\/rehearsal\/band\.html.*/, 'band-sunday.html');
+    var publicUrl = origin + publicPath;
+    document.getElementById('public-callout-slot').innerHTML =
+      '<div class="bv-public-callout">' +
+        '<strong>For the band\'s WhatsApp:</strong> share the public version at ' +
+        '<a href="' + publicUrl + '" target="_blank">' + publicUrl + '</a> — no PIN needed.' +
+      '</div>';
+  }
+
+  // Render the same band view used on the public page.
+  // Pass an editLink so admin/lead can jump back to the set editor.
+  var canEdit = COS.currentUser && (COS.currentUser.level === 'admin' || COS.currentUser.level === 'lead');
+  BandView.render({
+    container: document.getElementById('bv-root'),
+    editLink: canEdit ? 'set.html' : null
+  });
+}
+
+function buildSidebar(){
+  var sb = document.getElementById('sidebar');
+  var modules = [
+    { id:'dashboard',  label:'Dashboard',         href:'../dashboard.html',   icon:'🏠' },
+    { id:'sunday',     label:'Sunday Service',    href:'../sunday.html',      icon:'☀️' },
+    { id:'worship',    label:'Worship',           href:'../worship.html',     icon:'🎵' },
+    { id:'rehearsal',  label:'Rehearsal Studio',  href:'index.html',          icon:'🎶', active:true },
+    { id:'media',      label:'Media',             href:'../media.html',       icon:'🎥' },
+    { id:'midweek',    label:'Mid-week',          href:'../midweek.html',     icon:'📅' },
+    { id:'departments',label:'Departments',       href:'../departments.html', icon:'🏛️' },
+  ];
+  if(COS.currentUser && COS.currentUser.level === 'admin'){
+    modules.push({ id:'admin', label:'Admin', href:'../admin.html', icon:'⚙️' });
+  }
+  var accessible = modules.filter(function(m){ return COS.hasAccess(m.id); });
+  sb.innerHTML =
+    '<div class="nav-section">' +
+      '<div class="nav-section-label">Modules</div>' +
+      accessible.map(function(m){
+        return '<a href="' + m.href + '" class="nav-item ' + (m.active ? 'active' : '') + '">' +
+          '<span class="nav-item-icon">' + m.icon + '</span>' +
+          '<span class="nav-item-label">' + m.label + '</span>' +
+        '</a>';
+      }).join('') +
+    '</div>';
+}
+
+COS.init('rehearsal');
+</script>
+
+</body>
+</html>
