@@ -48,34 +48,68 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--obsidian) 0%, var(--charcoal) 100%);
-            padding: 3rem 0;
-            text-align: center;
-            border-bottom: 1px solid var(--slate);
+            width: 100%;
+            height: 70vh;
+            min-height: 400px;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--slate);
             overflow: hidden;
         }
 
         .header-video {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.3;
-            z-index: 0;
+            border-radius: 0;
+        }
+
+        .header-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(11, 11, 14, 0.9), var(--obsidian));
+            padding: 3rem 0 2rem;
+            z-index: 2;
         }
 
         .header-content {
             position: relative;
-            z-index: 1;
-            background: rgba(11, 11, 14, 0.7);
-            backdrop-filter: blur(2px);
-            padding: 2rem;
-            border-radius: 12px;
-            margin: 0 auto;
-            max-width: 600px;
+            z-index: 3;
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.7);
+        }
+
+        .header .subtitle {
+            font-family: var(--font-editorial);
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header .date {
+            font-family: var(--font-ui);
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
 
         .header h1 {
@@ -301,6 +335,19 @@
 
         /* Mobile Responsive */
         @media (max-width: 768px) {
+            .header {
+                height: 60vh;
+                min-height: 300px;
+            }
+
+            .header h1 {
+                font-size: clamp(2rem, 8vw, 3.5rem);
+            }
+
+            .header .subtitle {
+                font-size: 1.1rem;
+            }
+
             .decisions-grid {
                 grid-template-columns: 1fr;
             }
@@ -321,16 +368,18 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header Hero Video -->
     <div class="header">
         <video class="header-video" autoplay muted loop playsinline>
             <source src="https://calvaryhfgc.github.io/calvaryhephzibah/assets/THANKFUL.mp4" type="video/mp4">
         </video>
-        <div class="container">
-            <div class="header-content">
-                <h1>Meeting Summary</h1>
-                <div class="subtitle">Transition Team · Anniversary Planning</div>
-                <div class="date">April 25, 2026</div>
+        <div class="header-overlay">
+            <div class="container">
+                <div class="header-content">
+                    <h1>Meeting Summary</h1>
+                    <div class="subtitle">Transition Team · Anniversary Planning</div>
+                    <div class="date">April 25, 2026</div>
+                </div>
             </div>
         </div>
     </div>
