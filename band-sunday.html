@@ -96,6 +96,7 @@ body {
 .bv-list {
   display: flex;
   gap: 8px;
+  align-items: center;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -110,6 +111,25 @@ body {
   -webkit-backdrop-filter: blur(8px);
 }
 .bv-list::-webkit-scrollbar { display: none; }
+
+/* Section label inside the pill nav — small, muted, sits between groups */
+.bv-pill-section {
+  flex: 0 0 auto;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  padding: 0 6px;
+  white-space: nowrap;
+}
+.bv-pill-sep {
+  flex: 0 0 auto;
+  width: 1px;
+  height: 18px;
+  background: var(--ink-5);
+  margin: 0 4px;
+}
 .bv-pill {
   flex: 0 0 auto;
   display: inline-flex;
@@ -168,6 +188,28 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* Section heading: rule + label + rule, sitting between card groups */
+.bv-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 4px 4px;
+}
+.bv-section:first-child { margin-top: 8px; }
+.bv-section-rule {
+  flex: 1;
+  height: 1px;
+  background: var(--ink-5);
+}
+.bv-section-label {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 2.2px;
+  text-transform: uppercase;
 }
 .bv-card {
   background: var(--surface);

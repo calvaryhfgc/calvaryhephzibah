@@ -97,6 +97,7 @@
       var direction = sa.band_direction_override || (arr && arr.band_direction) || null;
       return {
         position: sa.position,
+        section: sa.section || null,    // 'praise'|'worship'|'offering'|'end_of_service'|null
         transitionNote: sa.transition_note || null,
         arrangement: arr,
         song: song,
@@ -136,21 +137,78 @@
     container.innerHTML = '<div class="bv-empty"><h2>Nothing scheduled</h2><p>' + escapeHtml(msg) + '</p></div>';
   }
 
+  // Canonical section order for the band view. Items without a section
+  // fall through into a final "Songs" bucket so the page never silently
+  // drops a row just because the worship leader hasn't assigned it yet.
+  var SECTION_ORDER = ['praise', 'worship', 'offering', 'end_of_service', null];
+  var SECTION_LABELS = {
+    'praise':         'Praise',
+    'worship':        'Worship',
+    'offering':       'Offering',
+    'end_of_service': 'End of service',
+    null:             'Songs'
+  };
+
+  function groupBySection(items){
+    // Group items into the canonical order while preserving the position
+    // ordering inside each section.
+    var buckets = {};
+    items.forEach(function(it){
+      var key = it.section || null;
+      if(!buckets[key]) buckets[key] = [];
+      buckets[key].push(it);
+    });
+    var groups = [];
+    SECTION_ORDER.forEach(function(key){
+      if(buckets[key] && buckets[key].length){
+        groups.push({ section: key, label: SECTION_LABELS[key], items: buckets[key] });
+      }
+    });
+    return groups;
+  }
+
   function renderSet(container, data, opts){
     var set = data.set;
     var items = data.items;
     var dateLabel = formatLongDate(set.service_date);
 
-    var listHtml = items.map(function(it, i){
-      return '<a href="#song-' + (i + 1) + '" class="bv-pill" data-song="' + (i + 1) + '">' +
-        '<span class="bv-pill-num">' + (i + 1) + '</span>' +
-        '<span class="bv-pill-title">' + escapeHtml(it.song.title) + '</span>' +
-        '<span class="bv-pill-key">' + escapeHtml(it.arrangement.key || '') + '</span>' +
-        '</a>';
+    // Assign a 1-based song number across the whole set, in section order
+    var groups = groupBySection(items);
+    var counter = 0;
+    groups.forEach(function(g){
+      g.items.forEach(function(it){
+        counter += 1;
+        it._number = counter;
+      });
+    });
+
+    // ── Pill nav: one continuous strip, but section breaks visible
+    var listHtml = groups.map(function(g, gi){
+      var separator = gi > 0
+        ? '<span class="bv-pill-sep" aria-hidden="true"></span>'
+        : '';
+      var label = '<span class="bv-pill-section" aria-hidden="false">' + escapeHtml(g.label) + '</span>';
+      var pillsForGroup = g.items.map(function(it){
+        return '<a href="#song-' + it._number + '" class="bv-pill" data-song="' + it._number + '">' +
+          '<span class="bv-pill-num">' + it._number + '</span>' +
+          '<span class="bv-pill-title">' + escapeHtml(it.song.title) + '</span>' +
+          '<span class="bv-pill-key">' + escapeHtml(it.arrangement.key || '') + '</span>' +
+          '</a>';
+      }).join('');
+      return separator + label + pillsForGroup;
     }).join('');
 
-    var cardsHtml = items.map(function(it, i){
-      return renderCard(it, i + 1, opts);
+    // ── Cards: rendered in section blocks with a heading per section
+    var cardsHtml = groups.map(function(g){
+      var headHtml = '<div class="bv-section">' +
+        '<div class="bv-section-rule"></div>' +
+        '<div class="bv-section-label">' + escapeHtml(g.label) + '</div>' +
+        '<div class="bv-section-rule"></div>' +
+      '</div>';
+      var inner = g.items.map(function(it){
+        return renderCard(it, it._number, opts);
+      }).join('');
+      return headHtml + inner;
     }).join('');
 
     var emptyState = items.length === 0
@@ -276,7 +334,10 @@
     render: render,
     // Exposed for callers that want to fetch without rendering
     resolveSetId: resolveSetId,
-    fetchSetData: fetchSetData
+    fetchSetData: fetchSetData,
+    // Exposed for the set editor (so it has the same options + labels)
+    SECTION_ORDER: SECTION_ORDER.filter(function(s){ return s !== null; }),
+    SECTION_LABELS: SECTION_LABELS
   };
 
 })(typeof window !== 'undefined' ? window : this);

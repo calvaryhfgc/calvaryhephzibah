@@ -98,6 +98,10 @@
   /* Transition note — free text on each set item. Between the meta
      line and the action buttons. Small, unobtrusive, and collapses
      if empty (not rendered). */
+  .set-item-section-row{display:flex;align-items:center;gap:8px;margin-top:8px;}
+  .set-item-section-label{font-size:10px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;color:var(--ink-4);}
+  .set-item-section-select{padding:5px 9px;border:1px solid var(--ink-5);background:var(--white);border-radius:var(--r8);font-family:inherit;font-size:12px;font-weight:500;color:var(--ink-2);cursor:pointer;}
+  .set-item-section-select:focus{outline:none;border-color:var(--red);}
   .set-item-transition{width:100%;margin-top:6px;padding:6px 8px;border:1px solid var(--ink-5);background:var(--ink-6);border-radius:var(--r8);font-family:inherit;font-size:12px;color:var(--ink);resize:vertical;min-height:32px;line-height:1.4;}
   .set-item-transition:focus{outline:none;border-color:var(--red);background:var(--white);}
   .set-item-transition::placeholder{color:var(--ink-4);font-style:italic;}
@@ -429,6 +433,7 @@ async function loadSet(){
   state.items = (items || []).map(i => ({
     arrangement_id: i.arrangement_id,
     transition_note: i.transition_note || '',
+    section: i.section || null,
     position: i.position
   }));
 
@@ -662,6 +667,16 @@ function renderSetItems(){
           <div class="set-item-title">${escapeHtml(arr.name || 'Untitled')}</div>
           <div class="set-item-meta">${escapeHtml(songTitle)}${meta.length ? ' · ' + meta.join(' · ') : ''}</div>
           ${practiceHtml}
+          <div class="set-item-section-row">
+            <label class="set-item-section-label">Section</label>
+            <select class="set-item-section-select" onchange="updateSection(${i}, this.value)">
+              <option value="" ${!item.section ? 'selected' : ''}>— Unassigned —</option>
+              <option value="praise"         ${item.section === 'praise' ? 'selected' : ''}>Praise</option>
+              <option value="worship"        ${item.section === 'worship' ? 'selected' : ''}>Worship</option>
+              <option value="offering"       ${item.section === 'offering' ? 'selected' : ''}>Offering</option>
+              <option value="end_of_service" ${item.section === 'end_of_service' ? 'selected' : ''}>End of service</option>
+            </select>
+          </div>
           <textarea class="set-item-transition" placeholder="Transition note (optional) — e.g. 'key change to F', 'MC bridges', 'segue direct'" oninput="updateTransitionNote(${i}, this.value)">${escapeHtml(item.transition_note || '')}</textarea>
         </div>
         <div class="set-item-actions">
@@ -690,6 +705,7 @@ function addArrangementToSet(arrangementId){
   state.items.push({
     arrangement_id: arrangementId,
     transition_note: '',
+    section: null,
     position: state.items.length
   });
   markDirty();
@@ -737,6 +753,16 @@ function moveSetItem(idx, delta){
 function updateTransitionNote(idx, value){
   if(!state.items[idx]) return;
   state.items[idx].transition_note = value;
+  markDirty();
+}
+
+// Section assignment — drives grouping in the band-facing Sunday view.
+// Stored values: 'praise' | 'worship' | 'offering' | 'end_of_service' | null.
+// Empty option from the dropdown comes through as ''; coerce to null so the
+// distinction between "unassigned" and "set" stays clean in the database.
+function updateSection(idx, value){
+  if(!state.items[idx]) return;
+  state.items[idx].section = (value && value.length) ? value : null;
   markDirty();
 }
 
@@ -930,7 +956,8 @@ async function saveSet(arg){
         set_id: setId,
         arrangement_id: it.arrangement_id,
         position: i,
-        transition_note: it.transition_note && it.transition_note.trim() ? it.transition_note.trim() : null
+        transition_note: it.transition_note && it.transition_note.trim() ? it.transition_note.trim() : null,
+        section: it.section || null
       }));
       const insRes = await sbPost('rs_set_arrangements', rows);
       if(!insRes) throw new Error('Failed to save set items');
