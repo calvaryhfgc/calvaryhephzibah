@@ -2,1146 +2,338 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Calvary Service Run Sheet – 26th April 2026</title>
-
-    <!-- Primary Meta -->
-    <meta name="title" content="Calvary Service Run Sheet – 26th April 2026">
-    <meta name="description" content="Service Run Sheet for Sunday 26th April 2026 | The Hope and Power of the Resurrection of Jesus Christ | Brother Michael Kabalu | Calvary Hephzibah Full Gospel Church | Calvary Hephzibah Full Gospel Church">
-
-    <!-- Open Graph (WhatsApp, Facebook, iMessage) -->
-    <meta property="og:type" content="website">
     <meta property="og:title" content="Calvary Service Run Sheet – 26th April 2026">
-    <meta property="og:description" content="Service Run Sheet for Sunday 26th April 2026 | The Hope and Power of the Resurrection of Jesus Christ | Brother Michael Kabalu | Calvary Hephzibah Full Gospel Church | Calvary Hephzibah Full Gospel Church">
+    <meta property="og:description" content="Sunday 26th April 2026 | The Hope and Power of the Resurrection | Bro Michael Kabalu | Calvary Hephzibah">
     <meta property="og:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/sermon-thumbnail-26-apr-2026.jpg">
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="720">
-    <meta property="og:site_name" content="Calvary Hephzibah Full Gospel Church">
-
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Calvary Service Run Sheet – 26th April 2026">
-    <meta name="twitter:description" content="Service Run Sheet for Sunday 26th April 2026 | The Hope and Power of the Resurrection of Jesus Christ | Brother Michael Kabalu | Calvary Hephzibah Full Gospel Church | Calvary Hephzibah Full Gospel Church">
     <meta name="twitter:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/sermon-thumbnail-26-apr-2026.jpg">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #FAFAFA;
-            --bg-card: #FFFFFF;
-            --text-primary: #1D1D1F;
-            --text-secondary: #86868B;
-            --text-tertiary: #AEAEB2;
-            --accent-rose: #FF2D55;
-            --accent-rose-soft: #FF6482;
-            --accent-gold: #BF9B30;
-            --accent-blush: #FFE5EC;
-            --border-light: rgba(0,0,0,0.06);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 24px rgba(0,0,0,0.06);
-            --shadow-lg: 0 12px 48px rgba(0,0,0,0.08);
-            --shadow-xl: 0 24px 80px rgba(0,0,0,0.1);
-            --radius-sm: 12px;
-            --radius-md: 20px;
-            --radius-lg: 28px;
-            --radius-xl: 36px;
+            --red: #C41E2A; --red-soft: rgba(196,30,42,0.08);
+            --gold: #B8860B; --gold-soft: rgba(184,134,11,0.1);
+            --bg: #F5F5F3; --surface: #FFFFFF;
+            --text: #111; --text-2: #555; --text-3: #999;
+            --border: rgba(0,0,0,0.08);
+            --r: 16px;
+            --safe-b: env(safe-area-inset-bottom, 0px);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body { font-family:'DM Sans',-apple-system,sans-serif; background:var(--bg); color:var(--text); font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased; }
+
+        /* HERO */
+        .hero { background:linear-gradient(160deg,#1A1A1A 0%,#2D1000 100%); padding:28px 20px 24px; text-align:center; position:relative; overflow:hidden; }
+        .hero::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 70% 0%,rgba(196,30,42,0.3) 0%,transparent 60%); pointer-events:none; }
+        .hero-inner { position:relative; z-index:1; }
+        .hero-logo { width:48px; height:48px; margin:0 auto 14px; display:block; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)); }
+        .hero-eyebrow { font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:6px; }
+        .hero-date { font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:5px; }
+        .hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.5rem,5.5vw,2.2rem); font-weight:700; color:white; line-height:1.1; margin-bottom:5px; }
+        .hero-sub { font-size:12px; color:rgba(255,255,255,0.55); line-height:1.4; }
+
+        /* ROLE BAR */
+        .role-bar { position:sticky; top:0; z-index:200; background:rgba(245,245,243,0.96); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:10px 14px; display:flex; gap:7px; align-items:center; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+        .role-bar::-webkit-scrollbar { display:none; }
+        .role-label { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-3); flex-shrink:0; }
+        .role-pill { flex-shrink:0; display:inline-flex; align-items:center; gap:4px; padding:7px 13px; border-radius:100px; font-size:13px; font-weight:600; cursor:pointer; border:1.5px solid var(--border); background:white; color:var(--text-2); transition:all 0.15s; -webkit-appearance:none; min-height:36px; white-space:nowrap; }
+        .role-pill.active { background:var(--red); border-color:var(--red); color:white; box-shadow:0 3px 10px rgba(196,30,42,0.28); }
+
+        /* LAYOUT */
+        .container { max-width:680px; margin:0 auto; padding:14px 12px calc(40px + var(--safe-b)); display:flex; flex-direction:column; gap:10px; }
+
+        /* CARD */
+        .card { background:var(--surface); border-radius:var(--r); box-shadow:0 1px 8px rgba(0,0,0,0.06),0 4px 20px rgba(0,0,0,0.04); overflow:hidden; }
+        .ch { display:flex; align-items:center; gap:11px; padding:16px 16px 0; }
+        .ci { width:34px; height:34px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; background:var(--bg); }
+        .ct { font-family:'Cormorant Garamond',serif; font-size:1.2rem; font-weight:700; }
+        .cb { padding:10px 16px 16px; }
+
+        /* SECTION BADGE */
+        .sbadge { display:inline-block; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:2px 9px; border-radius:100px; margin-bottom:12px; }
+        .sb-all { background:#EBEBEB; color:#666; }
+        .sb-media { background:#DBEAFE; color:#1D4ED8; }
+        .sb-worship { background:#EDE9FE; color:#6D28D9; }
+        .sb-readers { background:#DCFCE7; color:#15803D; }
+        .sb-leaders { background:#FEF3C7; color:#92400E; }
+
+        /* ORDER OF SERVICE */
+        .svc-list { display:flex; flex-direction:column; }
+        .svc-row { display:flex; align-items:flex-start; gap:10px; padding:11px 0; border-bottom:1px solid var(--border); }
+        .svc-row:last-child { border-bottom:none; }
+        .svc-num { width:26px; height:26px; border-radius:7px; background:var(--bg); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--text-2); flex-shrink:0; margin-top:1px; }
+        .svc-info { flex:1; min-width:0; }
+        .svc-name { font-weight:600; font-size:14px; color:var(--text); line-height:1.3; }
+        .svc-person { font-size:12px; color:var(--text-2); margin-top:2px; }
+        .svc-row.hl .svc-num { background:var(--gold-soft); color:var(--gold); }
+        .svc-row.hl .svc-name { color:var(--gold); }
+        .svc-row.ser { background:var(--red-soft); border-radius:10px; padding:11px; margin:3px 0; border:none; }
+        .svc-row.ser .svc-num { background:var(--red); color:white; }
+        .svc-row.ser .svc-name { color:var(--red); font-weight:700; }
+
+        /* SONGS */
+        .slabel { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-3); padding:4px 0 2px; }
+        .medley { background:linear-gradient(135deg,var(--red) 0%,#8B0000 100%); border-radius:14px; padding:15px; }
+        .medley-hd { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.65); margin-bottom:11px; }
+        .msong { display:flex; align-items:center; gap:8px; }
+        .msong + .msong { margin-top:10px; }
+        .msong-info { display:flex; align-items:center; gap:9px; flex:1; min-width:0; }
+        .mnum { width:24px; height:24px; border-radius:6px; background:rgba(255,255,255,0.18); color:white; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+        .mname { font-size:14px; font-weight:600; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .dl { flex-shrink:0; display:inline-flex; align-items:center; padding:6px 12px; background:white; color:var(--red); font-size:12px; font-weight:700; text-decoration:none; border-radius:100px; min-height:30px; }
+        .dl.pend { background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.45); }
+        .ssong { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:11px 13px; background:var(--bg); border-radius:11px; min-height:50px; }
+        .ssong-info { display:flex; align-items:center; gap:9px; flex:1; min-width:0; }
+        .sicon { width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+        .sname { font-size:14px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .sdl { flex-shrink:0; display:inline-flex; align-items:center; padding:6px 12px; background:white; color:var(--red); font-size:12px; font-weight:700; text-decoration:none; border-radius:100px; border:1.5px solid var(--border); min-height:30px; white-space:nowrap; }
+        .sdl.pend { color:var(--text-3); }
+
+        /* SCRIPTURE */
+        .sc-card { background:linear-gradient(135deg,#1A1A1A 0%,#2D1000 100%); border-radius:var(--r); padding:18px 16px; color:white; box-shadow:0 8px 28px rgba(0,0,0,0.15); }
+        .sc-reader { font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:14px; }
+        .sc-reader strong { color:white; font-size:14px; }
+        .sc-ref { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+        .sc-text { font-size:14px; color:rgba(255,255,255,0.82); line-height:1.6; font-style:italic; padding:12px; background:rgba(255,255,255,0.06); border-radius:10px; border-left:3px solid var(--gold); }
+        .sc-btn { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:10px 16px; background:rgba(255,255,255,0.1); color:white; font-size:13px; font-weight:600; text-decoration:none; border-radius:100px; border:1px solid rgba(255,255,255,0.18); min-height:42px; }
+
+        /* SERMON */
+        .serm-card { background:linear-gradient(135deg,#0D0D0D 0%,#1A0500 100%); border-radius:var(--r); padding:18px 16px; color:white; box-shadow:0 8px 28px rgba(0,0,0,0.2); }
+        .serm-preacher { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--red); margin-bottom:7px; }
+        .serm-title { font-family:'Cormorant Garamond',serif; font-size:clamp(1.2rem,4.5vw,1.65rem); font-weight:700; color:white; line-height:1.15; margin-bottom:14px; }
+        .serm-thumb { width:100%; border-radius:11px; display:block; margin-bottom:12px; }
+        .serm-note { display:flex; align-items:flex-start; gap:8px; background:rgba(255,255,255,0.06); border-radius:10px; padding:11px; font-size:13px; color:rgba(255,255,255,0.75); line-height:1.5; margin-bottom:12px; }
+        .serm-dl { display:inline-flex; align-items:center; gap:6px; padding:10px 16px; background:rgba(255,255,255,0.1); color:white; font-size:13px; font-weight:600; text-decoration:none; border-radius:100px; border:1px solid rgba(255,255,255,0.18); min-height:42px; }
+
+        /* CAMERA */
+        .cam-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .cam-item { background:var(--bg); border-radius:11px; padding:12px; }
+        .cam-item.warn { background:#FFF8E1; border:1px solid #FFE082; }
+        .cam-emoji { font-size:22px; margin-bottom:4px; }
+        .cam-title { font-size:13px; font-weight:700; }
+        .cam-note { font-size:11px; color:var(--text-2); line-height:1.4; margin-top:2px; }
+        .frame-card { background:#1A1A1A; border-radius:var(--r); padding:16px; color:white; margin-top:10px; }
+        .frame-tips { display:flex; flex-direction:column; gap:9px; margin-top:12px; }
+        .frame-tip { display:flex; align-items:center; gap:9px; font-size:14px; color:rgba(255,255,255,0.82); }
+        .frame-dot { width:7px; height:7px; border-radius:50%; background:#4ADE80; flex-shrink:0; }
+
+        /* FORMATTER */
+        .fmt-card { background:#2A2A2A; border-radius:var(--r); padding:18px 16px; color:white; }
+        .fmt-steps { display:flex; flex-direction:column; gap:8px; margin:12px 0; }
+        .fmt-step { display:flex; align-items:flex-start; gap:9px; font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; }
+        .fmt-n { width:21px; height:21px; border-radius:6px; background:rgba(255,255,255,0.12); color:white; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+        .fmt-btn { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; padding:13px; background:white; color:#2A2A2A; font-size:14px; font-weight:700; text-decoration:none; border-radius:11px; min-height:48px; }
+
+        /* CHECKLIST */
+        .chk { display:flex; flex-direction:column; gap:2px; }
+        .chk-row { display:flex; align-items:center; gap:11px; padding:11px 10px; border-radius:10px; cursor:pointer; min-height:48px; transition:background 0.12s; -webkit-user-select:none; user-select:none; }
+        .chk-row:active { background:rgba(0,0,0,0.04); }
+        .chk-row.done { opacity:0.45; }
+        .chk-row.done .chk-label { text-decoration:line-through; }
+        .chk-box { width:24px; height:24px; border-radius:7px; border:2px solid var(--border); background:white; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.15s; font-size:13px; font-weight:700; color:white; }
+        .chk-row.done .chk-box { background:#22C55E; border-color:#22C55E; }
+        .chk-label { font-size:14px; font-weight:500; color:var(--text); line-height:1.4; }
+
+        /* HIDDEN */
+        .hidden { display:none !important; }
+
+        @media (min-width:480px) {
+            .cb { padding:14px 20px 18px; }
+            .ch { padding:18px 20px 0; }
+        }
+        @media (min-width:640px) {
+            .cam-grid { grid-template-columns:repeat(4,1fr); }
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            font-size: 17px;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Hero */
-        .hero {
-            position: relative;
-            min-height: 70vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 80px 32px;
-            background: linear-gradient(180deg, #FFF8E7 0%, #FAFAFA 100%);
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -20%;
-            width: 140%; height: 200%;
-            background: radial-gradient(ellipse at 30% 20%, rgba(191,155,48,0.12) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 60%, rgba(99,102,241,0.07) 0%, transparent 40%);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            max-width: 800px;
-        }
-
-        .logo {
-            width: 120px;
-            height: auto;
-            margin-bottom: 40px;
-            filter: drop-shadow(0 8px 24px rgba(0,0,0,0.1));
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .hero-eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: #6366F1;
-            margin-bottom: 20px;
-        }
-
-        .hero-date {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            font-weight: 400;
-            color: var(--text-secondary);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 16px;
-        }
-
-        .hero-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 8vw, 5.5rem);
-            font-weight: 600;
-            line-height: 1.05;
-            letter-spacing: -0.02em;
-            color: var(--text-primary);
-            margin-bottom: 24px;
-        }
-
-        .hero-title em {
-            font-style: italic;
-            color: #6366F1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            font-weight: 400;
-            color: var(--text-secondary);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        /* Container */
-        .container {
-            max-width: 920px;
-            margin: 0 auto;
-            padding: 60px 24px 120px;
-        }
-
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .section-icon {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
-            border-radius: 14px;
-            font-size: 22px;
-            box-shadow: 0 4px 16px rgba(99,102,241,0.25);
-        }
-
-        .section-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.75rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 36px;
-            margin-bottom: 28px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
-        }
-
-        /* Order of Service */
-        .service-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        .service-item:last-child { border-bottom: none; }
-        .service-item:hover { padding-left: 8px; }
-
-        .service-item-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .service-item-number {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-primary);
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .service-item-title { font-weight: 500; color: var(--text-primary); }
-        .service-item-title em { font-style: italic; color: #6366F1; }
-        .service-item-person { font-size: 15px; color: var(--text-secondary); text-align: right; }
-
-        .service-item.highlight {
-            background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(224,231,255,0.5) 100%);
-            margin: 12px -24px;
-            padding: 20px 24px;
-            border-radius: var(--radius-md);
-            border: none;
-        }
-
-        .service-item.sermon {
-            background: linear-gradient(135deg, rgba(191,155,48,0.08) 0%, rgba(255,248,220,0.5) 100%);
-            margin: 12px -24px;
-            padding: 20px 24px;
-            border-radius: var(--radius-md);
-            border: none;
-        }
-
-        /* Checklist Grid */
-        .checklist-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-        }
-
-        .checklist-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            padding: 20px;
-            background: var(--bg-primary);
-            border-radius: var(--radius-md);
-            transition: all 0.3s ease;
-        }
-
-        .checklist-item:hover { background: #EEF2FF; }
-
-        .checklist-item.warning {
-            background: #FFF8E6;
-            border: 1px solid rgba(191,155,48,0.2);
-        }
-
-        .checklist-item.warning:hover { background: #FFF3D0; }
-
-        .checklist-icon {
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-card);
-            border-radius: 12px;
-            font-size: 20px;
-            box-shadow: var(--shadow-sm);
-            flex-shrink: 0;
-        }
-
-        .checklist-text h4 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
-        .checklist-text p { font-size: 13px; color: var(--text-secondary); line-height: 1.4; }
-
-        /* Song Cards */
-        .songs-grid { display: flex; flex-direction: column; gap: 12px; }
-
-        .song-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 24px;
-            background: var(--bg-primary);
-            border-radius: var(--radius-md);
-            transition: all 0.3s ease;
-        }
-
-        .song-card:hover { background: #EEF2FF; transform: translateX(4px); }
-
-        .song-info { display: flex; align-items: center; gap: 16px; }
-
-        .song-number {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(99,102,241,0.25);
-        }
-
-        .song-title { font-weight: 500; color: var(--text-primary); }
-
-        .download-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            background: var(--bg-card);
-            color: #6366F1;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 100px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-        }
-
-        .download-btn:hover {
-            background: #6366F1;
-            color: white;
-            box-shadow: 0 4px 16px rgba(99,102,241,0.3);
-            transform: scale(1.02);
-        }
-
-        .download-btn.pending {
-            background: var(--bg-primary);
-            color: var(--text-tertiary);
-            cursor: not-allowed;
-        }
-
-        .download-btn.pending:hover {
-            background: var(--bg-primary);
-            color: var(--text-tertiary);
-            box-shadow: var(--shadow-sm);
-            transform: none;
-        }
-
-        /* Medley Container */
-        .medley-container {
-            background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            margin-bottom: 20px;
-            box-shadow: 0 12px 40px rgba(99,102,241,0.25);
-        }
-
-        .medley-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-
-        .medley-badge {
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            font-size: 12px;
-            font-weight: 700;
-            border-radius: 100px;
-            letter-spacing: 1px;
-            backdrop-filter: blur(10px);
-        }
-
-        .medley-container .song-card { background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); }
-        .medley-container .song-card:hover { background: rgba(255,255,255,0.25); }
-        .medley-container .song-number { background: rgba(255,255,255,0.25); color: white; box-shadow: none; }
-        .medley-container .song-title { color: white; }
-        .medley-container .download-btn { background: white; color: #6366F1; }
-        .medley-container .download-btn:hover { background: var(--text-primary); color: white; }
-        .medley-container .download-btn.pending { background: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }
-
-        /* Scripture Card */
-        .scripture-card {
-            background: linear-gradient(135deg, #1D1D1F 0%, #2D2D30 100%);
-            color: white;
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            margin-bottom: 28px;
-            box-shadow: var(--shadow-xl);
-        }
-
-        .scripture-card .section-icon { background: rgba(255,255,255,0.1); box-shadow: none; }
-        .scripture-card .section-title { color: white; }
-
-        .scripture-reference {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            font-weight: 600;
-            margin: 20px 0 8px;
-            color: #BF9B30;
-        }
-
-        .scripture-reader { font-size: 15px; opacity: 0.7; }
-
-        .scripture-verse {
-            background: rgba(255,255,255,0.08);
-            border-left: 3px solid #BF9B30;
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-            padding: 16px 20px;
-            margin-top: 16px;
-            font-style: italic;
-            font-size: 15px;
-            opacity: 0.9;
-            line-height: 1.7;
-        }
-
-        .scripture-ref-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #BF9B30;
-            margin-bottom: 6px;
-            opacity: 1;
-        }
-
-        /* Sermon Card */
-        .sermon-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            margin-bottom: 28px;
-            box-shadow: var(--shadow-xl);
-        }
-
-        .sermon-preacher {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #BF9B30;
-            margin-bottom: 12px;
-        }
-
-        .sermon-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            font-weight: 600;
-            line-height: 1.1;
-            margin-bottom: 8px;
-        }
-
-        .sermon-subtitle {
-            font-size: 1rem;
-            opacity: 0.6;
-            margin-bottom: 28px;
-        }
-
-        .sermon-note {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            background: rgba(191,155,48,0.15);
-            border: 1px solid rgba(191,155,48,0.3);
-            border-radius: var(--radius-md);
-            padding: 16px 20px;
-            font-size: 14px;
-            opacity: 0.9;
-            margin-top: 20px;
-        }
-
-        .sermon-thumbnail-placeholder {
-            background: rgba(255,255,255,0.08);
-            border-radius: var(--radius-md);
-            padding: 40px;
-            text-align: center;
-            border: 2px dashed rgba(255,255,255,0.15);
-            margin-bottom: 16px;
-            font-size: 15px;
-            opacity: 0.7;
-        }
-
-        /* Camera Guide */
-        .camera-guide {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            margin-bottom: 28px;
-            box-shadow: var(--shadow-xl);
-        }
-
-        .camera-guide-content { flex: 1; }
-        .camera-guide .section-icon { background: rgba(255,255,255,0.1); box-shadow: none; }
-        .camera-guide .section-title { color: white; }
-
-        .camera-tips { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
-
-        .camera-tip {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .camera-tip span { color: #4ADE80; font-weight: 700; }
-
-        .camera-visual { flex: 0 0 160px; text-align: center; }
-
-        .camera-visual-frame {
-            background: #2d2d3d;
-            border-radius: 8px;
-            padding: 12px;
-            border: 2px solid #3d3d5c;
-            position: relative;
-            height: 140px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            padding-top: 16px;
-        }
-
-        .camera-visual-gap {
-            font-size: 10px;
-            color: #888;
-            position: absolute;
-            top: 4px;
-            right: 6px;
-        }
-
-        .camera-visual-head {
-            width: 44px;
-            height: 44px;
-            background: #5D5D60;
-            border-radius: 50%;
-        }
-
-        .camera-visual-body {
-            width: 60px;
-            height: 52px;
-            background: #5D5D60;
-            border-radius: 10px 10px 0 0;
-            margin-top: 6px;
-        }
-
-        .camera-visual-label { margin-top: 10px; font-size: 11px; color: rgba(255,255,255,0.5); }
-
-        /* Lyric Formatter */
-        .formatter-card {
-            background: linear-gradient(135deg, #667085 0%, #475467 100%);
-            color: white;
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            margin-bottom: 28px;
-        }
-
-        .formatter-card .section-icon { background: rgba(255,255,255,0.15); box-shadow: none; }
-        .formatter-card .section-title { color: white; }
-
-        .formatter-steps {
-            background: rgba(255,255,255,0.1);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            margin: 24px 0;
-        }
-
-        .formatter-steps ol { margin-left: 20px; line-height: 2.2; }
-        .formatter-steps a { color: white; font-weight: 600; }
-        .formatter-steps ul { margin-left: 20px; margin-top: 8px; font-size: 14px; opacity: 0.9; }
-
-        .formatter-example { background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); padding: 20px; margin-top: 20px; }
-        .formatter-example-label { font-size: 13px; font-weight: 600; margin-bottom: 12px; opacity: 0.8; }
-        .formatter-example pre { font-family: monospace; font-size: 14px; line-height: 1.6; white-space: pre-wrap; opacity: 0.95; }
-        .formatter-example-note { font-size: 12px; margin-top: 12px; opacity: 0.7; }
-
-        .formatter-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 24px;
-            padding: 16px 32px;
-            background: white;
-            color: #475467;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 100px;
-            transition: all 0.3s ease;
-        }
-
-        .formatter-btn:hover { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-
-        /* Final Checklist */
-        .final-checklist {
-            background: var(--bg-card);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
-        }
-
-        .checklist-items { display: flex; flex-direction: column; gap: 4px; }
-
-        .checklist-row {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
-            border-radius: var(--radius-sm);
-            transition: all 0.3s ease;
-        }
-
-        .checklist-row:hover { background: var(--bg-primary); }
-
-        .checklist-checkbox {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--border-light);
-            border-radius: 8px;
-            flex-shrink: 0;
-            transition: all 0.3s ease;
-        }
-
-        .checklist-row:hover .checklist-checkbox { border-color: #6366F1; }
-        .checklist-label { font-size: 15px; color: var(--text-primary); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero { min-height: auto; padding: 60px 24px; }
-            .card { padding: 28px 24px; }
-            .service-item { flex-direction: column; align-items: flex-start; gap: 8px; }
-            .service-item-person { text-align: left; padding-left: 48px; }
-            .camera-guide { flex-direction: column; }
-            .camera-visual { width: 100%; max-width: 180px; }
-            .sermon-card { padding: 32px 24px; }
-        }
-
-        /* Role Filter Bar */
-        .role-bar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(250,250,250,0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-light);
-            padding: 12px 24px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .role-bar-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-tertiary);
-            margin-right: 4px;
-            white-space: nowrap;
-        }
-
-        .role-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 7px 14px;
-            border-radius: 100px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border: 1.5px solid var(--border-light);
-            background: white;
-            color: var(--text-secondary);
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            user-select: none;
-        }
-
-        .role-pill:hover { border-color: #C41E2A; color: #C41E2A; }
-
-        .role-pill.active {
-            background: #C41E2A;
-            border-color: #C41E2A;
-            color: white;
-            box-shadow: 0 4px 12px rgba(196,30,42,0.25);
-        }
-
-        /* Section role tags */
-        .role-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            padding: 3px 10px;
-            border-radius: 100px;
-            margin-bottom: 16px;
-        }
-
-        .role-tag.leaders { background: #FFF3E0; color: #E65100; }
-        .role-tag.worship { background: #EDE7F6; color: #4527A0; }
-        .role-tag.media { background: #E3F2FD; color: #1565C0; }
-        .role-tag.readers { background: #E8F5E9; color: #2E7D32; }
-        .role-tag.all { background: #F5F5F5; color: #616161; }
-
-        .section-hidden { display: none !important; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card, .scripture-card, .sermon-card, .camera-guide, .formatter-card, .final-checklist {
-            animation: fadeInUp 0.6s ease-out both;
-        }
-
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.2s; }
-        .card:nth-child(3) { animation-delay: 0.3s; }
     </style>
 </head>
 <body>
 
-    <div class="hero">
-        <div class="hero-content">
-            <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/ufTeOHywYxLPaG9TDWPG/media/68319627522e13a702426868.png" alt="Calvary Logo" class="logo">
-            <div class="hero-eyebrow"><span>🙏</span> Sunday Service</div>
-            <div class="hero-date">Sunday, 26th April 2026</div>
-            <h1 class="hero-title">Service <em>Run Sheet</em></h1>
-            <p class="hero-subtitle">The Hope and Power of the Resurrection of Jesus Christ — Brother Michael Kabalu</p>
+<div class="hero">
+    <div class="hero-inner">
+        <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/ufTeOHywYxLPaG9TDWPG/media/68319627522e13a702426868.png" alt="Calvary" class="hero-logo">
+        <div class="hero-eyebrow">✝ Service Run Sheet</div>
+        <div class="hero-date">Sunday, 26th April 2026</div>
+        <h1 class="hero-title">Calvary Hephzibah</h1>
+        <p class="hero-sub">The Hope and Power of the Resurrection — Bro Michael Kabalu</p>
+    </div>
+</div>
+
+<div class="role-bar">
+    <span class="role-label">I am:</span>
+    <button class="role-pill active" data-role="all" onclick="setRole('all')">👁 All</button>
+    <button class="role-pill" data-role="leaders" onclick="setRole('leaders')">🏛 Leader</button>
+    <button class="role-pill" data-role="worship" onclick="setRole('worship')">🎶 Worship</button>
+    <button class="role-pill" data-role="media" onclick="setRole('media')">🎥 Media</button>
+    <button class="role-pill" data-role="readers" onclick="setRole('readers')">📖 Reader</button>
+</div>
+
+<div class="container">
+
+    <!-- ORDER OF SERVICE -->
+    <div data-roles="all leaders">
+        <div class="card">
+            <div class="ch"><div class="ci">📋</div><h2 class="ct">Order of Service</h2></div>
+            <div class="cb">
+                <div class="sbadge sb-all">👁 Everyone</div>
+                <div class="svc-list">
+                    <div class="svc-row"><div class="svc-num">1</div><div class="svc-info"><div class="svc-name">Welcome &amp; Bible Reading</div><div class="svc-person">Pastor Gbenga Adebanjo</div></div></div>
+                    <div class="svc-row"><div class="svc-num">2</div><div class="svc-info"><div class="svc-name">Opening Prayer</div><div class="svc-person">Sister Petty</div></div></div>
+                    <div class="svc-row"><div class="svc-num">3</div><div class="svc-info"><div class="svc-name">Worship</div><div class="svc-person">Worship Team 🎶</div></div></div>
+                    <div class="svc-row"><div class="svc-num">4</div><div class="svc-info"><div class="svc-name">Communion</div><div class="svc-person">Brother Michael Kabalu</div></div></div>
+                    <div class="svc-row"><div class="svc-num">5</div><div class="svc-info"><div class="svc-name">Announcements</div><div class="svc-person">Pastor Kayode Ogungbenro</div></div></div>
+                    <div class="svc-row hl"><div class="svc-num">📖</div><div class="svc-info"><div class="svc-name">Bible Reading — Romans 6:1–23</div><div class="svc-person">Dr Caster Martins</div></div></div>
+                    <div class="svc-row ser"><div class="svc-num">🎤</div><div class="svc-info"><div class="svc-name">The Hope and Power of the Resurrection of Jesus Christ</div><div class="svc-person">Brother Michael Kabalu</div></div></div>
+                    <div class="svc-row"><div class="svc-num">8</div><div class="svc-info"><div class="svc-name">Closing Prayer</div><div class="svc-person">Mummy Akintunde</div></div></div>
+                    <div class="svc-row"><div class="svc-num">9</div><div class="svc-info"><div class="svc-name">Benediction</div><div class="svc-person">Sister Yinka Osipitan</div></div></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Role Filter Bar -->
-    <div class="role-bar">
-        <span class="role-bar-label">View as:</span>
-        <button class="role-pill active" data-role="all" onclick="setRole('all')">👁 Everyone</button>
-        <button class="role-pill" data-role="leaders" onclick="setRole('leaders')">🏛 Leaders & Ushers</button>
-        <button class="role-pill" data-role="worship" onclick="setRole('worship')">🎶 Worship Team</button>
-        <button class="role-pill" data-role="media" onclick="setRole('media')">🎥 Media Team</button>
-        <button class="role-pill" data-role="readers" onclick="setRole('readers')">📖 Bible Readers</button>
+    <!-- SONGS -->
+    <div data-roles="worship media">
+        <div class="card">
+            <div class="ch"><div class="ci">🎶</div><h2 class="ct">Today's Songs</h2></div>
+            <div class="cb">
+                <div class="sbadge sb-worship">🎶 Worship &amp; Media</div>
+                <div style="display:flex;flex-direction:column;gap:9px;">
+                    <div class="slabel">Praise</div>
+                    <div class="medley">
+                        <div class="medley-hd">Medley · 3 songs</div>
+                        <div class="msong"><div class="msong-info"><div class="mnum">1</div><div class="mname">Trading My Sorrows</div></div><a href="https://drive.google.com/file/d/1wKihbFXvwS4WFBHHtOtzX2GdRP8QzBWK/view?usp=sharing" target="_blank" class="dl">📥</a></div>
+                        <div class="msong"><div class="msong-info"><div class="mnum">2</div><div class="mname">Lord You Are Good</div></div><a href="https://drive.google.com/file/d/18D4UlGyba8AZYGU_sQ-unTPj0nkshUxM/view?usp=sharing" target="_blank" class="dl">📥</a></div>
+                        <div class="msong"><div class="msong-info"><div class="mnum">3</div><div class="mname">Friend of God</div></div><a href="https://drive.google.com/file/d/1E5FlDPBWZ54ya-khe1TQLPPIys6v7JzU/view?usp=sharing" target="_blank" class="dl">📥</a></div>
+                    </div>
+                    <div class="slabel" style="margin-top:3px;">Worship</div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#EDE9FE;">🙏</div><div class="sname">Be Magnified</div></div><a href="https://drive.google.com/file/d/1TxxTDTdkHzjSUroKIDb8C7qyHaLRkq_Y/view?usp=sharing" target="_blank" class="sdl">📥</a></div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#EDE9FE;">🙏</div><div class="sname">I Exalt Thee</div></div><span class="sdl pend">⏳ Pending</span></div>
+                    <div class="slabel" style="margin-top:3px;">💰 Offering</div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#DCFCE7;">💚</div><div class="sname">Blessing and Honour</div></div><span class="sdl pend">⏳ Pending</span></div>
+                    <div class="slabel" style="margin-top:3px;">🏁 End of Service</div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#FEF3C7;">✨</div><div class="sname">He Is Lord</div></div><span class="sdl pend">⏳ Pending</span></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="container">
-
-        <!-- Order of Service -->
-        <div class="card" data-roles="all leaders">
-            <span class="role-tag all">👁 Everyone</span>
-            <div class="section-header">
-                <div class="section-icon">📋</div>
-                <h2 class="section-title">Order of Service</h2>
-            </div>
-
-            <div class="service-item">
-                <div class="service-item-content">
-                    <div class="service-item-number">1</div>
-                    <div class="service-item-title">Welcome & Bible Reading</div>
-                </div>
-                <div class="service-item-person">Pastor Gbenga Adebanjo</div>
-            </div>
-
-            <div class="service-item">
-                <div class="service-item-content">
-                    <div class="service-item-number">2</div>
-                    <div class="service-item-title">Opening Prayer</div>
-                </div>
-                <div class="service-item-person">Sister Petty</div>
-            </div>
-
-            <div class="service-item">
-                <div class="service-item-content">
-                    <div class="service-item-number">3</div>
-                    <div class="service-item-title">Worship</div>
-                </div>
-                <div class="service-item-person">Worship Team 🎶</div>
-            </div>
-
-            <div class="service-item">
-                <div class="service-item-content">
-                    <div class="service-item-number">4</div>
-                    <div class="service-item-title">Communion</div>
-                </div>
-                <div class="service-item-person">Brother Michael Kabalu</div>
-            </div>
-
-            <div class="service-item">
-                <div class="service-item-content">
-                    <div class="service-item-number">5</div>
-                    <div class="service-item-title">Announcements</div>
-                </div>
-                <div class="service-item-person">Pastor Kayode Ogungbenro</div>
-            </div>
-
-            <div class="service-item highlight">
-                <div class="service-item-content">
-                    <div class="service-item-number">📖</div>
-                    <div class="service-item-title"><em>Bible Reading — Romans 6:1–23</em></div>
-                </div>
-                <div class="service-item-person">Dr Caster Martins</div>
-            </div>
-
-            <div class="service-item sermon">
-                <div class="service-item-content">
-                    <div class="service-item-number">🎤</div>
-                    <div class="service-item-title"><em>The Hope and Power of the Resurrection of Jesus Christ</em></div>
-                </div>
-                <div class="service-item-person">Brother Michael Kabalu</div>
-            </div>
-
-            <div class="service-item">
-                <div class="service-item-content">
-                    <div class="service-item-number">8</div>
-                    <div class="service-item-title">Closing Prayer</div>
-                </div>
-                <div class="service-item-person">Mummy Akintunde</div>
-            </div>
-
-            <div class="service-item">
-                <div class="service-item-content">
-                    <div class="service-item-number">9</div>
-                    <div class="service-item-title">Benediction</div>
-                </div>
-                <div class="service-item-person">Sister Yinka Osipitan</div>
-            </div>
+    <!-- SCRIPTURE -->
+    <div data-roles="readers leaders media">
+        <div class="sc-card">
+            <div class="sbadge" style="background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.85);">📖 Readers &amp; Leaders</div>
+            <div class="ch" style="padding:0;margin-bottom:12px;"><div class="ci" style="background:rgba(255,255,255,0.08);">📖</div><h2 class="ct" style="color:white;">Scripture Reading</h2></div>
+            <div class="sc-reader">Reader: <strong>Dr Caster Martins</strong></div>
+            <div class="sc-ref">Romans 6:1–23</div>
+            <div class="sc-text">"What shall we say then? Are we to continue in sin that grace may abound? By no means! How can we who died to sin still live in it?... For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord."</div>
+            <p style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.45);">📺 Display on screen as Dr Caster Martins reads.</p>
+            <span style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:9px 15px;background:rgba(184,134,11,0.15);color:rgba(184,134,11,0.85);font-size:12px;font-weight:600;border-radius:100px;border:1px solid rgba(184,134,11,0.3);">⏳ Romans 6:1–23 slides pending</span>
         </div>
-
-        <!-- Phone Camera Checklist -->
-        <div class="card" data-roles="media">
-            <span class="role-tag media">🎥 Media Team</span>
-            <div class="section-header">
-                <div class="section-icon">📱</div>
-                <h2 class="section-title">Phone Camera Setup</h2>
-            </div>
-            <div class="checklist-grid">
-                <div class="checklist-item">
-                    <div class="checklist-icon">🔋</div>
-                    <div class="checklist-text">
-                        <h4>Battery Charged</h4>
-                        <p>Check level before service starts</p>
-                    </div>
-                </div>
-                <div class="checklist-item warning">
-                    <div class="checklist-icon">🔌</div>
-                    <div class="checklist-text">
-                        <h4>USB-C Charger Connected</h4>
-                        <p>Keep plugged in throughout service</p>
-                    </div>
-                </div>
-                <div class="checklist-item">
-                    <div class="checklist-icon">📶</div>
-                    <div class="checklist-text">
-                        <h4>Stable Mount</h4>
-                        <p>Phone secure on tripod</p>
-                    </div>
-                </div>
-                <div class="checklist-item">
-                    <div class="checklist-icon">📺</div>
-                    <div class="checklist-text">
-                        <h4>Livestream Connected</h4>
-                        <p>Confirm stream is live</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Camera Framing Guide -->
-        <div data-roles="media">
-        <div class="camera-guide">
-            <div class="camera-guide-content">
-                <div class="section-header">
-                    <div class="section-icon">🎥</div>
-                    <h2 class="section-title">Camera Framing</h2>
-                </div>
-                <p>Zoom in so there's only a few centimetres between the speaker's head and the top of the frame.</p>
-                <div class="camera-tips">
-                    <div class="camera-tip"><span>✓</span> Tight headroom (2–5cm gap)</div>
-                    <div class="camera-tip"><span>✓</span> Speaker fills most of frame</div>
-                    <div class="camera-tip"><span>✓</span> Eyes in upper third</div>
-                </div>
-            </div>
-            <div class="camera-visual">
-                <div class="camera-visual-frame">
-                    <div class="camera-visual-gap">← small gap</div>
-                    <div class="camera-visual-head"></div>
-                    <div class="camera-visual-body"></div>
-                </div>
-                <div class="camera-visual-label">Correct framing</div>
-            </div>
-        </div>
-        </div><!-- end media wrapper -->
-
-        <!-- Worship Songs -->
-        <div class="card" data-roles="worship media">
-            <span class="role-tag worship">🎶 Worship & Media</span>
-            <div class="section-header">
-                <div class="section-icon">🎶</div>
-                <h2 class="section-title">Today's Worship Songs</h2>
-            </div>
-            <p style="color: var(--text-secondary); margin-bottom: 24px;">Led by the Worship Team. Display lyrics on screen during each song.</p>
-
-            <!-- Praise Medley -->
-            <div class="medley-container">
-                <div class="medley-header">
-                    <span class="medley-badge">PRAISE</span>
-                </div>
-                <div class="songs-grid">
-                    <div class="song-card">
-                        <div class="song-info">
-                            <div class="song-number">1</div>
-                            <div class="song-title">Trading My Sorrows</div>
-                        </div>
-                        <a href="https://drive.google.com/file/d/1wKihbFXvwS4WFBHHtOtzX2GdRP8QzBWK/view?usp=sharing" target="_blank" class="download-btn">📥 Download</a>
-                    </div>
-                    <div class="song-card">
-                        <div class="song-info">
-                            <div class="song-number">2</div>
-                            <div class="song-title">Lord You Are Good</div>
-                        </div>
-                        <a href="https://drive.google.com/file/d/18D4UlGyba8AZYGU_sQ-unTPj0nkshUxM/view?usp=sharing" target="_blank" class="download-btn">📥 Download</a>
-                    </div>
-                    <div class="song-card">
-                        <div class="song-info">
-                            <div class="song-number">3</div>
-                            <div class="song-title">Friend of God</div>
-                        </div>
-                        <a href="https://drive.google.com/file/d/1E5FlDPBWZ54ya-khe1TQLPPIys6v7JzU/view?usp=sharing" target="_blank" class="download-btn">📥 Download</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Worship Songs -->
-            <div style="margin-top: 16px; margin-bottom: 16px;">
-                <p style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-tertiary); margin-bottom: 12px;">🙏 Worship</p>
-                <div class="songs-grid">
-                    <div class="song-card">
-                        <div class="song-info">
-                            <div class="song-number" style="background: linear-gradient(135deg, #6366F1, #818CF8); box-shadow: 0 4px 12px rgba(99,102,241,0.25);">🎵</div>
-                            <div class="song-title">Be Magnified</div>
-                        </div>
-                        <a href="https://drive.google.com/file/d/1TxxTDTdkHzjSUroKIDb8C7qyHaLRkq_Y/view?usp=sharing" target="_blank" class="download-btn">📥 Download</a>
-                    </div>
-                    <div class="song-card">
-                        <div class="song-info">
-                            <div class="song-number" style="background: linear-gradient(135deg, #6366F1, #818CF8); box-shadow: 0 4px 12px rgba(99,102,241,0.25);">🎵</div>
-                            <div class="song-title">I Exalt Thee</div>
-                        </div>
-                        <span class="download-btn pending">⏳ Link pending</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Offering -->
-            <div style="margin-top: 8px; margin-bottom: 16px;">
-                <p style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-tertiary); margin-bottom: 12px;">💰 Offering</p>
-                <div class="song-card">
-                    <div class="song-info">
-                        <div class="song-number" style="background: linear-gradient(135deg, #4CAF50, #81C784); box-shadow: 0 4px 12px rgba(76,175,80,0.25);">🎵</div>
-                        <div class="song-title">Blessing and Honour</div>
-                    </div>
-                    <span class="download-btn pending">⏳ Link pending</span>
-                </div>
-            </div>
-
-            <!-- End of Service -->
-            <div style="margin-top: 8px;">
-                <p style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text-tertiary); margin-bottom: 12px;">🏁 End of Service</p>
-                <div class="song-card">
-                    <div class="song-info">
-                        <div class="song-number" style="background: linear-gradient(135deg, #6B46C1, #9F7AEA); box-shadow: 0 4px 12px rgba(107,70,193,0.25);">🎶</div>
-                        <div class="song-title">He Is Lord</div>
-                    </div>
-                    <span class="download-btn pending">⏳ Link pending</span>
-                </div>
-            </div>
-        </div>
-        <!-- Scripture Reading -->
-        <div class="scripture-card" data-roles="readers leaders media">
-            <span class="role-tag readers" style="background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);">📖 Bible Readers & Leaders</span>
-            <div class="section-header">
-                <div class="section-icon">📖</div>
-                <h2 class="section-title">Scripture Reading</h2>
-            </div>
-            <p class="scripture-reader"><strong>Reader:</strong> Dr Caster Martins</p>
-
-            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 16px;">
-                <div>
-                    <div class="scripture-ref-label">Romans 6:1–23</div>
-                    <div class="scripture-verse">What shall we say then? Are we to continue in sin that grace may abound? By no means! How can we who died to sin still live in it?... For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.</div>
-                </div>
-            </div>
-
-            <p style="margin-top: 20px; opacity: 0.6; font-size: 14px;">📺 Display the scripture text on screen as Dr Caster Martins reads.</p>
-            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;">
-                <span style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: rgba(191,155,48,0.1); color: rgba(191,155,48,0.5); font-weight: 600; border-radius: 100px; border: 1px solid rgba(191,155,48,0.2); font-size: 14px;">⏳ Romans 6:1–23 Slides pending</span>
-            </div>
-        </div>
-
-        <!-- Sermon Section -->
-        <div class="sermon-card" data-roles="media leaders">
-            <span class="role-tag media" style="background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);">🎥 Media & Leaders</span>
-            <div class="sermon-preacher">Brother Michael Kabalu</div>
-            <h3 class="sermon-title">The Hope and Power of the Resurrection of Jesus Christ</h3>
-
-            <img src="https://calvaryhfgc.github.io/calvaryhephzibah/sermon-thumbnail-26-apr-2026.jpg" alt="Sermon - The Hope and Power of the Resurrection of Jesus Christ" style="width: 100%; border-radius: 16px; margin-bottom: 16px; box-shadow: var(--shadow-lg);">
-
-            <div class="sermon-note">
-                <span>💡</span>
-                Display sermon thumbnail for 30 seconds as Brother Michael Kabalu comes up to preach.
-            </div>
-
-            <a href="https://drive.google.com/file/d/1DEYnPw1sKEgmh-Uxn5AhUsAyLsgQHKOS/view?usp=sharing" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 12px 24px; background: rgba(255,255,255,0.1); color: white; font-weight: 600; text-decoration: none; border-radius: 100px; border: 1px solid rgba(255,255,255,0.2);">📥 Download Sermon Thumbnail</a>
-        </div>
-
-        <!-- Generate Lyrics On The Fly -->
-        <div class="formatter-card" data-roles="media worship">
-            <span class="role-tag worship" style="background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9);">🎶 Worship & Media</span>
-            <div class="section-header">
-                <div class="section-icon">🔧</div>
-                <h2 class="section-title">Generate Lyrics On The Fly</h2>
-            </div>
-            <p style="opacity: 0.9;">If you need to create lyric slides for a song that isn't pre-prepared, use Calvary's Song Lyric Formatter.</p>
-            <div class="formatter-steps">
-                <ol>
-                    <li>Go to <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank">calvaryhephzibah.co.uk/songlyricformatter</a></li>
-                    <li>Enter the <strong>song title</strong> in the title field</li>
-                    <li>Enter the <strong>lyrics</strong> following these rules:
-                        <ul>
-                            <li>Write <strong>two lines at a time</strong> per slide</li>
-                            <li>Keep each line around <strong>25–30 characters</strong></li>
-                            <li>Add a <strong>blank line</strong> between each pair</li>
-                        </ul>
-                    </li>
-                    <li>Click <strong>"Generate Slides"</strong></li>
-                    <li>Download the ZIP file</li>
-                    <li>Extract and upload to OBS</li>
-                </ol>
-            </div>
-            <div class="formatter-example">
-                <div class="formatter-example-label">📝 Example Format:</div>
-                <pre>He's my rock, He's my fortress
-He's my deliverer, in Him will I trust
-
-Praise the Lord, praise the Lord
-Let the earth hear His voice</pre>
-                <div class="formatter-example-note">↑ Each pair of lines becomes one slide. The blank line creates the separation.</div>
-            </div>
-            <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="formatter-btn">🔧 Open Song Lyric Formatter</a>
-        </div>
-
-        <!-- Final Checklist -->
-        <div class="final-checklist" data-roles="media">
-            <span class="role-tag media">🎥 Media Team</span>
-            <div class="section-header">
-                <div class="section-icon">✅</div>
-                <h2 class="section-title">Media Team Checklist</h2>
-            </div>
-            <div class="checklist-items">
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Phone camera charged and USB-C charger plugged in</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Phone mounted securely and livestream connected</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Camera framing checked (tight headroom)</div>
-                </div>
-                <div class="checklist-row" style="background: rgba(99,102,241,0.06); border-radius: 12px;">
-                    <div class="checklist-checkbox" style="border-color: #6366F1;"></div>
-                    <div class="checklist-label">Praise medley ready — Trading My Sorrows, Lord You Are Good, Friend of God</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Worship songs ready — Be Magnified, I Exalt Thee</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Offering song ready — Blessing and Honour</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">End of service ready — He Is Lord</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Scripture slides ready — Romans 6:1–23 (Dr Caster Martins)</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Sermon thumbnail ready ✅</div>
-                </div>
-                <div class="checklist-row">
-                    <div class="checklist-checkbox"></div>
-                    <div class="checklist-label">Screen layouts tested before service</div>
-                </div>
-            </div>
-        </div>
-
     </div>
-    <script>
-        function setRole(role) {
-            // Update pills
-            document.querySelectorAll('.role-pill').forEach(p => {
-                p.classList.toggle('active', p.dataset.role === role);
-            });
 
-            // Show/hide sections
-            document.querySelectorAll('[data-roles]').forEach(section => {
-                if (role === 'all') {
-                    section.classList.remove('section-hidden');
-                } else {
-                    const roles = section.dataset.roles.split(' ');
-                    section.classList.toggle('section-hidden', !roles.includes(role) && !roles.includes('all'));
-                }
-            });
+    <!-- SERMON -->
+    <div data-roles="media leaders">
+        <div class="serm-card">
+            <div class="sbadge" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);">🎥 Media &amp; Leaders</div>
+            <div class="serm-preacher">Brother Michael Kabalu</div>
+            <h3 class="serm-title">The Hope and Power of the Resurrection of Jesus Christ</h3>
+            <img src="https://calvaryhfgc.github.io/calvaryhephzibah/sermon-thumbnail-26-apr-2026.jpg" alt="Sermon thumbnail" class="serm-thumb">
+            <div class="serm-note"><span>💡</span><span>Display sermon thumbnail for 30 seconds as Brother Michael comes up to preach.</span></div>
+            <a href="https://drive.google.com/file/d/1DEYnPw1sKEgmh-Uxn5AhUsAyLsgQHKOS/view?usp=sharing" target="_blank" class="serm-dl">📥 Download Thumbnail</a>
+        </div>
+    </div>
 
-            // Save preference
-            sessionStorage.setItem('calvary-role', role);
-        }
+    <!-- CAMERA SETUP -->
+    <div data-roles="media">
+        <div class="card">
+            <div class="ch"><div class="ci">📱</div><h2 class="ct">Camera Setup</h2></div>
+            <div class="cb">
+                <div class="sbadge sb-media">🎥 Media Team</div>
+                <div class="cam-grid">
+                    <div class="cam-item"><div class="cam-emoji">🔋</div><div class="cam-title">Battery</div><div class="cam-note">Check level before service</div></div>
+                    <div class="cam-item warn"><div class="cam-emoji">🔌</div><div class="cam-title">USB-C Charger</div><div class="cam-note">Keep plugged in throughout</div></div>
+                    <div class="cam-item"><div class="cam-emoji">📷</div><div class="cam-title">Mount</div><div class="cam-note">Secure on tripod</div></div>
+                    <div class="cam-item"><div class="cam-emoji">📺</div><div class="cam-title">Livestream</div><div class="cam-note">Confirm live before service</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="frame-card">
+            <div class="ch" style="padding:0;margin-bottom:4px;"><div class="ci" style="background:rgba(255,255,255,0.07);">🎥</div><h2 class="ct" style="color:white;">Camera Framing</h2></div>
+            <div class="frame-tips">
+                <div class="frame-tip"><div class="frame-dot"></div>Only 2–5cm gap above speaker's head</div>
+                <div class="frame-tip"><div class="frame-dot"></div>Speaker fills most of the frame</div>
+                <div class="frame-tip"><div class="frame-dot"></div>Eyes in upper third of screen</div>
+                <div class="frame-tip"><div class="frame-dot"></div>Zoom in — no excess empty space above</div>
+            </div>
+        </div>
+    </div>
 
-        // Restore on load
-        document.addEventListener('DOMContentLoaded', () => {
-            const saved = sessionStorage.getItem('calvary-role');
-            if (saved) setRole(saved);
-        });
-    </script>
+    <!-- LYRIC FORMATTER -->
+    <div data-roles="media worship">
+        <div class="fmt-card">
+            <div class="ch" style="padding:0;margin-bottom:10px;"><div class="ci" style="background:rgba(255,255,255,0.07);">🔧</div><h2 class="ct" style="color:white;">Generate Lyrics</h2></div>
+            <div class="sbadge" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.75);">🎶 Worship &amp; Media</div>
+            <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:2px;">Need slides for a song not pre-prepared?</p>
+            <div class="fmt-steps">
+                <div class="fmt-step"><div class="fmt-n">1</div><span>Open Lyric Formatter below</span></div>
+                <div class="fmt-step"><div class="fmt-n">2</div><span>Enter title &amp; lyrics — 2 lines per slide, blank line between each pair</span></div>
+                <div class="fmt-step"><div class="fmt-n">3</div><span>Generate → Download ZIP → Extract → Upload to OBS</span></div>
+            </div>
+            <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="fmt-btn">🔧 Open Lyric Formatter</a>
+        </div>
+    </div>
+
+    <!-- CHECKLIST -->
+    <div data-roles="media">
+        <div class="card">
+            <div class="ch"><div class="ci">✅</div><h2 class="ct">Pre-Service Checklist</h2></div>
+            <div class="cb">
+                <div class="sbadge sb-media">🎥 Media Team</div>
+                <p style="font-size:12px;color:var(--text-3);margin-bottom:10px;">Tap each item to mark complete.</p>
+                <div class="chk">
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Phone charged &amp; USB-C charger connected</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Phone mounted &amp; livestream confirmed live</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Camera framing checked — tight headroom</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Praise medley — Trading My Sorrows, Lord You Are Good, Friend of God</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Worship songs — Be Magnified, I Exalt Thee</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Offering — Blessing and Honour</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">End of service — He Is Lord</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Scripture slides — Romans 6:1–23</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Sermon thumbnail ready ✅</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Screen layouts tested before service</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+function setRole(r) {
+    document.querySelectorAll('.role-pill').forEach(p => p.classList.toggle('active', p.dataset.role === r));
+    document.querySelectorAll('[data-roles]').forEach(el => {
+        if (r === 'all') { el.classList.remove('hidden'); return; }
+        el.classList.toggle('hidden', !el.dataset.roles.split(' ').includes(r));
+    });
+    sessionStorage.setItem('calvary-role', r);
+    setTimeout(() => {
+        const first = document.querySelector('[data-roles]:not(.hidden)');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
+}
+
+function tick(row) {
+    row.classList.toggle('done');
+    row.querySelector('.chk-box').textContent = row.classList.contains('done') ? '✓' : '';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const saved = sessionStorage.getItem('calvary-role');
+    if (saved) setRole(saved);
+});
+</script>
 </body>
 </html>
