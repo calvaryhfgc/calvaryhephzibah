@@ -1149,6 +1149,95 @@
     margin-top: 8px;
   }
 
+  /* ============ FLOATING PREVIEW ============ */
+  #preview-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1000;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 100px;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  #preview-toggle:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 32px rgba(196, 30, 42, 0.45);
+  }
+  #preview-toggle.active {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+  }
+
+  #preview-panel {
+    position: fixed;
+    bottom: 80px;
+    right: 24px;
+    width: min(480px, calc(100vw - 48px));
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: opacity 0.18s, transform 0.18s;
+  }
+  #preview-panel.hidden {
+    display: none;
+  }
+
+  #preview-header {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px 10px 14px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    user-select: none;
+  }
+
+  #preview-stage {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+  }
+  #preview-iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: #000;
+  }
+
+  @media (max-width: 600px) {
+    #preview-toggle {
+      bottom: 16px;
+      right: 16px;
+      padding: 10px 16px;
+      font-size: 13px;
+    }
+    #preview-panel {
+      bottom: 70px;
+      right: 16px;
+      left: 16px;
+      width: auto;
+    }
+  }
+
   /* ============ FOOTER ============ */
   .footer {
     text-align: center;
@@ -1415,6 +1504,26 @@
   <div class="footer">
     <p>Signed in as <span id="user-display" class="muted">—</span> · <button class="logout-btn" onclick="logout()">Sign out</button></p>
     <p style="margin-top: 8px;">Overlay URL: <a id="overlay-link" href="overlay.html" target="_blank">overlay.html</a> · <a href="obs-setup.html" style="color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px;">OBS setup guide →</a> · <a href="admin.html" style="color: var(--text-muted); text-decoration: underline; text-underline-offset: 2px;">Admin →</a></p>
+  </div>
+</div>
+
+<!-- Floating overlay preview -->
+<button id="preview-toggle" onclick="togglePreview()" aria-label="Toggle preview">
+  <span id="preview-toggle-icon">📺</span>
+  <span>Preview</span>
+</button>
+
+<div id="preview-panel" class="hidden" role="dialog" aria-label="Overlay preview">
+  <div id="preview-header">
+    <div style="display:flex;align-items:center;gap:8px;flex:1;cursor:move" id="preview-drag-handle">
+      <span style="width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block"></span>
+      <strong style="font-size:12px;letter-spacing:0.5px">LIVE PREVIEW</strong>
+      <span style="font-size:11px;color:var(--text-muted)">— what's on the overlay right now</span>
+    </div>
+    <button onclick="togglePreview()" aria-label="Close preview" style="background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:18px;line-height:1;padding:4px 8px">×</button>
+  </div>
+  <div id="preview-stage">
+    <iframe id="preview-iframe" src="about:blank" loading="lazy" title="Overlay preview" style="background:#000"></iframe>
   </div>
 </div>
 
@@ -2579,6 +2688,84 @@ function escapeHtml(s) {
   } else {
     await loadUsers();
   }
+})();
+
+// ============================================================
+// FLOATING PREVIEW PANEL
+// ============================================================
+window.togglePreview = () => {
+  const panel  = document.getElementById('preview-panel');
+  const button = document.getElementById('preview-toggle');
+  const iframe = document.getElementById('preview-iframe');
+  const isHidden = panel.classList.contains('hidden');
+
+  if (isHidden) {
+    // Lazy-load the iframe the first time it's opened, and reload each time
+    // the user re-opens it so it always reflects current display settings
+    iframe.src = 'overlay.html?hud=off';
+    panel.classList.remove('hidden');
+    button.classList.add('active');
+    button.querySelector('span:last-child').textContent = 'Hide preview';
+  } else {
+    panel.classList.add('hidden');
+    button.classList.remove('active');
+    button.querySelector('span:last-child').textContent = 'Preview';
+    // Stop the iframe to free its WebSocket and decoders when hidden
+    iframe.src = 'about:blank';
+  }
+};
+
+// Drag-to-reposition for the preview panel.
+// Listens on the header drag handle and moves the panel within the viewport.
+(function setupPreviewDrag() {
+  const handle = document.getElementById('preview-drag-handle');
+  const panel  = document.getElementById('preview-panel');
+  if (!handle || !panel) return;
+
+  let dragging = false;
+  let startX, startY, panelStartLeft, panelStartTop;
+
+  function onDown(e) {
+    const pt = e.touches ? e.touches[0] : e;
+    dragging = true;
+    startX = pt.clientX;
+    startY = pt.clientY;
+    const rect = panel.getBoundingClientRect();
+    panelStartLeft = rect.left;
+    panelStartTop  = rect.top;
+    // Switch from bottom/right anchoring to top/left so we can move freely
+    panel.style.left   = panelStartLeft + 'px';
+    panel.style.top    = panelStartTop  + 'px';
+    panel.style.right  = 'auto';
+    panel.style.bottom = 'auto';
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend',  onUp);
+    if (e.cancelable) e.preventDefault();
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    const pt = e.touches ? e.touches[0] : e;
+    let nx = panelStartLeft + (pt.clientX - startX);
+    let ny = panelStartTop  + (pt.clientY - startY);
+    // Keep panel on screen (at least 40px of header always grabbable)
+    const rect = panel.getBoundingClientRect();
+    nx = Math.max(8, Math.min(window.innerWidth - rect.width - 8, nx));
+    ny = Math.max(8, Math.min(window.innerHeight - 40, ny));
+    panel.style.left = nx + 'px';
+    panel.style.top  = ny + 'px';
+    if (e.cancelable) e.preventDefault();
+  }
+  function onUp() {
+    dragging = false;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('touchend',  onUp);
+  }
+  handle.addEventListener('mousedown', onDown);
+  handle.addEventListener('touchstart', onDown, { passive: false });
 })();
 </script>
 
