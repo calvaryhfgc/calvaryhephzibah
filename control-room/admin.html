@@ -257,8 +257,18 @@
     <div id="panel-images" class="panel">
       <div class="two-col">
         <div class="card">
-          <h2>Image library</h2>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <h2 style="margin:0">Image library</h2>
+            <button id="image-bulk-toggle" class="btn" onclick="toggleBulkMode()" style="font-size:12px;padding:6px 10px">Select</button>
+          </div>
           <p class="muted" style="font-size:13px;margin-bottom:14px">Upload images for offering, sermon thumbnails, communion, and other graphics.</p>
+          <div id="image-bulk-bar" style="display:none;background:var(--surface-2);padding:8px 12px;border-radius:8px;margin-bottom:10px;align-items:center;justify-content:space-between;gap:8px">
+            <span id="image-bulk-count" style="font-size:13px;font-weight:600">0 selected</span>
+            <div style="display:flex;gap:6px">
+              <button class="btn" onclick="selectAllImages()" style="font-size:12px;padding:5px 10px">Select all</button>
+              <button class="btn danger" onclick="bulkDeleteImages()" id="image-bulk-delete-btn" style="font-size:12px;padding:5px 10px" disabled>Delete selected</button>
+            </div>
+          </div>
           <div id="images-list" class="song-list"></div>
         </div>
 
@@ -780,8 +790,26 @@ function renderImagesList() {
     const thumb = isVideo
       ? `<video src="${src}" muted playsinline preload="metadata" style="width:100%;height:100%;object-fit:cover"></video>`
       : `<img src="${src}" style="width:100%;height:100%;object-fit:cover">`;
+    const isSelected = bulkSelected.has(img.id);
+    if (bulkMode) {
+      // In bulk mode: checkbox replaces row click; × is hidden
+      return `
+        <div class="song-list-item" onclick="toggleBulkSelect('${img.id}')" style="display:flex;gap:12px;align-items:center;${isSelected ? 'background:rgba(196,30,42,0.15);border-color:var(--red);' : ''}">
+          <input type="checkbox" ${isSelected ? 'checked' : ''} onclick="event.stopPropagation();toggleBulkSelect('${img.id}')" style="width:18px;height:18px;cursor:pointer;flex-shrink:0">
+          <div style="width:60px;height:34px;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0;position:relative">
+            ${thumb}
+            ${isVideo ? '<div style="position:absolute;bottom:1px;right:1px;background:rgba(0,0,0,0.8);color:white;font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px">▶</div>' : ''}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(img.name)}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${img.category}${isVideo ? ' · video' : ''}</div>
+          </div>
+        </div>
+      `;
+    }
+    // Normal mode: row click edits, × button on hover deletes
     return `
-      <div class="song-list-item" onclick="window.editImage('${img.id}')" style="display:flex;gap:12px;align-items:center">
+      <div class="song-list-item" onclick="window.editImage('${img.id}')" style="display:flex;gap:12px;align-items:center;position:relative">
         <div style="width:60px;height:34px;background:#000;border-radius:4px;overflow:hidden;flex-shrink:0;position:relative">
           ${thumb}
           ${isVideo ? '<div style="position:absolute;bottom:1px;right:1px;background:rgba(0,0,0,0.8);color:white;font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px">▶</div>' : ''}
@@ -790,10 +818,86 @@ function renderImagesList() {
           <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(img.name)}</div>
           <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${img.category}${isVideo ? ' · video' : ''}</div>
         </div>
+        <button onclick="event.stopPropagation();window.quickDeleteImage('${img.id}')" title="Delete" style="background:transparent;border:1px solid var(--border);color:var(--text-muted);width:28px;height:28px;border-radius:6px;cursor:pointer;flex-shrink:0;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='var(--red)';this.style.color='white';this.style.borderColor='var(--red)'" onmouseout="this.style.background='transparent';this.style.color='var(--text-muted)';this.style.borderColor='var(--border)'">×</button>
       </div>
     `;
   }).join('');
 }
+
+// === BULK SELECT MODE ===
+let bulkMode = false;
+const bulkSelected = new Set();
+
+window.toggleBulkMode = () => {
+  bulkMode = !bulkMode;
+  bulkSelected.clear();
+  document.getElementById('image-bulk-toggle').textContent = bulkMode ? 'Done' : 'Select';
+  document.getElementById('image-bulk-bar').style.display = bulkMode ? 'flex' : 'none';
+  updateBulkBar();
+  renderImagesList();
+};
+
+window.toggleBulkSelect = (id) => {
+  if (bulkSelected.has(id)) bulkSelected.delete(id);
+  else bulkSelected.add(id);
+  updateBulkBar();
+  renderImagesList();
+};
+
+window.selectAllImages = () => {
+  if (bulkSelected.size === images.length) {
+    bulkSelected.clear();
+  } else {
+    images.forEach(i => bulkSelected.add(i.id));
+  }
+  updateBulkBar();
+  renderImagesList();
+};
+
+function updateBulkBar() {
+  const n = bulkSelected.size;
+  document.getElementById('image-bulk-count').textContent = n + (n === 1 ? ' selected' : ' selected');
+  document.getElementById('image-bulk-delete-btn').disabled = n === 0;
+}
+
+window.bulkDeleteImages = async () => {
+  const ids = [...bulkSelected];
+  if (!ids.length) return;
+  if (!confirm('Delete ' + ids.length + ' item' + (ids.length === 1 ? '' : 's') + '? This cannot be undone.')) return;
+
+  // Collect Storage paths to clean up after DB delete
+  const targets = images.filter(x => ids.includes(x.id));
+  const storagePaths = targets.map(t => t.storage_path).filter(Boolean);
+
+  const { error } = await client.from('control_room_images').delete().in('id', ids);
+  if (error) { toast('error', 'Bulk delete: ' + error.message); return; }
+
+  if (storagePaths.length) {
+    await client.storage.from('control-room-media').remove(storagePaths).catch(() => {});
+  }
+
+  toast('success', 'Deleted ' + ids.length + ' item' + (ids.length === 1 ? '' : 's'));
+  bulkSelected.clear();
+  await loadImagesAdmin();
+  updateBulkBar();
+};
+
+window.quickDeleteImage = async (id) => {
+  const img = images.find(x => x.id === id);
+  if (!img) return;
+  if (!confirm('Delete "' + img.name + '"? This cannot be undone.')) return;
+
+  const { error } = await client.from('control_room_images').delete().eq('id', id);
+  if (error) { toast('error', 'Delete: ' + error.message); return; }
+  if (img.storage_path) {
+    await client.storage.from('control-room-media').remove([img.storage_path]).catch(() => {});
+  }
+  toast('success', 'Deleted');
+
+  // If it was the one being edited, reset the form
+  if (editingImageId === id) resetImageForm();
+  await loadImagesAdmin();
+};
 
 window.editImage = (id) => {
   const img = images.find(x => x.id === id);
