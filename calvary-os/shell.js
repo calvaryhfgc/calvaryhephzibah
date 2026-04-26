@@ -62,7 +62,7 @@ const COS = {
   users: [
     { id:1,  name:'Bolaji Olatoye',          username:'bolatoye',  role:'Operations Lead',  level:'admin', pin:'bp_yhwbc0',  sections:['sunday','worship','media','midweek','departments','admin'], active:true },
     { id:2,  name:'Pastor Shade Olatoye',    username:'pshade',    role:'General Overseer', level:'admin', pin:'bp_yhvw22',  sections:['sunday','worship','media','midweek','departments','admin'], active:true },
-    { id:3,  name:'Scott Shokoya',           username:'sshokoya',  role:'Media Lead',       level:'lead',  pin:'bp_yhx751',  sections:['sunday','media'], active:true },
+    { id:3,  name:'Scott Shokoya',           username:'sshokoya',  role:'Media Lead',       level:'lead',  pin:'bp_yhu7vp',  sections:['sunday','media'], active:true },
     { id:4,  name:'Caster Martins',          username:'cmartins',  role:'Worship Lead',     level:'lead',  pin:'bp_yhsq3p',  sections:['sunday','worship'], active:true },
     { id:5,  name:'Morayo Ogungbenro',       username:'morayo',    role:'Worship',          level:'team',  pin:'bp_yhu1z9',  sections:['sunday','worship'], active:true },
     { id:6,  name:'Laolu Ogungbenro',        username:'laolu',     role:'Worship',          level:'team',  pin:'bp_yhu4ed',  sections:['sunday','worship'], active:true },
