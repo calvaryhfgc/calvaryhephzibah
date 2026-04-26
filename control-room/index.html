@@ -1562,8 +1562,8 @@ async function loadUsers() {
   list.innerHTML = '<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 14px;">Loading users…</div>';
   try {
     const { data, error } = await client
-      .from('control_room_users')
-      .select('id, name, pin_hash, level, sections, active')
+      .from('bridge_users_v2')
+      .select('id, name, pin_hash, active')
       .eq('active', true)
       .order('name');
     if (error) throw error;
@@ -1612,7 +1612,7 @@ document.getElementById('pin-input').addEventListener('input', (e) => {
   const uid = e.target.dataset.userId;
   const user = allUsers.find(x => x.id === uid);
   if (!user) return;
-  if (hashPin(pin) === user.pin_hash_hash) {
+  if (hashPin(pin) === user.pin_hash) {
     currentUser = user;
     sessionStorage.setItem('cr_user', JSON.stringify(user));
     enterApp();
