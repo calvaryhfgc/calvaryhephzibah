@@ -386,20 +386,49 @@ function renderPlaybookEntry(p, outerWrap){
     </div>
   `;
 
-  const videoBlock = p.videoUrl ? `
-    <a href="${p.videoUrl}" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:var(--ink);border-radius:var(--r12);padding:14px 16px;margin-top:14px;">
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg viewBox="0 0 14 14" fill="white" style="width:14px;height:14px;margin-left:2px;"><path d="M3 2l9 5-9 5V2z"/></svg>
+  // Extract YouTube video ID from any common URL shape (shorts, watch, youtu.be).
+  // Returns null if not a YouTube URL — caller falls back to the link-style card.
+  let videoBlock = '';
+  if(p.videoUrl){
+    const m = p.videoUrl.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    if(m){
+      const vid = m[1];
+      videoBlock = `
+        <div style="margin-top:14px;">
+          <div style="position:relative;width:100%;max-width:340px;aspect-ratio:9/16;background:var(--ink);border-radius:var(--r12);overflow:hidden;margin:0 auto;">
+            <iframe
+              src="https://www.youtube.com/embed/${vid}?rel=0"
+              title="${p.title}"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              referrerpolicy="strict-origin-when-cross-origin"
+              style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px auto 0;max-width:340px;font-size:11px;color:var(--ink-4);">
+            <span>${p.videoLabel || 'Training video'}</span>
+            <a href="${p.videoUrl}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;font-weight:600;">Open on YouTube ↗</a>
+          </div>
         </div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:13px;font-weight:600;color:white;">▶ Watch the training video</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;">${p.videoLabel || 'Training video'}</div>
-        </div>
-        <div style="font-size:11px;color:rgba(255,255,255,0.6);flex-shrink:0;">↗</div>
-      </div>
-    </a>
-  ` : '';
+      `;
+    } else {
+      // Non-YouTube URL — fall back to the link-style card
+      videoBlock = `
+        <a href="${p.videoUrl}" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:var(--ink);border-radius:var(--r12);padding:14px 16px;margin-top:14px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg viewBox="0 0 14 14" fill="white" style="width:14px;height:14px;margin-left:2px;"><path d="M3 2l9 5-9 5V2z"/></svg>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:13px;font-weight:600;color:white;">▶ Watch the training video</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;">${p.videoLabel || 'Training video'}</div>
+            </div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);flex-shrink:0;">↗</div>
+          </div>
+        </a>
+      `;
+    }
+  }
 
   const stepsBlock = p.steps && p.steps.length ? `
     <div style="margin-top:14px;">
