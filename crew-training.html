@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary Crew Training</title>
+<meta name="description" content="Setup and pack-down training for the Calvary Crew. Five videos from Brother Michael covering speakers, stands, and cables.">
+<meta name="theme-color" content="#C41E2A">
+<meta property="og:title" content="Calvary Crew Training">
+<meta property="og:description" content="Setup and pack-down training videos for the Calvary Crew. Watch on your phone.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C41E2A;
+    --red-light: #FEF2F2;
+    --red-mid: #FECACA;
+    --white: #FFFFFF;
+    --bg: #FAF9F7;
+    --bg-2: #F1EFEA;
+    --ink: #1A1A1A;
+    --ink-2: #374151;
+    --ink-3: #6B7280;
+    --ink-4: #9CA3AF;
+    --ink-5: #E5E7EB;
+    --ink-6: #F9FAFB;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --amber-mid: #FDE68A;
+    --blue: #2563EB;
+    --r8: 8px;
+    --r12: 12px;
+    --r16: 16px;
+    --r20: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ──────────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(180deg, var(--red) 0%, #A8181F 100%);
+    color: white;
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative;
+  }
+  .hero-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--r16);
+    margin-bottom: 16px;
+  }
+  .hero-logo svg { width: 24px; height: 24px; }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(2rem, 6vw, 2.6rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.9);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  /* ── INTRO BAND ───────────────────────────────────────────── */
+  .intro {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 36px 24px 12px;
+  }
+  .intro h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 14px;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+  }
+  .intro p {
+    font-size: 15px;
+    color: var(--ink-2);
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+  .intro-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding: 8px 14px;
+    background: var(--red-light);
+    border: 1px solid var(--red-mid);
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--red);
+    font-weight: 600;
+  }
+
+  /* ── CONTENT WRAPPER ───────────────────────────────────────── */
+  .content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 12px 24px 64px;
+  }
+
+  .content-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin: 28px 0 8px;
+  }
+  .content-heading {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 20px;
+    color: var(--ink);
+    letter-spacing: -0.4px;
+  }
+
+  /* ── ENTRY CARD ───────────────────────────────────────────── */
+  .entry {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: var(--r20);
+    padding: 22px 22px 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 3px rgba(17,24,39,0.04), 0 1px 2px rgba(17,24,39,0.03);
+  }
+  .entry-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .entry-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r12);
+    background: var(--bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .entry-meta { flex: 1; min-width: 0; }
+  .entry-num {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin-bottom: 4px;
+  }
+  .entry-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+    letter-spacing: -0.3px;
+    margin-bottom: 8px;
+  }
+  .entry-summary {
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.55;
+    margin-bottom: 6px;
+  }
+  .entry-taught-by {
+    font-size: 12px;
+    color: var(--ink-4);
+  }
+
+  /* ── VIDEO PLAYER ───────────────────────────────────────────── */
+  .video-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 9/16;
+    background: #000;
+    border-radius: var(--r16);
+    overflow: hidden;
+    margin: 4px auto 8px;
+  }
+  .video-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .video-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 8px auto 0;
+    max-width: 380px;
+    font-size: 12px;
+    color: var(--ink-4);
+  }
+  .video-meta a {
+    color: var(--blue);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* ── STEPS ────────────────────────────────────────────────── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin: 22px 0 10px;
+  }
+  .steps {
+    margin: 0;
+    padding-left: 24px;
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+  .steps li { margin-bottom: 8px; }
+  .steps li::marker { color: var(--red); font-weight: 700; }
+
+  /* ── WARNINGS ─────────────────────────────────────────────── */
+  .warnings {
+    background: var(--amber-light);
+    border: 1px solid var(--amber-mid);
+    border-left: 4px solid var(--amber);
+    border-radius: var(--r12);
+    padding: 14px 16px;
+    margin-top: 18px;
+  }
+  .warnings-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 8px;
+  }
+  .warnings ul { padding-left: 18px; margin: 0; }
+  .warnings li {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.55;
+    margin-bottom: 6px;
+  }
+  .warnings li:last-child { margin-bottom: 0; }
+  .warnings li::marker { color: var(--amber); }
+
+  /* ── INDEX (jump links at top) ─────────────────────────────── */
+  .toc {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: var(--r16);
+    padding: 18px 22px;
+    margin: 8px 0 26px;
+  }
+  .toc-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin-bottom: 10px;
+  }
+  .toc ol {
+    margin: 0;
+    padding-left: 22px;
+    font-size: 14px;
+  }
+  .toc li {
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .toc a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .toc a:hover { color: var(--red); }
+  .toc li::marker { color: var(--red); font-weight: 600; }
+
+  /* ── FOOTER ───────────────────────────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 32px 24px 48px;
+    color: var(--ink-4);
+    font-size: 12px;
+    line-height: 1.7;
+    border-top: 1px solid var(--ink-5);
+    background: var(--bg-2);
+  }
+  .footer strong { color: var(--ink-3); }
+  .footer p { margin-bottom: 4px; }
+  .footer a { color: var(--blue); text-decoration: none; }
+
+  /* ── BACK-TO-TOP ──────────────────────────────────────────── */
+  .back-top {
+    display: inline-block;
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--ink-3);
+    text-decoration: none;
+    padding: 6px 12px;
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: 100px;
+  }
+  .back-top:hover { border-color: var(--red); color: var(--red); }
+
+  @media (min-width: 600px) {
+    .hero { padding: 72px 24px 56px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-logo">
+    <svg viewBox="0 0 16 16" fill="none">
+      <rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/>
+      <rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/>
+    </svg>
+  </div>
+  <div class="hero-eyebrow">Calvary Hephzibah · Manchester</div>
+  <h1 class="hero-title">Crew Training</h1>
+  <p class="hero-sub">Welcome to Crew. Five short videos from Brother Michael covering everything you need to know about setting up and packing down on a Sunday morning.</p>
+</header>
+
+<section class="intro">
+  <h2>What is Crew?</h2>
+  <p>Crew is the team that handles setup before service and pack-down after. Boxes and equipment out of the store room, stage prepared so the Band can configure and sound-check, and at the end of service everything packed away properly.</p>
+  <p>The videos below show you how. Watch them once before your first Sunday, and come back to any of them whenever you need a refresher.</p>
+  <div class="intro-meta">
+    <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red);"></span>
+    Coordinator: Brother Ernest
+  </div>
+</section>
+
+<main class="content">
+
+  <div class="content-eyebrow">Index</div>
+  <div class="toc">
+    <div class="toc-label">5 training videos</div>
+    <ol id="toc-list"></ol>
+  </div>
+
+  <div class="content-eyebrow">Training videos</div>
+  <h2 class="content-heading" id="videos">Watch in order, or jump to what you need</h2>
+
+  <div id="entry-list"></div>
+
+  <a href="#" class="back-top">↑ Back to top</a>
+
+</main>
+
+<footer class="footer">
+  <p><strong>Calvary Hephzibah Full Gospel Church</strong></p>
+  <p>Manchester · Charity no. 1135709</p>
+  <p style="margin-top:14px;">Questions about Crew? Speak to Brother Ernest.</p>
+  <p>Questions about the videos? Speak to Brother Michael.</p>
+</footer>
+
+<script src="crew-training-data.js"></script>
+<script>
+  // Extract YouTube video ID from any common URL shape (shorts, watch, youtu.be).
+  // Returns null if not a YouTube URL.
+  function extractYouTubeId(url){
+    const m = url.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  // Render the table of contents at the top so people can jump.
+  function renderToc(){
+    document.getElementById('toc-list').innerHTML = CREW_TRAINING.map((p, i) =>
+      `<li><a href="#video-${i+1}">${p.title}</a></li>`
+    ).join('');
+  }
+
+  // Render each training entry.
+  function renderEntry(p, num, total){
+    const vid = extractYouTubeId(p.videoUrl);
+    const videoBlock = vid ? `
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/${vid}?rel=0"
+          title="${p.title}"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      <div class="video-meta">
+        <span>${p.videoLabel || 'Training video'}</span>
+        <a href="${p.videoUrl}" target="_blank" rel="noopener">Open on YouTube ↗</a>
+      </div>
+    ` : `
+      <div class="video-meta">
+        <a href="${p.videoUrl}" target="_blank" rel="noopener">▶ Watch the video ↗</a>
+      </div>
+    `;
+
+    const stepsBlock = p.steps && p.steps.length ? `
+      <div class="section-label">Step by step</div>
+      <ol class="steps">${p.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+    ` : '';
+
+    const warningsBlock = p.warnings && p.warnings.length ? `
+      <div class="warnings">
+        <div class="warnings-label">⚠️ Important</div>
+        <ul>${p.warnings.map(w => `<li>${w}</li>`).join('')}</ul>
+      </div>
+    ` : '';
+
+    return `
+      <article class="entry" id="video-${num}">
+        <div class="entry-head">
+          <div class="entry-icon">${p.icon}</div>
+          <div class="entry-meta">
+            <div class="entry-num">${num} of ${total}</div>
+            <h3 class="entry-title">${p.title}</h3>
+            <p class="entry-summary">${p.summary}</p>
+            ${p.taughtBy ? `<p class="entry-taught-by">Taught by ${p.taughtBy}</p>` : ''}
+          </div>
+        </div>
+        ${videoBlock}
+        ${stepsBlock}
+        ${warningsBlock}
+      </article>
+    `;
+  }
+
+  function renderAll(){
+    renderToc();
+    const total = CREW_TRAINING.length;
+    document.getElementById('entry-list').innerHTML =
+      CREW_TRAINING.map((p, i) => renderEntry(p, i+1, total)).join('');
+  }
+
+  renderAll();
+</script>
+
+</body>
+</html>
