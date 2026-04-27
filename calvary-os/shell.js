@@ -121,6 +121,10 @@ const COS = {
       const s = this.currentUser.sections || [];
       return s.includes('media') || s.includes('sunday') || s.includes('worship');
     }
+    // Crew is available to anyone authenticated — visible to band, media,
+    // leadership and operations so they can see who's setting up. Edit-gating
+    // (admin/lead vs team) happens inside crew.html itself.
+    if(section === 'crew') return true;
     return (this.currentUser.sections||[]).includes(section);
   },
 
