@@ -111,15 +111,13 @@
             <div id="ts-crew-block"></div>
           </div>
 
-          <!-- Setup & pack-down — checklist building from videos -->
-          <div class="card" style="margin-bottom:14px;border-left:3px solid var(--amber);">
-            <div class="card-label">⏰ Setup & pack-down checklist</div>
-            <div style="background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:14px 16px;margin-top:10px;">
-              <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">📹 Checklist being built from Brother Michael's videos</div>
-              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">First training video is live — <strong>How to fold cables</strong>. Watch it on the Playbook tab. More videos are being recorded with Mario and BJ. The full tickable checklist lands once the setup and pack-down videos are all captured.</div>
-              <div style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-top:10px;"><strong style="color:var(--ink-2);">In the meantime:</strong> Crew this Sunday should follow Brother Michael's lead on the day. Pastor Shade will also be present.</div>
-              <a href="crew.html#playbook" onclick="event.preventDefault();COS.navTo('playbook',document.querySelector('[onclick*=\\'playbook\\']'))" style="display:inline-block;margin-top:10px;font-size:12px;font-weight:600;color:var(--blue);text-decoration:none;">Open the Playbook →</a>
+          <!-- Latest training — first real video from Brother Michael -->
+          <div class="card" style="margin-bottom:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap;">
+              <div class="card-label" style="margin-bottom:0;">📖 Latest training</div>
+              <button onclick="goToPlaybook()" style="font-size:11px;font-weight:600;color:var(--blue);background:none;border:none;cursor:pointer;font-family:'Poppins',sans-serif;padding:0;">See all training →</button>
             </div>
+            <div id="ts-latest"></div>
           </div>
 
           <!-- Notes for this week -->
@@ -365,67 +363,91 @@ function renderThisSunday(){
   document.getElementById('ts-notes').innerHTML = ts.notes.map(n=>`<div style="margin-bottom:8px;">• ${n}</div>`).join('');
 }
 
-function renderPlaybook(){
-  document.getElementById('playbook-list').innerHTML = PLAYBOOK.map(p=>{
-    const statusColor = p.status === 'ready' ? 'var(--green)' : p.status === 'in-progress' ? 'var(--amber)' : 'var(--ink-4)';
-    const statusBg = p.status === 'ready' ? 'var(--green-light)' : p.status === 'in-progress' ? 'var(--amber-light)' : 'var(--ink-6)';
+// Render a single Playbook entry. Used by renderPlaybook (full list) and
+// renderLatest (most recent ready video, surfaced on This Sunday). The
+// outerWrap arg lets the caller decide whether the entry is wrapped in a
+// .card div (Playbook list) or used inline inside an existing card (This
+// Sunday's "Latest training" panel).
+function renderPlaybookEntry(p, outerWrap){
+  const statusColor = p.status === 'ready' ? 'var(--green)' : p.status === 'in-progress' ? 'var(--amber)' : 'var(--ink-4)';
+  const statusBg = p.status === 'ready' ? 'var(--green-light)' : p.status === 'in-progress' ? 'var(--amber-light)' : 'var(--ink-6)';
 
-    // Header: icon, title, status pill, summary
-    const header = `
-      <div style="display:flex;align-items:flex-start;gap:14px;">
-        <div style="width:42px;height:42px;border-radius:var(--r12);background:var(--bg-2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${p.icon}</div>
+  const header = `
+    <div style="display:flex;align-items:flex-start;gap:14px;">
+      <div style="width:42px;height:42px;border-radius:var(--r12);background:var(--bg-2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${p.icon}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px;">
+          <div style="font-size:14px;font-weight:600;color:var(--ink);">${p.title}</div>
+          <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:${statusBg};color:${statusColor};">${p.statusLabel}</span>
+        </div>
+        <div style="font-size:12px;color:var(--ink-3);line-height:1.5;">${p.summary}</div>
+        ${p.taughtBy ? `<div style="font-size:11px;color:var(--ink-4);margin-top:4px;">Taught by ${p.taughtBy}</div>` : ''}
+      </div>
+    </div>
+  `;
+
+  const videoBlock = p.videoUrl ? `
+    <a href="${p.videoUrl}" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:var(--ink);border-radius:var(--r12);padding:14px 16px;margin-top:14px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg viewBox="0 0 14 14" fill="white" style="width:14px;height:14px;margin-left:2px;"><path d="M3 2l9 5-9 5V2z"/></svg>
+        </div>
         <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px;">
-            <div style="font-size:14px;font-weight:600;color:var(--ink);">${p.title}</div>
-            <span style="font-size:10px;font-weight:700;padding:3px 8px;border-radius:100px;background:${statusBg};color:${statusColor};">${p.statusLabel}</span>
-          </div>
-          <div style="font-size:12px;color:var(--ink-3);line-height:1.5;">${p.summary}</div>
-          ${p.taughtBy ? `<div style="font-size:11px;color:var(--ink-4);margin-top:4px;">Taught by ${p.taughtBy}</div>` : ''}
+          <div style="font-size:13px;font-weight:600;color:white;">▶ Watch the training video</div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;">${p.videoLabel || 'Training video'}</div>
         </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);flex-shrink:0;">↗</div>
       </div>
-    `;
+    </a>
+  ` : '';
 
-    // Video card
-    const videoBlock = p.videoUrl ? `
-      <a href="${p.videoUrl}" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:var(--ink);border-radius:var(--r12);padding:14px 16px;margin-top:14px;">
-        <div style="display:flex;align-items:center;gap:12px;">
-          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg viewBox="0 0 14 14" fill="white" style="width:14px;height:14px;margin-left:2px;"><path d="M3 2l9 5-9 5V2z"/></svg>
-          </div>
-          <div style="flex:1;min-width:0;">
-            <div style="font-size:13px;font-weight:600;color:white;">▶ Watch the training video</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;">${p.videoLabel || 'Training video'}</div>
-          </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6);flex-shrink:0;">↗</div>
-        </div>
-      </a>
-    ` : '';
+  const stepsBlock = p.steps && p.steps.length ? `
+    <div style="margin-top:14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Step by step</div>
+      <ol style="margin:0;padding-left:20px;font-size:13px;color:var(--ink-2);line-height:1.7;">
+        ${p.steps.map(s=>`<li style="margin-bottom:6px;">${s}</li>`).join('')}
+      </ol>
+    </div>
+  ` : '';
 
-    // Steps
-    const stepsBlock = p.steps && p.steps.length ? `
-      <div style="margin-top:14px;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:8px;">Step by step</div>
-        <ol style="margin:0;padding-left:20px;font-size:13px;color:var(--ink-2);line-height:1.7;">
-          ${p.steps.map(s=>`<li style="margin-bottom:6px;">${s}</li>`).join('')}
-        </ol>
-      </div>
-    ` : '';
+  const warningsBlock = p.warnings && p.warnings.length ? `
+    <div style="margin-top:14px;background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:12px 14px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:6px;">⚠️ Important</div>
+      ${p.warnings.map(w=>`<div style="font-size:13px;color:var(--ink-2);line-height:1.5;">${w}</div>`).join('')}
+    </div>
+  ` : '';
 
-    // Warnings
-    const warningsBlock = p.warnings && p.warnings.length ? `
-      <div style="margin-top:14px;background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:12px 14px;">
-        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:6px;">⚠️ Important</div>
-        ${p.warnings.map(w=>`<div style="font-size:13px;color:var(--ink-2);line-height:1.5;">${w}</div>`).join('')}
-      </div>
-    ` : '';
+  const inner = header + videoBlock + stepsBlock + warningsBlock;
+  return outerWrap ? `<div class="card" style="margin-bottom:10px;">${inner}</div>` : inner;
+}
 
-    return `<div class="card" style="margin-bottom:10px;">
-      ${header}
-      ${videoBlock}
-      ${stepsBlock}
-      ${warningsBlock}
-    </div>`;
-  }).join('');
+function renderPlaybook(){
+  document.getElementById('playbook-list').innerHTML = PLAYBOOK.map(p=>renderPlaybookEntry(p, true)).join('');
+}
+
+// Surface the most recent ready video on This Sunday so Crew don't need to
+// click into the Playbook tab to see what's new. If nothing is ready yet,
+// show an honest placeholder.
+function renderLatest(){
+  const latest = PLAYBOOK.find(p=>p.status==='ready');
+  const el = document.getElementById('ts-latest');
+  if(!el) return;
+  if(latest){
+    el.innerHTML = renderPlaybookEntry(latest, false);
+  } else {
+    el.innerHTML = `<div style="font-size:13px;color:var(--ink-3);line-height:1.6;">No training videos yet — Brother Michael is recording the first ones with Mario and BJ. They'll appear here as soon as they're live.</div>`;
+  }
+}
+
+// Switch to the Playbook tab. Programmatically clicks the sidebar nav item
+// so the existing COS.navTo handles all the active-state housekeeping.
+function goToPlaybook(){
+  const navItem = Array.from(document.querySelectorAll('.nav-item, .mob-nav-btn'))
+    .find(el=>(el.getAttribute('onclick')||'').includes("navTo('playbook'"));
+  if(navItem){
+    COS.navTo('playbook', navItem);
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
 }
 
 function renderRota(){
@@ -474,6 +496,7 @@ function renderTeam(){
 
 function pageInit(){
   renderThisSunday();
+  renderLatest();
   renderPlaybook();
   renderRota();
   renderTeam();
