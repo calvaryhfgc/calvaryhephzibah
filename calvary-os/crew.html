@@ -102,7 +102,7 @@
           <div class="page-header">
             <div class="page-eyebrow">Crew · This Sunday</div>
             <div class="page-title" id="ts-title">Sunday Setup & Pack-down</div>
-            <div class="page-sub" id="ts-sub">Crew turn up early, bring everything out of the room. Band configures and sound-checks. Pack-down is Crew-led, Band assists.</div>
+            <div class="page-sub" id="ts-sub">Crew handles setup and pack-down so the Band can focus on configuring instruments and sound-checking. Brother Michael is capturing the exact process on video — the detail will land here once it's transcribed.</div>
           </div>
 
           <!-- Today's Crew block -->
@@ -111,18 +111,14 @@
             <div id="ts-crew-block"></div>
           </div>
 
-          <!-- Setup checklist -->
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-label">⏰ Setup — from 8:30am</div>
-            <div style="font-size:12px;color:var(--ink-4);margin-bottom:12px;line-height:1.6;">Crew responsibility. Band arrives ready to play once setup is complete.</div>
-            <div id="setup-checklist"></div>
-          </div>
-
-          <!-- Pack-down checklist -->
-          <div class="card" style="margin-bottom:14px;">
-            <div class="card-label">📦 Pack-down — after service</div>
-            <div style="font-size:12px;color:var(--ink-4);margin-bottom:12px;line-height:1.6;">Crew-led. Band assists with their own equipment. Nothing leaves the stage area until everything is in the right box.</div>
-            <div id="packdown-checklist"></div>
+          <!-- Setup & pack-down — awaiting source material -->
+          <div class="card" style="margin-bottom:14px;border-left:3px solid var(--amber);">
+            <div class="card-label">⏰ Setup & pack-down checklist</div>
+            <div style="background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:14px 16px;margin-top:10px;">
+              <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;">📹 Awaiting Brother Michael's videos</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">The setup and pack-down steps will be drawn directly from the videos Brother Michael is recording with Mario and BJ — not invented from guesswork. Once the videos are in and transcribed, this section will become the live, tickable checklist Crew works through every Sunday.</div>
+              <div style="font-size:12px;color:var(--ink-3);line-height:1.6;margin-top:10px;"><strong style="color:var(--ink-2);">In the meantime:</strong> Crew this Sunday should follow Brother Michael's lead on the day. Pastor Shade will also be present.</div>
+            </div>
           </div>
 
           <!-- Notes for this week -->
@@ -161,7 +157,7 @@
             <ul style="font-size:13px;color:var(--ink-2);line-height:2;padding-left:16px;margin:0;">
               <li>Minimum <strong>2 people</strong> on Crew every Sunday</li>
               <li>One named lead per Sunday — accountable for everything happening on time</li>
-              <li>Crew arrive <strong>by 8:30am</strong> at the latest</li>
+              <li>Crew arrive early enough to set up before Band needs the stage (exact time to be confirmed once Brother Michael's process is documented)</li>
               <li>If you can't make your Sunday, message Brother Ernest as early as possible so a swap can be arranged</li>
             </ul>
           </div>
@@ -214,84 +210,26 @@ const THIS_SUNDAY = {
     { name: 'TBC', role: 'Crew' },
     { name: 'TBC', role: 'Crew' },
   ],
-  arrivalTime: '8:30am',
+  arrivalTime: 'TBC — confirm with Brother Ernest',
   notes: [
     'Brother Ernest is putting the rota together this week. Names will land here as soon as they are confirmed.',
-    'Brother Michael is preparing setup and pack-down instructions — videos being recorded with Mario and BJ. The Playbook tab will fill out as those land.',
+    'Brother Michael is recording the setup and pack-down videos with Mario and BJ. Once transcribed, the actual checklist will replace the placeholder card below.',
     'Pastor Shade will be at church this Sunday and is available if anything needs escalating in the moment.',
   ],
 };
 
-// Setup checklist — what Crew needs to do, in order, every Sunday before service.
-// These are the categories Pastor Shade described in her debrief: bring everything
-// out of boxes, get the stage ready for the band to walk on and tweak. Detail per
-// item lives in the Playbook tab once Brother Michael's videos are in.
-const SETUP_TASKS = [
-  { task: 'Open up & lights on', detail: 'Unlock store room. Lights, heating, ventilation as needed.' },
-  { task: 'Bring boxes & equipment out of store room', detail: 'Drum kit cases, mic stands, cables, monitors, keys stand. Stage everything near where it goes.' },
-  { task: 'Set up drum kit on stage', detail: 'Position kit. Band will tune, set heights, mic up.' },
-  { task: 'Set up mic stands & cables', detail: 'Vocal stands centre and BV positions. Run cables along the back.' },
-  { task: 'Position keys, amps & monitors', detail: 'Keys stand to the right. Guitar amp position. Monitors angled to performers.' },
-  { task: 'Hand stage over to Band by 9:15am', detail: 'Band sound-checks and tweaks from here. Crew steps back unless asked.' },
-  { task: 'Set out chairs', detail: 'Chairs is a separate task to Crew but if Crew is finished early, help out.' },
-];
-
-// Pack-down checklist — Crew-led, Band assists with their own gear.
-const PACKDOWN_TASKS = [
-  { task: 'Wait until Band has dismantled their own kit', detail: 'Drums, keys, guitars — Band breaks these down. Crew waits until items are ready to box.' },
-  { task: 'Cable wraps & mic stands away', detail: 'Cables wrapped over-under. Mic stands collapsed. Into the right boxes.' },
-  { task: 'Drum kit cases', detail: 'Each piece in its case, in the order it goes back into the store room.' },
-  { task: 'Monitors, amps & accessories', detail: 'Powered down, cables coiled, into their cases.' },
-  { task: 'Everything back into the store room', detail: 'In the right place. The room must look the way it did before service.' },
-  { task: 'Final walk-through with Coordinator', detail: 'Lead does a final check before locking up. Nothing left out.' },
-];
-
-// Playbook — structured task library. Each entry will eventually have:
-// videos (from Brother Michael's recordings with Mario and BJ), photos, written
-// step-by-step. For now it's the structure with status flags showing what's
-// captured and what's still being recorded.
+// Playbook — structured task library. The structure of this section (which
+// tasks, in what order, broken down how) will be drawn directly from the
+// videos Brother Michael is recording with Mario and BJ. Until those land
+// and are transcribed, this stays as a single honest placeholder rather than
+// invented categories that would look authoritative.
 const PLAYBOOK = [
   {
-    icon: '📦',
-    title: 'Boxes & equipment from store room',
-    summary: 'What comes out, in what order, by whom.',
+    icon: '📹',
+    title: 'Awaiting Brother Michael\'s videos',
+    summary: 'Brother Michael is recording the setup and pack-down process with Mario and BJ. Once the videos are in and transcribed, the Playbook will be built from what they actually show — not from guesswork. Each task that emerges will get its own card here, with the video clip, written steps, and photos of where things go.',
     status: 'in-progress',
-    statusLabel: 'Video being recorded',
-  },
-  {
-    icon: '🥁',
-    title: 'Drum kit setup',
-    summary: 'Kit positioning, piece order, where Band picks up.',
-    status: 'in-progress',
-    statusLabel: 'Video being recorded with BJ',
-  },
-  {
-    icon: '🎤',
-    title: 'Mic stands & cables',
-    summary: 'Stand positions, cable routing, what plugs into what.',
-    status: 'in-progress',
-    statusLabel: 'Video being recorded',
-  },
-  {
-    icon: '🎹',
-    title: 'Keys, amps & monitors',
-    summary: 'Stand placement, amp positioning, monitor angles.',
-    status: 'in-progress',
-    statusLabel: 'Video being recorded',
-  },
-  {
-    icon: '🔊',
-    title: 'FOH & sound desk',
-    summary: 'What Crew touches, what Crew does not. Boundaries with Media.',
-    status: 'pending',
-    statusLabel: 'To be added',
-  },
-  {
-    icon: '📦',
-    title: 'Pack-down — order of operations',
-    summary: 'Reverse the setup. What goes in which box. How the room should look.',
-    status: 'in-progress',
-    statusLabel: 'Video being recorded with Mario',
+    statusLabel: 'In production',
   },
 ];
 
@@ -402,45 +340,8 @@ function renderThisSunday(){
     ${teamHtml}
   `;
 
-  // Setup checklist
-  document.getElementById('setup-checklist').innerHTML = SETUP_TASKS.map((t,i)=>`
-    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:${i===0?'none':'1px solid var(--border)'};">
-      <div style="width:20px;height:20px;border-radius:6px;border:1.5px solid var(--ink-5);background:var(--white);flex-shrink:0;margin-top:1px;cursor:pointer;" onclick="toggleCheck(this)"></div>
-      <div style="flex:1;">
-        <div style="font-size:13px;font-weight:600;color:var(--ink);">${t.task}</div>
-        <div style="font-size:12px;color:var(--ink-4);line-height:1.5;margin-top:2px;">${t.detail}</div>
-      </div>
-    </div>
-  `).join('');
-
-  // Pack-down checklist
-  document.getElementById('packdown-checklist').innerHTML = PACKDOWN_TASKS.map((t,i)=>`
-    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:${i===0?'none':'1px solid var(--border)'};">
-      <div style="width:20px;height:20px;border-radius:6px;border:1.5px solid var(--ink-5);background:var(--white);flex-shrink:0;margin-top:1px;cursor:pointer;" onclick="toggleCheck(this)"></div>
-      <div style="flex:1;">
-        <div style="font-size:13px;font-weight:600;color:var(--ink);">${t.task}</div>
-        <div style="font-size:12px;color:var(--ink-4);line-height:1.5;margin-top:2px;">${t.detail}</div>
-      </div>
-    </div>
-  `).join('');
-
   // Notes
   document.getElementById('ts-notes').innerHTML = ts.notes.map(n=>`<div style="margin-bottom:8px;">• ${n}</div>`).join('');
-}
-
-function toggleCheck(el){
-  const checked = el.style.background === 'var(--green)' || el.dataset.checked === 'true';
-  if(checked){
-    el.style.background = 'var(--white)';
-    el.style.borderColor = 'var(--ink-5)';
-    el.innerHTML = '';
-    el.dataset.checked = 'false';
-  } else {
-    el.style.background = 'var(--green)';
-    el.style.borderColor = 'var(--green)';
-    el.innerHTML = '<svg viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;display:block;margin:1px;"><path d="M3 7l3 3 5-6"/></svg>';
-    el.dataset.checked = 'true';
-  }
 }
 
 function renderPlaybook(){
