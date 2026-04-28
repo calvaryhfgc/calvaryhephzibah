@@ -19,19 +19,27 @@ const CREW_TRAINING = [
   {
     icon: '🔢',
     title: 'How to patch the multicore into the mixer (inputs)',
-    summary: 'The setup-side opposite of winding the multicore back up. Carry the unravelled multicore to the back, connect each numbered cable to the matching input on the mixer — one-to-one. Outputs are covered in a separate video.',
+    summary: 'The setup-side opposite of winding the multicore back up. Carry the unravelled multicore to the back, connect each numbered cable to the matching input on the mixer — one-to-one. Two operational gotchas worth knowing: channel 6 vs 9, and channel 10. Outputs are covered in a separate video.',
     taughtBy: 'Brother Michael & Mario (carrying)',
     videoUrl: 'https://youtube.com/shorts/DYDobSJURj4',
     videoLabel: 'Calvary CREW Training (6)',
+    additionalVideos: [
+      {
+        url: 'https://youtube.com/shorts/AiA8PGO14mE',
+        label: 'Calvary CREW Training (7) — addendum: channel 6/9 + channel 10',
+      },
+    ],
     steps: [
       'Start with the multicore wound up on its drum. Unravel it as you walk it out — same cable, same care as winding it up (see the "How to wind up the multicore cable" video for the reverse process).',
       'Take it to the back of the room where the mixer and media station are.',
       'At the multicore end you\'ll find a bunch of smaller cables bundled together. Each one is labelled with a number.',
       'Connect each cable to the matching input on the mixer — one-to-one. The cable labelled "1" goes to input 1. The cable labelled "2" goes to input 2. And so on.',
+      'Watch out for channel 6 vs channel 9 — written as numerals they look the same. Calvary\'s convention: channel 6 has "SIX" written out in letters; channel 9 is the numeral "9". So if you see letters, it\'s 6. If you see a digit, it\'s 9.',
       'That\'s inputs done. Outputs will be covered in a separate video — don\'t worry about them here.',
     ],
     warnings: [
       'Match the numbers exactly. Cable 1 to input 1, cable 2 to input 2 — no creative routing. The Band\'s sound-check assumes the channels arrive on the right inputs.',
+      'Channel 10 currently doesn\'t work. Don\'t spend time troubleshooting it on the day — Brother Michael is aware. If something needed channel 10, raise it with him.',
     ],
   },
   {

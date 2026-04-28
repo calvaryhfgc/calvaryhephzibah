@@ -383,19 +383,18 @@ function renderPlaybookEntry(p, outerWrap){
     </div>
   `;
 
-  // Extract YouTube video ID from any common URL shape (shorts, watch, youtu.be).
-  // Returns null if not a YouTube URL — caller falls back to the link-style card.
-  let videoBlock = '';
-  if(p.videoUrl){
-    const m = p.videoUrl.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  // Render a single video (main or addendum). Falls back to a dark link
+  // card if the URL is not a recognised YouTube shape.
+  function renderOneVideo(url, label, title){
+    const m = url.match(/(?:youtube\.com\/(?:shorts\/|watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
     if(m){
       const vid = m[1];
-      videoBlock = `
+      return `
         <div style="margin-top:14px;">
           <div style="position:relative;width:100%;max-width:340px;aspect-ratio:9/16;background:var(--ink);border-radius:var(--r12);overflow:hidden;margin:0 auto;">
             <iframe
               src="https://www.youtube.com/embed/${vid}?rel=0"
-              title="${p.title}"
+              title="${title}"
               loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
@@ -403,26 +402,42 @@ function renderPlaybookEntry(p, outerWrap){
               style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px auto 0;max-width:340px;font-size:11px;color:var(--ink-4);">
-            <span>${p.videoLabel || 'Training video'}</span>
-            <a href="${p.videoUrl}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;font-weight:600;">Open on YouTube ↗</a>
+            <span>${label || 'Training video'}</span>
+            <a href="${url}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;font-weight:600;">Open on YouTube ↗</a>
           </div>
         </div>
       `;
-    } else {
-      // Non-YouTube URL — fall back to the link-style card
-      videoBlock = `
-        <a href="${p.videoUrl}" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:var(--ink);border-radius:var(--r12);padding:14px 16px;margin-top:14px;">
-          <div style="display:flex;align-items:center;gap:12px;">
-            <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg viewBox="0 0 14 14" fill="white" style="width:14px;height:14px;margin-left:2px;"><path d="M3 2l9 5-9 5V2z"/></svg>
-            </div>
-            <div style="flex:1;min-width:0;">
-              <div style="font-size:13px;font-weight:600;color:white;">▶ Watch the training video</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;">${p.videoLabel || 'Training video'}</div>
-            </div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.6);flex-shrink:0;">↗</div>
+    }
+    // Non-YouTube URL — fall back to the link-style card
+    return `
+      <a href="${url}" target="_blank" rel="noopener" style="display:block;text-decoration:none;background:var(--ink);border-radius:var(--r12);padding:14px 16px;margin-top:14px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg viewBox="0 0 14 14" fill="white" style="width:14px;height:14px;margin-left:2px;"><path d="M3 2l9 5-9 5V2z"/></svg>
           </div>
-        </a>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:600;color:white;">▶ Watch the training video</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;">${label || 'Training video'}</div>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.6);flex-shrink:0;">↗</div>
+        </div>
+      </a>
+    `;
+  }
+
+  let videoBlock = '';
+  if(p.videoUrl){
+    videoBlock = renderOneVideo(p.videoUrl, p.videoLabel, p.title);
+
+    // Addendum videos — supplementary content recorded after the main video.
+    // Used when Brother Michael adds detail or covers an edge case in a
+    // follow-up clip rather than re-recording the original.
+    if(p.additionalVideos && p.additionalVideos.length){
+      videoBlock += `
+        <div style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--ink-5);">
+          <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;">📌 Addendum — also watch</div>
+          ${p.additionalVideos.map(v => renderOneVideo(v.url, v.label, p.title + ' (addendum)')).join('')}
+        </div>
       `;
     }
   }

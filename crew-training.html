@@ -329,6 +329,21 @@
   .footer p { margin-bottom: 4px; }
   .footer a { color: var(--blue); text-decoration: none; }
 
+  /* ── ADDENDUM ─────────────────────────────────────────────── */
+  .addendum {
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px dashed var(--ink-5);
+  }
+  .addendum-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-4);
+    margin-bottom: 10px;
+  }
+
   /* ── BACK-TO-TOP ──────────────────────────────────────────── */
   .back-top {
     display: inline-block;
@@ -413,27 +428,46 @@
   }
 
   // Render each training entry.
-  function renderEntry(p, num, total){
-    const vid = extractYouTubeId(p.videoUrl);
-    const videoBlock = vid ? `
-      <div class="video-wrap">
-        <iframe
-          src="https://www.youtube.com/embed/${vid}?rel=0"
-          title="${p.title}"
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          referrerpolicy="strict-origin-when-cross-origin"></iframe>
-      </div>
+  // Render a single video (main or addendum). Falls back to a link if not YouTube.
+  function renderOneVideo(url, label, title){
+    const vid = extractYouTubeId(url);
+    if(vid){
+      return `
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/${vid}?rel=0"
+            title="${title}"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        <div class="video-meta">
+          <span>${label || 'Training video'}</span>
+          <a href="${url}" target="_blank" rel="noopener">Open on YouTube ↗</a>
+        </div>
+      `;
+    }
+    return `
       <div class="video-meta">
-        <span>${p.videoLabel || 'Training video'}</span>
-        <a href="${p.videoUrl}" target="_blank" rel="noopener">Open on YouTube ↗</a>
-      </div>
-    ` : `
-      <div class="video-meta">
-        <a href="${p.videoUrl}" target="_blank" rel="noopener">▶ Watch the video ↗</a>
+        <a href="${url}" target="_blank" rel="noopener">▶ Watch the video ↗</a>
       </div>
     `;
+  }
+
+  function renderEntry(p, num, total){
+    let videoBlock = renderOneVideo(p.videoUrl, p.videoLabel, p.title);
+
+    // Addendum videos — supplementary content. Rendered with a divider and
+    // small heading so it's clearly part of the same lesson but secondary.
+    if(p.additionalVideos && p.additionalVideos.length){
+      videoBlock += `
+        <div class="addendum">
+          <div class="addendum-label">📌 Addendum — also watch</div>
+          ${p.additionalVideos.map(v => renderOneVideo(v.url, v.label, p.title + ' (addendum)')).join('')}
+        </div>
+      `;
+    }
 
     const stepsBlock = p.steps && p.steps.length ? `
       <div class="section-label">Step by step</div>
