@@ -17,9 +17,27 @@
 
 const CREW_TRAINING = [
   {
+    icon: '🔢',
+    title: 'How to patch the multicore into the mixer (inputs)',
+    summary: 'The setup-side opposite of winding the multicore back up. Carry the unravelled multicore to the back, connect each numbered cable to the matching input on the mixer — one-to-one. Outputs are covered in a separate video.',
+    taughtBy: 'Brother Michael & Mario (carrying)',
+    videoUrl: 'https://youtube.com/shorts/DYDobSJURj4',
+    videoLabel: 'Calvary CREW Training (6)',
+    steps: [
+      'Start with the multicore wound up on its drum. Unravel it as you walk it out — same cable, same care as winding it up (see the "How to wind up the multicore cable" video for the reverse process).',
+      'Take it to the back of the room where the mixer and media station are.',
+      'At the multicore end you\'ll find a bunch of smaller cables bundled together. Each one is labelled with a number.',
+      'Connect each cable to the matching input on the mixer — one-to-one. The cable labelled "1" goes to input 1. The cable labelled "2" goes to input 2. And so on.',
+      'That\'s inputs done. Outputs will be covered in a separate video — don\'t worry about them here.',
+    ],
+    warnings: [
+      'Match the numbers exactly. Cable 1 to input 1, cable 2 to input 2 — no creative routing. The Band\'s sound-check assumes the channels arrive on the right inputs.',
+    ],
+  },
+  {
     icon: '🎛️',
     title: 'How to wind up the multicore cable',
-    summary: 'The long, heavy cable that runs from the stage to the mixer at the back. Sit down to do it — your back will thank you. Done in pairs, one rolling and one guiding.',
+    summary: 'The pack-down opposite of patching the multicore in. The long, heavy cable that runs from the stage to the mixer at the back. Sit down to do it — your back will thank you. Done in pairs, one rolling and one guiding.',
     taughtBy: 'Brother Michael & BJ (rolling)',
     videoUrl: 'https://youtu.be/s1kAYIHIOHo',
     videoLabel: 'Calvary CREW Training (5)',
