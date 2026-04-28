@@ -6,22 +6,11 @@
     <title>THANKFUL 2026 | Calvary Anniversary Celebration</title>
     <link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
     <style>
-        /* Additional animations and festival styling */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-20px) rotate(1deg); }
-            66% { transform: translateY(-10px) rotate(-1deg); }
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(208, 68, 28, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(208, 68, 28, 0.6), 0 0 60px rgba(208, 68, 28, 0.2); }
-        }
-
-        @keyframes slideInUp {
+        /* Additional animations using design system tokens */
+        @keyframes reveal-up {
             from {
                 opacity: 0;
-                transform: translateY(60px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -29,94 +18,66 @@
             }
         }
 
-        @keyframes sparkle {
-            0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-            25% { opacity: 0.7; transform: scale(1.1) rotate(90deg); }
-            50% { opacity: 1; transform: scale(0.9) rotate(180deg); }
-            75% { opacity: 0.8; transform: scale(1.05) rotate(270deg); }
+        @keyframes subtle-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
-        .festival-hero {
+        .hero-section {
             position: relative;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            overflow: hidden;
+            background: var(--obsidian);
         }
-
-        .hero-bg-elements {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .floating-element {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .floating-element:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
-        .floating-element:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
-        .floating-element:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 6s; }
 
         .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 1200px;
+            max-width: 1000px;
             padding: 0 var(--s-4);
         }
 
         .hero-title {
+            font-size: var(--fs-mega);
             font-family: var(--font-display);
-            font-size: clamp(4rem, 15vw, 12rem);
             line-height: var(--lh-display);
             letter-spacing: var(--track-display);
             text-transform: uppercase;
-            margin-bottom: var(--s-3);
-            background: linear-gradient(135deg, var(--red) 0%, var(--red-bright) 50%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 4px 20px rgba(208, 68, 28, 0.3);
-            animation: slideInUp 1s ease-out;
+            color: var(--fg-1);
+            margin-bottom: var(--s-4);
+            animation: reveal-up 1.2s var(--ease-out-quint);
         }
 
         .hero-subtitle {
+            font-size: var(--fs-h2);
             font-family: var(--font-serif);
             font-style: italic;
-            font-size: clamp(1.5rem, 4vw, 3rem);
             color: var(--gold);
-            margin-bottom: var(--s-5);
-            animation: slideInUp 1s ease-out 0.2s both;
+            margin-bottom: var(--s-6);
+            animation: reveal-up 1.2s var(--ease-out-quint) 0.2s both;
         }
 
-        .hero-date-block {
+        .date-info {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: var(--s-6);
-            margin: var(--s-6) 0;
-            animation: slideInUp 1s ease-out 0.4s both;
+            gap: var(--s-5);
+            margin: var(--s-7) 0;
+            animation: reveal-up 1.2s var(--ease-out-quint) 0.4s both;
         }
 
         .date-card {
-            background: rgba(208, 68, 28, 0.1);
-            border: 2px solid var(--red);
+            background: var(--slate);
+            border: 1px solid var(--line-red);
             border-radius: var(--r-2);
             padding: var(--s-4);
+            min-width: 100px;
             text-align: center;
-            min-width: 120px;
-            animation: pulse-glow 3s ease-in-out infinite;
         }
 
         .date-label {
+            font-size: var(--fs-eyebrow);
             font-family: var(--font-body);
-            font-size: var(--fs-small);
             text-transform: uppercase;
             letter-spacing: var(--track-eyebrow);
             color: var(--red);
@@ -129,96 +90,66 @@
             color: var(--fg-1);
         }
 
-        .cta-section {
-            animation: slideInUp 1s ease-out 0.6s both;
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: var(--s-4);
+            margin-top: var(--s-6);
+            animation: reveal-up 1.2s var(--ease-out-quint) 0.6s both;
         }
 
-        .register-btn {
-            font-size: var(--fs-body-lg);
-            padding: var(--s-4) var(--s-6);
-            background: linear-gradient(135deg, var(--red) 0%, var(--red-bright) 100%);
-            color: var(--bone);
-            border: none;
-            border-radius: var(--r-2);
-            cursor: pointer;
-            transition: all var(--t-standard) var(--ease-out-quint);
-            margin: 0 var(--s-2);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: var(--s-2);
-            text-transform: uppercase;
-            letter-spacing: var(--track-button);
-            font-weight: 600;
-        }
-
-        .register-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(208, 68, 28, 0.4);
-        }
-
-        .features-section {
-            background: linear-gradient(135deg, var(--slate) 0%, rgba(44, 44, 51, 0.8) 100%);
+        .features {
+            background: var(--slate);
             padding: var(--s-9) 0;
-            position: relative;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--s-4);
+        }
+
+        .features-header {
+            text-align: center;
+            margin-bottom: var(--s-8);
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: var(--s-6);
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 var(--s-4);
         }
 
         .feature-card {
-            background: rgba(244, 239, 230, 0.05);
-            border: 1px solid rgba(244, 239, 230, 0.1);
+            background: var(--obsidian);
+            border: 1px solid var(--line-soft);
             border-radius: var(--r-2);
             padding: var(--s-6);
             text-align: center;
             transition: all var(--t-standard) var(--ease-out-quint);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(208, 68, 28, 0.1), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .feature-card:hover::before {
-            left: 100%;
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
             border-color: var(--red);
-            box-shadow: 0 20px 40px rgba(208, 68, 28, 0.2);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-2);
         }
 
         .feature-icon {
-            font-size: 4rem;
+            font-size: 3rem;
             margin-bottom: var(--s-4);
-            animation: sparkle 4s ease-in-out infinite;
+            animation: subtle-float 4s ease-in-out infinite;
         }
 
         .feature-title {
-            font-family: var(--font-display);
             font-size: var(--fs-h3);
+            font-family: var(--font-display);
             color: var(--red);
             text-transform: uppercase;
             margin-bottom: var(--s-3);
         }
 
-        .countdown-section {
+        .countdown {
             background: var(--obsidian);
             padding: var(--s-8) 0;
             text-align: center;
@@ -228,16 +159,15 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: var(--s-4);
-            max-width: 600px;
+            max-width: 500px;
             margin: var(--s-6) auto;
         }
 
         .countdown-item {
-            background: rgba(208, 68, 28, 0.1);
-            border: 1px solid var(--red);
+            background: var(--slate);
+            border: 1px solid var(--line-red);
             border-radius: var(--r-2);
             padding: var(--s-4);
-            text-align: center;
         }
 
         .countdown-number {
@@ -255,15 +185,15 @@
             letter-spacing: var(--track-eyebrow);
         }
 
-        .registration-section {
-            background: linear-gradient(135deg, var(--red-deep) 0%, var(--red) 50%, var(--red-bright) 100%);
+        .registration {
+            background: var(--red);
             padding: var(--s-9) 0;
             color: var(--bone);
             text-align: center;
         }
 
         .registration-form {
-            max-width: 500px;
+            max-width: 400px;
             margin: var(--s-6) auto 0;
             padding: 0 var(--s-4);
         }
@@ -283,34 +213,27 @@
         .form-input {
             width: 100%;
             padding: var(--s-3);
-            border: 2px solid rgba(244, 239, 230, 0.2);
+            border: 1px solid var(--line-soft);
             border-radius: var(--r-1);
-            background: rgba(244, 239, 230, 0.1);
-            color: var(--bone);
+            background: var(--bone);
+            color: var(--fg-1-on-light);
             font-family: var(--font-body);
-            transition: border-color var(--t-micro) ease;
         }
 
         .form-input:focus {
             outline: none;
-            border-color: var(--bone);
-            background: rgba(244, 239, 230, 0.15);
-        }
-
-        .form-input::placeholder {
-            color: rgba(244, 239, 230, 0.6);
+            border-color: var(--red-deep);
         }
 
         .submit-btn {
             width: 100%;
-            padding: var(--s-4);
             background: var(--bone);
             color: var(--red);
             border: none;
+            padding: var(--s-4);
             border-radius: var(--r-1);
             font-family: var(--font-body);
             font-weight: 700;
-            font-size: var(--fs-body-lg);
             text-transform: uppercase;
             letter-spacing: var(--track-button);
             cursor: pointer;
@@ -319,39 +242,13 @@
 
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(244, 239, 230, 0.3);
+            box-shadow: var(--shadow-1);
         }
 
-        .sparkle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--gold);
-            border-radius: 50%;
-            animation: sparkle 3s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .hero-date-block {
-                flex-direction: column;
-                gap: var(--s-4);
-            }
-
-            .countdown-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Intersection Observer reveal animations */
+        /* Intersection Observer animations */
         .reveal-on-scroll {
             opacity: 0;
-            transform: translateY(50px);
+            transform: translateY(30px);
             transition: all 1s var(--ease-out-quint);
         }
 
@@ -359,30 +256,33 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        @media (max-width: 768px) {
+            .date-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body class="cv-stage">
     
     <!-- Hero Section -->
-    <section class="festival-hero">
-        <div class="hero-bg-elements">
-            <div class="floating-element">🎵</div>
-            <div class="floating-element">✨</div>
-            <div class="floating-element">🙏</div>
-            <div class="floating-element">🎉</div>
-            
-            <!-- Sparkles scattered around -->
-            <div class="sparkle" style="top: 15%; left: 25%; animation-delay: 0s;"></div>
-            <div class="sparkle" style="top: 25%; right: 30%; animation-delay: 1s;"></div>
-            <div class="sparkle" style="bottom: 35%; left: 15%; animation-delay: 2s;"></div>
-            <div class="sparkle" style="bottom: 20%; right: 20%; animation-delay: 1.5s;"></div>
-        </div>
-        
+    <section class="hero-section cv-section">
         <div class="hero-content">
             <h1 class="hero-title">THANKFUL</h1>
             <p class="hero-subtitle">Reasons to be Thankful</p>
             
-            <div class="hero-date-block">
+            <div class="date-info">
                 <div class="date-card">
                     <div class="date-label">Date</div>
                     <div class="date-value">May 17</div>
@@ -397,19 +297,15 @@
                 </div>
             </div>
             
-            <div class="cta-section">
-                <a href="#register" class="register-btn">
-                    🎉 Join the Celebration
-                </a>
-                <a href="#details" class="cv-btn cv-btn-ghost" style="margin-left: var(--s-3);">
-                    Learn More
-                </a>
+            <div class="cta-buttons">
+                <a href="#register" class="cv-btn cv-btn-primary">Join Us</a>
+                <a href="#details" class="cv-btn cv-btn-ghost">Learn More</a>
             </div>
         </div>
     </section>
 
     <!-- Countdown Section -->
-    <section class="countdown-section reveal-on-scroll">
+    <section class="countdown reveal-on-scroll">
         <h2 class="cv-h2" style="color: var(--red); margin-bottom: var(--s-4);">Celebration Countdown</h2>
         <div class="countdown-grid" id="countdown">
             <div class="countdown-item">
@@ -432,12 +328,12 @@
     </section>
 
     <!-- Features Section -->
-    <section class="features-section reveal-on-scroll" id="details">
-        <div class="cv-section">
-            <div style="text-align: center; margin-bottom: var(--s-8);">
-                <h2 class="cv-h2" style="color: var(--red); margin-bottom: var(--s-3);">A Day of Celebration</h2>
+    <section class="features reveal-on-scroll" id="details">
+        <div class="features-container">
+            <div class="features-header">
+                <h2 class="cv-h2" style="color: var(--red); margin-bottom: var(--s-3);">A Day of Thanksgiving</h2>
                 <p class="cv-body-lg" style="max-width: 600px; margin: 0 auto;">
-                    Join us for an unforgettable day of worship, thanksgiving, and community as we celebrate God's faithfulness through Calvary Hephzibah.
+                    Join us for a meaningful celebration of God's faithfulness and goodness.
                 </p>
             </div>
             
@@ -445,54 +341,42 @@
                 <div class="feature-card">
                     <div class="feature-icon">🎵</div>
                     <h3 class="feature-title">Vibrant Worship</h3>
-                    <p class="cv-body">Experience passionate, Spirit-led worship that lifts our hearts and voices in thanksgiving to God.</p>
+                    <p class="cv-body">Spirit-led worship and praise celebrating God's goodness.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🎭</div>
                     <h3 class="feature-title">Creative Presentations</h3>
-                    <p class="cv-body">Witness inspiring poems, songs, and dramas from our ministry departments expressing reasons to be thankful.</p>
+                    <p class="cv-body">Inspiring presentations from our ministry departments expressing thanksgiving.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🙏</div>
                     <h3 class="feature-title">Thanksgiving Message</h3>
-                    <p class="cv-body">Be encouraged by a powerful message centered on recognizing and celebrating God's abundant blessings.</p>
+                    <p class="cv-body">A powerful message centered on recognizing God's abundant blessings.</p>
                 </div>
                 
                 <div class="feature-card">
                     <div class="feature-icon">🤝</div>
-                    <h3 class="feature-title">Fellowship & Community</h3>
-                    <p class="cv-body">Connect with our church family and celebrate together the journey God has taken us on this year.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🍽️</div>
-                    <h3 class="feature-title">Celebration Meal</h3>
-                    <p class="cv-body">Enjoy refreshments and fellowship as we continue the celebration together after the service.</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🎉</div>
-                    <h3 class="feature-title">Special Atmosphere</h3>
-                    <p class="cv-body">Experience a joyful, festive atmosphere as we honor God for His goodness throughout the year.</p>
+                    <h3 class="feature-title">Fellowship</h3>
+                    <p class="cv-body">Connect with our church family in celebration and community.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Registration Section -->
-    <section class="registration-section reveal-on-scroll" id="register">
+    <section class="registration reveal-on-scroll" id="register">
         <div class="cv-section">
             <h2 class="cv-h2" style="margin-bottom: var(--s-4);">Join the Celebration</h2>
-            <p class="cv-body-lg" style="max-width: 600px; margin: 0 auto var(--s-6);">
-                Be part of this special day of thanksgiving and worship. Register below to help us prepare for our time together.
+            <p class="cv-body-lg" style="max-width: 500px; margin: 0 auto var(--s-6);">
+                Be part of this special day of thanksgiving and worship. Help us prepare by registering below.
             </p>
             
             <form class="registration-form" id="registrationForm">
                 <div class="form-group">
                     <label class="form-label" for="name">Full Name</label>
-                    <input type="text" id="name" class="form-input" placeholder="Enter your full name" required>
+                    <input type="text" id="name" class="form-input" placeholder="Enter your name" required>
                 </div>
                 
                 <div class="form-group">
@@ -501,14 +385,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label" for="phone">Phone Number</label>
-                    <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="guests">Number of Guests</label>
+                    <label class="form-label" for="guests">Number of People</label>
                     <select id="guests" class="form-input">
-                        <option value="1">Just me</option>
+                        <option value="1">1 person</option>
                         <option value="2">2 people</option>
                         <option value="3">3 people</option>
                         <option value="4">4 people</option>
@@ -517,7 +396,7 @@
                 </div>
                 
                 <button type="submit" class="submit-btn">
-                    🎉 Register for THANKFUL 2026
+                    Register for THANKFUL 2026
                 </button>
             </form>
         </div>
@@ -527,8 +406,8 @@
     <footer style="background: var(--obsidian); padding: var(--s-6) 0; text-align: center; border-top: 1px solid var(--line-soft);">
         <div class="cv-section">
             <h3 class="cv-h3" style="color: var(--red); margin-bottom: var(--s-3);">Calvary Hephzibah Full Gospel Church</h3>
-            <p class="cv-body" style="margin-bottom: var(--s-2);">Building Together in Faith · Manchester, UK</p>
-            <p class="cv-small">May 17, 2026 · 10:30 AM · Reasons to be Thankful</p>
+            <p class="cv-body" style="margin-bottom: var(--s-2);">Manchester, UK</p>
+            <p class="cv-small">May 17, 2026 · 10:30 AM</p>
         </div>
     </footer>
 
@@ -552,11 +431,10 @@
             }
         }
 
-        // Update countdown every second
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Intersection Observer for scroll animations
+        // Scroll animations
         const observerOptions = {
             root: null,
             rootMargin: '0px',
@@ -571,7 +449,6 @@
             });
         }, observerOptions);
 
-        // Observe all reveal elements
         document.querySelectorAll('.reveal-on-scroll').forEach(el => {
             observer.observe(el);
         });
@@ -579,26 +456,11 @@
         // Form submission
         document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // Get form data
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                guests: document.getElementById('guests').value
-            };
-
-            // Simulate submission (replace with actual endpoint)
-            console.log('Registration submitted:', formData);
-            
-            // Show success message
-            alert('🎉 Thank you for registering for THANKFUL 2026! We\'re excited to celebrate with you.');
-            
-            // Reset form
+            alert('Thank you for registering for THANKFUL 2026! We look forward to celebrating with you.');
             this.reset();
         });
 
-        // Smooth scrolling for anchor links
+        // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -611,25 +473,6 @@
                 }
             });
         });
-
-        // Add random sparkles dynamically
-        function createSparkle() {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            sparkle.style.left = Math.random() * 100 + '%';
-            sparkle.style.top = Math.random() * 100 + '%';
-            sparkle.style.animationDelay = Math.random() * 3 + 's';
-            
-            document.querySelector('.hero-bg-elements').appendChild(sparkle);
-            
-            // Remove sparkle after animation
-            setTimeout(() => {
-                sparkle.remove();
-            }, 6000);
-        }
-
-        // Create sparkles periodically
-        setInterval(createSparkle, 2000);
     </script>
 
 </body>
