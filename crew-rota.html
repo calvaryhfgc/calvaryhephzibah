@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calvary Crew Rota</title>
+<meta name="description" content="The Crew rota for upcoming Sundays at Calvary Hephzibah Full Gospel Church.">
+<meta name="theme-color" content="#C41E2A">
+<meta property="og:title" content="Calvary Crew Rota">
+<meta property="og:description" content="Who's on Crew this Sunday and the Sundays after.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C41E2A;
+    --red-light: #FEF2F2;
+    --red-mid: #FECACA;
+    --white: #FFFFFF;
+    --bg: #FAF9F7;
+    --bg-2: #F1EFEA;
+    --ink: #1A1A1A;
+    --ink-2: #374151;
+    --ink-3: #6B7280;
+    --ink-4: #9CA3AF;
+    --ink-5: #E5E7EB;
+    --ink-6: #F9FAFB;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --green-mid: #BBF7D0;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --amber-mid: #FDE68A;
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --r8: 8px;
+    --r12: 12px;
+    --r16: 16px;
+    --r20: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HERO ──────────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(180deg, var(--red) 0%, #A8181F 100%);
+    color: white;
+    padding: 56px 24px 48px;
+    text-align: center;
+  }
+  .hero-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: var(--r16);
+    margin-bottom: 16px;
+  }
+  .hero-logo svg { width: 24px; height: 24px; }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 10px;
+  }
+  .hero-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(2rem, 6vw, 2.6rem);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+  .hero-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.9);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  /* ── CONTENT WRAPPER ───────────────────────────────────────── */
+  .content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 36px 24px 64px;
+  }
+  .section-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin: 28px 0 8px;
+  }
+  .section-eyebrow:first-child { margin-top: 0; }
+  .section-heading {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 18px;
+    color: var(--ink);
+    letter-spacing: -0.4px;
+  }
+
+  /* ── PER-PERSON SUMMARY ─────────────────────────────────────── */
+  .person-card {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: var(--r16);
+    padding: 16px 18px;
+    margin-bottom: 10px;
+  }
+  .person-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .person-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--red-light);
+    border: 1.5px solid var(--red-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--red);
+    flex-shrink: 0;
+  }
+  .person-avatar.lead {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+  .person-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    flex: 1;
+    min-width: 0;
+  }
+  .person-role-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--bg-2);
+    color: var(--ink-3);
+    flex-shrink: 0;
+  }
+  .person-role-pill.lead {
+    background: rgba(196,30,42,0.1);
+    color: var(--red);
+  }
+  .person-role-pill.every-week {
+    background: var(--green-light);
+    color: var(--green);
+  }
+  .person-role-pill.alternating {
+    background: var(--blue-light);
+    color: var(--blue);
+  }
+  .person-dates {
+    margin-top: 4px;
+    padding-left: 48px;
+    font-size: 13px;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+  .person-dates span {
+    display: inline-block;
+    background: var(--bg-2);
+    padding: 2px 10px;
+    border-radius: 100px;
+    margin: 2px 4px 2px 0;
+    font-size: 12px;
+  }
+
+  /* ── ROTA WEEK CARD ────────────────────────────────────────── */
+  .week-card {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: var(--r16);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .week-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .week-date {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.2px;
+  }
+  .status-pill {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 100px;
+  }
+  .status-pill.pending {
+    background: var(--amber-light);
+    color: var(--amber);
+    border: 1px solid var(--amber-mid);
+  }
+  .status-pill.confirmed {
+    background: var(--green-light);
+    color: var(--green);
+    border: 1px solid var(--green-mid);
+  }
+  .week-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .week-row-label {
+    color: var(--ink-3);
+    font-weight: 600;
+    width: 56px;
+    flex-shrink: 0;
+  }
+  .week-row-value {
+    color: var(--ink);
+  }
+  .week-note {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--amber-light);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--r8);
+    font-size: 12px;
+    color: var(--ink-2);
+    line-height: 1.5;
+  }
+
+  /* ── STANDARD CARD ────────────────────────────────────────── */
+  .standard {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-left: 4px solid var(--blue);
+    border-radius: var(--r16);
+    padding: 18px 22px;
+    margin-bottom: 24px;
+  }
+  .standard-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  .standard ul {
+    margin: 0;
+    padding-left: 22px;
+    font-size: 14px;
+    color: var(--ink-2);
+    line-height: 1.8;
+  }
+  .standard li { margin-bottom: 4px; }
+
+  /* ── FOOTER ───────────────────────────────────────────────── */
+  .footer {
+    text-align: center;
+    padding: 32px 24px 48px;
+    color: var(--ink-4);
+    font-size: 12px;
+    line-height: 1.7;
+    border-top: 1px solid var(--ink-5);
+    background: var(--bg-2);
+  }
+  .footer strong { color: var(--ink-3); }
+  .footer p { margin-bottom: 4px; }
+
+  @media (min-width: 600px) {
+    .hero { padding: 72px 24px 56px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-logo">
+    <svg viewBox="0 0 16 16" fill="none">
+      <rect x="6.5" y="1" width="3" height="14" rx="0.5" fill="white"/>
+      <rect x="1" y="5.5" width="14" height="3" rx="0.5" fill="white"/>
+    </svg>
+  </div>
+  <div class="hero-eyebrow">Calvary Hephzibah · Manchester</div>
+  <h1 class="hero-title">Crew Rota</h1>
+  <p class="hero-sub">Find your name below to see which Sundays you're on. Coordinated by Brother Ernest.</p>
+</header>
+
+<main class="content">
+
+  <div class="section-eyebrow">Your Sundays at a glance</div>
+  <h2 class="section-heading">Who's on which week</h2>
+  <div id="people-list"></div>
+
+  <div class="section-eyebrow">Schedule</div>
+  <h2 class="section-heading">Upcoming Sundays</h2>
+  <div id="weeks-list"></div>
+
+  <div class="section-eyebrow">How it works</div>
+  <h2 class="section-heading">The rota standard</h2>
+  <div class="standard">
+    <div class="standard-label">📌 The standard</div>
+    <ul id="standard-list"></ul>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <p><strong>Calvary Hephzibah Full Gospel Church</strong></p>
+  <p>Manchester · Charity no. 1135709</p>
+  <p style="margin-top:14px;">Need to swap? Message Brother Ernest as early as possible.</p>
+  <p>Questions about Crew? Speak to Brother Ernest.</p>
+</footer>
+
+<script src="crew-rota-data.js"></script>
+<script>
+  // Build the per-person summary by walking the rota and grouping dates by name.
+  // Lead row first, then anyone on every week, then alternating, then anyone else.
+  function buildPeople(){
+    const map = new Map(); // name -> { name, dates: [], roles: Set }
+
+    CREW_ROTA.forEach(week => {
+      // Lead
+      if(!map.has(week.lead)) map.set(week.lead, { name: week.lead, dates: [], roles: new Set() });
+      map.get(week.lead).dates.push(week.date);
+      map.get(week.lead).roles.add('lead');
+
+      // Team
+      week.team.forEach(person => {
+        if(!map.has(person)) map.set(person, { name: person, dates: [], roles: new Set() });
+        map.get(person).dates.push(week.date);
+        map.get(person).roles.add('team');
+      });
+    });
+
+    const total = CREW_ROTA.length;
+    const people = Array.from(map.values()).map(p => {
+      const isLead = p.roles.has('lead');
+      const everyWeek = p.dates.length === total;
+      let roleLabel, roleClass;
+      if(isLead){
+        roleLabel = 'Lead';
+        roleClass = 'lead';
+      } else if(everyWeek){
+        roleLabel = 'Every week';
+        roleClass = 'every-week';
+      } else {
+        roleLabel = 'Alternating';
+        roleClass = 'alternating';
+      }
+      return { ...p, roleLabel, roleClass, isLead, everyWeek };
+    });
+
+    // Sort: lead → every-week → alternating
+    const order = { 'lead': 0, 'every-week': 1, 'alternating': 2 };
+    people.sort((a, b) => order[a.roleClass] - order[b.roleClass]);
+    return people;
+  }
+
+  function renderPeople(){
+    const people = buildPeople();
+    document.getElementById('people-list').innerHTML = people.map(p => {
+      const initials = p.name.split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase();
+      const datesHtml = p.dates.map(d => `<span>${d.replace('Sunday ', '').replace(' 2026', '')}</span>`).join('');
+      return `
+        <div class="person-card">
+          <div class="person-head">
+            <div class="person-avatar ${p.isLead ? 'lead' : ''}">${initials}</div>
+            <div class="person-name">${p.name}</div>
+            <div class="person-role-pill ${p.roleClass}">${p.roleLabel}</div>
+          </div>
+          <div class="person-dates">${datesHtml}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderWeeks(){
+    document.getElementById('weeks-list').innerHTML = CREW_ROTA.map(w => {
+      const statusLabel = w.status === 'confirmed' ? 'Confirmed' : 'Pending';
+      return `
+        <div class="week-card">
+          <div class="week-head">
+            <div class="week-date">${w.date}</div>
+            <span class="status-pill ${w.status}">${statusLabel}</span>
+          </div>
+          <div class="week-row">
+            <span class="week-row-label">Lead</span>
+            <span class="week-row-value">${w.lead}</span>
+          </div>
+          <div class="week-row">
+            <span class="week-row-label">Crew</span>
+            <span class="week-row-value">${w.team.join(' · ')}</span>
+          </div>
+          ${w.note ? `<div class="week-note">${w.note}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderStandard(){
+    document.getElementById('standard-list').innerHTML =
+      CREW_ROTA_STANDARD.map(s => `<li>${s}</li>`).join('');
+  }
+
+  renderPeople();
+  renderWeeks();
+  renderStandard();
+</script>
+
+</body>
+</html>
