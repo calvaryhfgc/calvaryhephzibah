@@ -39,7 +39,7 @@ const CREW_TRAINING = [
     ],
     warnings: [
       'Match the numbers exactly. Cable 1 to input 1, cable 2 to input 2 — no creative routing. The Band\'s sound-check assumes the channels arrive on the right inputs.',
-      'Channel 10 currently doesn\'t work. Don\'t spend time troubleshooting it on the day — Brother Michael is aware. If something needed channel 10, raise it with him.',
+      'Channel 10 currently doesn\'t work. Don\'t spend time troubleshooting it on the day — Brother Ernest is aware. If something needed channel 10, raise it with him.',
     ],
   },
   {
