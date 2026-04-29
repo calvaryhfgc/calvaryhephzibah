@@ -165,9 +165,10 @@
           <div class="card" style="margin-bottom:14px;border-left:3px solid var(--blue);">
             <div class="card-label">📌 The standard</div>
             <ul style="font-size:13px;color:var(--ink-2);line-height:2;padding-left:16px;margin:0;">
-              <li>Minimum <strong>2 people</strong> on Crew every Sunday</li>
-              <li>One named lead per Sunday — accountable for everything happening on time</li>
-              <li>Crew arrive early enough to set up before Band needs the stage (exact time to be confirmed once Brother Michael's process is documented)</li>
+              <li><strong>3 people on Crew most weeks:</strong> Brother Ernest + Brother Stephen permanently, with Sister Petty and Sister Lisa alternating</li>
+              <li>Minimum <strong>2 people</strong> if someone is off — the alternating pattern means there's always cover</li>
+              <li>Brother Ernest leads every week — accountable for everything happening on time</li>
+              <li>Crew arrive early enough to set up before Band needs the stage (exact time to be confirmed)</li>
               <li>If you can't make your Sunday, message Brother Ernest as early as possible so a swap can be arranged</li>
             </ul>
           </div>
@@ -218,13 +219,14 @@ const THIS_SUNDAY = {
   date: 'Sunday 3rd May 2026',
   lead: { name: 'Brother Ernest', role: 'Crew Coordinator (Head of Ushers)' },
   team: [
-    { name: 'TBC', role: 'Crew' },
-    { name: 'TBC', role: 'Crew' },
+    { name: 'Brother Stephen', role: 'Crew' },
+    { name: 'Sister Petty', role: 'Crew (alternating weeks)' },
   ],
   arrivalTime: 'TBC — confirm with Brother Ernest',
   notes: [
-    'Brother Ernest is putting the rota together this week. Names will land here as soon as they are confirmed.',
-    'First training video is live — Brother Michael on cable folding. See the Playbook tab. More videos to come from Michael with Mario and BJ.',
+    'Brother Ernest agreed the rota structure on 28 April: Ernest + Stephen every week, with Sister Petty and Sister Lisa alternating. Three on Crew most Sundays.',
+    'Two confirmations still pending — Brother Stephen\'s arrival timing, and Sister Petty\'s arrival (depends on Noah\'s media call time). Brother Ernest is firming both up this Sunday.',
+    'Seven training videos now live in the Playbook — speakers, multicore patching, cable folding. Worth a watch on the day if anyone\'s new.',
     'Pastor Shade will be at church this Sunday and is available if anything needs escalating in the moment.',
   ],
 };
@@ -249,34 +251,37 @@ const PLAYBOOK = [
   },
 ];
 
-// Rota — upcoming Sundays. Brother Ernest fills in the assigned Crew.
-// Edit this block weekly.
+// Rota — Brother Ernest's proposed structure (agreed 28 April 2026):
+// - Ernest + Stephen on every week (permanent)
+// - Sister Petty and Sister Lisa alternate (every other week)
+// This gives 3 people per Sunday with redundancy if anyone's off.
+// Edit this block weekly to track confirmations and any swaps.
 const ROTA = [
   {
     date: 'Sunday 3rd May 2026',
     lead: 'Brother Ernest',
-    team: ['TBC', 'TBC'],
+    team: ['Brother Stephen', 'Sister Petty'],
     status: 'pending',
-    note: 'Awaiting confirmed names from Brother Ernest',
+    note: 'Brother Stephen\'s arrival time and Sister Petty\'s arrival (depends on Noah\'s media call time) being confirmed by Brother Ernest this Sunday.',
   },
   {
     date: 'Sunday 10th May 2026',
-    lead: 'TBC',
-    team: ['TBC', 'TBC'],
+    lead: 'Brother Ernest',
+    team: ['Brother Stephen', 'Sister Lisa'],
     status: 'pending',
-    note: '',
+    note: 'Sister Lisa\'s availability and transport being confirmed by Brother Ernest.',
   },
   {
     date: 'Sunday 17th May 2026',
-    lead: 'TBC',
-    team: ['TBC', 'TBC'],
+    lead: 'Brother Ernest',
+    team: ['Brother Stephen', 'Sister Petty'],
     status: 'pending',
     note: '',
   },
   {
     date: 'Sunday 24th May 2026',
-    lead: 'TBC',
-    team: ['TBC', 'TBC'],
+    lead: 'Brother Ernest',
+    team: ['Brother Stephen', 'Sister Lisa'],
     status: 'pending',
     note: '',
   },
@@ -288,22 +293,36 @@ const TEAM = [
     name: 'Brother Ernest',
     role: 'Crew Coordinator',
     status: 'lead',
-    note: 'Head of Ushers. Now coordinating Crew alongside Ushers. Accountable for the rota and for Crew showing up — even when he is not personally there. Direct him for swap requests, availability, and anything Crew-related.',
+    note: 'Head of Ushers. Now coordinating Crew alongside Ushers. On Crew every week, leading. Accountable for the rota and for Crew showing up — even when he is not personally there. Direct him for swap requests, availability, and anything Crew-related.',
     badge: 'lead',
+  },
+  {
+    name: 'Brother Stephen',
+    role: 'Crew (every week)',
+    status: 'crew',
+    note: 'Permanent on the rota alongside Brother Ernest, every week. Arrival timing being confirmed.',
+    badge: 'crew',
+  },
+  {
+    name: 'Sister Petty',
+    role: 'Crew (alternating weeks)',
+    status: 'crew',
+    note: 'On Crew every other week, alternating with Sister Lisa. Travels to church with Noah — her arrival time is tied to his media call time.',
+    badge: 'crew',
+  },
+  {
+    name: 'Sister Lisa',
+    role: 'Crew (alternating weeks)',
+    status: 'crew',
+    note: 'On Crew every other week, alternating with Sister Petty. Availability and transport being confirmed.',
+    badge: 'crew',
   },
   {
     name: 'Brother Michael',
     role: 'Setup & Pack-down Process',
     status: 'support',
-    note: 'Producing the Playbook videos with Mario and BJ. Going forward, the source of truth on how setup and pack-down actually work. Operational training partner to Brother Ernest.',
+    note: 'Recording the Playbook training videos with Mario and BJ. Source of truth on how setup and pack-down actually work. Operational training partner to Brother Ernest.',
     badge: 'support',
-  },
-  {
-    name: 'Sister Petty',
-    role: 'Crew (potential)',
-    status: 'support',
-    note: 'Already shows up early. Reliable. Pastor Shade flagged her as someone to formally bring onto Crew.',
-    badge: 'crew',
   },
   {
     name: 'Mario',
@@ -516,9 +535,14 @@ function renderRota(){
 
 function renderTeam(){
   document.getElementById('team-list').innerHTML = TEAM.map(m=>{
-    const badgeBg = m.badge==='lead'?'rgba(196,30,42,0.1)':m.badge==='support'?'var(--blue-light)':'var(--ink-6)';
-    const badgeColor = m.badge==='lead'?'var(--red)':m.badge==='support'?'var(--blue)':'var(--ink-4)';
-    const badgeLabel = m.badge==='lead'?'lead':m.badge==='support'?'support':'crew';
+    let badgeBg, badgeColor, badgeLabel;
+    if(m.badge === 'lead'){
+      badgeBg = 'rgba(196,30,42,0.1)'; badgeColor = 'var(--red)'; badgeLabel = 'lead';
+    } else if(m.badge === 'crew'){
+      badgeBg = 'var(--green-light)'; badgeColor = 'var(--green)'; badgeLabel = 'crew';
+    } else {
+      badgeBg = 'var(--blue-light)'; badgeColor = 'var(--blue)'; badgeLabel = 'support';
+    }
     return `<div class="card" style="margin-bottom:10px;">
       <div style="display:flex;align-items:flex-start;gap:12px;">
         <div style="width:38px;height:38px;border-radius:50%;background:var(--bg-2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ink-3);flex-shrink:0;">${m.name.split(' ').slice(0,2).map(n=>n[0]).join('').toUpperCase()}</div>
