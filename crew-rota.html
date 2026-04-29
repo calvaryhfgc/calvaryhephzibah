@@ -283,6 +283,183 @@
   }
   .standard li { margin-bottom: 4px; }
 
+  /* ── VIEW TOGGLE ──────────────────────────────────────────── */
+  .view-toggle {
+    display: inline-flex;
+    background: var(--bg-2);
+    border: 1px solid var(--ink-5);
+    border-radius: 100px;
+    padding: 4px;
+    margin-bottom: 22px;
+    gap: 2px;
+  }
+  .view-toggle-btn {
+    background: transparent;
+    border: 0;
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-3);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .view-toggle-btn:hover { color: var(--ink); }
+  .view-toggle-btn.active {
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(17,24,39,0.08);
+  }
+  .view-toggle-btn .icon {
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  /* Hide inactive views */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ── GRID VIEW ────────────────────────────────────────────── */
+  .grid-wrap {
+    background: var(--white);
+    border: 1px solid var(--ink-5);
+    border-radius: var(--r16);
+    padding: 18px;
+    overflow-x: auto;          /* horizontal scroll on narrow screens */
+    -webkit-overflow-scrolling: touch;
+  }
+  .grid-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    min-width: 360px;          /* don't squash below this */
+  }
+  .grid-table th, .grid-table td {
+    padding: 10px 6px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 13px;
+  }
+  .grid-table thead th {
+    border-bottom: 2px solid var(--ink-5);
+    font-weight: 600;
+    color: var(--ink-3);
+    font-size: 11px;
+    line-height: 1.3;
+    padding-bottom: 12px;
+    min-width: 56px;
+  }
+  .grid-day {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 18px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .grid-month {
+    font-size: 10px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .grid-table th.name-col,
+  .grid-table td.name-col {
+    text-align: left;
+    padding-left: 12px;
+    padding-right: 12px;
+    min-width: 130px;
+    border-right: 1px solid var(--ink-5);
+    background: var(--bg);    /* sticky-feel even when scrolling */
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+  .grid-table thead th.name-col {
+    background: var(--bg);
+  }
+  .grid-table tbody tr:nth-child(even) td { background: var(--ink-6); }
+  .grid-table tbody tr:nth-child(even) td.name-col { background: var(--ink-6); }
+  .grid-table tbody td {
+    border-bottom: 1px solid var(--ink-5);
+  }
+  .grid-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .grid-name {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 13px;
+  }
+  .grid-name-role {
+    font-size: 10px;
+    color: var(--ink-4);
+    margin-top: 1px;
+    font-weight: 400;
+  }
+
+  /* On / off cells */
+  .grid-on {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .grid-on.lead {
+    background: var(--red);
+    color: white;
+  }
+  .grid-on.team {
+    background: var(--green);
+    color: white;
+  }
+  .grid-off {
+    color: var(--ink-5);
+    font-size: 16px;
+  }
+
+  .grid-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--ink-5);
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: var(--ink-3);
+  }
+  .grid-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .grid-legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .grid-legend-dot.lead { background: var(--red); }
+  .grid-legend-dot.team { background: var(--green); }
+
+  .grid-scroll-hint {
+    font-size: 11px;
+    color: var(--ink-4);
+    margin-top: 8px;
+    text-align: center;
+    display: none;
+  }
+  @media (max-width: 480px) {
+    .grid-scroll-hint { display: block; }
+  }
+
   /* ── FOOTER ───────────────────────────────────────────────── */
   .footer {
     text-align: center;
@@ -317,15 +494,48 @@
 
 <main class="content">
 
-  <div class="section-eyebrow">Your Sundays at a glance</div>
-  <h2 class="section-heading">Who's on which week</h2>
-  <div id="people-list"></div>
+  <div class="view-toggle" role="tablist" aria-label="Rota view">
+    <button class="view-toggle-btn active" data-view="schedule" onclick="switchView('schedule')" role="tab">
+      <span class="icon">📅</span> Schedule
+    </button>
+    <button class="view-toggle-btn" data-view="people" onclick="switchView('people')" role="tab">
+      <span class="icon">👥</span> People
+    </button>
+    <button class="view-toggle-btn" data-view="grid" onclick="switchView('grid')" role="tab">
+      <span class="icon">🔲</span> Grid
+    </button>
+  </div>
 
-  <div class="section-eyebrow">Schedule</div>
-  <h2 class="section-heading">Upcoming Sundays</h2>
-  <div id="weeks-list"></div>
+  <!-- SCHEDULE VIEW (default) — chronological week-by-week -->
+  <div class="view active" data-view="schedule" role="tabpanel">
+    <div class="section-eyebrow">Schedule</div>
+    <h2 class="section-heading">Upcoming Sundays</h2>
+    <div id="weeks-list"></div>
+  </div>
 
-  <div class="section-eyebrow">How it works</div>
+  <!-- PEOPLE VIEW — find your name, see your dates -->
+  <div class="view" data-view="people" role="tabpanel">
+    <div class="section-eyebrow">Your Sundays at a glance</div>
+    <h2 class="section-heading">Who's on which week</h2>
+    <div id="people-list"></div>
+  </div>
+
+  <!-- GRID VIEW — people × Sundays at-a-glance matrix -->
+  <div class="view" data-view="grid" role="tabpanel">
+    <div class="section-eyebrow">Grid</div>
+    <h2 class="section-heading">People × Sundays</h2>
+    <div class="grid-wrap">
+      <table class="grid-table" id="grid-table"></table>
+      <div class="grid-legend">
+        <span class="grid-legend-item"><span class="grid-legend-dot lead"></span> Lead</span>
+        <span class="grid-legend-item"><span class="grid-legend-dot team"></span> Crew</span>
+      </div>
+    </div>
+    <div class="grid-scroll-hint">Swipe sideways to see more dates →</div>
+  </div>
+
+  <!-- STANDARD — always visible, regardless of view -->
+  <div class="section-eyebrow" style="margin-top:36px;">How it works</div>
   <h2 class="section-heading">The rota standard</h2>
   <div class="standard">
     <div class="standard-label">📌 The standard</div>
@@ -432,9 +642,100 @@
       CREW_ROTA_STANDARD.map(s => `<li>${s}</li>`).join('');
   }
 
+  // Parse a date string like 'Sunday 3rd May 2026' into compact display parts.
+  // Returns {day:'3', month:'May'}. We don't use Date.parse because the
+  // ordinal suffix ('rd') breaks it across browsers and we only need to
+  // display the day and month — we don't need a real Date object.
+  function parseRotaDate(dateStr){
+    const match = dateStr.match(/(\d+)(?:st|nd|rd|th)?\s+(\w+)/);
+    if(!match) return { day: '?', month: '' };
+    return { day: match[1], month: match[2] };
+  }
+
+  // Grid view — people down the left, Sundays across the top, dots in cells.
+  // Uses the same buildPeople() data so role classification stays consistent
+  // with the People view.
+  function renderGrid(){
+    const people = buildPeople();
+    const weeks = CREW_ROTA;
+
+    // Header row: empty corner cell + one column per Sunday
+    const headerHtml = `
+      <thead>
+        <tr>
+          <th class="name-col"></th>
+          ${weeks.map(w => {
+            const { day, month } = parseRotaDate(w.date);
+            return `<th><span class="grid-day">${day}</span><span class="grid-month">${month}</span></th>`;
+          }).join('')}
+        </tr>
+      </thead>
+    `;
+
+    // One row per person; for each Sunday, check if they're on it
+    const bodyHtml = `
+      <tbody>
+        ${people.map(p => {
+          const cells = weeks.map(w => {
+            const isLead = w.lead === p.name;
+            const isOnTeam = w.team.includes(p.name);
+            if(isLead){
+              return `<td><span class="grid-on lead" title="Lead — ${w.date}">L</span></td>`;
+            } else if(isOnTeam){
+              return `<td><span class="grid-on team" title="On — ${w.date}">✓</span></td>`;
+            } else {
+              return `<td><span class="grid-off" title="Off — ${w.date}">·</span></td>`;
+            }
+          }).join('');
+          return `
+            <tr>
+              <td class="name-col">
+                <div class="grid-name">${p.name}</div>
+                <div class="grid-name-role">${p.roleLabel}</div>
+              </td>
+              ${cells}
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    `;
+
+    document.getElementById('grid-table').innerHTML = headerHtml + bodyHtml;
+  }
+
+  // View switching. Updates the toggle button states, the .view container
+  // visibility, and the URL hash so the chosen view can be deep-linked.
+  function switchView(view){
+    const valid = ['schedule', 'people', 'grid'];
+    if(!valid.includes(view)) view = 'schedule';
+
+    document.querySelectorAll('.view-toggle-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === view);
+    });
+    document.querySelectorAll('.view').forEach(el => {
+      el.classList.toggle('active', el.dataset.view === view);
+    });
+
+    // Don't trigger another popstate when we're the ones updating the hash
+    if(window.location.hash !== '#' + view){
+      history.replaceState(null, '', '#' + view);
+    }
+  }
+
+  // Honour the URL hash on load (so #grid deep-links to the grid view).
+  function initialView(){
+    const hash = (window.location.hash || '').replace('#', '');
+    return ['schedule', 'people', 'grid'].includes(hash) ? hash : 'schedule';
+  }
+
   renderPeople();
   renderWeeks();
+  renderGrid();
   renderStandard();
+  switchView(initialView());
+
+  // If the user navigates back/forward through hash changes, follow.
+  window.addEventListener('hashchange', () => switchView(initialView()));
 </script>
 
 </body>
