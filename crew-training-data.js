@@ -20,7 +20,7 @@ const CREW_TRAINING = [
     icon: '🔢',
     title: 'How to patch the multicore into the mixer (inputs)',
     summary: 'The setup-side opposite of winding the multicore back up. Carry the unravelled multicore to the back, connect each numbered cable to the matching input on the mixer — one-to-one. Two operational gotchas worth knowing: channel 6 vs 9, and channel 10. Outputs are covered in a separate video.',
-    taughtBy: 'Brother Michael & Mario (carrying)',
+    taughtBy: 'Brother Michael & Morayo (carrying)',
     videoUrl: 'https://youtube.com/shorts/DYDobSJURj4',
     videoLabel: 'Calvary CREW Training (6)',
     additionalVideos: [
