@@ -316,7 +316,38 @@
     }
     .action-row .owner { font-size: 11px; }
     footer { font-size: 10px; }
+  }  /* === VIDEO === */
+  .video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
   }
+  .video-wrap iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .video-fallback {
+    margin-top: 12px;
+    color: var(--grey);
+    font-size: 13px;
+  }
+  .video-fallback a {
+    color: var(--red);
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .video-fallback a:hover {
+    text-decoration: underline;
+  }
+
 </style>
 </head>
 <body>
@@ -336,6 +367,18 @@
     <h1>Training session — recap</h1>
     <div class="meta">Thursday 1st May 2026 · ~57 minutes · Led by Bolaji &amp; Scott</div>
   </header>
+
+  <!-- === Recording === -->
+  <section>
+    <h2><span class="num">00</span>The recording</h2>
+    <div class="video-wrap">
+      <iframe
+        src="https://drive.google.com/file/d/1Xs-ZmK59M0oBzTl5jZ_2r2uLkqKGcHUw/preview"
+        allow="autoplay"
+        allowfullscreen></iframe>
+    </div>
+    <p class="video-fallback">Trouble playing? <a href="https://drive.google.com/file/d/1Xs-ZmK59M0oBzTl5jZ_2r2uLkqKGcHUw/view" target="_blank" rel="noopener">Open on Google Drive →</a></p>
+  </section>
 
   <!-- === Who was there === -->
   <section>
