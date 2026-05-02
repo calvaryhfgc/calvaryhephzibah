@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Media Team Training — Sessions</title>
+<meta name="description" content="Calvary Media Team training sessions and recaps.">
+
+<meta property="og:title" content="Calvary Media Team — Training Sessions">
+<meta property="og:description" content="Recaps, action items and notes from each training session.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --red: #C41E2A;
+    --black: #0a0a0a;
+    --near-black: #1a1a1a;
+    --grey: #888;
+    --grey-light: #e0e0e0;
+    --bg-soft: #fafafa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--black);
+    line-height: 1.55;
+    font-size: 16px;
+    background: white;
+    padding: 24px 20px 64px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  /* === BREADCRUMB === */
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--grey);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .breadcrumb a {
+    color: var(--red);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb span.sep { margin: 0 8px; color: var(--grey-light); }
+
+  /* === HEADER === */
+  header {
+    border-bottom: 1px solid var(--grey-light);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(36px, 8vw, 56px);
+    font-weight: normal;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--black);
+    margin-bottom: 12px;
+  }
+  .subtitle {
+    color: var(--grey);
+    font-size: 16px;
+    max-width: 520px;
+  }
+
+  /* === SESSION LIST === */
+  .sessions { display: grid; gap: 16px; }
+
+  a.session {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 18px;
+    padding: 20px 22px;
+    background: var(--bg-soft);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.15s;
+    align-items: center;
+  }
+  a.session:hover {
+    background: white;
+    border-color: var(--near-black);
+    transform: translateX(2px);
+  }
+
+  .session-date {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 28px;
+    color: var(--red);
+    line-height: 1;
+    text-align: center;
+  }
+  .session-date .day {
+    font-size: 32px;
+    font-weight: normal;
+    display: block;
+  }
+  .session-date .month {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--grey);
+    font-style: normal;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .session-body { min-width: 0; }
+  .session-title {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--black);
+  }
+  .session-summary {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.45;
+  }
+
+  .session-arrow {
+    color: var(--red);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  /* === EMPTY STATE FOR FUTURE === */
+  .empty-future {
+    margin-top: 32px;
+    padding: 24px 22px;
+    background: white;
+    border: 1px dashed var(--grey-light);
+    border-radius: 10px;
+    color: var(--grey);
+    font-size: 14px;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* === FOOTER === */
+  footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--grey-light);
+    color: var(--grey);
+    font-size: 12px;
+    letter-spacing: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  footer .left { text-transform: uppercase; }
+
+  /* === MOBILE === */
+  @media (max-width: 540px) {
+    body { padding: 20px 16px 48px; }
+    h1 { font-size: 36px; }
+    a.session {
+      grid-template-columns: 60px 1fr auto;
+      gap: 14px;
+      padding: 16px 18px;
+    }
+    .session-date .day { font-size: 24px; }
+    .session-date .month { font-size: 11px; }
+    .session-title { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="breadcrumb">
+    <a href="../">Media Team</a>
+    <span class="sep">/</span>
+    Training
+  </nav>
+
+  <header>
+    <div class="eyebrow">Calvary · Media</div>
+    <h1>Training sessions</h1>
+    <p class="subtitle">Every training session has a recap with what was covered, who was there, and what we agreed.</p>
+  </header>
+
+  <div class="sessions">
+
+    <a href="2026-05-01/" class="session">
+      <div class="session-date">
+        <span class="day">01</span>
+        <span class="month">May 2026</span>
+      </div>
+      <div class="session-body">
+        <div class="session-title">Orientation &amp; Control Room walkthrough</div>
+        <div class="session-summary">First training. Covered the kit, demoed Control Room, set Sunday timings, agreed action items.</div>
+      </div>
+      <div class="session-arrow">→</div>
+    </a>
+
+  </div>
+
+  <div class="empty-future">More sessions will be added here as they happen.</div>
+
+  <footer>
+    <span class="left">Calvary Hephzibah Full Gospel Church · Manchester</span>
+    <span><a href="../" style="color:var(--grey); text-decoration:underline">Back to Media Team</a></span>
+  </footer>
+
+</div>
+
+</body>
+</html>
