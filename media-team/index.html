@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Media Team Training — Recap</title>
+<meta name="description" content="Recap from the Calvary Media Team training session, 1st May 2026.">
+
+<!-- Open Graph for nice link previews when shared on WhatsApp etc -->
+<meta property="og:title" content="Calvary Media Team — Training Recap">
+<meta property="og:description" content="What we covered, who's on this Sunday, action items.">
+<meta property="og:type" content="article">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --red: #C41E2A;
+    --red-deep: #8E0F1B;
+    --black: #0a0a0a;
+    --near-black: #1a1a1a;
+    --grey: #888;
+    --grey-light: #e0e0e0;
+    --bg-soft: #fafafa;
+    --bg-callout: #fff5f5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--black);
+    line-height: 1.55;
+    font-size: 16px;
+    background: white;
+    padding: 24px 20px 64px;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* === HEADER === */
+  header {
+    border-bottom: 1px solid var(--grey-light);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+
+  .eyebrow {
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(32px, 7vw, 48px);
+    font-weight: normal;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--black);
+    margin-bottom: 12px;
+  }
+
+  .meta {
+    color: var(--grey);
+    font-size: 14px;
+  }
+
+  /* === SECTION === */
+  section { margin-bottom: 36px; }
+
+  h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(22px, 4.5vw, 28px);
+    font-weight: normal;
+    color: var(--black);
+    margin-bottom: 14px;
+    padding-left: 14px;
+    border-left: 3px solid var(--red);
+    line-height: 1.2;
+  }
+
+  h2 .num {
+    color: var(--red);
+    font-weight: 700;
+    font-style: normal;
+    margin-right: 10px;
+    font-size: 0.7em;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+    vertical-align: 0.05em;
+  }
+
+  p { margin-bottom: 12px; }
+
+  /* === ATTENDEES PILLS === */
+  .attendees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .pill {
+    background: #f4f4f4;
+    border: 1px solid var(--grey-light);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 14px;
+    color: #333;
+  }
+  .pill.lead {
+    background: var(--red);
+    color: white;
+    border-color: var(--red);
+    font-weight: 600;
+  }
+
+  .note-small {
+    color: var(--grey);
+    font-size: 14px;
+    font-style: italic;
+  }
+
+  /* === KEY POINTS === */
+  ul.points {
+    list-style: none;
+  }
+  ul.points li {
+    position: relative;
+    padding-left: 22px;
+    margin-bottom: 12px;
+  }
+  ul.points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 10px;
+    height: 2px;
+    background: var(--red);
+  }
+  ul.points li strong {
+    color: var(--black);
+  }
+
+  /* === KEYS BOX === */
+  .keys-box {
+    background: var(--near-black);
+    color: white;
+    padding: 20px 24px;
+    border-radius: 10px;
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .key-item .label {
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .key-item .value {
+    font-family: 'Courier New', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 4px;
+  }
+
+  /* === SUNDAY CALLOUT === */
+  .sunday-box {
+    background: var(--bg-callout);
+    border-left: 4px solid var(--red);
+    padding: 16px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  .sunday-box strong { color: var(--red); }
+
+  /* === ROSTER === */
+  .roster {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .roster-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-soft);
+    border-radius: 6px;
+    font-size: 15px;
+  }
+  .roster-row .name { font-weight: 600; }
+  .roster-row .when { color: var(--grey); font-size: 14px; text-align: right; }
+
+  /* === ACTION ITEMS === */
+  .actions {
+    display: grid;
+    gap: 10px;
+  }
+  .action-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--bg-soft);
+    border-radius: 6px;
+    font-size: 15px;
+  }
+  .action-row .owner {
+    font-weight: 700;
+    color: var(--red);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding-top: 1px;
+  }
+
+  /* === LINKS BAR === */
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--near-black);
+    color: white;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  .links a:hover {
+    background: var(--red);
+  }
+  .links a.secondary {
+    background: white;
+    color: var(--near-black);
+    border: 1px solid var(--grey-light);
+  }
+  .links a.secondary:hover {
+    background: var(--bg-soft);
+    border-color: var(--near-black);
+  }
+
+  /* === FOOTER === */
+  footer {
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--grey-light);
+    color: var(--grey);
+    font-size: 12px;
+    letter-spacing: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: space-between;
+  }
+  footer .left { text-transform: uppercase; }
+
+  /* === MOBILE === */
+  @media (max-width: 540px) {
+    body { padding: 20px 16px 48px; }
+    h1 { font-size: 32px; }
+    h2 { font-size: 22px; padding-left: 12px; }
+    .keys-box { grid-template-columns: 1fr; gap: 14px; }
+    .key-item .value { font-size: 24px; }
+    .roster-row {
+      flex-direction: column;
+      gap: 2px;
+      align-items: flex-start;
+    }
+    .roster-row .when { text-align: left; }
+    .action-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .action-row .owner { font-size: 11px; }
+    footer { font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Calvary · Media</div>
+    <h1>Training session — recap</h1>
+    <div class="meta">Thursday 1st May 2026 · ~57 minutes · Led by Bolaji &amp; Scott</div>
+  </header>
+
+  <!-- === Who was there === -->
+  <section>
+    <h2><span class="num">01</span>Who was there</h2>
+    <div class="attendees">
+      <span class="pill lead">Bolaji</span>
+      <span class="pill lead">Scott</span>
+      <span class="pill">Noah</span>
+      <span class="pill">Tavoi</span>
+      <span class="pill">Terrell</span>
+      <span class="pill">Chinedu (joined late)</span>
+    </div>
+    <p class="note-small">Scott will run through the kit setup with Chinedu in person to cover what he missed.</p>
+  </section>
+
+  <!-- === Why we're doing this === -->
+  <section>
+    <h2><span class="num">02</span>Why we're doing this</h2>
+    <p>Calvary is already streaming live on YouTube every Sunday. The goal of building out a media team is so people who can't be in the room — friends, family, grandparents in another country, someone watching from their bedroom — can still be part of what's happening. Serving on media is a meaningful way to use your time and skill to reach more people than handing out leaflets ever could.</p>
+  </section>
+
+  <!-- === The kit === -->
+  <section>
+    <h2><span class="num">03</span>The kit, explained</h2>
+    <ul class="points">
+      <li><strong>Phone (camera).</strong> Mounted on a stand at the front. Runs DroidCam OBS. Replaces the old broadcast camera — better quality, faster setup.</li>
+      <li><strong>Laptop.</strong> Lives in the wheely box. Runs Zoom and connects to the projector inside the church via a long cable.</li>
+      <li><strong>OBS.</strong> Software that takes the camera feed and pushes it out. Used to do everything; now mostly just broadcasts the video to Zoom.</li>
+      <li><strong>Control Room.</strong> Brand new. The "operator app" — where lyrics, scriptures, lower-thirds, images and announcements get pushed to the screen. Replaces the old convoluted OBS workflow.</li>
+      <li><strong>Wheely box.</strong> Everything packs into one rolling case. Setup at church now takes ~15 minutes, not an hour.</li>
+    </ul>
+  </section>
+
+  <!-- === Control Room === -->
+  <section>
+    <h2><span class="num">04</span>The Control Room — what we covered</h2>
+    <ul class="points">
+      <li>Logging in (PIN <strong>1234</strong>) and how the live preview lets you see exactly what's about to go on screen.</li>
+      <li>Pushing speaker names to a lower-third banner (e.g. "Dr Ayo · with pastor"). Saved speakers can be reused; new ones can be typed on the fly.</li>
+      <li>Walking through a Sunday set list — clicking each lyric line to push it. Skip ahead, jump back, blank the screen.</li>
+      <li>Bible verses by reference (e.g. <em>Philippians 4:13</em>). Single verse or ranges with Next/Previous to walk through them.</li>
+      <li>Pushing images, sermon thumbnails, communion graphics, and announcement cards.</li>
+      <li>Display settings — moving lyric position (top / middle / bottom) and adjusting distance from edge so they don't cover the singer's face.</li>
+      <li>The Admin view (PIN <strong>2610</strong>) for uploading new images and saving recurring speaker names.</li>
+    </ul>
+
+    <div class="keys-box">
+      <div class="key-item">
+        <div class="label">Operator PIN</div>
+        <div class="value">1234</div>
+      </div>
+      <div class="key-item">
+        <div class="label">Admin PIN</div>
+        <div class="value">2610</div>
+      </div>
+    </div>
+
+    <div class="links">
+      <a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/" target="_blank" rel="noopener">Open Control Room →</a>
+      <a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/admin.html" target="_blank" rel="noopener" class="secondary">Open Admin →</a>
+    </div>
+  </section>
+
+  <!-- === Sunday timings === -->
+  <section>
+    <h2><span class="num">05</span>Sunday timings</h2>
+    <div class="sunday-box">
+      Service starts <strong>10:30 AM</strong>. Setup now takes about 15 minutes.<br>
+      Aim to be at church between <strong>9:30 and 10:00</strong> — 10:00 at the latest.
+    </div>
+  </section>
+
+  <!-- === Who's on this Sunday === -->
+  <section>
+    <h2><span class="num">06</span>Who's on this Sunday (4th May)</h2>
+    <div class="roster">
+      <div class="roster-row"><span class="name">Noah</span><span class="when">Likely. Aim for 9:30–10:00.</span></div>
+      <div class="roster-row"><span class="name">Chinedu</span><span class="when">Will try to be early.</span></div>
+      <div class="roster-row"><span class="name">Tavoi &amp; Terrell</span><span class="when">Not this week — week after.</span></div>
+      <div class="roster-row"><span class="name">Scott &amp; Bolaji</span><span class="when">On for setup &amp; support.</span></div>
+    </div>
+  </section>
+
+  <!-- === Action items === -->
+  <section>
+    <h2><span class="num">07</span>Action items</h2>
+    <div class="actions">
+      <div class="action-row"><span class="owner">Bolaji</span><span>Fix the display-position bug so lyrics drop fully to the bottom edge as expected.</span></div>
+      <div class="action-row"><span class="owner">Bolaji</span><span>Refresh outdated images and announcement graphics in Control Room.</span></div>
+      <div class="action-row"><span class="owner">Bolaji</span><span>Improve lyric/text legibility on screen (better contrast against camera feed).</span></div>
+      <div class="action-row"><span class="owner">The team</span><span>Source a power cable extension + adapter so the camera phone stays plugged in throughout the service.</span></div>
+      <div class="action-row"><span class="owner">Scott</span><span>Help Auntie Pauline set up Starlink at church on Sunday — testing as a longer-term internet fix.</span></div>
+      <div class="action-row"><span class="owner">Scott</span><span>Walk through the kit setup with Chinedu in person on Sunday to cover what he missed.</span></div>
+      <div class="action-row"><span class="owner">Bolaji</span><span>Send recording link &amp; this recap to all attendees, including new team members.</span></div>
+    </div>
+  </section>
+
+  <!-- === One more thing === -->
+  <section>
+    <h2><span class="num">08</span>One more thing</h2>
+    <p>You're already good at this. You watch reels, you know what looks good, you can spot bad framing in two seconds. We're just pointing what you already do at something that matters.</p>
+    <p>Show up. Be willing. Care about the people watching. That's the whole deal.</p>
+  </section>
+
+  <footer>
+    <span class="left">Calvary Hephzibah Full Gospel Church · Manchester</span>
+    <span>Recap · 1st May 2026</span>
+  </footer>
+
+</div>
+
+</body>
+</html>
