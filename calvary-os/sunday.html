@@ -205,11 +205,6 @@
           <div id="songs-loading" style="padding:20px 0;color:var(--ink-4);font-size:14px;">Loading…</div>
           <div id="songs-content" style="display:none;">
             <div id="songs-list"></div>
-            <div style="background:var(--amber-light);border:1.5px solid var(--amber-mid);border-radius:var(--r14);padding:14px 16px;margin-top:8px;">
-              <div style="font-size:12px;font-weight:600;color:var(--amber);margin-bottom:4px;">Missing lyric slides?</div>
-              <div style="font-size:14px;color:var(--ink-2);margin-bottom:10px;">Use the Lyric Formatter to generate slides for any song.</div>
-              <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-white btn-sm" style="text-decoration:none;">Open Lyric Formatter →</a>
-            </div>
           </div>
         </div>
 
@@ -270,7 +265,8 @@
           </div>
           <div class="card">
             <div class="card-label">Useful links</div>
-            <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--ink-5);text-decoration:none;color:var(--ink-2);font-size:15px;font-weight:500;">Song Lyric Formatter <span style="color:var(--ink-4);">→</span></a>
+            <a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--ink-5);text-decoration:none;color:var(--ink-2);font-size:15px;font-weight:500;">Control Room (operator) <span style="color:var(--ink-4);">→</span></a>
+            <a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/admin.html" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--ink-5);text-decoration:none;color:var(--ink-2);font-size:15px;font-weight:500;">Control Room (admin) <span style="color:var(--ink-4);">→</span></a>
             <a href="https://calvaryhephzibah.co.uk" target="_blank" style="display:flex;align-items:center;justify-content:space-between;padding:13px 0;text-decoration:none;color:var(--ink-2);font-size:15px;font-weight:500;">Church website <span style="color:var(--ink-4);">→</span></a>
           </div>
         </div>
@@ -462,13 +458,21 @@ function renderService(s) {
     html += `<div class="song-section-label">${sec}</div>`;
     ss.forEach(song => {
       html += `<div class="song-row">
-        <div><div class="song-row-title">${song.title}</div></div>
-        ${song.lyrics
-          ? `<a href="${song.lyrics}" target="_blank" class="btn btn-white btn-sm" style="text-decoration:none;flex-shrink:0;">📥 Lyrics</a>`
-          : `<a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;flex-shrink:0;font-size:12px;">Generate →</a>`}
+        <div style="flex:1;min-width:0;"><div class="song-row-title">${song.title}</div></div>
       </div>`;
     });
   });
+  // Lyrics are now pushed live from Control Room — link there instead of per-song downloads
+  if (html) {
+    html += `<a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/" target="_blank"
+      style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding:12px 14px;background:#0A0A0A;border-radius:12px;text-decoration:none;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:2px;">🎛 Lyrics on screen</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.4;">Slides pushed live from Control Room — no downloads needed.</div>
+      </div>
+      <span style="flex-shrink:0;padding:6px 12px;background:white;color:#0A0A0A;font-size:12px;font-weight:700;border-radius:100px;">Open →</span>
+    </a>`;
+  }
   document.getElementById('songs-list').innerHTML = html || '<div style="font-size:14px;color:var(--ink-4);">No songs added yet.</div>';
   document.getElementById('songs-loading').style.display = 'none';
   document.getElementById('songs-content').style.display = 'block';

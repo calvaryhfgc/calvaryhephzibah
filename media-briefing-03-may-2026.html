@@ -122,13 +122,6 @@
         .frame-tip { display:flex; align-items:center; gap:9px; font-size:14px; color:rgba(255,255,255,0.82); }
         .frame-dot { width:7px; height:7px; border-radius:50%; background:#4ADE80; flex-shrink:0; }
 
-        /* FORMATTER */
-        .fmt-card { background:#2A2A2A; border-radius:var(--r); padding:18px 16px; color:white; }
-        .fmt-steps { display:flex; flex-direction:column; gap:8px; margin:12px 0; }
-        .fmt-step { display:flex; align-items:flex-start; gap:9px; font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; }
-        .fmt-n { width:21px; height:21px; border-radius:6px; background:rgba(255,255,255,0.12); color:white; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
-        .fmt-btn { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:14px; padding:13px; background:white; color:#2A2A2A; font-size:14px; font-weight:700; text-decoration:none; border-radius:11px; min-height:48px; }
-
         /* CHECKLIST */
         .chk { display:flex; flex-direction:column; gap:2px; }
         .chk-row { display:flex; align-items:center; gap:11px; padding:11px 10px; border-radius:10px; cursor:pointer; min-height:48px; transition:background 0.12s; -webkit-user-select:none; user-select:none; }
@@ -230,19 +223,26 @@
             <div class="ch"><div class="ci">🎶</div><h2 class="ct">Today's Songs</h2></div>
             <div class="cb">
                 <div class="sbadge sb-worship">🎶 Worship &amp; Media</div>
+                <div style="background:#FEF3C7;border-radius:10px;padding:12px;border-left:3px solid #F59E0B;margin-bottom:10px;">
+                    <p style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:3px;">⏳ Set list pending</p>
+                    <p style="font-size:12px;color:#78350F;line-height:1.5;">Worship leader's set will be confirmed during the week. This card will update with songs as they come in.</p>
+                </div>
                 <div style="display:flex;flex-direction:column;gap:9px;">
-                    <div style="background:#FEF3C7;border-radius:10px;padding:12px;border-left:3px solid #F59E0B;margin-bottom:6px;">
-                        <p style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:3px;">⏳ Set list pending</p>
-                        <p style="font-size:12px;color:#78350F;line-height:1.5;">Worship leader's set will be confirmed during the week. This card will update with songs and lyric links as they come in.</p>
-                    </div>
                     <div class="slabel">Praise</div>
-                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#FEE2E2;">🎺</div><div class="sname">Praise medley — TBC</div></div><span class="sdl pend">⏳ Pending</span></div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#FEE2E2;">🎺</div><div class="sname">TBC</div></div></div>
                     <div class="slabel" style="margin-top:3px;">Worship</div>
-                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#EDE9FE;">🙏</div><div class="sname">Worship songs — TBC</div></div><span class="sdl pend">⏳ Pending</span></div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#EDE9FE;">🙏</div><div class="sname">TBC</div></div></div>
                     <div class="slabel" style="margin-top:3px;">💰 Offering</div>
-                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#DCFCE7;">💚</div><div class="sname">Offering song — TBC</div></div><span class="sdl pend">⏳ Pending</span></div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#DCFCE7;">💚</div><div class="sname">TBC</div></div></div>
                     <div class="slabel" style="margin-top:3px;">🏁 End of Service</div>
-                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#FEF3C7;">✨</div><div class="sname">End of service — TBC</div></div><span class="sdl pend">⏳ Pending</span></div>
+                    <div class="ssong"><div class="ssong-info"><div class="sicon" style="background:#FEF3C7;">✨</div><div class="sname">TBC</div></div></div>
+                </div>
+                <div style="margin-top:14px;padding:13px 14px;background:#0A0A0A;border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:3px;">🎛 Lyrics on screen</div>
+                        <div style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.4;">Slides are pushed live from the Control Room — no downloads needed.</div>
+                    </div>
+                    <a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/" target="_blank" style="flex-shrink:0;display:inline-flex;align-items:center;padding:8px 14px;background:white;color:#0A0A0A;font-size:12px;font-weight:700;text-decoration:none;border-radius:100px;white-space:nowrap;">Open →</a>
                 </div>
             </div>
         </div>
@@ -257,7 +257,7 @@
             <div class="sc-ref">Philippians 3:1–21</div>
             <div class="sc-text">"But whatever were gains to me I now consider loss for the sake of Christ… I want to know Christ — yes, to know the power of his resurrection and participation in his sufferings, becoming like him in his death, and so, somehow, attaining to the resurrection from the dead… I press on toward the goal to win the prize for which God has called me heavenward in Christ Jesus."</div>
             <p style="margin-top:10px;font-size:12px;color:rgba(255,255,255,0.45);">📺 Display on screen as Pastor Kemi reads.</p>
-            <span style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:9px 15px;background:rgba(184,134,11,0.15);color:rgba(184,134,11,0.85);font-size:12px;font-weight:600;border-radius:100px;border:1px solid rgba(184,134,11,0.3);">⏳ Philippians 3:1–21 slides pending</span>
+            <span style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:9px 15px;background:rgba(184,134,11,0.15);color:rgba(184,134,11,0.85);font-size:12px;font-weight:600;border-radius:100px;border:1px solid rgba(184,134,11,0.3);">🎛 Pushed live from Control Room — verse-by-verse</span>
         </div>
     </div>
 
@@ -298,21 +298,6 @@
         </div>
     </div>
 
-    <!-- LYRIC FORMATTER -->
-    <div data-roles="media worship">
-        <div class="fmt-card">
-            <div class="ch" style="padding:0;margin-bottom:10px;"><div class="ci" style="background:rgba(255,255,255,0.07);">🔧</div><h2 class="ct" style="color:white;">Generate Lyrics</h2></div>
-            <div class="sbadge" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.75);">🎶 Worship &amp; Media</div>
-            <p style="font-size:13px;color:rgba(255,255,255,0.6);margin-bottom:2px;">Need slides for a song not pre-prepared?</p>
-            <div class="fmt-steps">
-                <div class="fmt-step"><div class="fmt-n">1</div><span>Open Lyric Formatter below</span></div>
-                <div class="fmt-step"><div class="fmt-n">2</div><span>Enter title &amp; lyrics — 2 lines per slide, blank line between each pair</span></div>
-                <div class="fmt-step"><div class="fmt-n">3</div><span>Generate → Download ZIP → Extract → Upload to OBS</span></div>
-            </div>
-            <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="fmt-btn">🔧 Open Lyric Formatter</a>
-        </div>
-    </div>
-
     <!-- CHECKLIST -->
     <div data-roles="media">
         <div class="card">
@@ -325,8 +310,9 @@
                     <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Phone mounted &amp; livestream confirmed live</div></div>
                     <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Camera framing checked — tight headroom</div></div>
                     <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Worship set list received from worship leader</div></div>
-                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">All lyric slides downloaded (Praise / Worship / Offering / End)</div></div>
-                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Scripture slides — Philippians 3:1–21</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">All songs loaded into Control Room set list (admin)</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Control Room operator app open &amp; signed in (lyrics/scripture)</div></div>
+                    <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">OBS overlay browser source verified — slides pushing live</div></div>
                     <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Sermon thumbnail ready ✅ (Dr Titi Sodipo)</div></div>
                     <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Anniversary 'Reasons to be Thankful' video cued for announcements</div></div>
                     <div class="chk-row" onclick="tick(this)"><div class="chk-box"></div><div class="chk-label">Screen layouts tested before service</div></div>

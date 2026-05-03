@@ -56,7 +56,7 @@
         <div class="nav-section-label">Worship</div>
         <div class="nav-item active" onclick="COS.navTo('team',this)">👥 Team</div>
         <div class="nav-item" onclick="COS.navTo('songs',this)">🎵 Song library</div>
-        <div class="nav-item" onclick="COS.navTo('formatter',this)">📝 Lyric formatter</div>
+        <div class="nav-item" onclick="COS.navTo('controlroom',this)">🎛 Control Room</div>
         <div class="nav-item" onclick="COS.navTo('guidance',this)">💡 Guidance</div>
         <div class="nav-item" onclick="COS.navTo('rebuild',this)">🔄 Rebuild plan</div>
       </div>
@@ -135,31 +135,30 @@
           <div id="song-library"></div>
         </div>
 
-        <!-- LYRIC FORMATTER -->
-        <div class="page" id="pg-formatter">
+        <!-- CONTROL ROOM -->
+        <div class="page" id="pg-controlroom">
           <div class="page-header">
             <div class="page-eyebrow">Worship Tools</div>
-            <div class="page-title">Lyric formatter</div>
-            <div class="page-sub">Generate lyric slides for any song. Format lyrics, export as images for OBS.</div>
+            <div class="page-title">Control Room</div>
+            <div class="page-sub">How song lyrics and scripture get on screen during service.</div>
           </div>
           <div class="card" style="margin-bottom:14px;">
             <div class="card-label">How it works</div>
             <div style="display:flex;flex-direction:column;gap:8px;">
-              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">1. Enter the song title and paste the lyrics below — two lines per slide, with a blank line between each pair.</div>
-              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">2. Click Generate. Download the ZIP file.</div>
-              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">3. Extract the ZIP and upload the images to OBS.</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">1. Songs live in the Control Room library. Each song is stored with lyrics pre-split into 2-line slides.</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">2. Each Sunday's set list is loaded in the admin app — songs in order, plus scripture and any extras.</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">3. The operator runs the operator app on a phone or laptop during service and taps Next/Previous to push slides live.</div>
+              <div style="font-size:13px;color:var(--ink-2);line-height:1.6;">4. The OBS overlay updates instantly — no slide downloads, no ZIPs, no per-song setup.</div>
             </div>
           </div>
           <div class="card" style="margin-bottom:14px;">
-            <div class="card-label">Example format</div>
-            <pre style="font-family:monospace;font-size:12px;color:var(--ink-3);line-height:1.8;white-space:pre-wrap;background:var(--bg-3);padding:12px;border-radius:var(--r8);">He is Lord, He is Lord
-He is risen from the dead
-
-And He is Lord, every knee
-Shall bow, every tongue confess</pre>
-            <div style="font-size:11px;color:var(--ink-4);margin-top:8px;">Each pair of lines = one slide. Blank line = separator.</div>
+            <div class="card-label">For worship leaders</div>
+            <div style="font-size:13px;color:var(--ink-2);line-height:1.55;margin-bottom:10px;">Send your set list to the worship admin (or load it yourself in the admin app). Any new song needs to be added to the library — title, artist, lyrics 2 lines per pair separated by blank lines.</div>
           </div>
-          <a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-red" style="text-decoration:none;display:inline-block;">Open Lyric Formatter ↗</a>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/admin.html" target="_blank" class="btn btn-red" style="text-decoration:none;display:inline-block;">Open Control Room admin ↗</a>
+            <a href="https://calvaryhfgc.github.io/calvaryhephzibah/control-room/" target="_blank" class="btn btn-white btn-sm" style="text-decoration:none;display:inline-block;">Open operator app ↗</a>
+          </div>
         </div>
 
         <!-- GUIDANCE -->
@@ -224,7 +223,7 @@ Shall bow, every tongue confess</pre>
     <div class="mob-nav-items">
       <button class="mob-nav-btn active" onclick="COS.navTo('team',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5" cy="4" r="2"/><path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/></svg>Team</button>
       <button class="mob-nav-btn" onclick="COS.navTo('songs',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v7a2.5 2.5 0 11-1-2V5L5 6V3l5-1z"/></svg>Songs</button>
-      <button class="mob-nav-btn" onclick="COS.navTo('formatter',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="10" height="10" rx="1"/></svg>Formatter</button>
+      <button class="mob-nav-btn" onclick="COS.navTo('controlroom',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="10" height="10" rx="1"/></svg>Control</button>
       <button class="mob-nav-btn" onclick="COS.navTo('guidance',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/></svg>Guidance</button>
       <button class="mob-nav-btn" onclick="COS.navTo('rebuild',this)"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 7c0-2.8 2.2-5 5-5"/></svg>Plan</button>
     </div>
@@ -280,11 +279,6 @@ function renderSongs(){
       <div class="li-content">
         <div class="li-title">${s.title}</div>
         <div class="li-sub">${s.type==='offering'?'Offering song':'Worship'}</div>
-      </div>
-      <div class="li-right">
-        ${s.lyrics
-          ? `<a href="${s.lyrics}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;">📥 Lyrics</a>`
-          : `<a href="https://calvaryhephzibah.co.uk/songlyricformatter" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none;">Generate →</a>`}
       </div>
     </div>`).join('');
 }
