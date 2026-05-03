@@ -1632,7 +1632,10 @@ async function loadPlan(targetDate) {
   if (!plans || plans.length === 0) {
     plan = null;
     renderEmptyPlan();
-    renderOrderOfService([]);
+    // Even with no song-plan, the briefing might still have an order of
+    // service published. Try the briefing fallback so the operator at
+    // least sees the running order.
+    await loadOrderOfService(null);
     return;
   }
 
@@ -2106,10 +2109,18 @@ let speakers = [];
 let currentLowerThird = null;
 let orderOfService = [];
 
+// Load OOS for the given plan: DB first, briefing fallback.
+//
+// DB path: read control_room_plan_speakers, render with real UUIDs.
+// Briefing path: if the DB has nothing for this date, fetch briefings.json,
+// find the matching briefing, parse the order of service from the HTML,
+// and render with synthetic IDs. This means the briefing is the canonical
+// source — admins edit one HTML file and it flows everywhere.
 async function loadOrderOfService(planId) {
   if (!planId) {
-    renderOrderOfService([]);
-    return;
+    // No plan exists for this date. Try the briefing — there might still
+    // be one published even if the song-plan hasn't been built yet.
+    return loadOrderOfServiceFromBriefing();
   }
   const { data, error } = await client
     .from('control_room_plan_speakers')
@@ -2117,8 +2128,82 @@ async function loadOrderOfService(planId) {
     .eq('plan_id', planId)
     .order('position');
   if (error) { console.error('OOS load:', error); return; }
-  orderOfService = data || [];
-  renderOrderOfService(orderOfService);
+  if (data && data.length) {
+    orderOfService = data;
+    renderOrderOfService(orderOfService);
+    return;
+  }
+  // No DB rows — fall back to parsing the briefing.
+  return loadOrderOfServiceFromBriefing();
+}
+
+async function loadOrderOfServiceFromBriefing() {
+  try {
+    const indexResp = await fetch('../briefings.json?_=' + Date.now());
+    if (!indexResp.ok) { renderOrderOfService([]); return; }
+    const index = await indexResp.json();
+    const target = (index.briefings || []).find(b => b.service_date === currentPlanDate);
+    if (!target) { renderOrderOfService([]); return; }
+
+    const briefingResp = await fetch('../' + target.file + '?_=' + Date.now());
+    if (!briefingResp.ok) { renderOrderOfService([]); return; }
+    const html = await briefingResp.text();
+    const parsed = parseBriefingOrder(html, currentPlanDate);
+    orderOfService = parsed;
+    renderOrderOfService(orderOfService);
+  } catch (e) {
+    console.warn('briefing OOS fallback failed:', e);
+    renderOrderOfService([]);
+  }
+}
+
+// Parse order of service rows out of a briefing HTML file. Returns rows
+// with the same shape as control_room_plan_speakers but with synthetic IDs
+// so push buttons can locate the row in memory.
+function parseBriefingOrder(html, serviceDate) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const rows = Array.from(doc.querySelectorAll('.svc-row'));
+  return rows.map((row, i) => {
+    const nameEl = row.querySelector('.svc-name');
+    const personEl = row.querySelector('.svc-person');
+    let role = nameEl ? nameEl.textContent.trim() : '';
+    let name = personEl ? personEl.textContent.trim() : '';
+    let notes = null;
+
+    // Briefing often combines role + scripture in svc-name (e.g. "Bible
+    // Reading — Philippians 3:1–21"). Split on em-dash so the operator
+    // sees clean lower-thirds and a notes line.
+    const dashSplit = role.split(' — ');
+    if (dashSplit.length > 1) {
+      role = dashSplit[0].trim();
+      notes = dashSplit.slice(1).join(' — ').trim();
+    }
+
+    // The briefing uses "Worship Team 🎶" for the worship row. In the
+    // operator UI we want the row labelled "Worship" with no pushable
+    // name — match the existing convention (name=null, notes='Worship Team').
+    if (/worship team/i.test(name)) {
+      notes = 'Worship Team';
+      name = null;
+    }
+
+    // Sermon row in the briefing has type='ser' (.svc-row.ser). The
+    // svc-name there is the sermon TITLE; svc-person is the preacher.
+    // Operator UI convention: role='Sermon', name=preacher, notes=title.
+    if (row.classList.contains('ser')) {
+      notes = role; // role currently holds the sermon title
+      role = 'Sermon';
+    }
+
+    return {
+      id: 'briefing-' + serviceDate + '-' + (i + 1),
+      position: i + 1,
+      role: role || 'Item ' + (i + 1),
+      name: name || null,
+      notes: notes,
+      image_id: null
+    };
+  });
 }
 
 function renderOrderOfService(items) {
