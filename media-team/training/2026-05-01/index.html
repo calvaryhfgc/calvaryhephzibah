@@ -29,7 +29,11 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { -webkit-text-size-adjust: 100%; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 64px; /* leaves room under sticky breadcrumb when jumping */
+  }
 
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -37,21 +41,37 @@
     line-height: 1.55;
     font-size: 16px;
     background: white;
-    padding: 24px 20px 64px;
+    padding: 0 0 64px;
   }
 
   .wrap {
     max-width: 720px;
     margin: 0 auto;
+    padding: 0 20px;
   }
 
-  /* === BREADCRUMB === */
+  /* === BREADCRUMB (sticky, top of page) === */
+  .breadcrumb-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: saturate(140%) blur(8px);
+    -webkit-backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid var(--grey-light);
+    margin-bottom: 28px;
+  }
   .breadcrumb {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 14px 20px;
     font-size: 12px;
     color: var(--grey);
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .breadcrumb a {
     color: var(--red);
@@ -60,6 +80,9 @@
   }
   .breadcrumb a:hover { text-decoration: underline; }
   .breadcrumb span.sep { margin: 0 8px; color: var(--grey-light); }
+
+  /* Spacer that the body content uses below the sticky bar */
+  .body-top { padding-top: 24px; }
 
   /* === HEADER === */
   header {
@@ -282,6 +305,95 @@
     border-color: var(--near-black);
   }
 
+  /* === IN-PAGE TABLE OF CONTENTS === */
+  .toc {
+    background: var(--bg-soft);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 32px;
+  }
+  .toc-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 10px;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px 16px;
+  }
+  .toc li {
+    counter-increment: toc;
+  }
+  .toc a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 8px 4px;
+    color: var(--black);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    transition: background 0.12s, color 0.12s;
+  }
+  .toc a::before {
+    content: counter(toc, decimal-leading-zero);
+    color: var(--red);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    width: 22px;
+  }
+  .toc a:hover, .toc a:focus {
+    background: white;
+    color: var(--red);
+    outline: none;
+  }
+
+  /* === BACK TO TOP === */
+  .back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--near-black);
+    color: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s, background 0.15s;
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .back-to-top:hover { background: var(--red); }
+  .back-to-top svg { width: 20px; height: 20px; }
+
+  /* === SECTION ANCHOR OFFSET (so jumps don't hide under sticky header) === */
+  section[id] {
+    scroll-margin-top: 64px;
+  }
+
   /* === FOOTER === */
   footer {
     margin-top: 48px;
@@ -299,9 +411,12 @@
 
   /* === MOBILE === */
   @media (max-width: 540px) {
-    body { padding: 20px 16px 48px; }
+    .wrap { padding: 0 16px; }
+    .breadcrumb { padding: 12px 16px; font-size: 11px; }
     h1 { font-size: 32px; }
     h2 { font-size: 22px; padding-left: 12px; }
+    .toc ol { grid-template-columns: 1fr; }
+    .toc { padding: 14px 16px; }
     .keys-box { grid-template-columns: 1fr; gap: 14px; }
     .key-item .value { font-size: 24px; }
     .roster-row {
@@ -316,6 +431,12 @@
     }
     .action-row .owner { font-size: 11px; }
     footer { font-size: 10px; }
+    .back-to-top {
+      width: 44px;
+      height: 44px;
+      bottom: 16px;
+      right: 16px;
+    }
   }  /* === VIDEO === */
   .video-wrap {
     position: relative;
@@ -352,8 +473,8 @@
 </head>
 <body>
 
-<div class="wrap">
-
+<!-- Sticky breadcrumb bar -->
+<div class="breadcrumb-bar">
   <nav class="breadcrumb">
     <a href="../../">Media Team</a>
     <span class="sep">/</span>
@@ -361,6 +482,9 @@
     <span class="sep">/</span>
     1st May 2026
   </nav>
+</div>
+
+<div class="wrap body-top">
 
   <header>
     <div class="eyebrow">Calvary · Media</div>
@@ -368,8 +492,23 @@
     <div class="meta">Thursday 1st May 2026 · ~57 minutes · Led by Bolaji &amp; Scott</div>
   </header>
 
+  <!-- In-page table of contents -->
+  <nav class="toc" aria-label="Page sections">
+    <div class="toc-label">On this page</div>
+    <ol>
+      <li><a href="#recording">The recording</a></li>
+      <li><a href="#attendees">Who was there</a></li>
+      <li><a href="#why">Why we're doing this</a></li>
+      <li><a href="#kit">The kit, explained</a></li>
+      <li><a href="#control-room">Control Room</a></li>
+      <li><a href="#timings">Sunday timings</a></li>
+      <li><a href="#sunday">This Sunday</a></li>
+      <li><a href="#actions">Action items</a></li>
+    </ol>
+  </nav>
+
   <!-- === Recording === -->
-  <section>
+  <section id="recording">
     <h2><span class="num">00</span>The recording</h2>
     <div class="video-wrap">
       <iframe
@@ -381,7 +520,7 @@
   </section>
 
   <!-- === Who was there === -->
-  <section>
+  <section id="attendees">
     <h2><span class="num">01</span>Who was there</h2>
     <div class="attendees">
       <span class="pill lead">Bolaji</span>
@@ -394,13 +533,13 @@
   </section>
 
   <!-- === Why we're doing this === -->
-  <section>
+  <section id="why">
     <h2><span class="num">02</span>Why we're doing this</h2>
     <p>Calvary is already streaming live on YouTube every Sunday. The goal of building out a media team is so people who can't be in the room — friends, family, grandparents in another country, someone watching from their bedroom — can still be part of what's happening. Serving on media is a meaningful way to use your time and skill to reach more people than handing out leaflets ever could.</p>
   </section>
 
   <!-- === The kit === -->
-  <section>
+  <section id="kit">
     <h2><span class="num">03</span>The kit, explained</h2>
     <ul class="points">
       <li><strong>Phone (camera).</strong> Mounted on a stand at the front. Runs DroidCam OBS. Replaces the old broadcast camera — better quality, faster setup.</li>
@@ -412,7 +551,7 @@
   </section>
 
   <!-- === Control Room === -->
-  <section>
+  <section id="control-room">
     <h2><span class="num">04</span>The Control Room — what we covered</h2>
     <ul class="points">
       <li>Logging in (PIN <strong>1234</strong>) and how the live preview lets you see exactly what's about to go on screen.</li>
@@ -442,7 +581,7 @@
   </section>
 
   <!-- === Sunday timings === -->
-  <section>
+  <section id="timings">
     <h2><span class="num">05</span>Sunday timings</h2>
     <div class="sunday-box">
       Service starts <strong>10:30 AM</strong>. Setup now takes about 15 minutes.<br>
@@ -451,7 +590,7 @@
   </section>
 
   <!-- === Who's on this Sunday === -->
-  <section>
+  <section id="sunday">
     <h2><span class="num">06</span>Who's on this Sunday (4th May)</h2>
     <div class="roster">
       <div class="roster-row"><span class="name">Noah</span><span class="when">Likely. Aim for 9:30–10:00.</span></div>
@@ -462,7 +601,7 @@
   </section>
 
   <!-- === Action items === -->
-  <section>
+  <section id="actions">
     <h2><span class="num">07</span>Action items</h2>
     <div class="actions">
       <div class="action-row"><span class="owner">Bolaji</span><span>Fix the display-position bug so lyrics drop fully to the bottom edge as expected.</span></div>
@@ -476,7 +615,7 @@
   </section>
 
   <!-- === One more thing === -->
-  <section>
+  <section id="closing">
     <h2><span class="num">08</span>One more thing</h2>
     <p>You're already good at this. You watch reels, you know what looks good, you can spot bad framing in two seconds. We're just pointing what you already do at something that matters.</p>
     <p>Show up. Be willing. Care about the people watching. That's the whole deal.</p>
@@ -488,6 +627,42 @@
   </footer>
 
 </div>
+
+<!-- Back to top -->
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<script>
+  // Show "back to top" button after scrolling past the first viewport
+  (function() {
+    var btn = document.getElementById('back-to-top');
+    var threshold = 600;
+    var ticking = false;
+
+    function update() {
+      if (window.scrollY > threshold) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    btn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+</script>
 
 </body>
 </html>
