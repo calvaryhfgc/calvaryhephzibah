@@ -287,6 +287,11 @@
           <div class="page-sub">Fill in this week's service details.</div>
           <input type="hidden" id="ns-id">
 
+          <div style="background:#FEF3C7;border:1.5px solid #F59E0B;border-radius:var(--r10);padding:12px 14px;margin-bottom:16px;">
+            <div style="font-size:13px;font-weight:700;color:#92400E;margin-bottom:3px;">📄 The briefing is the source of truth</div>
+            <div style="font-size:12px;color:#78350F;line-height:1.5;">Order of service, sermon, scripture and songs are read live from the published media briefing for this Sunday. Edit the briefing to change those. This form is for OS-only fields like band, time, YouTube link, and notes.</div>
+          </div>
+
           <div class="field"><label>Service date *</label><input type="date" id="ns-date"></div>
           <div class="field-row">
             <div class="field"><label>Badge</label><input id="ns-badge" placeholder="Sunday Service"></div>
@@ -366,20 +371,164 @@ async function pageInit() {
 
 async function loadThisSunday() {
   try {
+    // ── BRIEFING IS THE SOURCE OF TRUTH ─────────────────────────────────
+    // 1. Read briefings.json to discover the next upcoming briefing
+    // 2. Fetch + parse that briefing's HTML
+    // 3. Merge with any existing cos_services row (preserves band/youtube/notes)
+    // 4. Render + auto-snapshot back to cos_services so archive/history stays fresh
+    // ────────────────────────────────────────────────────────────────────
     const today = new Date().toISOString().split('T')[0];
-    let services = await sbFetch(`cos_services?order=service_date.asc&service_date=gte.${today}&limit=1`);
-    if (!services || !services.length) {
-      services = await sbFetch('cos_services?order=service_date.desc&limit=1');
+    const indexUrl = '../briefings.json?_=' + Date.now(); // bypass cache so updates land instantly
+    let index;
+    try {
+      const r = await fetch(indexUrl);
+      index = await r.json();
+    } catch(e) {
+      console.warn('briefings.json fetch failed, falling back to cos_services', e);
+      return loadFromSupabaseFallback(today);
     }
-    if (services && services.length) {
-      currentService = services[0];
-      renderService(currentService);
-    } else {
-      document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--ink-4);padding:20px 0;">No service records yet. Tap New Sunday to create one.</div>';
+
+    // Pick the next upcoming briefing; fall back to most recent if none upcoming.
+    const upcoming = (index.briefings || []).filter(b => b.service_date >= today);
+    const target = upcoming.length
+      ? upcoming[upcoming.length - 1] // upcoming list is desc-sorted, last = soonest
+      : index.briefings[0];           // most recent past
+
+    if (!target) {
+      document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--ink-4);padding:20px 0;">No briefings published yet.</div>';
+      return;
     }
+
+    // Parse briefing HTML.
+    const briefingHtml = await fetch(`../${target.file}?_=${Date.now()}`).then(r => r.text());
+    const parsed = parseBriefing(briefingHtml, target.service_date);
+
+    // Merge with existing cos_services row (preserves OS-only fields).
+    const existing = await sbFetch(`cos_services?service_date=eq.${target.service_date}&limit=1`);
+    const existingRow = existing && existing.length ? existing[0] : {};
+    const merged = {
+      ...existingRow,
+      service_date: target.service_date,
+      badge: parsed.badge || existingRow.badge || 'Sunday Service',
+      preacher: parsed.preacher || existingRow.preacher || null,
+      sermon_title: parsed.sermon_title || existingRow.sermon_title || null,
+      scripture: parsed.scripture || existingRow.scripture || null,
+      order_of_service: parsed.order_of_service.length ? parsed.order_of_service : (existingRow.order_of_service || []),
+      songs: parsed.songs.length ? parsed.songs : (existingRow.songs || []),
+      // OS-only fields kept as-is from existingRow (band, youtube_url, time, notes, worship_leader)
+    };
+
+    currentService = merged;
+    renderService(merged);
+
+    // Auto-snapshot back to cos_services (fire-and-forget, non-blocking).
+    snapshotToSupabase(merged, !!existing && existing.length, existingRow.id);
   } catch(e) {
     document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--red);">Could not load service details.</div>';
     console.error(e);
+  }
+}
+
+async function loadFromSupabaseFallback(today) {
+  let services = await sbFetch(`cos_services?order=service_date.asc&service_date=gte.${today}&limit=1`);
+  if (!services || !services.length) {
+    services = await sbFetch('cos_services?order=service_date.desc&limit=1');
+  }
+  if (services && services.length) {
+    currentService = services[0];
+    renderService(currentService);
+  } else {
+    document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--ink-4);padding:20px 0;">No service records yet.</div>';
+  }
+}
+
+// ── BRIEFING PARSER ────────────────────────────────────────────────────────
+// Reads the structural classes baked into every media-briefing HTML file
+// and returns the same shape that cos_services rows have. The parser is
+// tolerant — anything missing comes back as null/empty rather than throwing.
+function parseBriefing(html, serviceDate) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const txt = el => el ? el.textContent.trim() : null;
+
+  // Sermon
+  const preacher = txt(doc.querySelector('.serm-preacher'));
+  const sermonTitle = txt(doc.querySelector('.serm-title'));
+
+  // Scripture
+  const scripture = txt(doc.querySelector('.sc-ref'));
+
+  // Hero subtitle gives us a fallback for sermon/preacher if cards are missing
+  const heroSub = txt(doc.querySelector('.hero-sub'));
+
+  // Order of service — each .svc-row → {n, item, assigned, type}
+  const orderRows = Array.from(doc.querySelectorAll('.svc-row')).map((row, i) => {
+    const isHl = row.classList.contains('hl');
+    const isSer = row.classList.contains('ser');
+    return {
+      n: i + 1,
+      item: txt(row.querySelector('.svc-name')) || '',
+      assigned: txt(row.querySelector('.svc-person')) || '',
+      type: isSer ? 'sermon' : isHl ? 'highlight' : 'normal'
+    };
+  }).filter(r => r.item);
+
+  // Songs — walk .slabel headings, then collect following .ssong .sname elements
+  const songs = [];
+  const labelMap = { 'Praise':'Praise', 'Worship':'Worship', 'Offering':'Offering', 'End of Service':'End of Service' };
+  doc.querySelectorAll('.slabel').forEach(label => {
+    const labelText = label.textContent.trim().replace(/^[^A-Za-z]+/, ''); // strip leading emoji
+    const section = Object.keys(labelMap).find(k => labelText.startsWith(k));
+    if (!section) return;
+    // Collect siblings until the next .slabel
+    let sib = label.nextElementSibling;
+    while (sib && !sib.classList.contains('slabel')) {
+      sib.querySelectorAll('.sname').forEach(n => {
+        const title = n.textContent.trim();
+        if (title && title !== 'TBC') songs.push({ title, section, lyrics: null });
+      });
+      sib = sib.nextElementSibling;
+    }
+  });
+
+  return {
+    service_date: serviceDate,
+    badge: 'Sunday Service',
+    preacher: preacher || (heroSub ? heroSub.split('—').slice(-1)[0].trim() : null),
+    sermon_title: sermonTitle,
+    scripture,
+    order_of_service: orderRows,
+    songs
+  };
+}
+
+// ── AUTO-SNAPSHOT ──────────────────────────────────────────────────────────
+// After rendering from the briefing, write the merged data back to cos_services
+// so the archive/history page (and anything else that reads the table) stays
+// fresh. Fire-and-forget — failures here don't block the UI.
+async function snapshotToSupabase(data, isUpdate, existingId) {
+  try {
+    const payload = {
+      service_date: data.service_date,
+      badge: data.badge || 'Sunday Service',
+      preacher: data.preacher || null,
+      sermon_title: data.sermon_title || null,
+      scripture: data.scripture || null,
+      worship_leader: data.worship_leader || null,
+      order_of_service: data.order_of_service || [],
+      songs: data.songs || [],
+      band: data.band || [],
+      time: data.time || null,
+      youtube_url: data.youtube_url || null,
+      notes: data.notes || null,
+      updated_at: new Date().toISOString()
+    };
+    if (isUpdate && existingId) {
+      await sbPatch('cos_services', `id=eq.${existingId}`, payload);
+    } else {
+      await sbPost('cos_services', payload);
+    }
+  } catch(e) {
+    console.warn('snapshotToSupabase failed (non-fatal):', e);
   }
 }
 

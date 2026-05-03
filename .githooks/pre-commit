@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────
+# Auto-rebuild briefings.json whenever a media briefing is staged.
+# This keeps the briefings index in sync with the actual files in the repo
+# without anyone having to remember to do it manually.
+# ─────────────────────────────────────────────────────────────────────────
+
+set -e
+
+# Only run if a briefing file was staged in this commit.
+if ! git diff --cached --name-only | grep -qE '^media-briefing-[0-9]+-[a-z]+-[0-9]+\.html$'; then
+  exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+if ! command -v node >/dev/null 2>&1; then
+  echo "⚠️  node not found — skipping briefings.json regeneration."
+  echo "    Install Node.js so the index stays in sync. https://nodejs.org/"
+  exit 0
+fi
+
+echo "→ Rebuilding briefings.json…"
+node scripts/build-briefings-index.js
+git add briefings.json
+echo "✓ briefings.json updated and staged"
