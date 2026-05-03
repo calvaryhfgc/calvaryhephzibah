@@ -999,7 +999,7 @@
                 <div class="top-notes-list">
                     <div class="top-note">
                         <div class="nm">1</div>
-                        <p><strong>Trading My Sorrows is in E.</strong> We rehearsed in B — transpose for Sunday. New arrangement: drums + bass hold back through verse 1 (Caster alone), come in for verse 2.</p>
+                        <p><strong>The whole praise medley is in E.</strong> All four songs — Trading My Sorrows, Lord You Are Good, Friend of God, Every Praise — stay in E throughout. We rehearsed Trading in B, so transpose for Sunday. New arrangement on Trading: drums + bass hold back through verse 1 (Caster alone), come in for verse 2.</p>
                     </div>
                     <div class="top-note">
                         <div class="nm">2</div>
@@ -1024,7 +1024,7 @@
                 <h2 class="slide-title">The order, the keys</h2>
                 <p class="slide-sub">Tap a row to jump to its detail.</p>
                 <div class="setlist-compact">
-                    <div class="sl-divider"><div class="lbl">Praise</div><div class="ln"></div></div>
+                    <div class="sl-divider"><div class="lbl">Praise · Medley in E</div><div class="ln"></div></div>
                     <a class="sl-row" onclick="goSlide(3)">
                         <span class="num">1</span>
                         <div class="nm"><div class="nm-name">Trading My Sorrows</div><div class="nm-flag">⚠ New arrangement</div></div>
@@ -1033,17 +1033,17 @@
                     <a class="sl-row" onclick="goSlide(4)">
                         <span class="num">2</span>
                         <div class="nm"><div class="nm-name">Lord You Are Good</div></div>
-                        <span class="key tbc">TBC</span>
+                        <span class="key">E</span>
                     </a>
                     <a class="sl-row" onclick="goSlide(5)">
                         <span class="num">3</span>
                         <div class="nm"><div class="nm-name">Friend of God</div></div>
-                        <span class="key tbc">TBC</span>
+                        <span class="key">E</span>
                     </a>
                     <a class="sl-row" onclick="goSlide(6)">
                         <span class="num">4</span>
                         <div class="nm"><div class="nm-name">Every Praise</div><div class="nm-flag">⚠ Cued by underplay</div></div>
-                        <span class="key tbc">TBC</span>
+                        <span class="key">E</span>
                     </a>
                     <div class="sl-divider"><div class="lbl">Worship</div><div class="ln"></div></div>
                     <a class="sl-row muted" onclick="goSlide(7)">
@@ -1156,7 +1156,8 @@
                     <div class="pos">Praise · Song 2 of 4</div>
                     <h2>Lord You Are Good</h2>
                     <div class="meta-row">
-                        <span class="key-pill">Key <span class="k">TBC</span></span>
+                        <span class="key-pill">Key <span class="k">E</span></span>
+                        <span class="key-pill">Medley · stay in E</span>
                     </div>
                 </div>
 
@@ -1212,7 +1213,7 @@
                     <div class="pos">Praise · Song 3 of 4</div>
                     <h2>Friend of God</h2>
                     <div class="meta-row">
-                        <span class="key-pill">Key <span class="k">TBC</span></span>
+                        <span class="key-pill">Key <span class="k">E</span></span>
                         <span class="key-pill">→ Cues Every Praise</span>
                     </div>
                 </div>
@@ -1274,7 +1275,7 @@
                     <div class="pos">Praise · Song 4 of 4</div>
                     <h2>Every Praise</h2>
                     <div class="meta-row">
-                        <span class="key-pill">Key <span class="k">TBC</span></span>
+                        <span class="key-pill">Key <span class="k">E</span></span>
                         <span class="key-pill">⚠ Cued transition</span>
                     </div>
                 </div>
@@ -1523,16 +1524,11 @@
                 name.textContent = slide.dataset.title;
                 btn.appendChild(num);
                 btn.appendChild(name);
-                // Add key info if it's a praise song
-                if (idx === 3) {
+                // Add key info if it's a praise song (all in E — medley)
+                if (idx >= 3 && idx <= 6) {
                     const key = document.createElement('span');
                     key.className = 'menu-key';
                     key.textContent = 'E';
-                    btn.appendChild(key);
-                } else if (idx >= 4 && idx <= 6) {
-                    const key = document.createElement('span');
-                    key.className = 'menu-key';
-                    key.textContent = 'TBC';
                     btn.appendChild(key);
                 }
                 btn.addEventListener('click', () => {
