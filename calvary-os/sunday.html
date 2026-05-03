@@ -297,21 +297,19 @@
             <div class="field"><label>Badge</label><input id="ns-badge" placeholder="Sunday Service"></div>
             <div class="field"><label>Time</label><input id="ns-time" placeholder="10:30am" value="10:30am"></div>
           </div>
-          <div class="field"><label>Preacher</label><input id="ns-preacher" placeholder="Name of preacher"></div>
-          <div class="field"><label>Sermon title</label><input id="ns-sermon" placeholder="Sermon title"></div>
-          <div class="field"><label>Scripture</label><input id="ns-scripture" placeholder="e.g. John 3:16"></div>
+          <div class="field-row">
+            <div class="field"><label>Time</label><input id="ns-time" placeholder="10:30am" value="10:30am"></div>
+            <div class="field"><label>Badge</label><input id="ns-badge" placeholder="Sunday Service"></div>
+          </div>
           <div class="field"><label>Worship leader</label><input id="ns-worship" placeholder="Name"></div>
           <div class="field"><label>YouTube link (once live)</label><input id="ns-youtube" placeholder="https://youtube.com/..."></div>
 
-          <div class="section-label">Order of service</div>
-          <div id="ns-order-rows"></div>
-          <button class="btn btn-white btn-sm" onclick="addOrderRow()" style="margin-bottom:16px;">+ Add item</button>
+          <div class="section-label">Band</div>
+          <div style="font-size:12px;color:var(--ink-4);margin:0 0 10px;line-height:1.5;">Who's playing this Sunday. Status options: confirmed · pending · TBC.</div>
+          <div id="ns-band-rows"></div>
+          <button class="btn btn-white btn-sm" onclick="addBandRow()" style="margin-bottom:16px;">+ Add band member</button>
 
-          <div class="section-label">Worship songs</div>
-          <div id="ns-song-rows"></div>
-          <button class="btn btn-white btn-sm" onclick="addSongRow()" style="margin-bottom:16px;">+ Add song</button>
-
-          <div class="field"><label>Notes</label><textarea id="ns-notes" placeholder="Any additional context for this Sunday…"></textarea></div>
+          <div class="field"><label>Notes</label><textarea id="ns-notes" placeholder="Any OS-only notes about this Sunday…"></textarea></div>
 
           <button class="btn btn-red btn-block" onclick="saveService()" style="margin-top:4px;">Save service record</button>
           <div id="ns-msg" style="font-size:13px;text-align:center;margin-top:10px;min-height:20px;"></div>
@@ -353,7 +351,6 @@
 let currentService = null;
 let allServices = [];
 let checkState = {};
-let oc = 0, sc2 = 0;
 
 function navPage(page, el) {
   COS.navTo(page, el);
@@ -378,13 +375,16 @@ async function loadThisSunday() {
     // 4. Render + auto-snapshot back to cos_services so archive/history stays fresh
     // ────────────────────────────────────────────────────────────────────
     const today = new Date().toISOString().split('T')[0];
+    console.log('[Sunday] today =', today);
     const indexUrl = '../briefings.json?_=' + Date.now(); // bypass cache so updates land instantly
     let index;
     try {
       const r = await fetch(indexUrl);
+      if (!r.ok) throw new Error('briefings.json HTTP ' + r.status);
       index = await r.json();
+      console.log('[Sunday] briefings.json loaded:', index.count, 'briefings');
     } catch(e) {
-      console.warn('briefings.json fetch failed, falling back to cos_services', e);
+      console.warn('[Sunday] briefings.json fetch failed, falling back to cos_services', e);
       return loadFromSupabaseFallback(today);
     }
 
@@ -395,13 +395,30 @@ async function loadThisSunday() {
       : index.briefings[0];           // most recent past
 
     if (!target) {
+      console.warn('[Sunday] no target briefing found');
       document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--ink-4);padding:20px 0;">No briefings published yet.</div>';
       return;
     }
+    console.log('[Sunday] target briefing:', target.file, '·', target.service_date);
 
     // Parse briefing HTML.
-    const briefingHtml = await fetch(`../${target.file}?_=${Date.now()}`).then(r => r.text());
+    let briefingHtml;
+    try {
+      const rsp = await fetch(`../${target.file}?_=${Date.now()}`);
+      if (!rsp.ok) throw new Error('briefing HTTP ' + rsp.status);
+      briefingHtml = await rsp.text();
+    } catch(e) {
+      console.warn('[Sunday] failed to fetch briefing HTML, falling back', e);
+      return loadFromSupabaseFallback(today);
+    }
     const parsed = parseBriefing(briefingHtml, target.service_date);
+    console.log('[Sunday] parsed:', {
+      preacher: parsed.preacher,
+      sermon_title: parsed.sermon_title,
+      scripture: parsed.scripture,
+      order_rows: parsed.order_of_service.length,
+      songs: parsed.songs.length
+    });
 
     // Merge with existing cos_services row (preserves OS-only fields).
     const existing = await sbFetch(`cos_services?service_date=eq.${target.service_date}&limit=1`);
@@ -424,8 +441,8 @@ async function loadThisSunday() {
     // Auto-snapshot back to cos_services (fire-and-forget, non-blocking).
     snapshotToSupabase(merged, !!existing && existing.length, existingRow.id);
   } catch(e) {
-    document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--red);">Could not load service details.</div>';
-    console.error(e);
+    document.getElementById('ov-loading').innerHTML = '<div style="font-size:14px;color:var(--red);">Could not load service details. Check console for details.</div>';
+    console.error('[Sunday] loadThisSunday failed:', e);
   }
 }
 
@@ -810,25 +827,14 @@ function viewArchiveService(date) {
 function initNewForm() {
   document.getElementById('ns-heading').textContent = 'New Sunday';
   document.getElementById('ns-id').value = '';
-  ['ns-date','ns-badge','ns-preacher','ns-sermon','ns-scripture','ns-worship','ns-youtube','ns-notes'].forEach(id => {
+  ['ns-date','ns-badge','ns-time','ns-worship','ns-youtube','ns-notes'].forEach(id => {
     const el = document.getElementById(id); if(el) el.value = el.defaultValue || '';
   });
-  document.getElementById('ns-order-rows').innerHTML = '';
-  document.getElementById('ns-song-rows').innerHTML = '';
+  document.getElementById('ns-band-rows').innerHTML = '';
   document.getElementById('ns-msg').textContent = '';
-  oc = 0; sc2 = 0;
-  [
-    {n:1,item:'Welcome & Bible Reading',assigned:'',type:'normal'},
-    {n:2,item:'Opening Prayer',assigned:'',type:'normal'},
-    {n:3,item:'Worship',assigned:'Worship Team',type:'normal'},
-    {n:4,item:'Communion',assigned:'',type:'normal'},
-    {n:5,item:'Announcements',assigned:'',type:'normal'},
-    {n:6,item:'Bible Reading',assigned:'',type:'highlight'},
-    {n:7,item:'Sermon',assigned:'',type:'sermon'},
-    {n:8,item:'Thanksgiving',assigned:'',type:'normal'},
-    {n:9,item:'Closing Prayer',assigned:'',type:'normal'},
-    {n:10,item:'Benediction',assigned:'',type:'normal'},
-  ].forEach(r => addOrderRow(r));
+  bc = 0;
+  // Seed one empty band row so the form isn't bare on first open.
+  addBandRow();
 }
 
 function editService(date) {
@@ -838,51 +844,39 @@ function editService(date) {
   document.getElementById('ns-id').value = s.id || '';
   document.getElementById('ns-date').value = s.service_date || '';
   document.getElementById('ns-badge').value = s.badge || '';
-  document.getElementById('ns-preacher').value = s.preacher || '';
-  document.getElementById('ns-sermon').value = s.sermon_title || '';
-  document.getElementById('ns-scripture').value = s.scripture || '';
+  document.getElementById('ns-time').value = s.time || '10:30am';
   document.getElementById('ns-worship').value = s.worship_leader || '';
   document.getElementById('ns-youtube').value = s.youtube_url || '';
   document.getElementById('ns-notes').value = s.notes || '';
-  document.getElementById('ns-order-rows').innerHTML = '';
-  document.getElementById('ns-song-rows').innerHTML = '';
+  document.getElementById('ns-band-rows').innerHTML = '';
   document.getElementById('ns-msg').textContent = '';
-  oc = 0; sc2 = 0;
-  (s.order_of_service||[]).forEach(r => addOrderRow(r));
-  (s.songs||[]).forEach(r => addSongRow(r));
+  bc = 0;
+  const band = s.band || [];
+  if (band.length === 0) addBandRow();
+  else band.forEach(m => addBandRow(m));
   navPage('new-service', document.getElementById('nav-new'));
 }
 
-function addOrderRow(d={}) {
-  oc++;
+let bc = 0;
+function addBandRow(d={}) {
+  bc++;
   const div = document.createElement('div');
-  div.className = 'order-row-item';
+  div.className = 'band-row-form';
+  div.style.cssText = 'display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap;';
   div.innerHTML = `
-    <input placeholder="Item" value="${(d.item||'').replace(/"/g,'&quot;')}" data-f="item" style="flex:2;min-width:120px;">
-    <input placeholder="Assigned to" value="${(d.assigned||'').replace(/"/g,'&quot;')}" data-f="assigned" style="flex:1;min-width:100px;">
-    <select data-f="type" style="width:110px;">
-      <option value="normal" ${!d.type||d.type==='normal'?'selected':''}>Normal</option>
-      <option value="highlight" ${d.type==='highlight'?'selected':''}>Highlight</option>
-      <option value="sermon" ${d.type==='sermon'?'selected':''}>Sermon</option>
+    <input placeholder="Name" value="${(d.name||'').replace(/"/g,'&quot;')}" data-f="name" style="flex:1;min-width:100px;">
+    <input placeholder="Role (e.g. Drums)" value="${(d.role||'').replace(/"/g,'&quot;')}" data-f="role" style="flex:1;min-width:100px;">
+    <select data-f="status" style="width:110px;">
+      <option value="confirmed" ${d.status==='confirmed'?'selected':''}>Confirmed</option>
+      <option value="pending" ${d.status==='pending'?'selected':''}>Pending</option>
+      <option value="tbc" ${d.status==='tbc'?'selected':''}>TBC</option>
+    </select>
+    <select data-f="paid" style="width:90px;">
+      <option value="false" ${!d.paid?'selected':''}>Volunteer</option>
+      <option value="true" ${d.paid?'selected':''}>Paid</option>
     </select>
     <button class="rmv" onclick="this.parentElement.remove()">×</button>`;
-  document.getElementById('ns-order-rows').appendChild(div);
-}
-
-function addSongRow(d={}) {
-  sc2++;
-  const div = document.createElement('div');
-  div.className = 'song-row-form';
-  div.innerHTML = `
-    <input placeholder="Song title" value="${(d.title||'').replace(/"/g,'&quot;')}" data-f="title" style="flex:1;min-width:140px;">
-    <select data-f="section" style="width:120px;">
-      <option value="Praise" ${d.section==='Praise'?'selected':''}>Praise</option>
-      <option value="Worship" ${d.section==='Worship'?'selected':''}>Worship</option>
-      <option value="Offering" ${d.section==='Offering'?'selected':''}>Offering</option>
-      <option value="End of Service" ${d.section==='End of Service'?'selected':''}>End</option>
-    </select>
-    <button class="rmv" onclick="this.parentElement.remove()">×</button>`;
-  document.getElementById('ns-song-rows').appendChild(div);
+  document.getElementById('ns-band-rows').appendChild(div);
 }
 
 async function saveService() {
@@ -891,31 +885,29 @@ async function saveService() {
   if (!date) { msg.textContent = 'Date required.'; msg.style.color='var(--red)'; return; }
   msg.textContent = 'Saving…'; msg.style.color = 'var(--ink-4)';
 
-  const orderRows = [];
-  document.querySelectorAll('#ns-order-rows .order-row-item').forEach((row, i) => {
-    const item = row.querySelector('[data-f="item"]').value.trim();
-    if (!item) return;
-    orderRows.push({n:i+1,item,assigned:row.querySelector('[data-f="assigned"]').value.trim(),type:row.querySelector('[data-f="type"]').value});
+  const bandRows = [];
+  document.querySelectorAll('#ns-band-rows .band-row-form').forEach(row => {
+    const name = row.querySelector('[data-f="name"]').value.trim();
+    if (!name) return;
+    bandRows.push({
+      name,
+      role: row.querySelector('[data-f="role"]').value.trim(),
+      status: row.querySelector('[data-f="status"]').value,
+      paid: row.querySelector('[data-f="paid"]').value === 'true'
+    });
   });
 
-  const songRows = [];
-  document.querySelectorAll('#ns-song-rows .song-row-form').forEach(row => {
-    const title = row.querySelector('[data-f="title"]').value.trim();
-    if (!title) return;
-    songRows.push({title,section:row.querySelector('[data-f="section"]').value,lyrics:null});
-  });
-
+  // OS-only fields. Briefing-controlled fields (preacher/sermon/scripture/
+  // order/songs) are NOT sent — they would be overwritten on next page load
+  // anyway since the briefing is canonical.
   const payload = {
     service_date: date,
     badge: document.getElementById('ns-badge').value.trim() || 'Sunday Service',
-    preacher: document.getElementById('ns-preacher').value.trim(),
-    sermon_title: document.getElementById('ns-sermon').value.trim(),
-    scripture: document.getElementById('ns-scripture').value.trim(),
-    worship_leader: document.getElementById('ns-worship').value.trim(),
+    time: document.getElementById('ns-time').value.trim() || '10:30am',
+    worship_leader: document.getElementById('ns-worship').value.trim() || null,
     youtube_url: document.getElementById('ns-youtube').value.trim() || null,
-    notes: document.getElementById('ns-notes').value.trim(),
-    order_of_service: orderRows,
-    songs: songRows,
+    notes: document.getElementById('ns-notes').value.trim() || null,
+    band: bandRows,
     updated_at: new Date().toISOString()
   };
 
