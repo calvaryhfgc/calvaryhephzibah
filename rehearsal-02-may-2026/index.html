@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worship Rehearsal Recap — Saturday 2nd May 2026 | Calvary Hephzibah</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800;900&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #D95A2B;
+            --deep-charcoal: #1A1A1A;
+            --warm-gray: #2D2D2D;
+            --cream: #FAF9F7;
+            --warm-white: #FFFFFE;
+            --worship-purple: #6B46C1;
+            --worship-blue: #3B82F6;
+            --rose: #E11D48;
+            --gold: #B8860B;
+            --shadow-soft: 0 4px 20px rgba(13, 13, 13, 0.08);
+            --shadow-medium: 0 8px 40px rgba(13, 13, 13, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--cream);
+            color: var(--deep-charcoal);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #4C1D95 0%, var(--worship-purple) 50%, var(--worship-blue) 100%);
+            padding: 64px 24px 56px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.6;
+        }
+
+        .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            padding: 9px 22px;
+            border-radius: 100px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+            font-weight: 800;
+            color: white;
+            margin-bottom: 12px;
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-date {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.95);
+            font-weight: 500;
+            margin-bottom: 14px;
+        }
+
+        .hero-tagline {
+            font-size: 0.98rem;
+            color: rgba(255,255,255,0.82);
+            font-weight: 400;
+            font-style: italic;
+            max-width: 540px;
+            margin: 0 auto;
+        }
+
+        .container { max-width: 920px; margin: 0 auto; padding: 40px 22px 80px; }
+
+        /* Intro callout */
+        .intro-card {
+            background: white;
+            border-radius: 18px;
+            padding: 28px 32px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 36px;
+            border-left: 5px solid var(--worship-purple);
+        }
+        .intro-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--deep-charcoal);
+        }
+        .intro-card p { color: #4a4a4a; }
+        .intro-card .who { font-size: 0.92rem; color: #777; margin-top: 14px; }
+        .intro-card .who strong { color: var(--worship-purple); }
+
+        /* Section heading */
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.85rem;
+            font-weight: 700;
+            margin: 48px 0 18px;
+            color: var(--deep-charcoal);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .section-heading::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 28px;
+            background: linear-gradient(180deg, var(--worship-purple), var(--worship-blue));
+            border-radius: 4px;
+        }
+
+        /* Song card */
+        .song-card {
+            background: white;
+            border-radius: 18px;
+            padding: 0;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+        .song-card-header {
+            background: linear-gradient(135deg, var(--worship-purple) 0%, var(--worship-blue) 100%);
+            padding: 22px 30px;
+            color: white;
+            position: relative;
+        }
+        .song-card-header.gold {
+            background: linear-gradient(135deg, #B8860B 0%, #D4A017 100%);
+        }
+        .song-card-header.rose {
+            background: linear-gradient(135deg, #BE185D 0%, #E11D48 100%);
+        }
+        .song-card-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .song-card-header .meta {
+            font-size: 0.88rem;
+            opacity: 0.92;
+            font-weight: 500;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .song-card-header .meta span { display: flex; align-items: center; gap: 6px; }
+        .song-card-header .meta strong { font-weight: 700; }
+
+        .song-card-body { padding: 26px 30px 28px; }
+
+        /* Subsection inside card */
+        .sub-block {
+            margin-top: 22px;
+        }
+        .sub-block:first-child { margin-top: 0; }
+        .sub-block h4 {
+            font-family: 'Source Sans 3', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--worship-purple);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sub-block p { color: #3a3a3a; margin-bottom: 10px; }
+        .sub-block p:last-child { margin-bottom: 0; }
+
+        /* Arrangement structure list */
+        .structure-list {
+            list-style: none;
+            counter-reset: step;
+            margin: 6px 0;
+        }
+        .structure-list li {
+            counter-increment: step;
+            padding: 10px 14px 10px 44px;
+            position: relative;
+            background: var(--cream);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.96rem;
+            color: #2a2a2a;
+        }
+        .structure-list li::before {
+            content: counter(step);
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            background: var(--worship-purple);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+        .structure-list li strong { color: var(--worship-purple); }
+        .structure-list li .annotation {
+            font-size: 0.85rem;
+            color: #777;
+            font-style: italic;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Parts grid */
+        .parts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .part-card {
+            background: var(--cream);
+            border-radius: 10px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--worship-purple);
+        }
+        .part-card .part-name {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: var(--worship-purple);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .part-card .part-name .musician {
+            color: #888;
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: normal;
+            font-size: 0.78rem;
+        }
+        .part-card p {
+            font-size: 0.92rem;
+            color: #2a2a2a;
+            line-height: 1.55;
+        }
+        .part-card.flag {
+            border-left-color: var(--rose);
+            background: #FFF5F7;
+        }
+        .part-card.flag .part-name { color: var(--rose); }
+
+        /* Gaps / open questions block */
+        .gaps-block {
+            background: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+            border-left: 5px solid var(--gold);
+            border-radius: 12px;
+            padding: 18px 22px;
+            margin-top: 18px;
+        }
+        .gaps-block h4 {
+            color: #8B6914;
+            margin-bottom: 8px;
+        }
+        .gaps-block ul {
+            list-style: none;
+            padding: 0;
+        }
+        .gaps-block li {
+            padding: 6px 0 6px 24px;
+            position: relative;
+            font-size: 0.94rem;
+            color: #4a3a10;
+        }
+        .gaps-block li::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            color: var(--gold);
+        }
+
+        /* Win callout */
+        .win-block {
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            border-left: 5px solid #4CAF50;
+            border-radius: 12px;
+            padding: 16px 22px;
+            margin-top: 16px;
+            font-size: 0.94rem;
+            color: #1B5E20;
+        }
+        .win-block strong { color: #2E7D32; }
+
+        /* Set list panel */
+        .setlist-panel {
+            background: white;
+            border-radius: 18px;
+            padding: 30px 32px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 32px;
+        }
+        .setlist-panel h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+        .setlist-panel .subhead { color: #666; font-size: 0.95rem; margin-bottom: 20px; }
+        .setlist-section {
+            margin-bottom: 18px;
+        }
+        .setlist-section:last-child { margin-bottom: 0; }
+        .setlist-section .label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: var(--worship-purple);
+            margin-bottom: 6px;
+        }
+        .setlist-section ol {
+            list-style: none;
+            padding: 0;
+        }
+        .setlist-section li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #eee;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 1rem;
+        }
+        .setlist-section li:last-child { border-bottom: none; }
+        .setlist-section li .num {
+            display: inline-flex;
+            width: 24px;
+            height: 24px;
+            background: var(--worship-purple);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* Anniversary teaser */
+        .anniversary {
+            background: linear-gradient(135deg, #1e1b4b 0%, #4C1D95 100%);
+            color: white;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .anniversary::before {
+            content: '✦';
+            position: absolute;
+            top: 22px;
+            right: 28px;
+            font-size: 3.5rem;
+            opacity: 0.12;
+        }
+        .anniversary h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+        .anniversary .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+        .anniversary p { opacity: 0.92; margin-bottom: 10px; }
+        .anniversary p:last-child { margin-bottom: 0; }
+        .anniversary strong { color: #FCD34D; }
+
+        /* Action items list */
+        .actions-card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px 32px;
+            box-shadow: var(--shadow-medium);
+            margin-bottom: 32px;
+        }
+        .actions-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            margin-bottom: 16px;
+        }
+        .actions-list {
+            list-style: none;
+            padding: 0;
+        }
+        .actions-list li {
+            padding: 12px 0 12px 36px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.96rem;
+            color: #2a2a2a;
+        }
+        .actions-list li:last-child { border-bottom: none; }
+        .actions-list li::before {
+            content: '☐';
+            position: absolute;
+            left: 0;
+            top: 11px;
+            font-size: 1.2rem;
+            color: var(--worship-purple);
+        }
+        .actions-list li strong { color: var(--worship-purple); }
+        .actions-list li .who-pill {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: #ede9fe;
+            color: var(--worship-purple);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+
+        /* Footer */
+        .footer-note {
+            text-align: center;
+            color: #999;
+            font-size: 0.88rem;
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid #e8e8e8;
+            font-style: italic;
+        }
+        .footer-note .verse {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #555;
+            font-size: 1.02rem;
+            margin-bottom: 8px;
+        }
+
+        /* Audio rail - top of page, all 5 recordings */
+        .audio-rail {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            color: white;
+            border-radius: 18px;
+            padding: 26px 30px 22px;
+            margin-bottom: 36px;
+            box-shadow: var(--shadow-medium);
+        }
+        .audio-rail h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+        }
+        .audio-rail .subhead {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.92rem;
+            margin-bottom: 18px;
+        }
+        .audio-rail-list {
+            display: grid;
+            gap: 12px;
+        }
+        .audio-rail-item {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+        .audio-rail-item .audio-label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.95);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .audio-rail-item .audio-label .badge-num {
+            font-size: 0.7rem;
+            color: white;
+            font-weight: 700;
+            background: var(--worship-purple);
+            padding: 2px 9px;
+            border-radius: 100px;
+            margin-right: 8px;
+        }
+        .audio-rail-item .audio-context {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.65);
+            margin-bottom: 8px;
+            font-style: italic;
+        }
+        .audio-rail-item audio {
+            width: 100%;
+            height: 36px;
+            border-radius: 8px;
+        }
+
+        /* Inline song section audio - lighter version */
+        .song-audio {
+            background: var(--cream);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-top: 14px;
+            border-left: 3px solid var(--worship-purple);
+        }
+        .song-audio .label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: var(--worship-purple);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .song-audio .clip-list {
+            display: grid;
+            gap: 10px;
+        }
+        .song-audio .clip-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .song-audio .clip-row .clip-name {
+            font-size: 0.86rem;
+            color: #555;
+            font-weight: 600;
+            min-width: 150px;
+            flex-shrink: 0;
+        }
+        .song-audio audio {
+            flex: 1;
+            min-width: 220px;
+            height: 34px;
+        }
+        @media (max-width: 540px) {
+            .song-audio .clip-row { flex-direction: column; align-items: stretch; }
+            .song-audio .clip-row .clip-name { min-width: auto; margin-bottom: 4px; }
+        }
+
+        @media (max-width: 600px) {
+            .song-card-header, .song-card-body, .setlist-panel, .actions-card, .anniversary { padding-left: 22px; padding-right: 22px; }
+            .intro-card { padding-left: 22px; padding-right: 22px; }
+            .audio-rail { padding-left: 22px; padding-right: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🎶 Rehearsal Recap</div>
+            <h1>Worship Team Rehearsal</h1>
+            <div class="hero-date">Saturday, 2nd May 2026</div>
+            <div class="hero-tagline">A working session — Trading My Sorrows arrangement, dynamics work, and the first sketch of Anniversary plans.</div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- Intro -->
+        <div class="intro-card">
+            <h2>What we did</h2>
+            <p>Most of the rehearsal went on locking down <strong>Trading My Sorrows</strong> — getting the structure consistent, fixing dynamics, and pulling the band onto the same page on the new arrangement. We also sketched the <strong>Lord You Are Good</strong> transition, walked through <strong>Friend of God</strong> with the optional <em>Every Praise</em> bridge idea, and at the end did the first round of <strong>Anniversary</strong> set planning.</p>
+            <p class="who"><strong>In the room:</strong> Caster (worship leader / vocal lead), BJ (drums), Uncle Michael (bass), Esther (vocals), Morayo (guitar — joining tomorrow), with set planning input throughout.</p>
+        </div>
+
+        <!-- Audio rail: all 5 recordings -->
+        <div class="audio-rail">
+            <h3>🎙 Full rehearsal recordings</h3>
+            <p class="subhead">All five segments from Saturday night, in order. Per-song clips appear inside each song breakdown below.</p>
+            <div class="audio-rail-list">
+                <div class="audio-rail-item">
+                    <div class="audio-label"><span><span class="badge-num">1</span>Opening · Trading My Sorrows arrangement (part 1)</span></div>
+                    <div class="audio-context">Prayer, set list confirmation, start of Trading My Sorrows numerical walk-through</div>
+                    <audio controls preload="none" src="audio/rehearsal-part1.m4a"></audio>
+                </div>
+                <div class="audio-rail-item">
+                    <div class="audio-label"><span><span class="badge-num">2</span>Trading My Sorrows refinement · Lord You Are Good transition (part 2)</span></div>
+                    <div class="audio-context">Intro count settled, dynamics work, transition into Lord You Are Good, volume complaint</div>
+                    <audio controls preload="none" src="audio/rehearsal-part2.m4a"></audio>
+                </div>
+                <div class="audio-rail-item">
+                    <div class="audio-label"><span><span class="badge-num">3</span>Friend of God · Every Praise idea</span></div>
+                    <div class="audio-context">"Who Am I" section runs, the Every Praise bridge sketch, Caster + Esther vocal blend</div>
+                    <audio controls preload="none" src="audio/rehearsal-seq2.m4a"></audio>
+                </div>
+                <div class="audio-rail-item">
+                    <div class="audio-label"><span><span class="badge-num">4</span>Full run-through</span></div>
+                    <div class="audio-context">End-to-end run of the praise set. The "God Almighty / God My Saviour" mix-up. Final positive feedback.</div>
+                    <audio controls preload="none" src="audio/rehearsal-seq3.m4a"></audio>
+                </div>
+                <div class="audio-rail-item">
+                    <div class="audio-label"><span><span class="badge-num">5</span>Anniversary planning · wrap-up</span></div>
+                    <div class="audio-context">"Thanks, Thanks, I Give You Thanks" opener idea, Morayo guitar solo discussion, logistics for tomorrow</div>
+                    <audio controls preload="none" src="audio/rehearsal-seq4.m4a"></audio>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sunday set summary -->
+        <div class="setlist-panel">
+            <h3>📋 Sunday Set — 3rd May 2026</h3>
+            <p class="subhead">The set as confirmed at the close of rehearsal. Same structure as recent weeks.</p>
+
+            <div class="setlist-section">
+                <div class="label">Praise</div>
+                <ol>
+                    <li><span class="num">1</span> Trading My Sorrows</li>
+                    <li><span class="num">2</span> Lord You Are Good</li>
+                    <li><span class="num">3</span> Friend of God</li>
+                </ol>
+            </div>
+
+            <div class="setlist-section">
+                <div class="label">Worship</div>
+                <ol>
+                    <li><span class="num">1</span> Here I Am to Worship</li>
+                    <li><span class="num">2</span> Be Magnified</li>
+                    <li><span class="num">3</span> I Exalt Thee</li>
+                </ol>
+            </div>
+
+            <div class="setlist-section">
+                <div class="label">Offering</div>
+                <ol>
+                    <li><span class="num">1</span> Ancient of Days</li>
+                </ol>
+            </div>
+
+            <div class="setlist-section">
+                <div class="label">End of Service</div>
+                <ol>
+                    <li><span class="num">1</span> He Is Lord</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ───── SONG 1: Trading My Sorrows ───── -->
+        <h2 class="section-heading">Per-song breakdown</h2>
+
+        <div class="song-card">
+            <div class="song-card-header">
+                <h3>1. Trading My Sorrows</h3>
+                <div class="meta">
+                    <span>🎹 <strong>Key:</strong> E (Sunday) · rehearsed in B</span>
+                    <span>⏱ <strong>Tempo:</strong> ~moderate, don't rush</span>
+                    <span>📍 <strong>Status:</strong> Mostly locked, dynamics still need attention</span>
+                </div>
+            </div>
+            <div class="song-card-body">
+
+                <div class="sub-block">
+                    <h4>📐 Arrangement (the new shape)</h4>
+                    <ol class="structure-list">
+                        <li>
+                            <strong>Intro</strong> — looped 8 times (multiple of 4)
+                            <span class="annotation">Build slowly. Drums hardly play. Bass minimal. Caster sets the count.</span>
+                        </li>
+                        <li>
+                            <strong>Verse 1 — Caster alone</strong>
+                            <span class="annotation">"I'm trading my sorrows…" Esther holds back. Instruments stay really low.</span>
+                        </li>
+                        <li>
+                            <strong>Verse 2 — Caster + Esther together</strong>
+                            <span class="annotation">Esther only enters here. Drums lift slightly. Still controlled.</span>
+                        </li>
+                        <li>
+                            <strong>The run</strong>
+                            <span class="annotation">4 3 2 / 2 3 4 / 1 → 7 — but simplified: drop the 2 3 so it lands cleaner. Whole band hits this together.</span>
+                        </li>
+                        <li>
+                            <strong>Back into the verse — full build</strong>
+                            <span class="annotation">After the run, return to top of verse with full dynamics. This is where the song opens up. Snare comes in, kick lifts.</span>
+                        </li>
+                        <li>
+                            <strong>Chorus</strong> — "Yes Lord, Yes Lord, Yes Yes Lord"
+                            <span class="annotation">Chord shape: 6 4 6 4 / 5 5 6.</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="sub-block">
+                    <h4>🎯 The dynamics principle</h4>
+                    <p>Uncle Michael's earlier feedback — that the song felt rushed and too busy — wasn't a tempo problem. It was a <strong>dynamics</strong> problem. We were filling every bar instead of letting the song breathe. The new arrangement fixes that by building deliberately: nothing → Caster alone → Caster + Esther → full band on the run.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h4>👥 Per-part guidance</h4>
+                    <div class="parts-grid">
+                        <div class="part-card flag">
+                            <div class="part-name">Drums <span class="musician">BJ</span></div>
+                            <p><strong>The big note.</strong> Drums have been coming in too early. Hold back through the intro and verse 1 — be barely audible. Lift on verse 2. Snare and kick come <em>after the run</em>, on the second time round. Follow Uncle Michael's slap pattern on the intro — light cymbal/tom work, not too much.</p>
+                        </div>
+                        <div class="part-card">
+                            <div class="part-name">Bass <span class="musician">Uncle Michael</span></div>
+                            <p>Don't really come in until Esther comes in (or until the run). The bass entry is a dynamic moment — let it be one. We worked out a movement on the bass for the chorus.</p>
+                        </div>
+                        <div class="part-card flag">
+                            <div class="part-name">Vocals <span class="musician">Esther</span></div>
+                            <p><strong>Don't enter on verse 1.</strong> Caster does the first verse alone. You come in for verse 2. Match Caster's line — what you're singing should be in line with his. Mic closer when you sing.</p>
+                        </div>
+                        <div class="part-card">
+                            <div class="part-name">Lead Vocal <span class="musician">Caster</span></div>
+                            <p>You're leading this whole thing — the band is counting on you to call the structure. Lock in the intro count, signal the verse, signal the run. Strong start to the intro.</p>
+                        </div>
+                        <div class="part-card">
+                            <div class="part-name">Guitar <span class="musician">Morayo</span></div>
+                            <p>Joining tomorrow morning. Note: our Trading My Sorrows movement is <em>slightly different</em> to what you'll remember — we'll walk you through the change at the 9am setup.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="win-block">
+                    <strong>What's working:</strong> When we strip it down and play together — really together — it sounds completely different. Someone literally said "it makes such a difference." That's the version we want on Sunday.
+                </div>
+
+                <div class="gaps-block">
+                    <h4>Open / watch for</h4>
+                    <ul>
+                        <li>Transposing the rehearsed B back to E for Sunday — make sure the chord numbers translate cleanly</li>
+                        <li>Caster's intro count needs to be confident every time — don't second-guess mid-loop</li>
+                        <li>If we're too loud, Liv (next door) will let us know — the kick was shaking the frames in her studio. Keep volumes down at venue.</li>
+                    </ul>
+                </div>
+
+                <div class="song-audio">
+                    <div class="label">🎙 Listen back</div>
+                    <div class="clip-list">
+                        <div class="clip-row">
+                            <span class="clip-name">Arrangement walk-through</span>
+                            <audio controls preload="none" src="audio/rehearsal-part1.m4a"></audio>
+                        </div>
+                        <div class="clip-row">
+                            <span class="clip-name">Dynamics refinement</span>
+                            <audio controls preload="none" src="audio/rehearsal-part2.m4a"></audio>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ───── SONG 2: Lord You Are Good ───── -->
+        <div class="song-card">
+            <div class="song-card-header">
+                <h3>2. Lord You Are Good</h3>
+                <div class="meta">
+                    <span>🔗 <strong>Transitions from:</strong> Trading My Sorrows</span>
+                    <span>📍 <strong>Status:</strong> Transition agreed, simple</span>
+                </div>
+            </div>
+            <div class="song-card-body">
+
+                <div class="sub-block">
+                    <h4>🔗 The transition</h4>
+                    <p>Straight in — <strong>no "Yes, yes, Lord" intro chant</strong>. We talked about it and decided to drop it, like we did last time. Goes directly into "We worship You / Hallelujah."</p>
+                    <p>The "We worship You" chorus is played twice as the intro before any singer comes in. By that point the band has already taken us through the chorus once, so it's effectively a two-round musical intro to settle into.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h4>👥 Per-part guidance</h4>
+                    <div class="parts-grid">
+                        <div class="part-card">
+                            <div class="part-name">Bass <span class="musician">Uncle Michael</span></div>
+                            <p>The bass movement we worked out on the chorus is the anchor for this transition. Carries us out of Trading My Sorrows and into the new feel.</p>
+                        </div>
+                        <div class="part-card">
+                            <div class="part-name">Drums <span class="musician">BJ</span></div>
+                            <p>Normal — no special movement. But keep the volume considerate; we're still in a venue with neighbours.</p>
+                        </div>
+                        <div class="part-card">
+                            <div class="part-name">Lead Vocal <span class="musician">Caster</span></div>
+                            <p>Two rounds of "We worship You / Hallelujah" is the intro. Then welcome the congregation in (Pastor's role / your call).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="song-audio">
+                    <div class="label">🎙 Listen back</div>
+                    <div class="clip-list">
+                        <div class="clip-row">
+                            <span class="clip-name">Transition discussion</span>
+                            <audio controls preload="none" src="audio/rehearsal-part2.m4a"></audio>
+                        </div>
+                        <div class="clip-row">
+                            <span class="clip-name">Full sung run-through</span>
+                            <audio controls preload="none" src="audio/rehearsal-seq3.m4a"></audio>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ───── SONG 3: Friend of God ───── -->
+        <div class="song-card">
+            <div class="song-card-header gold">
+                <h3>3. Friend of God</h3>
+                <div class="meta">
+                    <span>📍 <strong>Status:</strong> Standard arrangement; "Every Praise" bridge sketched but <em>not for Sunday</em></span>
+                </div>
+            </div>
+            <div class="song-card-body">
+
+                <div class="sub-block">
+                    <h4>📐 Arrangement</h4>
+                    <p>Standard chorus / verse / chorus / pre-chorus / chorus shape. The song is short — verse and chorus only, really. Each song in the praise set is around 2–3 minutes, so there's room to breathe.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h4>✨ The "Every Praise" idea — saved for later</h4>
+                    <p>BJ played <em>Every Praise</em> in the background during Friend of God as a build, with the idea of using it as a bridge — pause Friend of God, drop into Every Praise, then bring it back to the chorus. <strong>We're NOT doing this on Sunday</strong> — it's a strong idea but we're keeping the set tight. Holding it as a possible Anniversary bridge or for a future Sunday once the team is settled.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h4>👥 Per-part guidance</h4>
+                    <div class="parts-grid">
+                        <div class="part-card">
+                            <div class="part-name">Lead Vocal <span class="musician">Caster</span></div>
+                            <p>"I'm a friend of God" sung <strong>twice</strong> at the end before the transition. Be clear with the band — the entry into the next section is on you.</p>
+                        </div>
+                        <div class="part-card">
+                            <div class="part-name">Drums <span class="musician">BJ</span></div>
+                            <p>You can introduce a building feel late in the song — "instead of friend, come in early." There's room. Just don't make it a full bridge on Sunday.</p>
+                        </div>
+                        <div class="part-card">
+                            <div class="part-name">All</div>
+                            <p>If Caster does call us into Every Praise spontaneously, follow. But default plan is straight chorus → out.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gaps-block">
+                    <h4>Open / watch for</h4>
+                    <ul>
+                        <li>One muddle in rehearsal — BJ called out "God Almighty" by mistake instead of "God My Saviour." Sorted, but worth being deliberate with song-name calls on Sunday so no one comes in on the wrong song.</li>
+                    </ul>
+                </div>
+
+                <div class="song-audio">
+                    <div class="label">🎙 Listen back</div>
+                    <div class="clip-list">
+                        <div class="clip-row">
+                            <span class="clip-name">Every Praise bridge sketch</span>
+                            <audio controls preload="none" src="audio/rehearsal-seq2.m4a"></audio>
+                        </div>
+                        <div class="clip-row">
+                            <span class="clip-name">Run-through + recovery</span>
+                            <audio controls preload="none" src="audio/rehearsal-seq3.m4a"></audio>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ───── Worship section + Offering / End ───── -->
+        <div class="song-card">
+            <div class="song-card-header rose">
+                <h3>Worship · Offering · End of Service</h3>
+                <div class="meta">
+                    <span>📍 <strong>Status:</strong> Same as recent weeks — no significant changes</span>
+                </div>
+            </div>
+            <div class="song-card-body">
+
+                <div class="sub-block">
+                    <h4>📐 What we covered</h4>
+                    <p>The worship segment (Here I Am to Worship → Be Magnified → I Exalt Thee), Ancient of Days for offering, and He Is Lord for end of service all run as they have been. We didn't deep-dive these in rehearsal because the team knows them — focus was on the praise set where the new arrangement work was needed.</p>
+                </div>
+
+                <div class="sub-block">
+                    <h4>💡 Note on Ancient of Days</h4>
+                    <p>For the Anniversary set (not Sunday), we discussed giving Morayo a moment — she could take the bass solo on guitar in Ancient of Days. Worth her trying it through this week to see if it lands.</p>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ───── Anniversary teaser ───── -->
+        <div class="anniversary">
+            <div class="badge">✦ Looking ahead</div>
+            <h3>Anniversary Set — first sketch</h3>
+            <p>The anniversary theme is <strong>"Reasons to be Thankful."</strong> We landed on opening with a phrase from <em>"Thanks, Thanks, I Give You Thanks"</em> — one person singing it as a simple opener (probably one line: "I am so blessed, my soul is at rest"), then straight into Trading My Sorrows. Goal: open with a bang, but keep it simple. Reduce variables.</p>
+            <p>Other anchor points: Trading My Sorrows in <strong>E</strong>, fitting in <em>My Jesus, My Saviour</em> so Esther can lead her song, and Morayo possibly taking a guitar moment in Ancient of Days.</p>
+            <p>African praise was discussed — but a guest worship leader is coming for that part of the anniversary, so we're sticking to a normal contemporary praise set on our side.</p>
+            <div class="song-audio" style="background: rgba(255,255,255,0.08); border-left-color: #FCD34D; margin-top: 18px;">
+                <div class="label" style="color: #FCD34D;">🎙 Listen back</div>
+                <div class="clip-list">
+                    <div class="clip-row">
+                        <span class="clip-name" style="color: rgba(255,255,255,0.85);">Anniversary planning</span>
+                        <audio controls preload="none" src="audio/rehearsal-seq4.m4a"></audio>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ───── Action items / Open threads ───── -->
+        <div class="actions-card">
+            <h3>✅ Action items & open threads</h3>
+            <ul class="actions-list">
+                <li><strong>Send updated set to WhatsApp group tonight</strong> so everyone refreshes ahead of Sunday morning. <span class="who-pill">BJ</span></li>
+                <li><strong>Walk Morayo through the new Trading My Sorrows movement</strong> at 9am setup — it's slightly different to what she'll remember. <span class="who-pill">Caster + BJ</span></li>
+                <li><strong>9am call tomorrow</strong> for setup so we can do a quick run before service. <span class="who-pill">All</span></li>
+                <li><strong>Esther:</strong> practise holding back on verse 1 — only enter on verse 2 of Trading My Sorrows. <span class="who-pill">Esther</span></li>
+                <li><strong>BJ:</strong> drum dynamics — really pull back on the intro and verse 1. The band's full sound comes <em>after</em> the run. <span class="who-pill">BJ</span></li>
+                <li><strong>Caster:</strong> lock in the intro count and the song-name calls. The band is following you. <span class="who-pill">Caster</span></li>
+                <li><strong>Morayo:</strong> try the bass solo in Ancient of Days on guitar this week — see if it works for the Anniversary. <span class="who-pill">Morayo</span></li>
+                <li><strong>Volume control:</strong> kick + bass were too much for the venue. Keep volumes considerate on Sunday. <span class="who-pill">BJ + Uncle Michael</span></li>
+                <li><strong>Anniversary set</strong> — finalise the "Thanks, Thanks" opener arrangement and the My Jesus / Esther song slot before next rehearsal. <span class="who-pill">Caster + BJ</span></li>
+            </ul>
+        </div>
+
+        <!-- ───── Footer ───── -->
+        <div class="footer-note">
+            <div class="verse">"Sing to the LORD a new song; sing to the LORD, all the earth." — Psalm 96:1</div>
+            See you at 9am. Let's set up well, run it once, and lead the church into His presence.
+        </div>
+
+    </div>
+
+</body>
+</html>
