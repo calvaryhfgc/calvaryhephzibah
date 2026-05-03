@@ -2,12 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Worship Rehearsal Recap — Saturday 2nd May 2026 | Calvary Hephzibah</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Rehearsal Recap — Sat 2nd May 2026 | Calvary</title>
 
     <meta name="description" content="Worship team rehearsal recap from Saturday 2nd May 2026. Set order, keys, and key movements for Sunday's service.">
-    <meta name="author" content="Calvary Hephzibah Full Gospel Church">
-    <meta name="theme-color" content="#4C1D95">
+    <meta name="theme-color" content="#1e1b4b">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Rehearsal Recap">
@@ -20,20 +19,13 @@
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Calvary Hephzibah">
     <meta property="og:title" content="Worship Rehearsal Recap — Saturday 2nd May 2026">
-    <meta property="og:description" content="Set order, keys, and the things to remember for Sunday's worship. With audio.">
+    <meta property="og:description" content="Set order, keys, and the things to remember for Sunday's worship.">
     <meta property="og:url" content="https://calvaryhfgc.github.io/calvaryhephzibah/rehearsal-02-may-2026/">
     <meta property="og:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/rehearsal-02-may-2026/og-card.png">
-    <meta property="og:image:secure_url" content="https://calvaryhfgc.github.io/calvaryhephzibah/rehearsal-02-may-2026/og-card.png">
-    <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Calvary Worship Rehearsal Recap — Saturday 2nd May 2026">
-    <meta property="og:locale" content="en_GB">
-    <meta property="article:published_time" content="2026-05-03T00:00:00+01:00">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Worship Rehearsal Recap — Saturday 2nd May 2026">
-    <meta name="twitter:description" content="Set order, keys, and the things to remember for Sunday's worship.">
     <meta name="twitter:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/rehearsal-02-may-2026/og-card.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,6 +41,7 @@
             --gold: #D4A017;
             --gold-soft: #FCD34D;
             --rose: #E11D48;
+            --green: #22C55E;
             --bg: #FAFAFA;
             --card: #FFFFFF;
             --ink: #0F172A;
@@ -57,565 +50,676 @@
             --ink-4: #94A3B8;
             --line: #E2E8F0;
             --line-soft: #F1F5F9;
-            --shadow: 0 1px 3px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.06);
-            --shadow-lg: 0 4px 12px rgba(15,23,42,0.06), 0 20px 40px rgba(15,23,42,0.10);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --topbar: 56px;
+            --bottombar: 72px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+        }
 
         body {
             font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
             color: var(--ink);
-            line-height: 1.55;
+            line-height: 1.5;
             font-size: 16px;
             -webkit-font-smoothing: antialiased;
+            position: fixed;
+            inset: 0;
         }
 
-        /* Sticky song nav */
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(250,250,250,0.92);
+        /* ───── Top bar ───── */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: calc(var(--topbar) + var(--safe-top));
+            padding-top: var(--safe-top);
+            background: rgba(255,255,255,0.92);
             backdrop-filter: saturate(180%) blur(14px);
             -webkit-backdrop-filter: saturate(180%) blur(14px);
             border-bottom: 1px solid var(--line);
-        }
-        .navbar-inner {
-            max-width: 920px;
-            margin: 0 auto;
+            z-index: 100;
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 8px 12px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
+            justify-content: space-between;
+            padding-left: 16px;
+            padding-right: 16px;
         }
-        .navbar-inner::-webkit-scrollbar { display: none; }
-        .nav-brand {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            color: var(--purple-deep);
-            padding: 6px 10px 6px 4px;
-            white-space: nowrap;
-            flex-shrink: 0;
-            border-right: 1px solid var(--line);
-            margin-right: 4px;
-        }
-        .nav-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
+        .topbar .title {
             font-size: 0.84rem;
             font-weight: 600;
             color: var(--ink-2);
-            text-decoration: none;
-            border-radius: 100px;
-            white-space: nowrap;
-            transition: all 0.15s ease;
-            flex-shrink: 0;
         }
-        .nav-pill:hover { background: var(--line-soft); color: var(--ink); }
-        .nav-pill .num {
-            display: inline-flex;
+        .topbar .menu-btn {
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 18px; height: 18px;
-            background: var(--purple);
-            color: white;
-            border-radius: 50%;
-            font-size: 0.66rem;
-            font-weight: 700;
+            color: var(--ink-2);
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .topbar .menu-btn:hover { background: var(--line-soft); }
+        .topbar .menu-btn svg { width: 22px; height: 22px; }
+
+        .topbar .progress {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple-deep), var(--blue));
+            width: 0;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Hero */
-        .hero {
-            background: linear-gradient(135deg, var(--indigo) 0%, var(--purple-deep) 50%, var(--blue) 100%);
-            padding: 56px 22px 44px;
-            text-align: center;
-            color: white;
+        /* ───── Slide deck ───── */
+        .deck {
+            position: fixed;
+            top: calc(var(--topbar) + var(--safe-top));
+            bottom: calc(var(--bottombar) + var(--safe-bottom));
+            left: 0; right: 0;
+            display: flex;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+        .deck::-webkit-scrollbar { display: none; }
+
+        .slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 18px;
             position: relative;
-            overflow: hidden;
         }
-        .hero::after {
-            content: '';
-            position: absolute; inset: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
-            pointer-events: none;
+        .slide::-webkit-scrollbar { width: 4px; }
+        .slide::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+        @media (min-width: 720px) {
+            .slide { padding: 32px 32px; }
+            .slide-inner { max-width: 600px; margin: 0 auto; }
         }
-        .hero-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
-        .hero-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.22);
-            backdrop-filter: blur(10px);
-            padding: 7px 18px;
-            border-radius: 100px;
-            font-size: 0.7rem;
+
+        .slide-eyebrow {
+            font-size: 0.66rem;
             font-weight: 700;
-            letter-spacing: 2.5px;
+            letter-spacing: 1.8px;
             text-transform: uppercase;
-            margin-bottom: 18px;
+            color: var(--purple);
+            margin-bottom: 8px;
         }
-        .hero h1 {
+        .slide h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: 1.8rem;
             font-weight: 700;
+            line-height: 1.15;
             margin-bottom: 8px;
             letter-spacing: -0.5px;
         }
-        .hero h1 em { color: var(--gold-soft); font-style: italic; }
-        .hero .date { font-size: 1.1rem; opacity: 0.9; margin-bottom: 14px; }
-        .hero .stats {
-            display: inline-flex;
-            gap: 16px;
-            font-size: 0.82rem;
-            color: rgba(255,255,255,0.7);
-            padding-top: 14px;
-            border-top: 1px solid rgba(255,255,255,0.15);
-        }
-
-        .container { max-width: 920px; margin: 0 auto; padding: 28px 16px 80px; }
-
-        /* The setlist */
-        .setlist {
-            background: var(--card);
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-        .setlist-header { padding: 22px 22px 18px; border-bottom: 1px solid var(--line); }
-        .setlist-header .label {
-            font-size: 0.7rem;
+        .slide h2.slide-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
             font-weight: 700;
-            letter-spacing: 1.6px;
-            color: var(--purple);
-            text-transform: uppercase;
-            margin-bottom: 4px;
+            line-height: 1.2;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
         }
-        .setlist-header h2 {
+        .slide .slide-sub {
+            color: var(--ink-3);
+            font-size: 0.92rem;
+            margin-bottom: 18px;
+        }
+
+        /* ───── Slide 1: Cover ───── */
+        .slide.cover {
+            background: linear-gradient(160deg, var(--indigo) 0%, var(--purple-deep) 50%, var(--blue) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            padding: 30px 28px;
+        }
+        .slide.cover::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        .slide.cover > * { position: relative; z-index: 1; }
+        .cover-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.22);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin: 0 auto 22px;
+        }
+        .slide.cover h1 {
+            font-size: clamp(2.2rem, 9vw, 3rem);
+            margin-bottom: 10px;
+            color: white;
+        }
+        .slide.cover h1 em {
+            color: var(--gold-soft);
+            font-style: italic;
+        }
+        .cover-date {
+            font-size: 1.02rem;
+            opacity: 0.88;
+            margin-bottom: 26px;
+        }
+        .cover-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            max-width: 360px;
+            margin: 0 auto 28px;
+            padding: 16px 0;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+        .cover-stats > div { text-align: center; }
+        .cover-stats .num {
             font-family: 'Playfair Display', serif;
             font-size: 1.6rem;
             font-weight: 700;
+            color: var(--gold-soft);
+            line-height: 1;
         }
-        .setlist-header p { color: var(--ink-3); font-size: 0.92rem; margin-top: 4px; }
-
-        .section-divider {
+        .cover-stats .lbl {
+            font-size: 0.66rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.65);
+            margin-top: 4px;
+        }
+        .cover-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: white;
+            color: var(--purple-deep);
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            margin: 0 auto;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+        }
+        .cover-cta:active { transform: scale(0.97); }
+        .cover-hint {
+            font-size: 0.74rem;
+            color: rgba(255,255,255,0.55);
+            margin-top: 22px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 14px 22px 6px;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* ───── Slide 2: Top notes ───── */
+        .top-notes-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .top-note {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid #FCD34D;
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+        }
+        .top-note .nm {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--gold);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.84rem;
+            flex-shrink: 0;
+            padding-top: 4px;
+        }
+        .top-note p {
+            font-size: 0.92rem;
+            color: #4a3a10;
+            line-height: 1.45;
+            flex: 1;
+        }
+        .top-note p strong { color: #78350F; font-weight: 700; }
+
+        /* ───── Slide 3: Setlist ───── */
+        .setlist-compact {
+            background: var(--card);
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            overflow: hidden;
+        }
+        .sl-divider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px 4px;
             background: var(--line-soft);
         }
-        .section-divider .label {
-            font-size: 0.66rem;
+        .sl-divider .lbl {
+            font-size: 0.62rem;
             font-weight: 700;
             letter-spacing: 1.8px;
             text-transform: uppercase;
             color: var(--purple-deep);
         }
-        .section-divider .line { flex: 1; height: 1px; background: var(--line); }
-
-        .song-row {
+        .sl-divider .ln { flex: 1; height: 1px; background: var(--line); }
+        .sl-row {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 16px 22px;
+            gap: 12px;
+            padding: 12px 14px;
             border-bottom: 1px solid var(--line-soft);
             text-decoration: none;
             color: inherit;
-            transition: background 0.15s;
-        }
-        .song-row:last-child { border-bottom: none; }
-        .song-row:hover { background: var(--line-soft); }
-
-        .song-row .num {
-            display: flex; align-items: center; justify-content: center;
-            width: 32px; height: 32px;
-            background: linear-gradient(135deg, var(--purple-deep), var(--purple));
-            color: white;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 0.92rem;
-            flex-shrink: 0;
-        }
-        .song-row.muted .num { background: var(--ink-4); }
-        .song-row .name-block { flex: 1; min-width: 0; }
-        .song-row .song-name {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--ink);
-            line-height: 1.3;
-        }
-        .song-row .song-note {
-            font-size: 0.84rem;
-            color: var(--ink-3);
-            margin-top: 2px;
-            line-height: 1.35;
-        }
-        .song-row .song-note .flag {
-            display: inline-flex;
-            font-weight: 600;
-            color: var(--rose);
-            margin-right: 4px;
-        }
-        .song-row .key-pill {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 44px;
-            height: 32px;
-            padding: 0 12px;
-            background: var(--line-soft);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.92rem;
-            color: var(--purple-deep);
-            font-family: 'Playfair Display', serif;
-            flex-shrink: 0;
-        }
-        .song-row .key-pill.tbc {
-            background: transparent;
-            color: var(--ink-4);
-            font-style: italic;
-            font-weight: 500;
-            font-size: 0.8rem;
-            font-family: 'Source Sans 3', sans-serif;
-        }
-        .song-row .chev {
-            color: var(--ink-4);
-            font-size: 1.2rem;
-            font-weight: 300;
-            margin-left: -4px;
-            flex-shrink: 0;
-        }
-
-        /* Top notes box */
-        .priority-box {
-            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-            border: 1px solid #FCD34D;
-            border-radius: 16px;
-            padding: 20px 22px;
-            margin-bottom: 24px;
-        }
-        .priority-box .label {
-            font-size: 0.66rem;
-            font-weight: 700;
-            letter-spacing: 1.8px;
-            text-transform: uppercase;
-            color: #92400E;
-            margin-bottom: 10px;
-        }
-        .priority-box ul { list-style: none; padding: 0; }
-        .priority-box li {
-            padding: 6px 0 6px 22px;
-            position: relative;
-            font-size: 0.94rem;
-            color: #4a3a10;
-            line-height: 1.45;
-        }
-        .priority-box li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            top: 6px;
-            font-weight: 700;
-            color: var(--gold);
-        }
-        .priority-box li strong { color: #78350F; }
-
-        /* Section heading */
-        h2.h-section {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin: 36px 0 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        h2.h-section::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 22px;
-            background: var(--purple);
-            border-radius: 2px;
-        }
-
-        /* Song detail (collapsed by default) */
-        details.song-detail {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            margin-bottom: 12px;
-            overflow: hidden;
-            transition: box-shadow 0.2s, border-color 0.2s;
-        }
-        details.song-detail[open] {
-            box-shadow: var(--shadow);
-            border-color: var(--purple);
-        }
-        details.song-detail summary {
-            padding: 16px 20px;
             cursor: pointer;
-            list-style: none;
+        }
+        .sl-row:last-child { border-bottom: none; }
+        .sl-row:active { background: var(--line-soft); }
+        .sl-row .num {
             display: flex;
             align-items: center;
-            gap: 14px;
-            font-weight: 600;
-            user-select: none;
-        }
-        details.song-detail summary::-webkit-details-marker { display: none; }
-        details.song-detail summary::after {
-            content: '+';
-            margin-left: auto;
-            font-size: 1.4rem;
-            font-weight: 300;
-            color: var(--ink-4);
-        }
-        details.song-detail[open] summary::after { content: '–'; color: var(--purple); }
-        details.song-detail summary .num {
-            display: inline-flex;
-            align-items: center;
             justify-content: center;
-            width: 26px; height: 26px;
+            width: 26px;
+            height: 26px;
             background: var(--purple);
             color: white;
             border-radius: 50%;
-            font-size: 0.8rem;
             font-weight: 700;
+            font-size: 0.78rem;
             flex-shrink: 0;
         }
-        details.song-detail summary .key-pill {
-            background: var(--line-soft);
-            color: var(--purple-deep);
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            font-family: 'Playfair Display', serif;
+        .sl-row.muted .num { background: var(--ink-4); }
+        .sl-row .nm { flex: 1; min-width: 0; }
+        .sl-row .nm-name {
+            font-weight: 600;
+            font-size: 0.94rem;
+            line-height: 1.25;
         }
-        details.song-detail summary .key-pill.tbc {
-            color: var(--ink-4);
+        .sl-row .nm-flag {
+            display: inline-flex;
+            font-size: 0.7rem;
+            color: var(--rose);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+        .sl-row .key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            height: 28px;
+            padding: 0 10px;
+            background: var(--line-soft);
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            color: var(--purple-deep);
+            font-family: 'Playfair Display', serif;
+            flex-shrink: 0;
+        }
+        .sl-row .key.tbc {
             background: transparent;
             border: 1px dashed var(--line);
+            color: var(--ink-4);
             font-style: italic;
-            font-family: inherit;
             font-weight: 500;
+            font-size: 0.7rem;
+            font-family: 'Source Sans 3', sans-serif;
         }
 
-        .song-body {
-            padding: 16px 20px 20px;
-            border-top: 1px solid var(--line-soft);
+        /* ───── Song detail slides ───── */
+        .song-hero {
+            background: linear-gradient(135deg, var(--purple-deep) 0%, var(--blue) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
         }
-        .song-body h3 {
-            font-size: 0.7rem;
+        .song-hero.gold { background: linear-gradient(135deg, #92400E 0%, var(--gold) 100%); }
+        .song-hero.rose { background: linear-gradient(135deg, #9F1239 0%, var(--rose) 100%); }
+
+        .song-hero .pos {
+            font-size: 0.66rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 6px;
+        }
+        .song-hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+        .song-hero .meta-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .song-hero .key-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.18);
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .song-hero .key-pill .k {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        /* Filter chips */
+        .filter-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 10px 0 14px;
+            margin-bottom: 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .filter-bar .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 14px;
+            border-radius: 100px;
+            background: var(--line-soft);
+            color: var(--ink-2);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .filter-bar .chip[aria-pressed="true"] {
+            background: var(--purple-deep);
+            color: white;
+            border-color: var(--purple-deep);
+        }
+
+        /* Quick block: "the move" */
+        .move-block {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .move-block .lbl {
+            font-size: 0.66rem;
             font-weight: 700;
             letter-spacing: 1.5px;
             text-transform: uppercase;
             color: var(--purple);
-            margin: 16px 0 8px;
+            margin-bottom: 6px;
         }
-        .song-body h3:first-child { margin-top: 0; }
-        .song-body p {
-            color: var(--ink-2);
-            font-size: 0.94rem;
-            line-height: 1.55;
-            margin-bottom: 8px;
-        }
-
-        .parts-compact { display: grid; gap: 8px; margin-top: 4px; }
-        .part-line {
-            display: flex;
-            gap: 10px;
+        .move-block p {
             font-size: 0.92rem;
+            color: var(--ink-2);
             line-height: 1.5;
         }
-        .part-line .role {
-            font-weight: 700;
-            color: var(--purple);
-            min-width: 95px;
-            flex-shrink: 0;
-            font-size: 0.82rem;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
-            padding-top: 1px;
-        }
-        .part-line p { color: var(--ink-2); margin: 0; flex: 1; }
-        .part-line.flag .role { color: var(--rose); }
 
-        .audio-strip {
+        /* Per-part list */
+        .parts-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .part-item {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px 14px;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .part-item.flag { border-left: 3px solid var(--rose); }
+        .part-item .role {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .part-item .role-name {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--purple);
+        }
+        .part-item.flag .role-name { color: var(--rose); }
+        .part-item .musician {
+            font-size: 0.78rem;
+            color: var(--ink-3);
+            font-weight: 500;
+        }
+        .part-item p {
+            font-size: 0.88rem;
+            color: var(--ink-2);
+            line-height: 1.5;
+        }
+        .part-item.dim {
+            display: none;
+        }
+
+        /* Audio block — minimised by default */
+        .listen-toggle {
+            background: var(--line-soft);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            cursor: pointer;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--ink-2);
+            width: 100%;
+        }
+        .listen-toggle:active { background: #E2E8F0; }
+        .listen-toggle .ico {
+            font-size: 1rem;
+        }
+        .listen-toggle .arrow {
+            margin-left: auto;
+            color: var(--ink-4);
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+        .listen-toggle.open .arrow { transform: rotate(180deg); }
+
+        .listen-content {
+            display: none;
             background: var(--line-soft);
             border-radius: 10px;
             padding: 12px;
-            margin-top: 14px;
+            margin-top: 6px;
         }
-        .audio-strip .audio-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 1.4px;
-            text-transform: uppercase;
-            color: var(--ink-3);
+        .listen-content.open { display: block; }
+        .listen-content .audio-row {
             margin-bottom: 8px;
         }
-        .audio-strip .audio-row {
-            display: flex;
-            align-items: center;
+        .listen-content .audio-row:last-child { margin-bottom: 0; }
+        .listen-content .clip-label {
+            font-size: 0.74rem;
+            color: var(--ink-3);
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .listen-content audio {
+            width: 100%;
+            height: 36px;
+        }
+        .listen-content .note {
+            font-size: 0.74rem;
+            color: var(--ink-3);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        /* Watch-for block */
+        .watch-block {
+            background: #FEF2F2;
+            border-left: 3px solid var(--rose);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-top: 12px;
+        }
+        .watch-block .lbl {
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #991B1B;
+            margin-bottom: 4px;
+        }
+        .watch-block p {
+            font-size: 0.86rem;
+            color: #7F1D1D;
+            line-height: 1.45;
+        }
+
+        /* ───── Actions slide ───── */
+        .actions-list {
+            display: grid;
             gap: 10px;
             margin-top: 6px;
         }
-        .audio-strip .audio-row:first-of-type { margin-top: 0; }
-        .audio-strip .audio-row .clip-label {
-            font-size: 0.78rem;
-            color: var(--ink-3);
-            min-width: 130px;
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-        .audio-strip audio {
-            flex: 1;
-            min-width: 200px;
-            height: 36px;
-        }
-        @media (max-width: 540px) {
-            .audio-strip .audio-row { flex-direction: column; align-items: stretch; gap: 4px; }
-            .audio-strip .audio-row .clip-label { min-width: auto; }
-        }
-
-        /* Actions */
-        .actions {
+        .action-item {
             background: var(--card);
-            border-radius: 14px;
-            box-shadow: var(--shadow);
-            padding: 22px;
-            margin-bottom: 24px;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
         }
-        .actions h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 12px;
+        .action-item .check {
+            width: 22px; height: 22px;
+            border: 2px solid var(--ink-4);
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 1px;
         }
-        .actions ul { list-style: none; padding: 0; }
-        .actions li {
-            padding: 10px 0 10px 28px;
-            position: relative;
-            font-size: 0.94rem;
-            color: var(--ink-2);
-            border-bottom: 1px solid var(--line-soft);
-            line-height: 1.45;
+        .action-item .body { flex: 1; }
+        .action-item .body p {
+            font-size: 0.92rem;
+            color: var(--ink);
+            line-height: 1.4;
         }
-        .actions li:last-child { border-bottom: none; }
-        .actions li::before {
-            content: '○';
-            position: absolute;
-            left: 4px;
-            top: 10px;
-            color: var(--purple);
-            font-size: 1rem;
-        }
-        .actions li .who {
+        .action-item .body p strong { font-weight: 700; }
+        .action-item .body .who {
             display: inline-block;
-            font-size: 0.7rem;
+            font-size: 0.66rem;
             font-weight: 700;
             background: #EDE9FE;
             color: var(--purple-deep);
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 4px;
-            margin-left: 6px;
-            letter-spacing: 0.3px;
+            margin-top: 6px;
+            letter-spacing: 0.4px;
         }
 
-        /* Full recordings (collapsed) */
-        details.full-recordings {
-            background: var(--indigo);
-            color: white;
-            border-radius: 14px;
-            overflow: hidden;
-            margin-bottom: 24px;
+        /* ───── Audio slide ───── */
+        .recording-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
         }
-        details.full-recordings summary {
-            padding: 16px 22px;
-            cursor: pointer;
-            list-style: none;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-            user-select: none;
-        }
-        details.full-recordings summary::-webkit-details-marker { display: none; }
-        details.full-recordings summary::after {
-            content: '+';
-            margin-left: auto;
-            font-size: 1.4rem;
-            font-weight: 300;
-            opacity: 0.7;
-        }
-        details.full-recordings[open] summary::after { content: '–'; }
-        details.full-recordings summary .ico { font-size: 1.1rem; }
-        details.full-recordings summary .meta {
-            font-size: 0.82rem;
-            opacity: 0.7;
-            font-weight: 500;
-            margin-left: 8px;
-        }
-        .recordings-body {
-            padding: 0 22px 20px;
-            display: grid;
-            gap: 12px;
-        }
-        .recording-item {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 12px 14px;
-        }
-        .recording-item .r-label {
+        .recording-card .r-label {
             font-size: 0.84rem;
-            font-weight: 600;
+            font-weight: 700;
+            color: var(--ink);
             margin-bottom: 4px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .recording-item .r-num {
-            background: var(--gold);
-            color: var(--ink);
+        .recording-card .r-num {
+            background: var(--purple);
+            color: white;
             font-size: 0.66rem;
-            padding: 2px 7px;
+            padding: 2px 8px;
             border-radius: 100px;
             font-weight: 700;
         }
-        .recording-item .r-context {
+        .recording-card .r-context {
             font-size: 0.78rem;
-            color: rgba(255,255,255,0.6);
+            color: var(--ink-3);
             margin-bottom: 8px;
             line-height: 1.4;
         }
-        .recording-item audio { width: 100%; height: 36px; }
+        .recording-card audio {
+            width: 100%;
+            height: 36px;
+        }
 
-        /* Anniversary teaser */
-        .teaser {
+        /* ───── Anniversary slide ───── */
+        .anniversary-card {
             background: linear-gradient(135deg, var(--indigo) 0%, var(--purple-deep) 100%);
             color: white;
-            border-radius: 14px;
-            padding: 24px;
-            margin-bottom: 24px;
+            border-radius: 16px;
+            padding: 22px;
         }
-        .teaser .label {
+        .anniversary-card .label {
             display: inline-block;
             background: rgba(252,211,77,0.2);
             color: var(--gold-soft);
-            font-size: 0.66rem;
+            font-size: 0.64rem;
             font-weight: 700;
             letter-spacing: 1.6px;
             text-transform: uppercase;
@@ -623,270 +727,416 @@
             border-radius: 100px;
             margin-bottom: 12px;
         }
-        .teaser h2 {
+        .anniversary-card h2 {
             font-family: 'Playfair Display', serif;
             font-size: 1.3rem;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
-        .teaser p {
-            font-size: 0.92rem;
-            opacity: 0.85;
+        .anniversary-card p {
+            font-size: 0.88rem;
+            opacity: 0.88;
             line-height: 1.55;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
-        .teaser p:last-child { margin-bottom: 0; }
-        .teaser strong { color: var(--gold-soft); font-weight: 600; }
+        .anniversary-card p:last-child { margin-bottom: 0; }
+        .anniversary-card strong { color: var(--gold-soft); font-weight: 600; }
+        .anniversary-card .todo {
+            font-size: 0.78rem;
+            opacity: 0.7;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
 
-        .footer {
-            text-align: center;
-            color: var(--ink-4);
-            font-size: 0.84rem;
-            padding: 24px 0 0;
+        /* ───── Bottom navigation ───── */
+        .bottombar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: calc(var(--bottombar) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: saturate(180%) blur(14px);
+            -webkit-backdrop-filter: saturate(180%) blur(14px);
             border-top: 1px solid var(--line);
-            margin-top: 32px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 12px;
+            padding-right: 12px;
         }
-        .footer .verse {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: var(--ink-3);
-            font-size: 0.95rem;
-            margin-bottom: 6px;
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: var(--line-soft);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--ink-2);
+            flex-shrink: 0;
+        }
+        .nav-btn:active { background: var(--line); }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .nav-btn svg { width: 22px; height: 22px; }
+        .nav-btn.next {
+            background: var(--purple-deep);
+            color: white;
+        }
+        .nav-btn.next:active { background: var(--indigo); }
+
+        /* Dot indicator */
+        .dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 0 8px;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--line);
+            transition: all 0.2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .dot.active {
+            background: var(--purple-deep);
+            width: 22px;
+            border-radius: 100px;
         }
 
-        @media (max-width: 600px) {
-            .hero { padding: 44px 18px 36px; }
-            .container { padding: 22px 14px 60px; }
-            .setlist-header { padding: 18px 18px 14px; }
-            .song-row { padding: 14px 18px; gap: 12px; }
-            .song-row .song-name { font-size: 0.96rem; }
-            .song-row .song-note { font-size: 0.8rem; }
-            .priority-box { padding: 18px; }
-            details.song-detail summary { padding: 14px 16px; }
-            .song-body { padding: 16px 16px 18px; }
-            .actions { padding: 18px; }
-            .recordings-body { padding: 0 18px 16px; }
-            .part-line { flex-direction: column; gap: 2px; }
-            .part-line .role { min-width: auto; }
+        .slide-counter {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--ink-3);
+            min-width: 40px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ───── Menu (overlay) ───── */
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .menu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .menu-panel {
+            position: fixed;
+            top: 0; right: 0; bottom: 0;
+            width: min(320px, 85vw);
+            background: var(--card);
+            z-index: 201;
+            transform: translateX(100%);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+        }
+        .menu-panel.open { transform: translateX(0); }
+        .menu-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-header .h {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .menu-close {
+            background: var(--line-soft);
+            border: none;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--ink-2);
+        }
+        .menu-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            font-size: 0.94rem;
+            color: var(--ink);
+            font-family: inherit;
+        }
+        .menu-item:active { background: var(--line-soft); }
+        .menu-item.active {
+            background: #EDE9FE;
+            color: var(--purple-deep);
+            font-weight: 600;
+        }
+        .menu-item .menu-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--line-soft);
+            color: var(--ink-3);
+            border-radius: 50%;
+            font-size: 0.74rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .menu-item.active .menu-num {
+            background: var(--purple-deep);
+            color: white;
+        }
+        .menu-item .menu-name { flex: 1; }
+        .menu-item .menu-key {
+            font-size: 0.72rem;
+            color: var(--ink-3);
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+        }
+        .menu-divider {
+            height: 1px;
+            background: var(--line);
+            margin: 8px 0;
+        }
+        .menu-section-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: var(--ink-4);
+            padding: 12px 20px 6px;
+        }
+
+        .keyboard-hint {
+            display: none;
+        }
+        @media (min-width: 720px) and (hover: hover) {
+            .keyboard-hint {
+                display: block;
+                position: fixed;
+                bottom: calc(var(--bottombar) + var(--safe-bottom) + 12px);
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.72rem;
+                color: var(--ink-4);
+                background: rgba(255,255,255,0.9);
+                padding: 4px 10px;
+                border-radius: 100px;
+                pointer-events: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sticky song nav -->
-    <nav class="navbar" aria-label="Section navigation">
-        <div class="navbar-inner">
-            <span class="nav-brand">JUMP TO</span>
-            <a class="nav-pill" href="#priority">⚡ Top notes</a>
-            <a class="nav-pill" href="#song-1"><span class="num">1</span>Trading</a>
-            <a class="nav-pill" href="#song-2"><span class="num">2</span>Lord You Are Good</a>
-            <a class="nav-pill" href="#song-3"><span class="num">3</span>Friend of God</a>
-            <a class="nav-pill" href="#song-4"><span class="num">4</span>Every Praise</a>
-            <a class="nav-pill" href="#worship">Worship+</a>
-            <a class="nav-pill" href="#actions">✓ To do</a>
-            <a class="nav-pill" href="#audio">🎙 Audio</a>
-        </div>
-    </nav>
+    <!-- Top bar -->
+    <div class="topbar">
+        <div class="title">Rehearsal Recap · 2 May</div>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div class="progress" id="progress"></div>
+    </div>
 
-    <!-- Hero -->
-    <header class="hero">
-        <div class="hero-inner">
-            <div class="hero-badge">Worship · Rehearsal Recap</div>
+    <!-- Slide deck -->
+    <div class="deck" id="deck">
+
+        <!-- ──────── 1: Cover ──────── -->
+        <section class="slide cover" data-title="Cover">
+            <div class="cover-badge">Worship · Rehearsal Recap</div>
             <h1>Sunday <em>at a glance</em></h1>
-            <div class="date">From Saturday 2nd May rehearsal · for 3rd May service</div>
-            <div class="stats">
-                <span>9 songs</span>
-                <span>•</span>
-                <span>5 recordings</span>
-                <span>•</span>
-                <span>9am call</span>
+            <div class="cover-date">From Sat 2 May rehearsal · for 3 May service</div>
+            <div class="cover-stats">
+                <div><div class="num">9</div><div class="lbl">Songs</div></div>
+                <div><div class="num">5</div><div class="lbl">Recordings</div></div>
+                <div><div class="num">9am</div><div class="lbl">Call</div></div>
             </div>
-        </div>
-    </header>
-
-    <div class="container">
-
-        <!-- The 4 things that matter most -->
-        <section id="priority" class="priority-box" aria-label="Top things to remember">
-            <div class="label">⚡ The 4 things that matter most</div>
-            <ul>
-                <li><strong>Trading My Sorrows is in E</strong> — we rehearsed in B, transpose for Sunday. New arrangement: drums + bass hold back through verse 1 (Caster alone), come in for verse 2.</li>
-                <li><strong>BJ underplays Every Praise during Friend of God</strong> — that's the cue we're transitioning. Not a bridge inside the song; it's the signal to the band that Every Praise is next.</li>
-                <li><strong>Esther holds back on verse 1 of Trading My Sorrows</strong> — only enters on verse 2 with Caster.</li>
-                <li><strong>Volume control matters</strong> — kick and bass were too loud at rehearsal (Liv next door complained). Keep it considerate at the venue.</li>
-            </ul>
+            <button class="cover-cta" onclick="goSlide(1)">
+                Start
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+            <div class="cover-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 5l7 7-7 7M3 12h18"/></svg>
+                Swipe or tap to navigate
+            </div>
         </section>
 
-        <!-- The setlist (gig sheet) -->
-        <section class="setlist" aria-label="Sunday set list">
-            <div class="setlist-header">
-                <div class="label">Set list · Sunday 3rd May 2026</div>
-                <h2>The order, the keys, the watch-fors</h2>
-                <p>Tap a song below for full arrangement detail.</p>
+        <!-- ──────── 2: Top notes ──────── -->
+        <section class="slide" data-title="Top notes">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">⚡ The 4 things that matter most</div>
+                <h2 class="slide-title">If you read nothing else, read these</h2>
+                <p class="slide-sub">Lock these in before tomorrow.</p>
+                <div class="top-notes-list">
+                    <div class="top-note">
+                        <div class="nm">1</div>
+                        <p><strong>Trading My Sorrows is in E.</strong> We rehearsed in B — transpose for Sunday. New arrangement: drums + bass hold back through verse 1 (Caster alone), come in for verse 2.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">2</div>
+                        <p><strong>BJ underplays Every Praise during Friend of God.</strong> That's the cue we're transitioning. Not a bridge inside the song — it's the signal to the band that Every Praise is next.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">3</div>
+                        <p><strong>Esther holds back on verse 1 of Trading My Sorrows.</strong> Only enters on verse 2 with Caster.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">4</div>
+                        <p><strong>Volume control matters.</strong> Kick + bass were too loud at rehearsal (Liv next door complained). Keep it considerate at the venue.</p>
+                    </div>
+                </div>
             </div>
-
-            <div class="section-divider">
-                <div class="label">Praise</div>
-                <div class="line"></div>
-            </div>
-
-            <a class="song-row" href="#song-1">
-                <span class="num">1</span>
-                <div class="name-block">
-                    <div class="song-name">Trading My Sorrows</div>
-                    <div class="song-note"><span class="flag">⚠</span>New arrangement — verse 1 Caster alone, verse 2 together. Watch dynamics.</div>
-                </div>
-                <span class="key-pill">E</span>
-                <span class="chev">›</span>
-            </a>
-
-            <a class="song-row" href="#song-2">
-                <span class="num">2</span>
-                <div class="name-block">
-                    <div class="song-name">Lord You Are Good</div>
-                    <div class="song-note">Straight into "We worship You" intro — no "Yes, yes, Lord" chant.</div>
-                </div>
-                <span class="key-pill tbc">key TBC</span>
-                <span class="chev">›</span>
-            </a>
-
-            <a class="song-row" href="#song-3">
-                <span class="num">3</span>
-                <div class="name-block">
-                    <div class="song-name">Friend of God</div>
-                    <div class="song-note">"I'm a friend of God" sung twice at the end. Listen for BJ's underplay.</div>
-                </div>
-                <span class="key-pill tbc">key TBC</span>
-                <span class="chev">›</span>
-            </a>
-
-            <a class="song-row" href="#song-4">
-                <span class="num">4</span>
-                <div class="name-block">
-                    <div class="song-name">Every Praise</div>
-                    <div class="song-note"><span class="flag">⚠</span>Cued by BJ's underplay during Friend of God. Brief pause then in.</div>
-                </div>
-                <span class="key-pill tbc">key TBC</span>
-                <span class="chev">›</span>
-            </a>
-
-            <div class="section-divider">
-                <div class="label">Worship</div>
-                <div class="line"></div>
-            </div>
-
-            <a class="song-row muted" href="#worship">
-                <span class="num">1</span>
-                <div class="name-block">
-                    <div class="song-name">Here I Am to Worship</div>
-                    <div class="song-note">Standard arrangement — not deep-dived in rehearsal.</div>
-                </div>
-                <span class="key-pill tbc">TBC</span>
-                <span class="chev">›</span>
-            </a>
-
-            <a class="song-row muted" href="#worship">
-                <span class="num">2</span>
-                <div class="name-block">
-                    <div class="song-name">Be Magnified</div>
-                </div>
-                <span class="key-pill tbc">TBC</span>
-                <span class="chev">›</span>
-            </a>
-
-            <a class="song-row muted" href="#worship">
-                <span class="num">3</span>
-                <div class="name-block">
-                    <div class="song-name">I Exalt Thee</div>
-                </div>
-                <span class="key-pill tbc">TBC</span>
-                <span class="chev">›</span>
-            </a>
-
-            <div class="section-divider">
-                <div class="label">Offering</div>
-                <div class="line"></div>
-            </div>
-
-            <a class="song-row muted" href="#worship">
-                <span class="num">1</span>
-                <div class="name-block">
-                    <div class="song-name">Ancient of Days</div>
-                    <div class="song-note">Anniversary idea: Morayo on guitar for the bass solo (try this week).</div>
-                </div>
-                <span class="key-pill tbc">TBC</span>
-                <span class="chev">›</span>
-            </a>
-
-            <div class="section-divider">
-                <div class="label">End of Service</div>
-                <div class="line"></div>
-            </div>
-
-            <a class="song-row muted" href="#worship">
-                <span class="num">1</span>
-                <div class="name-block">
-                    <div class="song-name">He Is Lord</div>
-                </div>
-                <span class="key-pill tbc">TBC</span>
-                <span class="chev">›</span>
-            </a>
         </section>
 
-        <!-- Actions -->
-        <section id="actions" class="actions" aria-label="Action items">
-            <h2>✓ For tomorrow morning</h2>
-            <ul>
-                <li><strong>9am call</strong> — quick run through before service. <span class="who">All</span></li>
-                <li>Walk Morayo through the new Trading My Sorrows movement at setup. <span class="who">Caster + BJ</span></li>
-                <li>Confirm the Every Praise underplay cue is mutually understood. <span class="who">BJ + Caster</span></li>
-                <li>Send updated set to WhatsApp group tonight. <span class="who">BJ</span></li>
-                <li>Volume control — kick + bass kept considerate. <span class="who">BJ + Uncle Michael</span></li>
-            </ul>
+        <!-- ──────── 3: Setlist ──────── -->
+        <section class="slide" data-title="Set list">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">Set list · Sunday 3 May</div>
+                <h2 class="slide-title">The order, the keys</h2>
+                <p class="slide-sub">Tap a row to jump to its detail.</p>
+                <div class="setlist-compact">
+                    <div class="sl-divider"><div class="lbl">Praise</div><div class="ln"></div></div>
+                    <a class="sl-row" onclick="goSlide(3)">
+                        <span class="num">1</span>
+                        <div class="nm"><div class="nm-name">Trading My Sorrows</div><div class="nm-flag">⚠ New arrangement</div></div>
+                        <span class="key">E</span>
+                    </a>
+                    <a class="sl-row" onclick="goSlide(4)">
+                        <span class="num">2</span>
+                        <div class="nm"><div class="nm-name">Lord You Are Good</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                    <a class="sl-row" onclick="goSlide(5)">
+                        <span class="num">3</span>
+                        <div class="nm"><div class="nm-name">Friend of God</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                    <a class="sl-row" onclick="goSlide(6)">
+                        <span class="num">4</span>
+                        <div class="nm"><div class="nm-name">Every Praise</div><div class="nm-flag">⚠ Cued by underplay</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                    <div class="sl-divider"><div class="lbl">Worship</div><div class="ln"></div></div>
+                    <a class="sl-row muted" onclick="goSlide(7)">
+                        <span class="num">1</span>
+                        <div class="nm"><div class="nm-name">Here I Am to Worship</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                    <a class="sl-row muted" onclick="goSlide(7)">
+                        <span class="num">2</span>
+                        <div class="nm"><div class="nm-name">Be Magnified</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                    <a class="sl-row muted" onclick="goSlide(7)">
+                        <span class="num">3</span>
+                        <div class="nm"><div class="nm-name">I Exalt Thee</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                    <div class="sl-divider"><div class="lbl">Offering</div><div class="ln"></div></div>
+                    <a class="sl-row muted" onclick="goSlide(7)">
+                        <span class="num">1</span>
+                        <div class="nm"><div class="nm-name">Ancient of Days</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                    <div class="sl-divider"><div class="lbl">End of Service</div><div class="ln"></div></div>
+                    <a class="sl-row muted" onclick="goSlide(7)">
+                        <span class="num">1</span>
+                        <div class="nm"><div class="nm-name">He Is Lord</div></div>
+                        <span class="key tbc">TBC</span>
+                    </a>
+                </div>
+            </div>
         </section>
 
-        <!-- Detail -->
-        <h2 class="h-section">Per-song detail</h2>
-        <p style="color: var(--ink-3); font-size: 0.92rem; margin-bottom: 14px;">Tap any song to expand. Detail's there when you want it; out of the way when you don't.</p>
+        <!-- ──────── 4: Trading My Sorrows ──────── -->
+        <section class="slide" data-title="Trading My Sorrows">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Praise · Song 1 of 4</div>
+                    <h2>Trading My Sorrows</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">Key <span class="k">E</span></span>
+                        <span class="key-pill">⚠ New arrangement</span>
+                    </div>
+                </div>
 
-        <details class="song-detail" id="song-1" open>
-            <summary>
-                <span class="num">1</span>
-                <span>Trading My Sorrows</span>
-                <span class="key-pill">E</span>
-            </summary>
-            <div class="song-body">
-                <h3>Arrangement</h3>
-                <p>Intro × 8 (multiple of 4). Verse 1 — Caster alone, instruments low. Verse 2 — Caster + Esther together, drums lift slightly. The run (4 3 2 / 2 3 4 / 1 → 7, simplified by dropping the 2 3). After the run, full build into chorus (6 4 6 4 / 5 5 6).</p>
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                    <button class="chip" data-filter="guitar">Guitar</button>
+                </div>
 
-                <h3>The principle</h3>
-                <p>Earlier feedback that the song felt rushed wasn't a tempo problem — it was a dynamics problem. We were filling every bar. New arrangement builds: nothing → Caster alone → both → full band on the run.</p>
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>Intro × 8. Verse 1 — Caster alone, instruments low. Verse 2 — Caster + Esther, drums lift. The run (4 3 2 → 1 → 7, simplified). After the run, full build into chorus.</p>
+                </div>
 
-                <h3>Per part</h3>
-                <div class="parts-compact">
-                    <div class="part-line flag">
-                        <div class="role">Drums · BJ</div>
+                <div class="move-block">
+                    <div class="lbl">The principle</div>
+                    <p>Not a tempo problem — a dynamics problem. New arrangement builds: nothing → Caster alone → both → full band on the run.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item flag" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">BJ</span></div>
                         <p>Hold back through intro and verse 1, barely audible. Lift on verse 2. Full sound only <em>after</em> the run.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Bass · Michael</div>
+                    <div class="part-item" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">Michael</span></div>
                         <p>Don't really come in until Esther comes in (or until the run). Bass entry is a dynamic moment.</p>
                     </div>
-                    <div class="part-line flag">
-                        <div class="role">Vocals · Esther</div>
+                    <div class="part-item flag" data-part="vocals">
+                        <div class="role"><span class="role-name">Vocals</span><span class="musician">Esther</span></div>
                         <p>Don't enter on verse 1. Caster does it alone. You come in for verse 2.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Lead · Caster</div>
-                        <p>You're leading — band counts on you to call structure. Lock the intro count.</p>
+                    <div class="part-item" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Caster</span></div>
+                        <p>You're leading — band counts on you. Lock the intro count.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Guitar · Morayo</div>
-                        <p>Movement is slightly different to what you'll remember. We'll walk through at 9am setup.</p>
+                    <div class="part-item" data-part="guitar">
+                        <div class="role"><span class="role-name">Guitar</span><span class="musician">Morayo</span></div>
+                        <p>Movement is slightly different to what you'll remember. Walk through at 9am setup.</p>
                     </div>
                 </div>
 
-                <div class="audio-strip">
-                    <div class="audio-label">🎙 Listen back</div>
+                <button class="listen-toggle" data-listen-toggle>
+                    <span class="ico">🎙</span>
+                    <span>Listen back to rehearsal</span>
+                    <span class="arrow">▾</span>
+                </button>
+                <div class="listen-content">
                     <div class="audio-row">
                         <span class="clip-label">Arrangement walk-through</span>
                         <audio controls preload="none" src="audio/rehearsal-part1.m4a"></audio>
@@ -897,36 +1147,52 @@
                     </div>
                 </div>
             </div>
-        </details>
+        </section>
 
-        <details class="song-detail" id="song-2">
-            <summary>
-                <span class="num">2</span>
-                <span>Lord You Are Good</span>
-                <span class="key-pill tbc">key TBC</span>
-            </summary>
-            <div class="song-body">
-                <h3>The transition</h3>
-                <p>Straight in — no "Yes, yes, Lord" chant. Goes directly into "We worship You / Hallelujah." That chorus runs twice as a musical intro before any vocal lead-in.</p>
+        <!-- ──────── 5: Lord You Are Good ──────── -->
+        <section class="slide" data-title="Lord You Are Good">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Praise · Song 2 of 4</div>
+                    <h2>Lord You Are Good</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">Key <span class="k">TBC</span></span>
+                    </div>
+                </div>
 
-                <h3>Per part</h3>
-                <div class="parts-compact">
-                    <div class="part-line">
-                        <div class="role">Bass · Michael</div>
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The transition</div>
+                    <p>Straight in — no "Yes, yes, Lord" chant. Goes directly into "We worship You / Hallelujah." That chorus runs <strong>twice</strong> as a musical intro before any vocal lead-in.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">Michael</span></div>
                         <p>Bass movement on the chorus is the anchor for the transition out of Trading My Sorrows.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Drums · BJ</div>
+                    <div class="part-item" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">BJ</span></div>
                         <p>Normal — no special movement. Volume considerate.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Lead · Caster</div>
+                    <div class="part-item" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Caster</span></div>
                         <p>Two rounds of "We worship You / Hallelujah" before any vocal welcome.</p>
                     </div>
                 </div>
 
-                <div class="audio-strip">
-                    <div class="audio-label">🎙 Listen back</div>
+                <button class="listen-toggle" data-listen-toggle>
+                    <span class="ico">🎙</span>
+                    <span>Listen back to rehearsal</span>
+                    <span class="arrow">▾</span>
+                </button>
+                <div class="listen-content">
                     <div class="audio-row">
                         <span class="clip-label">Transition discussion</span>
                         <audio controls preload="none" src="audio/rehearsal-part2.m4a"></audio>
@@ -937,39 +1203,58 @@
                     </div>
                 </div>
             </div>
-        </details>
+        </section>
 
-        <details class="song-detail" id="song-3">
-            <summary>
-                <span class="num">3</span>
-                <span>Friend of God</span>
-                <span class="key-pill tbc">key TBC</span>
-            </summary>
-            <div class="song-body">
-                <h3>The transition into Every Praise</h3>
-                <p><strong>BJ plays Every Praise underneath the back end of Friend of God</strong> as a cue — building it in the background while Caster is still on "I'm a friend of God." The underplay <em>is</em> the signal: we're moving into Every Praise next. Caster takes Friend of God to its end ("I'm a friend of God" twice), brief pause, then drop into Every Praise.</p>
+        <!-- ──────── 6: Friend of God ──────── -->
+        <section class="slide" data-title="Friend of God">
+            <div class="slide-inner">
+                <div class="song-hero gold">
+                    <div class="pos">Praise · Song 3 of 4</div>
+                    <h2>Friend of God</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">Key <span class="k">TBC</span></span>
+                        <span class="key-pill">→ Cues Every Praise</span>
+                    </div>
+                </div>
 
-                <h3>Per part</h3>
-                <div class="parts-compact">
-                    <div class="part-line">
-                        <div class="role">Lead · Caster</div>
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The transition into Every Praise</div>
+                    <p><strong>BJ plays Every Praise underneath the back end of Friend of God</strong> as a cue — building it in the background while Caster is still on "I'm a friend of God." The underplay <em>is</em> the signal: we're moving into Every Praise next. Caster takes Friend of God to its end ("I'm a friend of God" twice), brief pause, then drop into Every Praise.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Caster</span></div>
                         <p>"I'm a friend of God" twice. Listen for BJ's Every Praise underplay — that's your cue.</p>
                     </div>
-                    <div class="part-line flag">
-                        <div class="role">Drums · BJ</div>
+                    <div class="part-item flag" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">BJ</span></div>
                         <p>Carry the transition. Underplay Every Praise during Friend of God's tail. That's the cue for the band.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Bass · Michael</div>
+                    <div class="part-item" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">Michael</span></div>
                         <p>Pick up on BJ's underplay and start moving into the new feel.</p>
                     </div>
                 </div>
 
-                <h3>Watch for</h3>
-                <p>One muddle in rehearsal — BJ called "God Almighty" instead of "God My Saviour." Be deliberate with song-name calls so no one comes in on the wrong song.</p>
+                <div class="watch-block">
+                    <div class="lbl">⚠ Watch for</div>
+                    <p>BJ called "God Almighty" by mistake instead of "God My Saviour" in rehearsal. Be deliberate with song-name calls.</p>
+                </div>
 
-                <div class="audio-strip">
-                    <div class="audio-label">🎙 Listen back</div>
+                <button class="listen-toggle" data-listen-toggle>
+                    <span class="ico">🎙</span>
+                    <span>Listen back to rehearsal</span>
+                    <span class="arrow">▾</span>
+                </button>
+                <div class="listen-content">
                     <div class="audio-row">
                         <span class="clip-label">Underplay idea</span>
                         <audio controls preload="none" src="audio/rehearsal-seq2.m4a"></audio>
@@ -980,40 +1265,59 @@
                     </div>
                 </div>
             </div>
-        </details>
+        </section>
 
-        <details class="song-detail" id="song-4">
-            <summary>
-                <span class="num">4</span>
-                <span>Every Praise</span>
-                <span class="key-pill tbc">key TBC</span>
-            </summary>
-            <div class="song-body">
-                <h3>The shape</h3>
-                <p>Comes in straight after Friend of God. The transition is the music telling us we're moving — no announcement needed. BJ's underplay during Friend of God puts the band in the groove before Every Praise lands.</p>
+        <!-- ──────── 7: Every Praise ──────── -->
+        <section class="slide" data-title="Every Praise">
+            <div class="slide-inner">
+                <div class="song-hero rose">
+                    <div class="pos">Praise · Song 4 of 4</div>
+                    <h2>Every Praise</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">Key <span class="k">TBC</span></span>
+                        <span class="key-pill">⚠ Cued transition</span>
+                    </div>
+                </div>
 
-                <h3>Per part</h3>
-                <div class="parts-compact">
-                    <div class="part-line">
-                        <div class="role">Drums · BJ</div>
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>Comes in straight after Friend of God. The transition is the music telling us we're moving — no announcement needed. BJ's underplay during Friend of God puts the band in the groove before Every Praise lands.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">BJ</span></div>
                         <p>You set this up by pre-playing it under Friend of God. Drive it from the moment we land.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Lead · Caster</div>
+                    <div class="part-item" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Caster</span></div>
                         <p>Friend of God ends, brief pause, take us into Every Praise. Band's already there.</p>
                     </div>
-                    <div class="part-line">
-                        <div class="role">Vocals · Esther</div>
+                    <div class="part-item" data-part="vocals">
+                        <div class="role"><span class="role-name">Vocals</span><span class="musician">Esther</span></div>
                         <p>Support Caster — come in once he's established the line.</p>
                     </div>
                 </div>
 
-                <h3>Watch for</h3>
-                <p>Tempo match between Friend of God's tail and Every Praise's start. BJ's underplay is what holds them together — if it drops, the transition will feel like a stop-start.</p>
+                <div class="watch-block">
+                    <div class="lbl">⚠ Watch for</div>
+                    <p>Tempo match between Friend of God's tail and Every Praise's start. BJ's underplay holds them together — if it drops, the transition feels like a stop-start.</p>
+                </div>
 
-                <div class="audio-strip">
-                    <div class="audio-label">🎙 Listen back</div>
-                    <p style="font-size: 0.78rem; color: var(--ink-3); margin-bottom: 8px; font-style: italic;">Wasn't run as its own song in rehearsal — these clips discuss it as the transition target.</p>
+                <button class="listen-toggle" data-listen-toggle>
+                    <span class="ico">🎙</span>
+                    <span>Listen back to rehearsal</span>
+                    <span class="arrow">▾</span>
+                </button>
+                <div class="listen-content">
+                    <div class="note">Wasn't run as its own song in rehearsal — these clips discuss it as the transition target.</div>
                     <div class="audio-row">
                         <span class="clip-label">Underplay & cue</span>
                         <audio controls preload="none" src="audio/rehearsal-seq2.m4a"></audio>
@@ -1024,73 +1328,319 @@
                     </div>
                 </div>
             </div>
-        </details>
-
-        <h2 class="h-section" id="worship">Worship · Offering · End</h2>
-        <details class="song-detail">
-            <summary>
-                <span class="num" style="background: var(--ink-4);">·</span>
-                <span>Standard arrangements (not deep-dived in rehearsal)</span>
-                <span class="key-pill tbc">keys TBC</span>
-            </summary>
-            <div class="song-body">
-                <h3>What's covered</h3>
-                <p>The worship segment (Here I Am to Worship → Be Magnified → I Exalt Thee), Ancient of Days for offering, and He Is Lord for end of service all run as recent weeks. Focus in rehearsal was the praise set where the new arrangement work was needed — the team knows these.</p>
-
-                <h3>Anniversary note</h3>
-                <p>Morayo could take the bass solo on guitar in Ancient of Days for the Anniversary set — worth her trying through this week to see if it lands. Not for Sunday 3rd May.</p>
-            </div>
-        </details>
-
-        <section class="teaser">
-            <span class="label">✦ Looking ahead</span>
-            <h2>Anniversary set — first sketch</h2>
-            <p>Theme: <strong>Reasons to be Thankful.</strong> Open with a phrase from <em>"Thanks, Thanks, I Give You Thanks"</em> — one person, one line ("I am so blessed, my soul is at rest"), straight into Trading My Sorrows.</p>
-            <p>Other anchor points: Trading My Sorrows in <strong>E</strong>, fitting in <em>My Jesus, My Saviour</em> for Esther to lead, Morayo on guitar in Ancient of Days. African praise covered by guest worship leader.</p>
-            <p style="font-size: 0.82rem; opacity: 0.65; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);"><strong style="color: rgba(255,255,255,0.85);">To finalise before next rehearsal:</strong> "Thanks, Thanks" opener arrangement and Esther's song slot.</p>
         </section>
 
-        <details id="audio" class="full-recordings">
-            <summary>
-                <span class="ico">🎙</span>
-                <span>Full rehearsal recordings</span>
-                <span class="meta">5 segments · ~2 hours</span>
-            </summary>
-            <div class="recordings-body">
-                <div class="recording-item">
-                    <div class="r-label"><span class="r-num">1</span>Opening · Trading My Sorrows arrangement</div>
-                    <div class="r-context">Prayer, set list confirmation, Trading My Sorrows numerical walk-through.</div>
+        <!-- ──────── 8: Worship + Offering + End ──────── -->
+        <section class="slide" data-title="Worship & rest">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">Worship · Offering · End</div>
+                <h2 class="slide-title">The rest of the set</h2>
+                <p class="slide-sub">Standard arrangements — not deep-dived in rehearsal. Team knows these.</p>
+
+                <div class="move-block">
+                    <div class="lbl">What's covered</div>
+                    <p>Worship: <strong>Here I Am to Worship → Be Magnified → I Exalt Thee.</strong> Offering: <strong>Ancient of Days.</strong> End of service: <strong>He Is Lord.</strong> All run as recent weeks.</p>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">Anniversary note</div>
+                    <p>Morayo could take the bass solo on guitar in Ancient of Days for the Anniversary set — worth her trying through this week. <strong>Not for Sunday 3 May.</strong></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 9: For tomorrow ──────── -->
+        <section class="slide" data-title="For tomorrow">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">✓ Action items</div>
+                <h2 class="slide-title">For tomorrow morning</h2>
+                <p class="slide-sub">Five things to land before service.</p>
+                <div class="actions-list">
+                    <div class="action-item">
+                        <div class="check"></div>
+                        <div class="body">
+                            <p><strong>9am call</strong> — quick run through before service.</p>
+                            <span class="who">All</span>
+                        </div>
+                    </div>
+                    <div class="action-item">
+                        <div class="check"></div>
+                        <div class="body">
+                            <p>Walk Morayo through the new Trading My Sorrows movement at setup.</p>
+                            <span class="who">Caster + BJ</span>
+                        </div>
+                    </div>
+                    <div class="action-item">
+                        <div class="check"></div>
+                        <div class="body">
+                            <p>Confirm the Every Praise underplay cue is mutually understood.</p>
+                            <span class="who">BJ + Caster</span>
+                        </div>
+                    </div>
+                    <div class="action-item">
+                        <div class="check"></div>
+                        <div class="body">
+                            <p>Send updated set to WhatsApp group tonight.</p>
+                            <span class="who">BJ</span>
+                        </div>
+                    </div>
+                    <div class="action-item">
+                        <div class="check"></div>
+                        <div class="body">
+                            <p>Volume control — kick + bass kept considerate.</p>
+                            <span class="who">BJ + Michael</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 10: Audio archive ──────── -->
+        <section class="slide" data-title="Recordings">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">🎙 Full recordings</div>
+                <h2 class="slide-title">Listen back</h2>
+                <p class="slide-sub">All five rehearsal segments. Tap play to stream.</p>
+
+                <div class="recording-card">
+                    <div class="r-label"><span class="r-num">1</span>Opening · Trading My Sorrows</div>
+                    <div class="r-context">Prayer, set list, numerical walk-through.</div>
                     <audio controls preload="none" src="audio/rehearsal-part1.m4a"></audio>
                 </div>
-                <div class="recording-item">
-                    <div class="r-label"><span class="r-num">2</span>Trading My Sorrows refinement · Lord You Are Good</div>
-                    <div class="r-context">Intro count settled, dynamics, transition into Lord You Are Good, volume complaint.</div>
+                <div class="recording-card">
+                    <div class="r-label"><span class="r-num">2</span>Refinement · Lord You Are Good</div>
+                    <div class="r-context">Intro count, dynamics, transition. Volume complaint.</div>
                     <audio controls preload="none" src="audio/rehearsal-part2.m4a"></audio>
                 </div>
-                <div class="recording-item">
-                    <div class="r-label"><span class="r-num">3</span>Friend of God · Every Praise transition</div>
-                    <div class="r-context">"Who Am I" runs, the Every Praise underplay cue, vocal blend.</div>
+                <div class="recording-card">
+                    <div class="r-label"><span class="r-num">3</span>Friend of God · Every Praise</div>
+                    <div class="r-context">"Who Am I" runs, the underplay cue, vocal blend.</div>
                     <audio controls preload="none" src="audio/rehearsal-seq2.m4a"></audio>
                 </div>
-                <div class="recording-item">
+                <div class="recording-card">
                     <div class="r-label"><span class="r-num">4</span>Full run-through</div>
-                    <div class="r-context">End-to-end run. The "God Almighty / God My Saviour" mix-up. Final positive feedback.</div>
+                    <div class="r-context">End-to-end. The "God Almighty" mix-up. Final feedback.</div>
                     <audio controls preload="none" src="audio/rehearsal-seq3.m4a"></audio>
                 </div>
-                <div class="recording-item">
-                    <div class="r-label"><span class="r-num">5</span>Anniversary planning · wrap-up</div>
-                    <div class="r-context">"Thanks, Thanks" opener idea, Morayo guitar solo discussion, logistics for tomorrow.</div>
+                <div class="recording-card">
+                    <div class="r-label"><span class="r-num">5</span>Anniversary planning</div>
+                    <div class="r-context">"Thanks, Thanks" opener. Morayo guitar idea. Wrap-up.</div>
                     <audio controls preload="none" src="audio/rehearsal-seq4.m4a"></audio>
                 </div>
             </div>
-        </details>
+        </section>
 
-        <div class="footer">
-            <div class="verse">"Sing to the LORD a new song; sing to the LORD, all the earth." — Psalm 96:1</div>
-            See you at 9am.
-        </div>
+        <!-- ──────── 11: Anniversary ──────── -->
+        <section class="slide" data-title="Anniversary">
+            <div class="slide-inner">
+                <div class="anniversary-card">
+                    <span class="label">✦ Looking ahead</span>
+                    <h2>Anniversary set — first sketch</h2>
+                    <p>Theme: <strong>Reasons to be Thankful.</strong> Open with a phrase from <em>"Thanks, Thanks, I Give You Thanks"</em> — one person, one line ("I am so blessed, my soul is at rest"), straight into Trading My Sorrows.</p>
+                    <p>Trading My Sorrows in <strong>E</strong>. Fitting in <em>My Jesus, My Saviour</em> for Esther to lead. Morayo on guitar in Ancient of Days. African praise covered by guest worship leader.</p>
+                    <div class="todo"><strong style="color: rgba(255,255,255,0.85);">To finalise:</strong> "Thanks, Thanks" opener arrangement and Esther's song slot.</div>
+                </div>
+            </div>
+        </section>
 
     </div>
+
+    <!-- Bottom navigation -->
+    <div class="bottombar">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="dots" id="dots" role="navigation" aria-label="Slide indicator"></div>
+        <div class="slide-counter" id="counter">1 / 11</div>
+        <button class="nav-btn next" id="nextBtn" aria-label="Next slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+    </div>
+
+    <div class="keyboard-hint">← → to navigate · m for menu</div>
+
+    <!-- Menu overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <aside class="menu-panel" id="menuPanel" aria-label="Slide menu">
+        <div class="menu-header">
+            <div class="h">Jump to</div>
+            <button class="menu-close" id="menuClose" aria-label="Close menu">×</button>
+        </div>
+        <div class="menu-list" id="menuList"></div>
+    </aside>
+
+    <script>
+        const deck = document.getElementById('deck');
+        const slides = Array.from(deck.querySelectorAll('.slide'));
+        const total = slides.length;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsBox = document.getElementById('dots');
+        const counter = document.getElementById('counter');
+        const progress = document.getElementById('progress');
+        const menuBtn = document.getElementById('menuBtn');
+        const menuPanel = document.getElementById('menuPanel');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuClose = document.getElementById('menuClose');
+        const menuList = document.getElementById('menuList');
+
+        let currentSlide = 0;
+
+        // Build dots
+        slides.forEach((s, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.setAttribute('role', 'button');
+            dot.setAttribute('aria-label', `Go to slide ${i + 1}: ${s.dataset.title}`);
+            dot.addEventListener('click', () => goSlide(i));
+            dotsBox.appendChild(dot);
+        });
+
+        // Build menu
+        const menuStructure = [
+            { label: 'Overview', items: [0, 1, 2] },
+            { label: 'Praise songs', items: [3, 4, 5, 6] },
+            { label: 'Rest of set', items: [7] },
+            { label: 'Action & audio', items: [8, 9, 10] }
+        ];
+
+        menuStructure.forEach(section => {
+            const lbl = document.createElement('div');
+            lbl.className = 'menu-section-label';
+            lbl.textContent = section.label;
+            menuList.appendChild(lbl);
+            section.items.forEach(idx => {
+                const slide = slides[idx];
+                if (!slide) return;
+                const btn = document.createElement('button');
+                btn.className = 'menu-item';
+                btn.dataset.slideIdx = idx;
+                const num = document.createElement('span');
+                num.className = 'menu-num';
+                num.textContent = idx + 1;
+                const name = document.createElement('span');
+                name.className = 'menu-name';
+                name.textContent = slide.dataset.title;
+                btn.appendChild(num);
+                btn.appendChild(name);
+                // Add key info if it's a praise song
+                if (idx === 3) {
+                    const key = document.createElement('span');
+                    key.className = 'menu-key';
+                    key.textContent = 'E';
+                    btn.appendChild(key);
+                } else if (idx >= 4 && idx <= 6) {
+                    const key = document.createElement('span');
+                    key.className = 'menu-key';
+                    key.textContent = 'TBC';
+                    btn.appendChild(key);
+                }
+                btn.addEventListener('click', () => {
+                    goSlide(idx);
+                    closeMenu();
+                });
+                menuList.appendChild(btn);
+            });
+        });
+
+        function goSlide(i) {
+            i = Math.max(0, Math.min(total - 1, i));
+            deck.scrollTo({ left: i * deck.clientWidth, behavior: 'smooth' });
+        }
+        window.goSlide = goSlide;
+
+        function updateUI() {
+            const i = Math.round(deck.scrollLeft / deck.clientWidth);
+            if (i === currentSlide) return;
+            currentSlide = i;
+            // Dots
+            Array.from(dotsBox.children).forEach((d, idx) => {
+                d.classList.toggle('active', idx === i);
+            });
+            // Menu items
+            Array.from(menuList.querySelectorAll('.menu-item')).forEach(item => {
+                item.classList.toggle('active', parseInt(item.dataset.slideIdx) === i);
+            });
+            // Counter & progress
+            counter.textContent = `${i + 1} / ${total}`;
+            progress.style.width = ((i + 1) / total * 100) + '%';
+            // Buttons
+            prevBtn.disabled = i === 0;
+            nextBtn.disabled = i === total - 1;
+            // Pause all audio when leaving a slide
+            document.querySelectorAll('audio').forEach(a => {
+                if (!slides[i].contains(a)) a.pause();
+            });
+        }
+
+        let scrollTimer;
+        deck.addEventListener('scroll', () => {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(updateUI, 50);
+        });
+
+        prevBtn.addEventListener('click', () => goSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goSlide(currentSlide + 1));
+
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'AUDIO' || e.target.tagName === 'INPUT') return;
+            if (e.key === 'ArrowRight' || e.key === ' ') { goSlide(currentSlide + 1); e.preventDefault(); }
+            if (e.key === 'ArrowLeft') { goSlide(currentSlide - 1); e.preventDefault(); }
+            if (e.key === 'Home') { goSlide(0); e.preventDefault(); }
+            if (e.key === 'End') { goSlide(total - 1); e.preventDefault(); }
+            if (e.key === 'm' || e.key === 'M') { openMenu(); }
+            if (e.key === 'Escape') { closeMenu(); }
+        });
+
+        // Menu
+        function openMenu() {
+            menuPanel.classList.add('open');
+            menuOverlay.classList.add('open');
+        }
+        function closeMenu() {
+            menuPanel.classList.remove('open');
+            menuOverlay.classList.remove('open');
+        }
+        menuBtn.addEventListener('click', openMenu);
+        menuClose.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Filter chips
+        document.querySelectorAll('[data-filter-bar]').forEach(bar => {
+            const chips = bar.querySelectorAll('.chip');
+            const slide = bar.closest('.slide');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+                    chip.setAttribute('aria-pressed', 'true');
+                    const filter = chip.dataset.filter;
+                    slide.querySelectorAll('.part-item').forEach(item => {
+                        item.classList.toggle('dim', filter !== 'all' && item.dataset.part !== filter);
+                    });
+                });
+            });
+        });
+
+        // Listen toggle
+        document.querySelectorAll('[data-listen-toggle]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                content.classList.toggle('open');
+                btn.classList.toggle('open');
+            });
+        });
+
+        // Resize: recalculate scroll position
+        window.addEventListener('resize', () => {
+            deck.scrollTo({ left: currentSlide * deck.clientWidth });
+        });
+
+        // Init
+        updateUI();
+        document.querySelector('.dot').classList.add('active');
+        prevBtn.disabled = true;
+    </script>
 
 </body>
 </html>
