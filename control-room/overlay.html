@@ -565,16 +565,20 @@ function subscribeDisplaySettings() {
 // ============================================================
 function renderLowerThird(lt) {
   const stage = document.getElementById('lower-third-stage');
-  const hasLT = lt && lt.name;
+  // Treat null, undefined, missing name all as "clear"
+  const hasLT = lt && typeof lt === 'object' && lt.name && String(lt.name).trim();
   if (!hasLT) {
     stage.classList.remove('active');
+    // Clear the text too so any stale content doesn't flash if .active is re-added
+    document.getElementById('lt-name').textContent = '';
+    document.getElementById('lt-role').textContent = '';
     document.documentElement.style.setProperty('--lt-pad', '0');
     return;
   }
   document.getElementById('lt-name').textContent = lt.name;
   document.getElementById('lt-role').textContent = lt.role || '';
-  requestAnimationFrame(() => stage.classList.add('active'));
-  // Reserve ~150px of space at the bottom (14% of 1080) so bottom-anchored lyrics don't collide
+  stage.classList.add('active');
+  // Reserve ~150px at the bottom so bottom-anchored lyrics don't collide
   document.documentElement.style.setProperty('--lt-pad', '150px');
 }
 

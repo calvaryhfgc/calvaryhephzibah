@@ -474,6 +474,24 @@
     cursor: pointer;
   }
   .lt-clear:hover { color: var(--text); border-color: var(--text-muted); }
+  .lt-clear-always {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-muted);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+  }
+  .lt-clear-always:hover {
+    color: var(--text);
+    border-color: var(--text-muted);
+    border-style: solid;
+  }
   .lt-list {
     display: flex;
     flex-direction: column;
@@ -1309,6 +1327,11 @@
       <div class="lt-cur-role" id="lt-cur-role"></div>
       <button class="lt-clear" onclick="clearLowerThird()">Clear lower third</button>
     </div>
+
+    <!-- Always-available clear, in case the conditional one above is hidden -->
+    <button class="lt-clear-always" onclick="clearLowerThird()" title="Force-clear any lower third on screen">
+      Clear lower third (force)
+    </button>
 
     <!-- Order of Service for the loaded date -->
     <div id="oos-section">
