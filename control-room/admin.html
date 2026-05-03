@@ -369,6 +369,10 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const SUPABASE_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
 const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Expose for console snippets / debugging. The module scope hides it
+// otherwise, which is hostile to the kind of "paste this into the console"
+// admin tasks we run before there's a UI for them.
+window.client = client;
 
 function hashPin(p) {
   let h = 5381;
