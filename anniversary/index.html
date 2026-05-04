@@ -181,15 +181,16 @@
 
     /* Eagle */
     .hero-eagle {
-      width: 64px;
-      height: 64px;
-      margin-bottom: 24px;
+      width: 56px;
+      height: 56px;
+      margin-top: 28px;
+      margin-bottom: 0;
       filter: drop-shadow(0 8px 20px rgba(208, 68, 28, 0.5));
       opacity: 0;
       transform: translateY(-20px) scale(0.92);
       animation:
-        heroEagle 1200ms var(--ease-out-quint) 200ms forwards,
-        eagleDrift 9s ease-in-out 1400ms infinite;
+        heroEagle 1200ms var(--ease-out-quint) 1500ms forwards,
+        eagleDrift 9s ease-in-out 2700ms infinite;
     }
     @keyframes heroEagle {
       to { opacity: 1; transform: translateY(0) scale(1); }
@@ -732,10 +733,6 @@
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-tint" aria-hidden="true"></div>
 
-    <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
-         alt="Calvary"
-         class="hero-eagle">
-
     <div class="hero-subline">Reasons to be</div>
 
     <div class="hero-monument-wrap">
@@ -743,6 +740,10 @@
     </div>
 
     <div class="hero-when">Sunday 17 May 2026 &nbsp;·&nbsp; 10:30 AM</div>
+
+    <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
+         alt="Calvary"
+         class="hero-eagle">
 
     <div class="hero-countdown" id="countdown" aria-live="polite">
       <div class="countdown-chip">
