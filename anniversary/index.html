@@ -1016,6 +1016,184 @@
       opacity: 0.55;
       filter: grayscale(0.3) brightness(0.7);
     }
+
+    /* ============================================================
+       BRIGHT MODE OVERRIDES
+       Everything below the hero flips to a warm bone surface.
+       The hero stays cinematic dark; everything else becomes
+       warm, hospitable, and readable.
+       ============================================================ */
+
+    /* Hero exit gradient — softens the transition from dark to bone */
+    .hero::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(to bottom, transparent, #F4EFE6);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Body's fixed ambient gradient and grain stay confined to the hero now —
+       below the hero we want clean bone, no atmospheric red wash */
+    body.cv-stage::before {
+      height: 100vh;  /* limit to viewport height; doesn't bleed into bright sections */
+    }
+    body.cv-stage::after {
+      opacity: 0.04;  /* quieten grain on bright surfaces */
+    }
+
+    /* ----- PROCLAMATION SECTION ----- */
+    .proclamation {
+      background: #F4EFE6;
+      padding: 100px 24px 80px;
+    }
+    .proclamation-quote {
+      color: #1A1A1A;
+    }
+    .proclamation-quote em {
+      color: #C41E2A;
+      font-style: italic;
+    }
+    .proclamation-attr {
+      color: #888;
+    }
+    .proclamation-rule {
+      background: #C41E2A;
+      opacity: 0.5;
+    }
+    /* Watermark eagle stays but darkened so it reads on bone */
+    .proclamation-watermark {
+      opacity: 0.06;
+      filter: grayscale(0.5) brightness(0.5);
+    }
+
+    /* ----- DAY / CARDS SECTION ----- */
+    .day {
+      background: #F0EBE2;  /* slightly warmer cream than proclamation */
+    }
+    .day-headline {
+      color: #1A1A1A;
+    }
+    .day-headline em {
+      color: #C41E2A;
+    }
+    .day-eyebrow {
+      color: #C41E2A;
+    }
+
+    /* Cards on bone: cream-on-cream with a hairline border + warm shadow */
+    .pillar {
+      background: #FAF6EE;
+      box-shadow: 0 2px 6px rgba(110, 80, 40, 0.06),
+                  0 12px 28px rgba(110, 80, 40, 0.08);
+      border: 1px solid rgba(110, 80, 40, 0.06);
+    }
+    .pillar:hover {
+      box-shadow: 0 4px 10px rgba(110, 80, 40, 0.10),
+                  0 20px 44px rgba(110, 80, 40, 0.14),
+                  0 0 0 1px var(--theme-accent-soft);
+      transform: translateY(-4px);
+    }
+    .pillar-title {
+      color: #1A1A1A;
+    }
+    .pillar-body {
+      color: #4A4A4A;
+    }
+    .pillar.active {
+      box-shadow: 0 4px 10px rgba(110, 80, 40, 0.10),
+                  0 20px 44px rgba(110, 80, 40, 0.14),
+                  0 0 0 1px var(--theme-accent-soft);
+    }
+    /* Card top-edge red glow softened on bone */
+    .pillar::after {
+      background: radial-gradient(ellipse 60% 100% at 50% 0%, var(--theme-accent-soft), transparent 70%);
+      opacity: 0.6;
+    }
+
+    /* Theme canvas — re-tune blend mode for bright surface */
+    .theme-layer {
+      mix-blend-mode: multiply;  /* multiply works on bright; screen worked on dark */
+    }
+    .theme-layer.active {
+      opacity: 0.18;  /* gentler on bright surface */
+    }
+
+    /* Theme caption stays italic, accent colour */
+    .theme-caption {
+      color: var(--theme-accent);
+    }
+
+    /* ----- PASTOR'S WORD SECTION ----- */
+    /* Already bone, but tighten the dark-bleed gradients which are no longer needed */
+    .pastor-word::before,
+    .pastor-word::after {
+      display: none;
+    }
+    .pastor-word {
+      background: #F4EFE6;
+      padding: 100px 24px 110px;
+    }
+
+    /* ----- RSVP SECTION ----- */
+    .rsvp {
+      background: #F0EBE2;
+      padding: 100px 24px 100px;
+    }
+    .rsvp-card {
+      background: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(110, 80, 40, 0.08),
+                  0 24px 56px rgba(110, 80, 40, 0.12),
+                  0 0 0 1px rgba(110, 80, 40, 0.05);
+    }
+    .rsvp-eyebrow {
+      color: #C41E2A;
+    }
+    .rsvp-title {
+      color: #1A1A1A;
+    }
+    .rsvp-body {
+      color: #4A4A4A;
+    }
+    .rsvp-fineprint {
+      color: #888;
+    }
+    .rsvp-button {
+      background: #C41E2A;
+      color: #FFFFFF;
+      box-shadow: 0 0 0 0 rgba(196, 30, 42, 0.4);
+    }
+    .rsvp-button:hover {
+      background: #A8161F;
+    }
+
+    /* ----- FOOTER ----- */
+    .footer {
+      background: #EBE5DA;
+      border-top: 1px solid rgba(110, 80, 40, 0.08);
+    }
+    .footer-name {
+      color: #1A1A1A;
+    }
+    .footer-meta {
+      color: #555;
+    }
+    .footer-meta a {
+      color: #555;
+      border-bottom-color: rgba(110, 80, 40, 0.2);
+    }
+    .footer-meta a:hover {
+      color: #C41E2A;
+      border-bottom-color: #C41E2A;
+    }
+    .footer-eagle {
+      filter: grayscale(0.3) brightness(0.7);
+      opacity: 0.7;
+    }
+
+    /* Ticker stays black at top — earned its contrast */
   </style>
 </head>
 <body class="cv-stage" data-theme="default">
