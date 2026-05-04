@@ -767,9 +767,150 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* ============================================================
+       THEME SYSTEM — auto-cycles between 5 themes on the cards section
+       Each theme shifts atmospheric colours, accent, and bg imagery
+       ============================================================ */
+    body.cv-stage {
+      --theme-accent: var(--red);
+      --theme-accent-soft: rgba(208, 68, 28, 0.15);
+      --theme-glow: rgba(208, 68, 28, 0.18);
+      --theme-undertone: rgba(110, 26, 15, 0.22);
+    }
+
+    body[data-theme="praise"] {
+      --theme-accent: #E8553F;
+      --theme-accent-soft: rgba(232, 85, 63, 0.20);
+      --theme-glow: rgba(232, 85, 63, 0.28);
+      --theme-undertone: rgba(200, 162, 75, 0.18);
+    }
+    body[data-theme="presentations"] {
+      --theme-accent: #D9447F;
+      --theme-accent-soft: rgba(217, 68, 127, 0.18);
+      --theme-glow: rgba(217, 68, 127, 0.22);
+      --theme-undertone: rgba(155, 49, 100, 0.22);
+    }
+    body[data-theme="word"] {
+      --theme-accent: #C8A24B;
+      --theme-accent-soft: rgba(200, 162, 75, 0.18);
+      --theme-glow: rgba(200, 162, 75, 0.24);
+      --theme-undertone: rgba(120, 80, 30, 0.30);
+    }
+    body[data-theme="lunch"] {
+      --theme-accent: #E07758;
+      --theme-accent-soft: rgba(224, 119, 88, 0.20);
+      --theme-glow: rgba(224, 119, 88, 0.26);
+      --theme-undertone: rgba(170, 60, 40, 0.22);
+    }
+    body[data-theme="family"] {
+      --theme-accent: #D88A3D;
+      --theme-accent-soft: rgba(216, 138, 61, 0.18);
+      --theme-glow: rgba(216, 138, 61, 0.22);
+      --theme-undertone: rgba(155, 95, 40, 0.22);
+    }
+
+    /* Body's ambient gradients now follow theme */
+    body.cv-stage::before {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, var(--theme-glow), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 50% 100%, var(--theme-undertone), transparent 60%);
+      transition: background 1500ms ease;
+    }
+
+    /* Hero tint follows theme too */
+    .hero-tint {
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 30%, var(--theme-glow), transparent 70%),
+        radial-gradient(ellipse 80% 40% at 50% 100%, var(--theme-undertone), transparent 60%);
+      transition: background 1500ms ease;
+    }
+
+    /* Pillar accents follow theme */
+    .pillar::before { background: var(--theme-accent); transition: background 1200ms ease, width 600ms var(--ease-out-quint); }
+    .pillar::after { background: radial-gradient(ellipse 60% 100% at 50% 0%, var(--theme-accent-soft), transparent 70%); transition: background 1200ms ease; }
+    .pillar-num { color: var(--theme-accent); transition: color 1200ms ease; }
+
+    /* Active card lifts and gets accent ring */
+    .pillar.active {
+      transform: translateY(-6px);
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--theme-accent-soft);
+    }
+    .pillar.active::before { width: 56px; }
+
+    /* CTA primary button follows theme too — subtle anchor */
+    .cv-btn-primary, .rsvp-button { transition: background 1200ms ease, transform 200ms; }
+
+    /* Theme canvas — radial gradient layers crossfading behind the cards */
+    .theme-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .theme-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1500ms ease;
+      mix-blend-mode: screen;
+    }
+    .theme-layer.active { opacity: 0.40; }
+
+    .theme-layer[data-layer="praise"] {
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(232, 85, 63, 0.7), transparent 50%),
+        radial-gradient(ellipse at 80% 70%, rgba(200, 162, 75, 0.55), transparent 50%);
+    }
+    .theme-layer[data-layer="presentations"] {
+      background:
+        radial-gradient(ellipse at 25% 40%, rgba(217, 68, 127, 0.6), transparent 55%),
+        radial-gradient(ellipse at 75% 60%, rgba(155, 49, 100, 0.55), transparent 55%);
+    }
+    .theme-layer[data-layer="word"] {
+      background:
+        radial-gradient(ellipse at 50% 30%, rgba(200, 162, 75, 0.6), transparent 55%),
+        radial-gradient(ellipse at 30% 80%, rgba(140, 90, 40, 0.55), transparent 55%);
+    }
+    .theme-layer[data-layer="lunch"] {
+      background:
+        radial-gradient(ellipse at 30% 50%, rgba(224, 119, 88, 0.6), transparent 55%),
+        radial-gradient(ellipse at 70% 60%, rgba(170, 60, 40, 0.55), transparent 55%);
+    }
+    .theme-layer[data-layer="family"] {
+      background:
+        radial-gradient(ellipse at 40% 40%, rgba(216, 138, 61, 0.6), transparent 55%),
+        radial-gradient(ellipse at 60% 70%, rgba(155, 95, 40, 0.55), transparent 55%);
+    }
+
+    /* Theme caption — small italic line above the carousel */
+    .theme-caption {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(15px, 1.8vw, 19px);
+      color: var(--theme-accent);
+      text-align: center;
+      margin: 0 0 28px;
+      min-height: 1.4em;
+      transition: color 1200ms ease, opacity 600ms ease;
+      opacity: 0;
+    }
+    .theme-caption.shown { opacity: 1; }
+
+    /* Day section hosts the theme canvas */
+    .day {
+      position: relative;
+      z-index: 2;
+      isolation: isolate;
+    }
+    .day-header, .carousel-wrap {
+      position: relative;
+      z-index: 2;
+    }
   </style>
 </head>
-<body class="cv-stage">
+<body class="cv-stage" data-theme="default">
 
   <!-- ============================================================
        TICKER — scrolling banner across the top
@@ -868,38 +1009,47 @@
        THE DAY — horizontal carousel of moments
        ============================================================ -->
   <section class="day reveal" id="day">
+    <div class="theme-canvas" aria-hidden="true">
+      <div class="theme-layer" data-layer="praise"></div>
+      <div class="theme-layer" data-layer="presentations"></div>
+      <div class="theme-layer" data-layer="word"></div>
+      <div class="theme-layer" data-layer="lunch"></div>
+      <div class="theme-layer" data-layer="family"></div>
+    </div>
+
     <div class="day-header">
       <span class="day-eyebrow">Here's What's Happening</span>
       <h2 class="day-headline">A Day You'll <em>Remember</em></h2>
+      <p class="theme-caption" id="theme-caption">&nbsp;</p>
     </div>
 
     <div class="carousel-wrap">
       <div class="carousel" id="carousel">
-        <div class="pillar">
+        <div class="pillar" data-theme="praise">
           <div class="pillar-num">01</div>
           <h3 class="pillar-title">Praise</h3>
           <p class="pillar-body">Calvary's worship team plus a special guest leading us in pure Naija praise — talking drum, dancing, the kind of worship you can't sit through.</p>
         </div>
 
-        <div class="pillar">
+        <div class="pillar" data-theme="presentations">
           <div class="pillar-num">02</div>
           <h3 class="pillar-title">Presentations</h3>
           <p class="pillar-body">Children, youth, and ministries each bringing something special. Surprises throughout the day. The whole Calvary family on show.</p>
         </div>
 
-        <div class="pillar">
+        <div class="pillar" data-theme="word">
           <div class="pillar-num">03</div>
           <h3 class="pillar-title">A Powerful Word</h3>
           <p class="pillar-body">A message for this season. Straight, anointed, exactly what we need as we step into the next chapter together.</p>
         </div>
 
-        <div class="pillar">
+        <div class="pillar" data-theme="lunch">
           <div class="pillar-num">04</div>
           <h3 class="pillar-title">Lunch Is Served</h3>
           <p class="pillar-body">A proper sit-down meal, brought to your table. Hot food, cold drinks, and no rush. Stay, eat, talk — that's the whole point.</p>
         </div>
 
-        <div class="pillar">
+        <div class="pillar" data-theme="family">
           <div class="pillar-num">05</div>
           <h3 class="pillar-title">Family &amp; Fun</h3>
           <p class="pillar-body">Round tables, not rows. People you know, people you'll meet. Photos, laughter, and a Sunday you'll be talking about all year.</p>
@@ -1000,6 +1150,131 @@
         });
       }, { threshold: 0.15 });
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+
+    // Theme auto-cycle — transforms the page atmosphere as cards rotate
+    (function() {
+      const themes = [
+        { key: 'praise',        caption: 'This is the sound of a thankful church.' },
+        { key: 'presentations', caption: 'Every part of the family steps forward.' },
+        { key: 'word',          caption: 'A word that lands where it\u2019s needed.' },
+        { key: 'lunch',         caption: 'The table is set. The seat is yours.' },
+        { key: 'family',        caption: 'A Sunday you\u2019ll be talking about all year.' }
+      ];
+
+      const body = document.body;
+      const captionEl = document.getElementById('theme-caption');
+      const layers = document.querySelectorAll('.theme-layer');
+      const pillars = document.querySelectorAll('.pillar[data-theme]');
+      const daySection = document.getElementById('day');
+
+      let index = 0;
+      let cycleTimer = null;
+      let isVisible = false;
+      let userInteracted = false;
+      const CYCLE_MS = 6000;
+
+      function applyTheme(i) {
+        const theme = themes[i];
+        body.setAttribute('data-theme', theme.key);
+
+        // Caption
+        captionEl.classList.remove('shown');
+        setTimeout(() => {
+          captionEl.textContent = theme.caption;
+          captionEl.classList.add('shown');
+        }, 300);
+
+        // Theme canvas layer
+        layers.forEach(layer => {
+          layer.classList.toggle('active', layer.dataset.layer === theme.key);
+        });
+
+        // Active card
+        pillars.forEach(p => {
+          p.classList.toggle('active', p.dataset.theme === theme.key);
+        });
+      }
+
+      function startCycle() {
+        if (cycleTimer || userInteracted) return;
+        applyTheme(index);
+        cycleTimer = setInterval(() => {
+          index = (index + 1) % themes.length;
+          applyTheme(index);
+        }, CYCLE_MS);
+      }
+
+      function stopCycle() {
+        if (cycleTimer) {
+          clearInterval(cycleTimer);
+          cycleTimer = null;
+        }
+      }
+
+      function resetToDefault() {
+        body.setAttribute('data-theme', 'default');
+        captionEl.classList.remove('shown');
+        layers.forEach(layer => layer.classList.remove('active'));
+        pillars.forEach(p => p.classList.remove('active'));
+      }
+
+      // Only cycle when day section is in viewport
+      const visibilityObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            isVisible = true;
+            startCycle();
+          } else {
+            isVisible = false;
+            stopCycle();
+            resetToDefault();
+          }
+        });
+      }, { threshold: 0.25 });
+      visibilityObserver.observe(daySection);
+
+      // If user manually interacts with carousel, lock to whichever card they pick
+      const carousel = document.getElementById('carousel');
+      let scrollDebounce = null;
+      carousel.addEventListener('scroll', () => {
+        userInteracted = true;
+        stopCycle();
+        clearTimeout(scrollDebounce);
+        scrollDebounce = setTimeout(() => {
+          // Find centermost card
+          const carouselRect = carousel.getBoundingClientRect();
+          const centerX = carouselRect.left + carouselRect.width / 2;
+          let closest = null;
+          let closestDist = Infinity;
+          pillars.forEach((p, i) => {
+            const r = p.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const d = Math.abs(cx - centerX);
+            if (d < closestDist) { closestDist = d; closest = i; }
+          });
+          if (closest !== null) {
+            index = closest;
+            applyTheme(index);
+          }
+        }, 150);
+      }, { passive: true });
+
+      // Tap a card → lock to that card's theme
+      pillars.forEach((p, i) => {
+        p.addEventListener('click', () => {
+          userInteracted = true;
+          stopCycle();
+          index = i;
+          applyTheme(index);
+        });
+      });
+
+      // Respect prefers-reduced-motion
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        userInteracted = true;
+        applyTheme(0);
+      }
     })();
   </script>
 
