@@ -77,8 +77,50 @@
     }
 
     /* ============================================================
-       HERO — first impression. The whole reason this page exists.
+       TICKER — top banner, scrolling, stays visible throughout
        ============================================================ */
+    .ticker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: #000;
+      color: var(--bone);
+      z-index: 100;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 80px;
+      white-space: nowrap;
+      animation: tickerScroll 40s linear infinite;
+      padding-left: 80px;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 80px;
+    }
+    .ticker-item::after {
+      content: "♦";
+      color: var(--red);
+      font-size: 8px;
+      letter-spacing: 0;
+    }
+    @keyframes tickerScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    /* Reduce body's fixed grain/ambient layers so they sit below the ticker */
     .hero {
       min-height: 100vh;
       display: flex;
@@ -86,7 +128,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 60px 24px 80px;
+      padding: 92px 24px 80px;
       position: relative;
       z-index: 2;
       overflow: hidden;
@@ -139,10 +181,10 @@
 
     /* Eagle */
     .hero-eagle {
-      width: 120px;
-      height: 120px;
-      margin-bottom: 32px;
-      filter: drop-shadow(0 12px 32px rgba(208, 68, 28, 0.45));
+      width: 64px;
+      height: 64px;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 8px 20px rgba(208, 68, 28, 0.5));
       opacity: 0;
       transform: translateY(-20px) scale(0.92);
       animation:
@@ -660,6 +702,20 @@
 <body class="cv-stage">
 
   <!-- ============================================================
+       TICKER — scrolling banner across the top
+       ============================================================ -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">Calvary Hephzibah Anniversary 2026</span>
+      <span class="ticker-item">Sunday 17 May · 10:30 AM</span>
+      <span class="ticker-item">Reasons to be Thankful</span>
+      <span class="ticker-item">Calvary Hephzibah Anniversary 2026</span>
+      <span class="ticker-item">Sunday 17 May · 10:30 AM</span>
+      <span class="ticker-item">Reasons to be Thankful</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
        HERO
        ============================================================ -->
   <section class="hero">
@@ -679,8 +735,6 @@
     <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
          alt="Calvary"
          class="hero-eagle">
-
-    <div class="hero-eyebrow">Calvary Anniversary 2026</div>
 
     <div class="hero-subline">Reasons to be</div>
 
