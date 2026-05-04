@@ -908,6 +908,114 @@
       position: relative;
       z-index: 2;
     }
+    /* ============================================================
+       PASTOR'S WORD — bright bone-coloured intermission
+       The visual rest between the cards and the RSVP.
+       ============================================================ */
+    .pastor-word {
+      background: #F4EFE6;
+      color: #1A1A1A;
+      padding: 120px 24px 130px;
+      position: relative;
+      z-index: 3;
+      isolation: isolate;
+      overflow: hidden;
+    }
+    /* Soft transition from dark above into bone — gradient bleed at top */
+    .pastor-word::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to bottom, rgba(11, 11, 14, 0.5), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Soft transition out at the bottom */
+    .pastor-word::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: linear-gradient(to top, rgba(11, 11, 14, 0.5), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .pastor-word-inner {
+      max-width: 580px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .pastor-word-eyebrow {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #C41E2A;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .pastor-word-eyebrow-rule {
+      width: 32px;
+      height: 1px;
+      background: #C41E2A;
+      margin: 0 auto 32px;
+      opacity: 0.4;
+    }
+    .pastor-word-greeting {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(20px, 2.6vw, 26px);
+      color: #C41E2A;
+      margin: 0 0 28px;
+      line-height: 1.2;
+    }
+    .pastor-word-body {
+      font-family: var(--font-body);
+      font-size: clamp(16px, 1.7vw, 19px);
+      line-height: 1.7;
+      color: #2D2D2D;
+      margin: 0 0 22px;
+      font-weight: 400;
+    }
+    .pastor-word-body:last-of-type { margin-bottom: 40px; }
+    .pastor-word-body em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      color: #1A1A1A;
+    }
+    .pastor-word-divider {
+      width: 32px;
+      height: 1px;
+      background: #C41E2A;
+      margin: 0 auto 24px;
+      opacity: 0.4;
+    }
+    .pastor-word-signoff {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(17px, 1.8vw, 20px);
+      color: #1A1A1A;
+      margin: 0 0 4px;
+      font-weight: 400;
+    }
+    .pastor-word-signoff-role {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: #666;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .pastor-word-eagle {
+      width: 36px;
+      height: 36px;
+      margin: 0 auto 28px;
+      opacity: 0.55;
+      filter: grayscale(0.3) brightness(0.7);
+    }
   </style>
 </head>
 <body class="cv-stage" data-theme="default">
@@ -1059,6 +1167,34 @@
         Swipe to see more
         <span class="carousel-cue-arrow"></span>
       </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PASTOR'S WORD — bright intermission, bone-coloured
+       ============================================================ -->
+  <section class="pastor-word reveal">
+    <div class="pastor-word-inner">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
+           alt=""
+           class="pastor-word-eagle"
+           aria-hidden="true">
+      <div class="pastor-word-eyebrow">A Word from Pastor Shade</div>
+      <div class="pastor-word-eyebrow-rule"></div>
+
+      <p class="pastor-word-greeting">Beloved,</p>
+
+      <p class="pastor-word-body">God has been faithful. Not in a way I can summarise — in a way you have to gather around a table to see.</p>
+
+      <p class="pastor-word-body">This Sunday, we stop. We look back. We give thanks for every reason we have to be thankful. And we step into the next chapter together.</p>
+
+      <p class="pastor-word-body">If you have ever called Calvary home — even for one Sunday — there is a seat for you here.</p>
+
+      <p class="pastor-word-body"><em>Come. Let us celebrate what God has done.</em></p>
+
+      <div class="pastor-word-divider"></div>
+      <div class="pastor-word-signoff">— Pastor Shade Olatoye</div>
+      <div class="pastor-word-signoff-role">General Overseer</div>
     </div>
   </section>
 
