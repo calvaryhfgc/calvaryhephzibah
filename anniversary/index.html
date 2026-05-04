@@ -1083,12 +1083,15 @@
       color: #C41E2A;
     }
 
-    /* Cards on bone: cream-on-cream with a hairline border + warm shadow */
+    /* Cards on bone become photo-led posters: image top, content bottom */
     .pillar {
       background: #FAF6EE;
+      padding: 0;  /* photo runs to edges; text gets its own padding */
       box-shadow: 0 2px 6px rgba(110, 80, 40, 0.06),
                   0 12px 28px rgba(110, 80, 40, 0.08);
       border: 1px solid rgba(110, 80, 40, 0.06);
+      overflow: hidden;
+      min-height: 420px;
     }
     .pillar:hover {
       box-shadow: 0 4px 10px rgba(110, 80, 40, 0.10),
@@ -1096,21 +1099,73 @@
                   0 0 0 1px var(--theme-accent-soft);
       transform: translateY(-4px);
     }
+    .pillar-photo {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background-size: cover;
+      background-position: center;
+      flex-shrink: 0;
+    }
+    /* Subtle vignette over photo for text readability + drama */
+    .pillar-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.25));
+      pointer-events: none;
+    }
+    /* Tiny number badge floats over the photo */
+    .pillar-photo-num {
+      position: absolute;
+      top: 16px; left: 20px;
+      z-index: 2;
+      font-family: var(--font-display);
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      color: rgba(255, 255, 255, 0.85);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .pillar-content {
+      padding: 28px 28px 32px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Hide the old pseudo-elements since photo provides the visual top */
+    .pillar::before { display: none; }
+    .pillar::after { display: none; }
+    .pillar-num { display: none; }  /* moved into photo as overlay */
     .pillar-title {
       color: #1A1A1A;
+      margin: 0 0 12px;
     }
     .pillar-body {
       color: #4A4A4A;
     }
+    /* Active card gets accent ring + slight lift */
     .pillar.active {
       box-shadow: 0 4px 10px rgba(110, 80, 40, 0.10),
                   0 20px 44px rgba(110, 80, 40, 0.14),
-                  0 0 0 1px var(--theme-accent-soft);
+                  0 0 0 2px var(--theme-accent);
+      transform: translateY(-6px);
     }
-    /* Card top-edge red glow softened on bone */
-    .pillar::after {
-      background: radial-gradient(ellipse 60% 100% at 50% 0%, var(--theme-accent-soft), transparent 70%);
-      opacity: 0.6;
+
+    /* Photo backgrounds per card */
+    .pillar[data-theme="praise"] .pillar-photo {
+      background-image: url('assets/photos/card-praise.svg');
+    }
+    .pillar[data-theme="presentations"] .pillar-photo {
+      background-image: url('assets/photos/card-presentations.svg');
+    }
+    .pillar[data-theme="word"] .pillar-photo {
+      background-image: url('assets/photos/card-word.svg');
+    }
+    .pillar[data-theme="lunch"] .pillar-photo {
+      background-image: url('assets/photos/card-lunch.svg');
+    }
+    .pillar[data-theme="family"] .pillar-photo {
+      background-image: url('assets/photos/card-family.svg');
     }
 
     /* Theme canvas — re-tune blend mode for bright surface */
@@ -1194,6 +1249,136 @@
     }
 
     /* Ticker stays black at top — earned its contrast */
+
+    /* ============================================================
+       PEAK BANNER — the second cinematic moment
+       Full-bleed photographic strip between cards and Pastor's Word
+       ============================================================ */
+    .peak {
+      position: relative;
+      height: 60vh;
+      min-height: 420px;
+      max-height: 620px;
+      background-image: url('assets/photos/peak-banner.svg');
+      background-size: cover;
+      background-position: center;
+      background-color: #2A1208;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    /* Vignette over peak image for typography readability */
+    .peak::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 50%, rgba(11,11,14,0.25) 0%, rgba(11,11,14,0.65) 100%);
+      z-index: 1;
+    }
+    .peak-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      padding: 60px 32px;
+    }
+    .peak-eyebrow {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #FFD580;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+    .peak-eyebrow::before,
+    .peak-eyebrow::after {
+      content: "";
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: #FFD580;
+      vertical-align: middle;
+      margin: 0 14px;
+      opacity: 0.6;
+    }
+    .peak-headline {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 6vw, 68px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #FFFFFF;
+      margin: 0 0 20px;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+    .peak-headline em {
+      color: #FFD580;
+      font-style: normal;
+    }
+    .peak-subline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(17px, 2vw, 22px);
+      color: rgba(255,255,255,0.92);
+      margin: 0;
+      max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       PASTOR'S WORD — upgraded layout with portrait
+       ============================================================ */
+    .pastor-word-inner {
+      max-width: 880px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+      align-items: center;
+      text-align: left;
+    }
+    @media (max-width: 720px) {
+      .pastor-word-inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        text-align: center;
+      }
+    }
+    .pastor-portrait {
+      width: 220px;
+      height: 280px;
+      background-image: url('assets/photos/pastor-portrait.svg');
+      background-size: cover;
+      background-position: center;
+      border-radius: 4px;
+      box-shadow: 0 12px 36px rgba(110, 80, 40, 0.18),
+                  0 2px 8px rgba(110, 80, 40, 0.10);
+      position: relative;
+    }
+    @media (max-width: 720px) {
+      .pastor-portrait {
+        width: 180px;
+        height: 220px;
+        margin: 0 auto;
+      }
+    }
+    /* The eagle small-icon at top of card no longer needed when there's a portrait */
+    .pastor-word-eagle {
+      display: none;
+    }
+    .pastor-word-eyebrow-rule {
+      margin-left: 0;
+    }
+    @media (max-width: 720px) {
+      .pastor-word-eyebrow-rule {
+        margin: 0 auto 32px;
+      }
+    }
   </style>
 </head>
 <body class="cv-stage" data-theme="default">
@@ -1312,33 +1497,43 @@
     <div class="carousel-wrap">
       <div class="carousel" id="carousel">
         <div class="pillar" data-theme="praise">
-          <div class="pillar-num">01</div>
-          <h3 class="pillar-title">Praise</h3>
-          <p class="pillar-body">Calvary's worship team plus a special guest leading us in pure Naija praise — talking drum, dancing, the kind of worship you can't sit through.</p>
+          <div class="pillar-photo"><span class="pillar-photo-num">01 · PRAISE</span></div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">Praise</h3>
+            <p class="pillar-body">Calvary's worship team plus a special guest leading us in pure Naija praise — talking drum, dancing, the kind of worship you can't sit through.</p>
+          </div>
         </div>
 
         <div class="pillar" data-theme="presentations">
-          <div class="pillar-num">02</div>
-          <h3 class="pillar-title">Presentations</h3>
-          <p class="pillar-body">Children, youth, and ministries each bringing something special. Surprises throughout the day. The whole Calvary family on show.</p>
+          <div class="pillar-photo"><span class="pillar-photo-num">02 · PRESENTATIONS</span></div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">Presentations</h3>
+            <p class="pillar-body">Children, youth, and ministries each bringing something special. Surprises throughout the day. The whole Calvary family on show.</p>
+          </div>
         </div>
 
         <div class="pillar" data-theme="word">
-          <div class="pillar-num">03</div>
-          <h3 class="pillar-title">A Powerful Word</h3>
-          <p class="pillar-body">A message for this season. Straight, anointed, exactly what we need as we step into the next chapter together.</p>
+          <div class="pillar-photo"><span class="pillar-photo-num">03 · THE WORD</span></div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">A Powerful Word</h3>
+            <p class="pillar-body">A message for this season. Straight, anointed, exactly what we need as we step into the next chapter together.</p>
+          </div>
         </div>
 
         <div class="pillar" data-theme="lunch">
-          <div class="pillar-num">04</div>
-          <h3 class="pillar-title">Lunch Is Served</h3>
-          <p class="pillar-body">A proper sit-down meal, brought to your table. Hot food, cold drinks, and no rush. Stay, eat, talk — that's the whole point.</p>
+          <div class="pillar-photo"><span class="pillar-photo-num">04 · THE TABLE</span></div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">Lunch Is Served</h3>
+            <p class="pillar-body">A proper sit-down meal, brought to your table. Hot food, cold drinks, and no rush. Stay, eat, talk — that's the whole point.</p>
+          </div>
         </div>
 
         <div class="pillar" data-theme="family">
-          <div class="pillar-num">05</div>
-          <h3 class="pillar-title">Family &amp; Fun</h3>
-          <p class="pillar-body">Round tables, not rows. People you know, people you'll meet. Photos, laughter, and a Sunday you'll be talking about all year.</p>
+          <div class="pillar-photo"><span class="pillar-photo-num">05 · FAMILY</span></div>
+          <div class="pillar-content">
+            <h3 class="pillar-title">Family &amp; Fun</h3>
+            <p class="pillar-body">Round tables, not rows. People you know, people you'll meet. Photos, laughter, and a Sunday you'll be talking about all year.</p>
+          </div>
         </div>
       </div>
       <div class="carousel-cue" aria-hidden="true">
@@ -1349,30 +1544,41 @@
   </section>
 
   <!-- ============================================================
-       PASTOR'S WORD — bright intermission, bone-coloured
+       PEAK BANNER — full-bleed cinematic moment
+       ============================================================ -->
+  <section class="peak reveal" aria-label="Anniversary celebration">
+    <div class="peak-content">
+      <div class="peak-eyebrow">17 May 2026</div>
+      <h2 class="peak-headline">One Sunday<br>to <em>Celebrate It All</em></h2>
+      <p class="peak-subline">A morning of worship, a word for the season, and a meal at the table — together as one family.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PASTOR'S WORD — bright intermission, bone-coloured, with portrait
        ============================================================ -->
   <section class="pastor-word reveal">
     <div class="pastor-word-inner">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
-           alt=""
-           class="pastor-word-eagle"
-           aria-hidden="true">
-      <div class="pastor-word-eyebrow">A Word from Pastor Shade</div>
-      <div class="pastor-word-eyebrow-rule"></div>
+      <div class="pastor-portrait" role="img" aria-label="Pastor Shade Olatoye"></div>
 
-      <p class="pastor-word-greeting">Beloved,</p>
+      <div class="pastor-word-text">
+        <div class="pastor-word-eyebrow">A Word from Pastor Shade</div>
+        <div class="pastor-word-eyebrow-rule"></div>
 
-      <p class="pastor-word-body">God has been faithful. Not in a way I can summarise — in a way you have to gather around a table to see.</p>
+        <p class="pastor-word-greeting">Beloved,</p>
 
-      <p class="pastor-word-body">This Sunday, we stop. We look back. We give thanks for every reason we have to be thankful. And we step into the next chapter together.</p>
+        <p class="pastor-word-body">God has been faithful. Not in a way I can summarise — in a way you have to gather around a table to see.</p>
 
-      <p class="pastor-word-body">If you have ever called Calvary home — even for one Sunday — there is a seat for you here.</p>
+        <p class="pastor-word-body">This Sunday, we stop. We look back. We give thanks for every reason we have to be thankful. And we step into the next chapter together.</p>
 
-      <p class="pastor-word-body"><em>Come. Let us celebrate what God has done.</em></p>
+        <p class="pastor-word-body">If you have ever called Calvary home — even for one Sunday — there is a seat for you here.</p>
 
-      <div class="pastor-word-divider"></div>
-      <div class="pastor-word-signoff">— Pastor Shade Olatoye</div>
-      <div class="pastor-word-signoff-role">General Overseer</div>
+        <p class="pastor-word-body"><em>Come. Let us celebrate what God has done.</em></p>
+
+        <div class="pastor-word-divider"></div>
+        <div class="pastor-word-signoff">— Pastor Shade Olatoye</div>
+        <div class="pastor-word-signoff-role">General Overseer</div>
+      </div>
     </div>
   </section>
 
