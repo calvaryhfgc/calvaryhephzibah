@@ -89,6 +89,52 @@
       padding: 60px 24px 80px;
       position: relative;
       z-index: 2;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    /* Hero video background — Pexels: Mountain Peaks in Sea of Clouds (Mikhail Nilov) */
+    .hero-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -3;
+      opacity: 0;
+      animation: heroVideoFadeIn 2400ms ease-out 200ms forwards;
+      will-change: opacity;
+    }
+    @keyframes heroVideoFadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Dark gradient overlay — keeps typography sharp and readable */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse 100% 80% at 50% 50%,
+          rgba(11, 11, 14, 0.55) 0%,
+          rgba(11, 11, 14, 0.78) 70%,
+          rgba(11, 11, 14, 0.92) 100%),
+        linear-gradient(180deg,
+          rgba(11, 11, 14, 0.45) 0%,
+          rgba(11, 11, 14, 0.20) 50%,
+          rgba(11, 11, 14, 0.85) 100%);
+    }
+
+    /* Red colour wash — unifies the natural palette with the Calvary brand */
+    .hero-tint {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 30%, rgba(208, 68, 28, 0.16), transparent 70%),
+        radial-gradient(ellipse 80% 40% at 50% 100%, rgba(110, 26, 15, 0.30), transparent 60%);
+      mix-blend-mode: multiply;
     }
 
     /* Eagle */
@@ -617,6 +663,19 @@
        HERO
        ============================================================ -->
   <section class="hero">
+    <video class="hero-video"
+           autoplay
+           muted
+           loop
+           playsinline
+           preload="auto"
+           poster="https://images.pexels.com/videos/6989287/free-video-6989287.jpg?auto=compress&cs=tinysrgb&dpr=1&w=1920"
+           aria-hidden="true">
+      <source src="https://videos.pexels.com/video-files/6989287/6989287-hd_1920_1080_25fps.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay" aria-hidden="true"></div>
+    <div class="hero-tint" aria-hidden="true"></div>
+
     <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
          alt="Calvary"
          class="hero-eagle">
