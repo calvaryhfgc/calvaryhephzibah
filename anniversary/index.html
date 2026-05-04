@@ -1381,10 +1381,12 @@
     }
 
     /* ============================================================
-       HERO PORTRAIT ROW — replaces the video background
-       Four slots, each rotating between 2 photos (8 total).
-       Staggered crossfades so rotation feels alive but never chaotic.
-       T-shape overlay keeps THANKFUL sharp while letting faces breathe.
+       HERO PORTRAIT ROW — JS-driven rotation engine
+       4 slots, each rotating through a pool of 13 portraits.
+       No duplicates across visible slots. No immediate repeats per slot.
+       Slicker crossfades with custom cubic-bezier easing and subtle
+       scale-in arrival on incoming images.
+       T-shape overlay keeps THANKFUL sharp, lets faces breathe.
        ============================================================ */
     .hero-portrait-row {
       position: absolute;
@@ -1402,87 +1404,57 @@
       position: relative;
       overflow: hidden;
     }
-    /* Each slot has 2 stacked images that crossfade */
+    /* Each slot has 2 stacked images — JS controls which is visible */
     .hero-portrait-img {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background-size: cover;
       background-position: center 22%;
       filter: saturate(0.95) contrast(1.02);
-      will-change: transform, opacity;
-    }
-    /* Image A — visible first half of cycle */
-    .hero-portrait-img.img-a {
-      opacity: 1;
-      animation: heroFadeA 16s ease-in-out infinite;
-    }
-    /* Image B — visible second half of cycle */
-    .hero-portrait-img.img-b {
+      will-change: opacity, transform;
       opacity: 0;
-      animation: heroFadeB 16s ease-in-out infinite;
+      transform: scale(1.05);
+      transition:
+        opacity 2400ms cubic-bezier(0.65, 0, 0.35, 1),
+        transform 4800ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-    @keyframes heroFadeA {
-      0%, 45%   { opacity: 1; }
-      50%, 95%  { opacity: 0; }
-      100%      { opacity: 1; }
+    /* Active image: visible at base scale (Ken Burns animates from 1.05 to 1.10
+       independently — see below) */
+    .hero-portrait-img.is-active {
+      opacity: 1;
+      transform: scale(1.05);
     }
-    @keyframes heroFadeB {
-      0%, 45%   { opacity: 0; }
-      50%, 95%  { opacity: 1; }
-      100%      { opacity: 0; }
+    /* Outgoing image fades slightly faster than incoming rises — cleaner cross */
+    .hero-portrait-img.is-leaving {
+      opacity: 0;
+      transition:
+        opacity 2000ms cubic-bezier(0.65, 0, 0.35, 1),
+        transform 4800ms cubic-bezier(0.22, 1, 0.36, 1);
     }
-    /* Stagger rotation across slots so they don't all change together */
-    .hero-portrait:nth-child(1) .hero-portrait-img { animation-delay: 0s; }
-    .hero-portrait:nth-child(2) .hero-portrait-img { animation-delay: -4s; }
-    .hero-portrait:nth-child(3) .hero-portrait-img { animation-delay: -8s; }
-    .hero-portrait:nth-child(4) .hero-portrait-img { animation-delay: -12s; }
+    /* Subtle Ken Burns motion runs on the active image continuously
+       via inline-applied animation (see JS) */
+    @keyframes heroKenBurnsA {
+      0%   { transform: scale(1.05) translate(0, 0); }
+      100% { transform: scale(1.10) translate(-1%, -1.5%); }
+    }
+    @keyframes heroKenBurnsB {
+      0%   { transform: scale(1.05) translate(0, 0); }
+      100% { transform: scale(1.10) translate(1%, -1.5%); }
+    }
+    @keyframes heroKenBurnsC {
+      0%   { transform: scale(1.05) translate(0, 0); }
+      100% { transform: scale(1.10) translate(-1.5%, -1%); }
+    }
+    @keyframes heroKenBurnsD {
+      0%   { transform: scale(1.05) translate(0, 0); }
+      100% { transform: scale(1.10) translate(1.5%, -1%); }
+    }
+    .hero-portrait-img.is-active.kb-a { animation: heroKenBurnsA 32s ease-in-out forwards; }
+    .hero-portrait-img.is-active.kb-b { animation: heroKenBurnsB 30s ease-in-out forwards; }
+    .hero-portrait-img.is-active.kb-c { animation: heroKenBurnsC 34s ease-in-out forwards; }
+    .hero-portrait-img.is-active.kb-d { animation: heroKenBurnsD 28s ease-in-out forwards; }
 
-    /* Ken Burns motion on each image — different speeds per slot, alternating directions */
-    .hero-portrait:nth-child(1) .hero-portrait-img.img-a {
-      animation: heroFadeA 16s ease-in-out infinite, kenBurns1 32s ease-in-out infinite alternate;
-    }
-    .hero-portrait:nth-child(1) .hero-portrait-img.img-b {
-      animation: heroFadeB 16s ease-in-out infinite, kenBurns2 30s ease-in-out infinite alternate;
-    }
-    .hero-portrait:nth-child(2) .hero-portrait-img.img-a {
-      animation: heroFadeA 16s ease-in-out infinite -4s, kenBurns3 34s ease-in-out infinite alternate;
-    }
-    .hero-portrait:nth-child(2) .hero-portrait-img.img-b {
-      animation: heroFadeB 16s ease-in-out infinite -4s, kenBurns4 28s ease-in-out infinite alternate;
-    }
-    .hero-portrait:nth-child(3) .hero-portrait-img.img-a {
-      animation: heroFadeA 16s ease-in-out infinite -8s, kenBurns2 30s ease-in-out infinite alternate;
-    }
-    .hero-portrait:nth-child(3) .hero-portrait-img.img-b {
-      animation: heroFadeB 16s ease-in-out infinite -8s, kenBurns1 32s ease-in-out infinite alternate;
-    }
-    .hero-portrait:nth-child(4) .hero-portrait-img.img-a {
-      animation: heroFadeA 16s ease-in-out infinite -12s, kenBurns4 28s ease-in-out infinite alternate;
-    }
-    .hero-portrait:nth-child(4) .hero-portrait-img.img-b {
-      animation: heroFadeB 16s ease-in-out infinite -12s, kenBurns3 34s ease-in-out infinite alternate;
-    }
-    @keyframes kenBurns1 {
-      from { transform: scale(1.04) translate(0, 0); }
-      to   { transform: scale(1.10) translate(-1%, -1.5%); }
-    }
-    @keyframes kenBurns2 {
-      from { transform: scale(1.05) translate(0, 0); }
-      to   { transform: scale(1.10) translate(1%, -1.5%); }
-    }
-    @keyframes kenBurns3 {
-      from { transform: scale(1.05) translate(0, 0); }
-      to   { transform: scale(1.10) translate(-1.5%, -1%); }
-    }
-    @keyframes kenBurns4 {
-      from { transform: scale(1.04) translate(0, 0); }
-      to   { transform: scale(1.10) translate(1.5%, -1%); }
-    }
-
-    /* Lighter vignette per portrait — let faces breathe */
+    /* Lighter vignette per slot — let faces breathe */
     .hero-portrait::after {
       content: "";
       position: absolute;
@@ -1500,7 +1472,7 @@
       z-index: 2;
     }
 
-    /* Soft vertical seam between adjacent portraits — narrower, softer */
+    /* Soft seam between adjacent slots */
     .hero-portrait:not(:last-child)::before {
       content: "";
       position: absolute;
@@ -1517,38 +1489,9 @@
       pointer-events: none;
     }
 
-    /* Photo backgrounds — slot 1 rotates between portraits 1 & 5 */
-    .hero-portrait[data-slot="1"] .hero-portrait-img.img-a {
-      background-image: url('assets/photos/hero-portrait-1.jpg');
-    }
-    .hero-portrait[data-slot="1"] .hero-portrait-img.img-b {
-      background-image: url('assets/photos/hero-portrait-5.jpg');
-    }
-    .hero-portrait[data-slot="2"] .hero-portrait-img.img-a {
-      background-image: url('assets/photos/hero-portrait-2.jpg');
-    }
-    .hero-portrait[data-slot="2"] .hero-portrait-img.img-b {
-      background-image: url('assets/photos/hero-portrait-6.jpg');
-    }
-    .hero-portrait[data-slot="3"] .hero-portrait-img.img-a {
-      background-image: url('assets/photos/hero-portrait-3.jpg');
-    }
-    .hero-portrait[data-slot="3"] .hero-portrait-img.img-b {
-      background-image: url('assets/photos/hero-portrait-7.jpg');
-    }
-    .hero-portrait[data-slot="4"] .hero-portrait-img.img-a {
-      background-image: url('assets/photos/hero-portrait-4.jpg');
-    }
-    .hero-portrait[data-slot="4"] .hero-portrait-img.img-b {
-      background-image: url('assets/photos/hero-portrait-8.jpg');
-    }
-
-    /* T-SHAPE OVERLAY: dark band where typography sits, bright above and below.
-       This is the new hero-overlay — keeps THANKFUL sharp while letting
-       faces actually be visible.  */
+    /* T-shape overlay — bright at top and bottom, dark band where THANKFUL sits */
     .hero-overlay {
       background:
-        /* Strong dark band centred where THANKFUL + countdown sit */
         linear-gradient(to bottom,
           rgba(11, 11, 14, 0.20) 0%,
           rgba(11, 11, 14, 0.30) 18%,
@@ -1558,7 +1501,7 @@
           rgba(11, 11, 14, 0.85) 100%);
     }
 
-    /* Mobile: collapse to two photos — keeps face size readable */
+    /* Mobile: collapse to two slots */
     @media (max-width: 720px) {
       .hero-portrait[data-slot="2"],
       .hero-portrait[data-slot="3"] {
@@ -1570,10 +1513,13 @@
       }
     }
 
-    /* Respect prefers-reduced-motion */
+    /* Reduced motion — show static photos, no rotation, no Ken Burns */
     @media (prefers-reduced-motion: reduce) {
-      .hero-portrait-img { animation: none !important; }
-      .hero-portrait-img.img-b { opacity: 0; }
+      .hero-portrait-img {
+        transition: none !important;
+        animation: none !important;
+        transform: scale(1.05) !important;
+      }
     }
   </style>
 </head>
@@ -1599,20 +1545,20 @@
   <section class="hero">
     <div class="hero-portrait-row" aria-hidden="true">
       <div class="hero-portrait" data-slot="1">
-        <div class="hero-portrait-img img-a"></div>
-        <div class="hero-portrait-img img-b"></div>
+        <div class="hero-portrait-img" data-img="0"></div>
+        <div class="hero-portrait-img" data-img="1"></div>
       </div>
       <div class="hero-portrait" data-slot="2">
-        <div class="hero-portrait-img img-a"></div>
-        <div class="hero-portrait-img img-b"></div>
+        <div class="hero-portrait-img" data-img="0"></div>
+        <div class="hero-portrait-img" data-img="1"></div>
       </div>
       <div class="hero-portrait" data-slot="3">
-        <div class="hero-portrait-img img-a"></div>
-        <div class="hero-portrait-img img-b"></div>
+        <div class="hero-portrait-img" data-img="0"></div>
+        <div class="hero-portrait-img" data-img="1"></div>
       </div>
       <div class="hero-portrait" data-slot="4">
-        <div class="hero-portrait-img img-a"></div>
-        <div class="hero-portrait-img img-b"></div>
+        <div class="hero-portrait-img" data-img="0"></div>
+        <div class="hero-portrait-img" data-img="1"></div>
       </div>
     </div>
     <div class="hero-overlay" aria-hidden="true"></div>
@@ -1990,6 +1936,148 @@
         userInteracted = true;
         applyTheme(0);
       }
+    })();
+
+    /* ============================================================
+       HERO PORTRAIT ROTATION ENGINE
+       Pool of 13 portraits, 4 visible slots, no duplicates across
+       slots, no immediate repeats per slot. Each slot rotates on
+       its own irregular timer for organic feel.
+       ============================================================ */
+    (function heroRotation() {
+      // Bail if reduced motion is preferred — initial photos stay static
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        // Set initial photos (1, 2, 3, 4) and stop
+        const initial = [1, 2, 3, 4];
+        document.querySelectorAll('.hero-portrait').forEach((slot, i) => {
+          const firstImg = slot.querySelector('.hero-portrait-img[data-img="0"]');
+          firstImg.style.backgroundImage = `url('assets/photos/hero-portrait-${initial[i]}.jpg')`;
+          firstImg.classList.add('is-active');
+        });
+        return;
+      }
+
+      const POOL_SIZE = 13;
+      const NUM_SLOTS = 4;
+
+      // Initial assignment — give each slot a different photo
+      // Use spread photos across the pool for variety (1, 4, 8, 11 spreads broadly)
+      const initialPhotos = [1, 4, 8, 11];
+
+      // Per-slot state: which photo is showing, and which image div (0 or 1) is active
+      const slotState = initialPhotos.map((photoNum, idx) => ({
+        currentPhoto: photoNum,
+        previousPhoto: null,
+        activeImg: 0,
+        kbClass: ['kb-a', 'kb-b', 'kb-c', 'kb-d'][idx]  // stagger initial KB motion
+      }));
+
+      const kbClasses = ['kb-a', 'kb-b', 'kb-c', 'kb-d'];
+
+      // Set initial photos on each slot's first image div
+      const slots = document.querySelectorAll('.hero-portrait');
+      slots.forEach((slot, slotIdx) => {
+        const imgs = slot.querySelectorAll('.hero-portrait-img');
+        imgs[0].style.backgroundImage =
+          `url('assets/photos/hero-portrait-${slotState[slotIdx].currentPhoto}.jpg')`;
+        // Apply Ken Burns + active state
+        imgs[0].classList.add('is-active', slotState[slotIdx].kbClass);
+      });
+
+      // Pick next photo for a slot — must not be in any current slot, and not the
+      // photo this slot just left
+      function pickNextFor(slotIdx) {
+        const inUse = new Set(slotState.map(s => s.currentPhoto));
+        const previous = slotState[slotIdx].previousPhoto;
+        const candidates = [];
+        for (let i = 1; i <= POOL_SIZE; i++) {
+          if (!inUse.has(i) && i !== previous) {
+            candidates.push(i);
+          }
+        }
+        // If somehow no candidates (shouldn't happen with 13 photos + 4 slots),
+        // fall back to anything not in use
+        if (candidates.length === 0) {
+          for (let i = 1; i <= POOL_SIZE; i++) {
+            if (!inUse.has(i)) candidates.push(i);
+          }
+        }
+        return candidates[Math.floor(Math.random() * candidates.length)];
+      }
+
+      // Rotate a single slot — preload new image, then crossfade
+      function rotateSlot(slotIdx) {
+        const state = slotState[slotIdx];
+        const slot = slots[slotIdx];
+        const imgs = slot.querySelectorAll('.hero-portrait-img');
+        const activeImg = imgs[state.activeImg];
+        const inactiveImg = imgs[1 - state.activeImg];
+
+        const nextPhoto = pickNextFor(slotIdx);
+        const nextKb = kbClasses[(kbClasses.indexOf(state.kbClass) + 1) % 4];
+
+        // Preload via Image() so the swap is seamless
+        const preloader = new Image();
+        preloader.onload = () => {
+          // Set background on the inactive image div
+          inactiveImg.style.backgroundImage =
+            `url('assets/photos/hero-portrait-${nextPhoto}.jpg')`;
+
+          // Reset Ken Burns animation by removing all kb classes first
+          inactiveImg.classList.remove('kb-a', 'kb-b', 'kb-c', 'kb-d');
+          // Force reflow so transition is clean
+          void inactiveImg.offsetWidth;
+
+          // Activate the new image (it animates in via CSS transition)
+          inactiveImg.classList.add('is-active', nextKb);
+          // Mark old as leaving
+          activeImg.classList.remove('is-active');
+          activeImg.classList.add('is-leaving');
+
+          // After transition completes, clean up old and reset its Ken Burns
+          setTimeout(() => {
+            activeImg.classList.remove('is-leaving', 'kb-a', 'kb-b', 'kb-c', 'kb-d');
+          }, 2400);
+
+          // Update state
+          state.previousPhoto = state.currentPhoto;
+          state.currentPhoto = nextPhoto;
+          state.activeImg = 1 - state.activeImg;
+          state.kbClass = nextKb;
+        };
+        preloader.src = `assets/photos/hero-portrait-${nextPhoto}.jpg`;
+      }
+
+      // Each slot has its own irregular cycle: 7s, 9s, 11s, 8s display intervals
+      // First rotation kicks in after 5-12s so the page settles before motion starts
+      const slotIntervals = [8000, 10000, 9000, 11000];
+      const slotInitialDelays = [5500, 7800, 6900, 9200];
+
+      // Pause/resume on tab visibility change to save battery on mobile
+      let timers = [];
+      let isPaused = false;
+
+      function scheduleSlot(slotIdx, delay) {
+        timers[slotIdx] = setTimeout(() => {
+          if (!isPaused) {
+            rotateSlot(slotIdx);
+          }
+          // Add small jitter (±10%) so timing stays organic
+          const base = slotIntervals[slotIdx];
+          const jitter = base * 0.10 * (Math.random() * 2 - 1);
+          scheduleSlot(slotIdx, base + jitter);
+        }, delay);
+      }
+
+      // Start each slot on its initial delay
+      slotInitialDelays.forEach((delay, idx) => {
+        scheduleSlot(idx, delay);
+      });
+
+      // Pause when tab is hidden, resume when visible
+      document.addEventListener('visibilitychange', () => {
+        isPaused = document.hidden;
+      });
     })();
   </script>
 
