@@ -1379,6 +1379,150 @@
         margin: 0 auto 32px;
       }
     }
+
+    /* ============================================================
+       HERO PORTRAIT ROW — replaces the video background
+       Four large portraits across the back of the hero with
+       gentle Ken Burns motion, vignette, and gradient feathering
+       between photos for a continuous human band feel.
+       ============================================================ */
+    .hero-portrait-row {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      z-index: -3;
+      overflow: hidden;
+    }
+    .hero-portrait {
+      flex: 1 1 25%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: heroPortraitFadeIn 1800ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .hero-portrait:nth-child(1) { animation-delay: 200ms; }
+    .hero-portrait:nth-child(2) { animation-delay: 500ms; }
+    .hero-portrait:nth-child(3) { animation-delay: 800ms; }
+    .hero-portrait:nth-child(4) { animation-delay: 1100ms; }
+    @keyframes heroPortraitFadeIn {
+      to { opacity: 1; }
+    }
+    .hero-portrait-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center 25%;
+      filter: saturate(0.85) contrast(1.05);
+      will-change: transform;
+    }
+    .hero-portrait:nth-child(1) .hero-portrait-img {
+      animation: kenBurns1 32s ease-in-out infinite alternate;
+    }
+    .hero-portrait:nth-child(2) .hero-portrait-img {
+      animation: kenBurns2 38s ease-in-out infinite alternate;
+    }
+    .hero-portrait:nth-child(3) .hero-portrait-img {
+      animation: kenBurns3 30s ease-in-out infinite alternate;
+    }
+    .hero-portrait:nth-child(4) .hero-portrait-img {
+      animation: kenBurns4 36s ease-in-out infinite alternate;
+    }
+    @keyframes kenBurns1 {
+      from { transform: scale(1.05) translate(0, 0); }
+      to   { transform: scale(1.10) translate(-1%, -1.5%); }
+    }
+    @keyframes kenBurns2 {
+      from { transform: scale(1.06) translate(0, 0); }
+      to   { transform: scale(1.10) translate(1%, -2%); }
+    }
+    @keyframes kenBurns3 {
+      from { transform: scale(1.04) translate(0, 0); }
+      to   { transform: scale(1.10) translate(-1.5%, -1%); }
+    }
+    @keyframes kenBurns4 {
+      from { transform: scale(1.05) translate(0, 0); }
+      to   { transform: scale(1.10) translate(1.5%, -1.5%); }
+    }
+    /* Vignette per portrait fades each into the dark surround */
+    .hero-portrait::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 70% at 50% 50%,
+          transparent 30%,
+          rgba(11, 11, 14, 0.55) 100%),
+        linear-gradient(to bottom,
+          rgba(11, 11, 14, 0.25) 0%,
+          transparent 30%,
+          transparent 70%,
+          rgba(11, 11, 14, 0.85) 100%);
+      pointer-events: none;
+    }
+    /* Soft gradient feathering between adjacent portraits */
+    .hero-portrait:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: -1px;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(to right,
+        transparent,
+        rgba(11, 11, 14, 0.6) 40%,
+        rgba(11, 11, 14, 0.6) 60%,
+        transparent);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-portrait[data-portrait="1"] .hero-portrait-img {
+      background-image: url('assets/photos/hero-portrait-1.jpg');
+    }
+    .hero-portrait[data-portrait="2"] .hero-portrait-img {
+      background-image: url('assets/photos/hero-portrait-2.jpg');
+    }
+    .hero-portrait[data-portrait="3"] .hero-portrait-img {
+      background-image: url('assets/photos/hero-portrait-3.jpg');
+    }
+    .hero-portrait[data-portrait="4"] .hero-portrait-img {
+      background-image: url('assets/photos/hero-portrait-4.jpg');
+    }
+    /* Strengthened hero overlay — photos are brighter than the video was,
+       so we need more darkness to keep typography sharp */
+    .hero-overlay {
+      background:
+        radial-gradient(ellipse 100% 80% at 50% 50%,
+          rgba(11, 11, 14, 0.65) 0%,
+          rgba(11, 11, 14, 0.85) 70%,
+          rgba(11, 11, 14, 0.95) 100%),
+        linear-gradient(180deg,
+          rgba(11, 11, 14, 0.55) 0%,
+          rgba(11, 11, 14, 0.30) 50%,
+          rgba(11, 11, 14, 0.92) 100%);
+    }
+    /* Mobile: collapse to two photos rather than four slivers */
+    @media (max-width: 720px) {
+      .hero-portrait:nth-child(2),
+      .hero-portrait:nth-child(3) {
+        display: none;
+      }
+      .hero-portrait:nth-child(1),
+      .hero-portrait:nth-child(4) {
+        flex: 1 1 50%;
+      }
+    }
+    /* Respect prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-portrait { opacity: 1; animation: none; }
+      .hero-portrait-img { animation: none; }
+    }
   </style>
 </head>
 <body class="cv-stage" data-theme="default">
@@ -1401,16 +1545,20 @@
        HERO
        ============================================================ -->
   <section class="hero">
-    <video class="hero-video"
-           autoplay
-           muted
-           loop
-           playsinline
-           preload="auto"
-           poster="assets/hero-poster.jpg"
-           aria-hidden="true">
-      <source src="assets/hero.mp4" type="video/mp4">
-    </video>
+    <div class="hero-portrait-row" aria-hidden="true">
+      <div class="hero-portrait" data-portrait="1">
+        <div class="hero-portrait-img"></div>
+      </div>
+      <div class="hero-portrait" data-portrait="2">
+        <div class="hero-portrait-img"></div>
+      </div>
+      <div class="hero-portrait" data-portrait="3">
+        <div class="hero-portrait-img"></div>
+      </div>
+      <div class="hero-portrait" data-portrait="4">
+        <div class="hero-portrait-img"></div>
+      </div>
+    </div>
     <div class="hero-overlay" aria-hidden="true"></div>
     <div class="hero-tint" aria-hidden="true"></div>
 
