@@ -438,9 +438,14 @@
        THE DAY — the three pillars
        ============================================================ */
     .day {
-      padding: 80px 24px 100px;
+      padding: 80px 0 100px;
       position: relative;
       z-index: 2;
+    }
+    .day-header {
+      padding: 0 24px;
+      max-width: 880px;
+      margin: 0 auto;
     }
     .day-eyebrow {
       display: block;
@@ -461,31 +466,57 @@
       text-transform: uppercase;
       color: var(--bone);
       text-align: center;
-      margin: 0 0 56px;
+      margin: 0 0 16px;
     }
     .day-headline em {
       color: var(--red);
       font-style: normal;
     }
+    .day-subhead {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(18px, 2.4vw, 24px);
+      color: var(--fg-2);
+      text-align: center;
+      margin: 0 0 56px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-    .pillars {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 24px;
+    /* Carousel — horizontally scrolling cards */
+    .carousel-wrap {
+      position: relative;
     }
-    @media (max-width: 720px) {
-      .pillars { grid-template-columns: 1fr; gap: 16px; }
+    .carousel {
+      display: flex;
+      gap: 20px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      padding: 8px 24px 32px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
     }
+    .carousel::-webkit-scrollbar { display: none; }
 
     .pillar {
+      flex: 0 0 320px;
+      scroll-snap-align: center;
       background: var(--slate);
-      padding: 40px 32px;
-      border-radius: 4px;
+      padding: 36px 28px 32px;
+      border-radius: 6px;
       box-shadow: var(--shadow-1);
       position: relative;
       transition: transform 600ms var(--ease-out-quint),
                   box-shadow 600ms var(--ease-out-quint);
       overflow: hidden;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 480px) {
+      .pillar { flex: 0 0 280px; }
     }
     .pillar::before {
       content: "";
@@ -495,18 +526,17 @@
       background: var(--red);
       transition: width 600ms var(--ease-out-quint);
     }
-    /* Subtle red glow at top edge — atmospheric warmth */
     .pillar::after {
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0;
       height: 80px;
-      background: radial-gradient(ellipse 60% 100% at 50% 0%, rgba(208, 68, 28, 0.08), transparent 70%);
+      background: radial-gradient(ellipse 60% 100% at 50% 0%, rgba(208, 68, 28, 0.10), transparent 70%);
       pointer-events: none;
     }
     .pillar:hover {
       transform: translateY(-4px);
-      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(208, 68, 28, 0.15);
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(208, 68, 28, 0.18);
     }
     .pillar:hover::before {
       width: 56px;
@@ -522,10 +552,10 @@
     .pillar-title {
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: 26px;
-      line-height: 1.15;
+      font-size: 24px;
+      line-height: 1.2;
       color: var(--bone);
-      margin: 0 0 16px;
+      margin: 0 0 14px;
       font-weight: 400;
     }
     .pillar-body {
@@ -534,6 +564,45 @@
       line-height: 1.6;
       color: var(--fg-2);
       margin: 0;
+      flex: 1;
+    }
+
+    /* Carousel scroll cue — shows users they can swipe */
+    .carousel-cue {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--fg-3);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+    .carousel-cue-arrow {
+      display: inline-block;
+      width: 16px;
+      height: 1px;
+      background: var(--red);
+      position: relative;
+      animation: carouselCueShimmer 2.4s ease-in-out infinite;
+    }
+    .carousel-cue-arrow::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      border-top: 1px solid var(--red);
+      border-right: 1px solid var(--red);
+      transform: rotate(45deg);
+    }
+    @keyframes carouselCueShimmer {
+      0%, 100% { opacity: 0.4; transform: translateX(0); }
+      50%      { opacity: 1;   transform: translateX(4px); }
     }
 
     /* ============================================================
@@ -794,31 +863,56 @@
   </section>
 
   <!-- ============================================================
-       THE DAY — three pillars
+       THE DAY — horizontal carousel of moments
        ============================================================ -->
   <section class="day reveal" id="day">
-    <div class="container">
-      <span class="day-eyebrow">A Day of Thanksgiving</span>
-      <h2 class="day-headline">More Than Celebration. <em>This Is Declaration.</em></h2>
+    <div class="day-header">
+      <span class="day-eyebrow">Here's What's Happening</span>
+      <h2 class="day-headline">A Day You'll <em>Remember</em></h2>
+      <p class="day-subhead">From the first note of praise to the last bite of lunch — every part of the day is built for you.</p>
+    </div>
 
-      <div class="pillars">
+    <div class="carousel-wrap">
+      <div class="carousel" id="carousel">
         <div class="pillar">
           <div class="pillar-num">01</div>
-          <h3 class="pillar-title">A Service of Worship</h3>
-          <p class="pillar-body">Spirit-filled praise. Calvary's worship team. A guest-led thanksgiving offering with talking drum and the sound of a people who know what God has done.</p>
+          <h3 class="pillar-title">Praise That<br>Lifts the Roof</h3>
+          <p class="pillar-body">Calvary's worship team plus a guest leader bringing pure Naija praise — talking drum, bata, vocals that won't let you stay in your seat.</p>
         </div>
 
         <div class="pillar">
           <div class="pillar-num">02</div>
-          <h3 class="pillar-title">A Word for the Season</h3>
-          <p class="pillar-body">Pastor Gbenga Adebanjo brings the anniversary message — Reasons to be Thankful. Honour. Reflection. Prayer for the church in the year ahead.</p>
+          <h3 class="pillar-title">Special<br>Presentations</h3>
+          <p class="pillar-body">Children, youth, and ministry teams each bringing something special. Songs, words, surprises. The whole Calvary family on display.</p>
         </div>
 
         <div class="pillar">
           <div class="pillar-num">03</div>
-          <h3 class="pillar-title">A Table to Share</h3>
-          <p class="pillar-body">Cabaret-style seating. Small chops on arrival, a sit-down meal at the close. We celebrate together — around tables, as a family.</p>
+          <h3 class="pillar-title">Honour &amp;<br>Testimony</h3>
+          <p class="pillar-body">Pastor Shade honours members by name. Three testimonies that will make you cry, laugh, and worship — all in the space of ten minutes.</p>
         </div>
+
+        <div class="pillar">
+          <div class="pillar-num">04</div>
+          <h3 class="pillar-title">A Word for<br>This Season</h3>
+          <p class="pillar-body">The anniversary message — straight, powerful, and exactly what we need to hear as we step into the next chapter together.</p>
+        </div>
+
+        <div class="pillar">
+          <div class="pillar-num">05</div>
+          <h3 class="pillar-title">Lunch<br>Is Served</h3>
+          <p class="pillar-body">A proper sit-down meal, served at your table. Hot food, cold drinks, and the kind of fellowship that only happens when no one's rushing to leave.</p>
+        </div>
+
+        <div class="pillar">
+          <div class="pillar-num">06</div>
+          <h3 class="pillar-title">Family,<br>Friends, Fun</h3>
+          <p class="pillar-body">Round tables, not rows. People you know, people you'll meet. Photos, laughter, and the kind of Sunday afternoon you'll talk about all year.</p>
+        </div>
+      </div>
+      <div class="carousel-cue" aria-hidden="true">
+        Swipe to see more
+        <span class="carousel-cue-arrow"></span>
       </div>
     </div>
   </section>
@@ -827,8 +921,8 @@
        INVITATION
        ============================================================ -->
   <section class="invitation reveal">
-    <p>This is more than another Sunday. This is the moment we stop, look back at <strong>everything God has done</strong>, and step forward into what He's still building.</p>
-    <p>Bring your family. Bring a friend. Come and eat with us.</p>
+    <p>However long it's been since we last saw you — <strong>this is your seat at the table</strong>.</p>
+    <p>Bring your kids. Bring your friends. Bring your appetite. Come and celebrate with us.</p>
     <div class="invitation-signoff">— The Calvary Family</div>
   </section>
 
