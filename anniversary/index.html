@@ -1617,6 +1617,167 @@
     }
 
     /* ============================================================
+       GALLERY — masonry mosaic, just before footer
+       ============================================================ */
+    .gallery {
+      background: #F0EBE2;
+      padding: 100px 24px 110px;
+      position: relative;
+    }
+    .gallery-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+    .gallery-head {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 56px;
+    }
+    .gallery-eyebrow {
+      display: inline-block;
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: #C41E2A;
+      margin-bottom: 14px;
+    }
+    .gallery-title {
+      font-family: 'Anton', 'Impact', sans-serif;
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      text-transform: uppercase;
+      color: #1A1A1A;
+      margin: 0 0 18px;
+    }
+    .gallery-title em {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      text-transform: none;
+      color: #C41E2A;
+    }
+    .gallery-sub {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.4;
+      color: #4A4A4A;
+      margin: 0;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-auto-rows: 130px;
+      gap: 10px;
+      grid-auto-flow: dense; /* fill holes with smaller items */
+    }
+    .gallery-tile {
+      position: relative;
+      overflow: hidden;
+      background: #1A1A1A;
+      border-radius: 2px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+    .gallery-tile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1),
+                  filter 400ms ease;
+      will-change: transform;
+    }
+    .gallery-tile:hover img {
+      transform: scale(1.04);
+    }
+    /* Subtle warmth on every tile to unify lighting */
+    .gallery-tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(20, 12, 6, 0.18));
+      pointer-events: none;
+    }
+
+    /* ----- Tile span variants -----
+       Use data attributes to drive grid placement.
+       Default = 1col x 2row (square-ish). Variants override. */
+    .gallery-tile { grid-column: span 2; grid-row: span 2; }
+    .gallery-tile[data-span="tall"]   { grid-column: span 2; grid-row: span 3; }
+    .gallery-tile[data-span="wide"]   { grid-column: span 3; grid-row: span 2; }
+    .gallery-tile[data-span="hero"]   { grid-column: span 4; grid-row: span 3; }
+    .gallery-tile[data-span="square"] { grid-column: span 2; grid-row: span 2; }
+    .gallery-tile[data-span="band"]   { grid-column: span 6; grid-row: span 2; }
+
+    /* Tablet — 4-col grid */
+    @media (max-width: 960px) {
+      .gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+        grid-auto-rows: 120px;
+      }
+      .gallery-tile { grid-column: span 2; grid-row: span 2; }
+      .gallery-tile[data-span="tall"]   { grid-column: span 2; grid-row: span 3; }
+      .gallery-tile[data-span="wide"]   { grid-column: span 4; grid-row: span 2; }
+      .gallery-tile[data-span="hero"]   { grid-column: span 4; grid-row: span 3; }
+      .gallery-tile[data-span="square"] { grid-column: span 2; grid-row: span 2; }
+      .gallery-tile[data-span="band"]   { grid-column: span 4; grid-row: span 2; }
+    }
+
+    /* Mobile — 2-col grid, all tiles smaller and roughly square */
+    @media (max-width: 560px) {
+      .gallery {
+        padding: 72px 16px 80px;
+      }
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 110px;
+        gap: 8px;
+      }
+      .gallery-tile,
+      .gallery-tile[data-span="tall"],
+      .gallery-tile[data-span="wide"],
+      .gallery-tile[data-span="hero"],
+      .gallery-tile[data-span="square"] {
+        grid-column: span 1;
+        grid-row: span 2;
+      }
+      .gallery-tile[data-span="band"],
+      .gallery-tile[data-span="hero-mobile"] {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
+      .gallery-tile[data-span="tall-mobile"] {
+        grid-column: span 1;
+        grid-row: span 3;
+      }
+    }
+
+    /* Reveal on scroll */
+    .gallery-tile {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .gallery-tile.in {
+      opacity: 1;
+      transform: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-tile {
+        opacity: 1;
+        transform: none;
+        transition: none !important;
+      }
+      .gallery-tile:hover img { transform: none !important; }
+    }
+
+    /* ============================================================
        RSVP MODAL — overlay form, design-system aligned
        ============================================================ */
     .rsvp-modal {
@@ -2217,6 +2378,101 @@
   </div>
 
   <!-- ============================================================
+       GALLERY — masonry mosaic of Calvary moments
+       ============================================================ -->
+  <section class="gallery" id="gallery" aria-labelledby="gallery-title">
+    <div class="gallery-inner">
+      <div class="gallery-head">
+        <div class="gallery-eyebrow">Thirty-four years · in pictures</div>
+        <h2 class="gallery-title" id="gallery-title">A house of <em>many faces.</em></h2>
+        <p class="gallery-sub">Worship. Word. Welcome. Generations.</p>
+      </div>
+
+      <div class="gallery-grid">
+        <!-- Opening band: congregation worshipping wide -->
+        <div class="gallery-tile" data-span="band">
+          <img src="assets/photos/peak-banner.jpg" alt="Calvary congregation worshipping with hands raised" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Leadership feature: Pastor Shade -->
+        <div class="gallery-tile" data-span="hero">
+          <img src="assets/photos/hero-portrait-1.jpg" alt="Pastor Shade Olatoye, General Overseer" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Pastor Gbenga -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-20.jpg" alt="Pastor Gbenga Adebanjo" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Pastor K -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-15.jpg" alt="Pastor Kayode Ogungbenro" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Lunch / fellowship -->
+        <div class="gallery-tile" data-span="wide">
+          <img src="assets/photos/card-lunch.jpg" alt="Spread of jollof rice, plantain, fish and salads laid out for fellowship" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Pastor Shade — orange Ankara, tall feature -->
+        <div class="gallery-tile" data-span="tall" data-span-mobile="tall-mobile">
+          <img src="assets/photos/hero-portrait-14.jpg" alt="Pastor Shade preaching in vibrant orange Ankara" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Atlantic City girl singing — full band visible -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-10.jpg" alt="A young singer leading worship with the band behind" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Woman in coral, hand raised in praise -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-18.jpg" alt="A worshipper singing with hand raised, drum kit behind" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Family / aso ebi -->
+        <div class="gallery-tile" data-span="wide">
+          <img src="assets/photos/card-family.jpg" alt="Calvary family in coordinated aso ebi with gold balloons" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Auntie Pauline (BW only) -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-4.jpg" alt="Auntie Pauline Tulloch" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Pastor Kemi -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-7.jpg" alt="Pastor Kemi Ogungbenro at the lectern" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Senior in zebra-print headwrap, tall -->
+        <div class="gallery-tile" data-span="tall" data-span-mobile="tall-mobile">
+          <img src="assets/photos/hero-portrait-8.jpg" alt="A Calvary elder leading from the lectern" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Children's presentations -->
+        <div class="gallery-tile" data-span="wide">
+          <img src="assets/photos/card-presentations.jpg" alt="Three young people presenting at the lectern" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Young man, denim jacket -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-13.jpg" alt="A young leader at the lectern" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Maroon coat woman -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-19.jpg" alt="A young woman speaking at the lectern" loading="lazy" decoding="async">
+        </div>
+
+        <!-- Bass player -->
+        <div class="gallery-tile" data-span="square">
+          <img src="assets/photos/hero-portrait-2.jpg" alt="The bass player in the worship band" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        FOOTER
        ============================================================ -->
   <footer class="footer">
@@ -2741,6 +2997,36 @@
         // Auto-close after a moment so the user can read the confirmation
         setTimeout(close, 4500);
       }
+    })();
+
+    /* ============================================================
+       GALLERY REVEAL — fade tiles in as they enter viewport
+       ============================================================ */
+    (function galleryReveal() {
+      const tiles = document.querySelectorAll('.gallery-tile');
+      if (!tiles.length) return;
+
+      // Reduced-motion users get everything visible at once
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        tiles.forEach(t => t.classList.add('in'));
+        return;
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Slight stagger across tiles in the same batch for natural feel
+            const delay = Math.min(160, Array.from(entry.target.parentNode.children).indexOf(entry.target) * 12);
+            setTimeout(() => entry.target.classList.add('in'), delay);
+            io.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -8% 0px'
+      });
+
+      tiles.forEach(tile => io.observe(tile));
     })();
   </script>
 
