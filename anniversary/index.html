@@ -245,31 +245,32 @@
     }
 
     /* THE MONUMENT — three layers stacked:
-       1. Base: drifting warm gradient fill (background-clip: text)
-       2. Stroke: thin warm-gold outline via -webkit-text-stroke
+       1. Base: drifting near-white gradient fill (background-clip: text)
+       2. Stroke: hairline warm-cream outline via -webkit-text-stroke
        3. Shimmer: bright cream sweep travelling diagonally on a 5s cycle
        All three use the same Anton uppercase letterforms, perfectly aligned
        via absolute positioning of pseudo-elements. */
     .hero-monument {
       font-family: var(--font-display);
-      font-size: clamp(72px, 18vw, 220px);
-      line-height: 0.86;
-      letter-spacing: -0.04em;
+      font-size: clamp(96px, 24vw, 360px);
+      line-height: 0.82;
+      letter-spacing: -0.065em;
       text-transform: uppercase;
       margin: 0;
       opacity: 0;
       animation: heroMonument 1200ms var(--ease-out-quint) 700ms forwards;
       position: relative;
 
-      /* LAYER 1: drifting gradient fill via background-clip: text */
+      /* LAYER 1: drifting near-white gradient fill via background-clip: text
+         All stops are white or near-white — registers as warm white
+         shimmering subtly, not coloured drift */
       background: linear-gradient(
         110deg,
-        #FFF6E8 0%,
-        #F5E0B8 20%,
-        #E8C68F 40%,
-        #FFF6E8 60%,
-        #F5E0B8 80%,
-        #E8C68F 100%
+        #FFFFFF 0%,
+        #F8F4EC 25%,
+        #FFFFFF 50%,
+        #F5EEDD 75%,
+        #FFFFFF 100%
       );
       background-size: 250% 250%;
       background-position: 0% 50%;
@@ -284,13 +285,13 @@
         monumentDrift 14s ease-in-out 1900ms infinite;
 
       /* Glow / lift behind the type */
-      filter: drop-shadow(0 0 60px rgba(208, 68, 28, 0.18))
-              drop-shadow(0 4px 24px rgba(0, 0, 0, 0.4));
+      filter: drop-shadow(0 0 80px rgba(208, 68, 28, 0.20))
+              drop-shadow(0 6px 32px rgba(0, 0, 0, 0.45));
     }
 
     @keyframes heroMonument {
-      from { opacity: 0; transform: translateY(40px) scale(0.96); letter-spacing: -0.01em; }
-      to   { opacity: 1; transform: translateY(0) scale(1); letter-spacing: -0.04em; }
+      from { opacity: 0; transform: translateY(40px) scale(0.96); letter-spacing: -0.02em; }
+      to   { opacity: 1; transform: translateY(0) scale(1); letter-spacing: -0.065em; }
     }
     @keyframes monumentDrift {
       0%   { background-position:   0% 50%; }
@@ -298,15 +299,14 @@
       100% { background-position:   0% 50%; }
     }
 
-    /* LAYER 2: stroke outline — uses ::before pseudo with same text content
-       (set via data-text attribute) so we get the stroke on top of the gradient */
+    /* LAYER 2: hairline stroke — barely-there warm-cream edge for definition */
     .hero-monument::before {
       content: attr(data-text);
       position: absolute;
       inset: 0;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      -webkit-text-stroke: 1.5px rgba(232, 198, 143, 0.65);
+      -webkit-text-stroke: 0.5px rgba(245, 238, 221, 0.35);
       pointer-events: none;
       z-index: 1;
     }
