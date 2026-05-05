@@ -1960,8 +1960,8 @@
       const NUM_SLOTS = 4;
 
       // Initial assignment — give each slot a different photo
-      // Use spread photos across the pool for variety (1, 4, 8, 11 spreads broadly)
-      const initialPhotos = [1, 4, 8, 11];
+      // Spread across pool for variety, including next generation (photo 9)
+      const initialPhotos = [1, 4, 9, 11];
 
       // Per-slot state: which photo is showing, and which image div (0 or 1) is active
       const slotState = initialPhotos.map((photoNum, idx) => ({
