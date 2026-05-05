@@ -1004,20 +1004,6 @@
         radial-gradient(ellipse at 60% 70%, rgba(155, 95, 40, 0.55), transparent 55%);
     }
 
-    /* Theme caption — small italic line above the carousel */
-    .theme-caption {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: clamp(15px, 1.8vw, 19px);
-      color: var(--theme-accent);
-      text-align: center;
-      margin: 0 0 28px;
-      min-height: 1.4em;
-      transition: color 1200ms ease, opacity 600ms ease;
-      opacity: 0;
-    }
-    .theme-caption.shown { opacity: 1; }
-
     /* Day section hosts the theme canvas */
     .day {
       position: relative;
@@ -1297,11 +1283,6 @@
     }
     .theme-layer.active {
       opacity: 0.18;  /* gentler on bright surface */
-    }
-
-    /* Theme caption stays italic, accent colour */
-    .theme-caption {
-      color: var(--theme-accent);
     }
 
     /* ----- PASTOR'S WORD SECTION ----- */
@@ -1980,7 +1961,6 @@
     <div class="day-header">
       <p class="day-invite">You are cordially invited to join us in celebrating</p>
       <h2 class="day-headline">34 Years of God's <em>Faithfulness</em></h2>
-      <p class="theme-caption" id="theme-caption">&nbsp;</p>
     </div>
 
     <div class="carousel-wrap">
@@ -2227,15 +2207,14 @@
     // Theme auto-cycle — transforms the page atmosphere as cards rotate
     (function() {
       const themes = [
-        { key: 'praise',        caption: 'This is the sound of a thankful church.' },
-        { key: 'presentations', caption: 'Every part of the family steps forward.' },
-        { key: 'word',          caption: 'A word that lands where it\u2019s needed.' },
-        { key: 'lunch',         caption: 'The table is set. The seat is yours.' },
-        { key: 'family',        caption: 'A Sunday you\u2019ll be talking about all year.' }
+        { key: 'praise' },
+        { key: 'presentations' },
+        { key: 'word' },
+        { key: 'lunch' },
+        { key: 'family' }
       ];
 
       const body = document.body;
-      const captionEl = document.getElementById('theme-caption');
       const layers = document.querySelectorAll('.theme-layer');
       const pillars = document.querySelectorAll('.pillar[data-theme]');
       const daySection = document.getElementById('day');
@@ -2249,13 +2228,6 @@
       function applyTheme(i) {
         const theme = themes[i];
         body.setAttribute('data-theme', theme.key);
-
-        // Caption
-        captionEl.classList.remove('shown');
-        setTimeout(() => {
-          captionEl.textContent = theme.caption;
-          captionEl.classList.add('shown');
-        }, 300);
 
         // Theme canvas layer
         layers.forEach(layer => {
@@ -2286,7 +2258,6 @@
 
       function resetToDefault() {
         body.setAttribute('data-theme', 'default');
-        captionEl.classList.remove('shown');
         layers.forEach(layer => layer.classList.remove('active'));
         pillars.forEach(p => p.classList.remove('active'));
       }
