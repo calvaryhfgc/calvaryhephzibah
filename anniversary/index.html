@@ -553,6 +553,23 @@
       font-weight: 600;
       margin-bottom: 16px;
     }
+    /* Cordial invitation line — sits above the day-headline.
+       Italic serif so it reads as a gracious card invitation,
+       contrast against the bold uppercase headline below. */
+    .day-invite {
+      display: block;
+      text-align: center;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(16px, 1.6vw, 20px);
+      line-height: 1.4;
+      letter-spacing: 0.005em;
+      color: var(--fg-2);
+      margin: 0 auto 14px;
+      max-width: 580px;
+      padding: 0 16px;
+    }
     .day-headline {
       font-family: var(--font-display);
       font-size: clamp(36px, 5.2vw, 64px);
@@ -1184,6 +1201,9 @@
     }
     .day-eyebrow {
       color: #C41E2A;
+    }
+    .day-invite {
+      color: #5A5046;
     }
 
     /* Cards on bone become photo-led posters: image top, content bottom */
@@ -1958,6 +1978,7 @@
     </div>
 
     <div class="day-header">
+      <p class="day-invite">You are cordially invited to join us in celebrating</p>
       <h2 class="day-headline">34 Years of God's <em>Faithfulness</em></h2>
       <p class="theme-caption" id="theme-caption">&nbsp;</p>
     </div>
