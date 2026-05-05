@@ -227,21 +227,79 @@
     .hero-monument-wrap {
       position: relative;
       display: inline-block;
+      isolation: isolate;
     }
+
+    /* Layer 1 — DARK VIGNETTE.
+       Soft, large, deep radial that absorbs light around the wordmark.
+       This creates the contrast that makes the bright glow on top pop.
+       Static — no animation, just anchors the type into the scene. */
     .hero-monument-wrap::before {
       content: "";
       position: absolute;
-      inset: -20% -10%;
-      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(208, 68, 28, 0.22), transparent 65%);
-      filter: blur(20px);
-      z-index: -1;
-      animation: monumentBreathe 6s ease-in-out infinite;
+      inset: -45% -25%;
+      background:
+        radial-gradient(
+          ellipse 65% 55% at 50% 50%,
+          rgba(0, 0, 0, 0.78) 0%,
+          rgba(0, 0, 0, 0.55) 35%,
+          rgba(0, 0, 0, 0.20) 60%,
+          transparent 80%
+        );
+      filter: blur(40px);
+      z-index: -2;
+      pointer-events: none;
       opacity: 0;
-      animation-delay: 1500ms, 1500ms;
+      animation: monumentVignetteFade 1400ms var(--ease-out-quint) 600ms forwards;
     }
-    @keyframes monumentBreathe {
-      0%, 100% { opacity: 0.7; transform: scale(1); }
-      50%      { opacity: 1;   transform: scale(1.08); }
+    @keyframes monumentVignetteFade {
+      to { opacity: 1; }
+    }
+
+    /* Layer 2 — BRIGHT ANIMATED GLOW.
+       Warm cream-into-gold radial, sized smaller than the vignette so it
+       sits inside the dark anchor. Pulses gently and drifts in scale and
+       hue for an organic feel. This is the "lift" effect. */
+    .hero-monument-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -25% -8%;
+      background:
+        radial-gradient(
+          ellipse 55% 50% at 50% 55%,
+          rgba(255, 232, 178, 0.62) 0%,
+          rgba(255, 200, 140, 0.42) 25%,
+          rgba(220, 110, 60, 0.22) 50%,
+          rgba(180, 50, 30, 0.10) 70%,
+          transparent 85%
+        );
+      filter: blur(28px);
+      mix-blend-mode: screen;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+      animation:
+        monumentGlowFade 1600ms var(--ease-out-quint) 1100ms forwards,
+        monumentGlowPulse 6.5s ease-in-out 2700ms infinite;
+    }
+    @keyframes monumentGlowFade {
+      to { opacity: 1; }
+    }
+    @keyframes monumentGlowPulse {
+      0%   { transform: scale(0.94) translateY(2px);   filter: blur(28px) hue-rotate(0deg); }
+      30%  { transform: scale(1.08) translateY(-3px);  filter: blur(34px) hue-rotate(-6deg); }
+      55%  { transform: scale(1.02) translateY(0);     filter: blur(30px) hue-rotate(2deg); }
+      80%  { transform: scale(1.12) translateY(-2px);  filter: blur(36px) hue-rotate(-3deg); }
+      100% { transform: scale(0.94) translateY(2px);   filter: blur(28px) hue-rotate(0deg); }
+    }
+
+    /* Reduced motion — keep the layered look but kill the pulse + drift */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-monument-wrap::before,
+      .hero-monument-wrap::after {
+        animation: none !important;
+        opacity: 1 !important;
+      }
     }
 
     /* THE MONUMENT — three layers stacked:
