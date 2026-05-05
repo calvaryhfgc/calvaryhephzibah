@@ -2040,8 +2040,8 @@
     (function heroRotation() {
       // Bail if reduced motion is preferred — initial photos stay static
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        // Set initial photos (1, 2, 3, 4) and stop
-        const initial = [1, 2, 3, 4];
+        // Set initial photos: Pastor Shade, Auntie Pauline, Pastor Gbenga, Pastor K
+        const initial = [1, 4, 3, 15];
         document.querySelectorAll('.hero-portrait').forEach((slot, i) => {
           const firstImg = slot.querySelector('.hero-portrait-img[data-img="0"]');
           firstImg.style.backgroundImage = `url('assets/photos/hero-portrait-${initial[i]}.jpg')`;
@@ -2054,8 +2054,9 @@
       const NUM_SLOTS = 4;
 
       // Initial assignment — give each slot a different photo
-      // Spread across pool for variety, including next generation (photo 9)
-      const initialPhotos = [1, 4, 9, 11];
+      // Anchored leadership on first paint: Pastor Shade, Auntie Pauline,
+      // Pastor Gbenga, Pastor K
+      const initialPhotos = [1, 4, 3, 15];
 
       // Per-slot state: which photo is showing, and which image div (0 or 1) is active
       const slotState = initialPhotos.map((photoNum, idx) => ({
