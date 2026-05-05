@@ -243,22 +243,116 @@
       0%, 100% { opacity: 0.7; transform: scale(1); }
       50%      { opacity: 1;   transform: scale(1.08); }
     }
+
+    /* THE MONUMENT — three layers stacked:
+       1. Base: drifting warm gradient fill (background-clip: text)
+       2. Stroke: thin warm-gold outline via -webkit-text-stroke
+       3. Shimmer: bright cream sweep travelling diagonally on a 5s cycle
+       All three use the same Anton uppercase letterforms, perfectly aligned
+       via absolute positioning of pseudo-elements. */
     .hero-monument {
       font-family: var(--font-display);
       font-size: clamp(72px, 18vw, 220px);
       line-height: 0.86;
       letter-spacing: -0.04em;
-      color: var(--bone);
       text-transform: uppercase;
       margin: 0;
       opacity: 0;
       animation: heroMonument 1200ms var(--ease-out-quint) 700ms forwards;
-      text-shadow: 0 0 60px rgba(208, 68, 28, 0.15);
       position: relative;
+
+      /* LAYER 1: drifting gradient fill via background-clip: text */
+      background: linear-gradient(
+        110deg,
+        #FFF6E8 0%,
+        #F5E0B8 20%,
+        #E8C68F 40%,
+        #FFF6E8 60%,
+        #F5E0B8 80%,
+        #E8C68F 100%
+      );
+      background-size: 250% 250%;
+      background-position: 0% 50%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+
+      /* Drifting fill animation — 14s ambient drift */
+      animation:
+        heroMonument 1200ms var(--ease-out-quint) 700ms forwards,
+        monumentDrift 14s ease-in-out 1900ms infinite;
+
+      /* Glow / lift behind the type */
+      filter: drop-shadow(0 0 60px rgba(208, 68, 28, 0.18))
+              drop-shadow(0 4px 24px rgba(0, 0, 0, 0.4));
     }
+
     @keyframes heroMonument {
       from { opacity: 0; transform: translateY(40px) scale(0.96); letter-spacing: -0.01em; }
       to   { opacity: 1; transform: translateY(0) scale(1); letter-spacing: -0.04em; }
+    }
+    @keyframes monumentDrift {
+      0%   { background-position:   0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position:   0% 50%; }
+    }
+
+    /* LAYER 2: stroke outline — uses ::before pseudo with same text content
+       (set via data-text attribute) so we get the stroke on top of the gradient */
+    .hero-monument::before {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(232, 198, 143, 0.65);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* LAYER 3: shimmer sweep — diagonal band of bright cream travelling
+       across the word every 5s, masked to the letterforms */
+    .hero-monument::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        100deg,
+        transparent 0%,
+        transparent 35%,
+        rgba(255, 250, 235, 0.0) 42%,
+        rgba(255, 250, 235, 0.95) 50%,
+        rgba(255, 250, 235, 0.0) 58%,
+        transparent 65%,
+        transparent 100%
+      );
+      background-size: 250% 100%;
+      background-position: -50% 50%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: monumentShimmer 5s ease-in-out 2200ms infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes monumentShimmer {
+      0%   { background-position: -50% 50%; }
+      30%  { background-position: 150% 50%; }
+      100% { background-position: 150% 50%; }
+    }
+
+    /* Reduced motion: kill the drift and shimmer, keep static gradient fill */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-monument {
+        animation: heroMonument 1200ms var(--ease-out-quint) 700ms forwards;
+        background-position: 50% 50%;
+      }
+      .hero-monument::after {
+        animation: none;
+        opacity: 0;
+      }
     }
 
     /* The italic subtitle — editorial line above the monument */
@@ -1567,7 +1661,7 @@
     <div class="hero-subline">Reasons to be</div>
 
     <div class="hero-monument-wrap">
-      <h1 class="hero-monument">THANKFUL</h1>
+      <h1 class="hero-monument" data-text="THANKFUL">THANKFUL</h1>
     </div>
 
     <div class="hero-when">Sunday 17 May 2026 &nbsp;·&nbsp; 10:30 AM</div>
