@@ -515,33 +515,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* Scroll cue */
-    .scroll-cue {
-      position: absolute;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      font-family: var(--font-body);
-      font-size: 10px;
-      color: var(--fg-3);
-      text-transform: uppercase;
-      letter-spacing: 0.32em;
-      font-weight: 600;
-      opacity: 0;
-      animation: fadeUp 800ms var(--ease-out-quint) 2000ms forwards;
-    }
-    .scroll-cue-line {
-      width: 1px;
-      height: 40px;
-      background: linear-gradient(to bottom, var(--red), transparent);
-      animation: pulse 2.4s ease-in-out infinite;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-
     /* ============================================================
        PROCLAMATION — the message under the hero
        ============================================================ */
@@ -2025,11 +1998,6 @@
     <div class="hero-cta">
       <a href="#rsvp" class="cv-btn cv-btn-primary">Save Me a Seat</a>
       <a href="#day" class="cv-btn cv-btn-ghost">What to Expect</a>
-    </div>
-
-    <div class="scroll-cue" aria-hidden="true">
-      Scroll
-      <span class="scroll-cue-line"></span>
     </div>
   </section>
 
