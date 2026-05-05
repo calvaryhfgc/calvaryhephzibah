@@ -379,6 +379,21 @@
       opacity: 0;
       animation: fadeUp 800ms var(--ease-out-quint) 1200ms forwards;
     }
+    /* Tagline variant — used directly under the THANKFUL monument.
+       Italic serif, no caps, longer phrase needs lighter tracking. */
+    .hero-when--tagline {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(17px, 2vw, 22px);
+      letter-spacing: 0.005em;
+      text-transform: none;
+      color: rgba(245, 238, 221, 0.92);
+      margin-top: 22px;
+      max-width: 640px;
+      padding: 0 16px;
+      line-height: 1.35;
+    }
 
     /* Countdown chips — restrained, confident */
     .hero-countdown {
@@ -1924,7 +1939,7 @@
       <h1 class="hero-monument" data-text="THANKFUL">THANKFUL</h1>
     </div>
 
-    <div class="hero-when">Sunday 17 May 2026 &nbsp;·&nbsp; 10:30 AM</div>
+    <div class="hero-when hero-when--tagline">Celebrating 34 years of God's faithfulness at Calvary</div>
 
     <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
          alt="Calvary"
