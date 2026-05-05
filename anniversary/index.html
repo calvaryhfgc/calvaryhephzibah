@@ -561,6 +561,46 @@
     /* ---- VERSE column (right) ---- */
     .proclamation-verse {
       max-width: 480px;
+      position: relative;
+      align-self: stretch;
+      display: flex;
+      align-items: center;
+      min-height: 480px;
+    }
+    /* Editorial background figure — Pastor K positioned in the empty
+       lower-right of the verse column. Faded to transparent toward the
+       verse text via mask-image so the verse remains primary. */
+    .proclamation-verse-figure {
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 380px;
+      height: 460px;
+      background-image: url('assets/photos/proclamation-bg-pastor-k.jpg');
+      background-size: cover;
+      background-position: center 30%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      filter: saturate(0.78) contrast(0.95);
+      -webkit-mask-image: linear-gradient(
+        to top left,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.85) 25%,
+        rgba(0, 0, 0, 0.45) 55%,
+        rgba(0, 0, 0, 0) 80%
+      );
+              mask-image: linear-gradient(
+        to top left,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0.85) 25%,
+        rgba(0, 0, 0, 0.45) 55%,
+        rgba(0, 0, 0, 0) 80%
+      );
+    }
+    .proclamation-verse-content {
+      position: relative;
+      z-index: 1;
     }
     .proclamation-quote {
       font-family: var(--font-serif);
@@ -684,6 +724,11 @@
       }
       .proclamation-verse {
         margin: 0 auto;
+        min-height: 0;
+        align-self: auto;
+      }
+      .proclamation-verse-figure {
+        display: none;
       }
     }
 
@@ -1342,6 +1387,12 @@
     }
     .proclamation-map:hover {
       box-shadow: 0 8px 24px rgba(110, 80, 40, 0.18);
+    }
+    /* On bone, lift the figure opacity slightly so Pastor K reads,
+       but keep saturation muted so it harmonises with the cream palette */
+    .proclamation-verse-figure {
+      opacity: 0.62;
+      filter: saturate(0.82) contrast(0.96) brightness(1.03);
     }
     /* Watermark eagle stays but darkened so it reads on bone */
     .proclamation-watermark {
@@ -2250,15 +2301,18 @@
       <!-- Vertical red divider -->
       <div class="proclamation-divider" aria-hidden="true"></div>
 
-      <!-- Right: scripture -->
+      <!-- Right: scripture, with Pastor K as editorial background -->
       <div class="proclamation-verse">
-        <div class="proclamation-quote">
-          <em>"For the Lord is good;</em><br>
-          <em>His mercy is everlasting;</em><br>
-          <em>and His truth endureth</em><br>
-          <em>to all generations."</em>
+        <div class="proclamation-verse-figure" aria-hidden="true"></div>
+        <div class="proclamation-verse-content">
+          <div class="proclamation-quote">
+            <em>"For the Lord is good;</em><br>
+            <em>His mercy is everlasting;</em><br>
+            <em>and His truth endureth</em><br>
+            <em>to all generations."</em>
+          </div>
+          <div class="proclamation-attr">Psalm 100 : 5 &nbsp;·&nbsp; KJV</div>
         </div>
-        <div class="proclamation-attr">Psalm 100 : 5 &nbsp;·&nbsp; KJV</div>
       </div>
 
     </div>
