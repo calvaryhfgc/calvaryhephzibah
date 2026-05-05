@@ -1615,6 +1615,266 @@
         transform: scale(1.05) !important;
       }
     }
+
+    /* ============================================================
+       RSVP MODAL — overlay form, design-system aligned
+       ============================================================ */
+    .rsvp-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 280ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .rsvp-modal.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .rsvp-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(11, 11, 14, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .rsvp-modal-dialog {
+      position: relative;
+      width: 100%;
+      max-width: 520px;
+      max-height: calc(100vh - 48px);
+      overflow-y: auto;
+      background: #FAF6EE;
+      border-radius: 4px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45),
+                  0 4px 16px rgba(0, 0, 0, 0.25);
+      transform: translateY(16px) scale(0.98);
+      transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1);
+      padding: 40px 36px 36px;
+    }
+    .rsvp-modal.is-open .rsvp-modal-dialog {
+      transform: translateY(0) scale(1);
+    }
+    .rsvp-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      color: #4A4A4A;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 160ms ease, color 160ms ease;
+    }
+    .rsvp-modal-close:hover {
+      background: rgba(0, 0, 0, 0.06);
+      color: #1A1A1A;
+    }
+    .rsvp-modal-close:focus-visible {
+      outline: 2px solid #C41E2A;
+      outline-offset: 2px;
+    }
+    .rsvp-modal-close svg {
+      width: 18px;
+      height: 18px;
+    }
+    .rsvp-modal-eyebrow {
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #C41E2A;
+      margin-bottom: 12px;
+    }
+    .rsvp-modal-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(28px, 4vw, 36px);
+      line-height: 1.1;
+      color: #1A1A1A;
+      margin: 0 0 8px;
+    }
+    .rsvp-modal-subtitle {
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #555;
+      margin: 0 0 28px;
+    }
+    .rsvp-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .rsvp-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .rsvp-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media (max-width: 480px) {
+      .rsvp-row { grid-template-columns: 1fr; gap: 18px; }
+      .rsvp-modal-dialog { padding: 32px 24px 28px; }
+    }
+    .rsvp-label {
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #1A1A1A;
+      text-transform: none;
+    }
+    .rsvp-label-req::after {
+      content: ' *';
+      color: #C41E2A;
+    }
+    .rsvp-input,
+    .rsvp-textarea,
+    .rsvp-select {
+      width: 100%;
+      padding: 11px 14px;
+      background: #FFFFFF;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      border-radius: 6px;
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 15px;
+      color: #1A1A1A;
+      transition: border-color 160ms ease, box-shadow 160ms ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .rsvp-input::placeholder,
+    .rsvp-textarea::placeholder {
+      color: #9A9A9A;
+    }
+    .rsvp-input:focus,
+    .rsvp-textarea:focus,
+    .rsvp-select:focus {
+      outline: none;
+      border-color: #C41E2A;
+      box-shadow: 0 0 0 3px rgba(196, 30, 42, 0.12);
+    }
+    .rsvp-textarea {
+      resize: vertical;
+      min-height: 84px;
+      font-family: 'Inter Tight', system-ui, sans-serif;
+    }
+    .rsvp-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231A1A1A' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+    /* Honeypot — visually hidden, kept available to bots */
+    .rsvp-hp {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .rsvp-error {
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 13px;
+      color: #C41E2A;
+      min-height: 18px;
+    }
+    .rsvp-submit {
+      margin-top: 6px;
+      width: 100%;
+      padding: 14px 20px;
+      background: #C41E2A;
+      color: #FFFFFF;
+      border: 0;
+      border-radius: 6px;
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 160ms ease, transform 160ms ease;
+    }
+    .rsvp-submit:hover { background: #A8161F; }
+    .rsvp-submit:active { transform: scale(0.98); }
+    .rsvp-submit:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .rsvp-fineprint-modal {
+      margin-top: 14px;
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+      line-height: 1.5;
+    }
+    /* Success state */
+    .rsvp-success {
+      text-align: center;
+      padding: 12px 0 8px;
+    }
+    .rsvp-success-mark {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: #C41E2A;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rsvp-success-mark svg { width: 24px; height: 24px; }
+    .rsvp-success-title {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-size: 28px;
+      color: #1A1A1A;
+      margin: 0 0 10px;
+      line-height: 1.15;
+    }
+    .rsvp-success-body {
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 15px;
+      color: #4A4A4A;
+      margin: 0 auto 22px;
+      max-width: 360px;
+      line-height: 1.55;
+    }
+    .rsvp-success-meta {
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 13px;
+      color: #888;
+      margin: 0;
+    }
+    /* No-scroll lock on body when modal is open */
+    body.rsvp-locked {
+      overflow: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rsvp-modal,
+      .rsvp-modal-dialog {
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 <body class="cv-stage" data-theme="default">
@@ -1833,10 +2093,128 @@
       <div class="rsvp-eyebrow">A Soft RSVP</div>
       <h2 class="rsvp-title">Let Us<br>Know You're Coming</h2>
       <p class="rsvp-body">We're cooking for everyone — let us know you're coming so we have enough on the table for you and yours.</p>
-      <a href="#" class="rsvp-button" id="rsvp-link">Save My Seat</a>
+      <a href="#rsvp-modal" class="rsvp-button" id="rsvp-link" data-rsvp-open aria-haspopup="dialog" aria-controls="rsvp-modal">Save My Seat</a>
       <div class="rsvp-fineprint">Takes 30 seconds. Names &amp; numbers only.</div>
     </div>
   </section>
+
+  <!-- ============================================================
+       RSVP MODAL
+       ============================================================ -->
+  <div class="rsvp-modal"
+       id="rsvp-modal"
+       role="dialog"
+       aria-modal="true"
+       aria-labelledby="rsvp-modal-title"
+       aria-describedby="rsvp-modal-subtitle"
+       hidden>
+    <div class="rsvp-modal-backdrop" data-rsvp-close></div>
+    <div class="rsvp-modal-dialog">
+      <button type="button"
+              class="rsvp-modal-close"
+              data-rsvp-close
+              aria-label="Close RSVP form">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <!-- Form view -->
+      <div class="rsvp-modal-view" data-view="form">
+        <div class="rsvp-modal-eyebrow">RSVP · 17 May 2026</div>
+        <h2 class="rsvp-modal-title" id="rsvp-modal-title">Save your seat at the table.</h2>
+        <p class="rsvp-modal-subtitle" id="rsvp-modal-subtitle">A few details so we cook for the right number and can keep you posted.</p>
+
+        <form class="rsvp-form" id="rsvp-form" novalidate>
+          <!-- Honeypot for spam bots — humans don't see this -->
+          <div class="rsvp-hp" aria-hidden="true">
+            <label>If you are human, leave this empty
+              <input type="text" name="website" tabindex="-1" autocomplete="off">
+            </label>
+          </div>
+
+          <div class="rsvp-field">
+            <label class="rsvp-label rsvp-label-req" for="rsvp-name">Your name</label>
+            <input class="rsvp-input"
+                   id="rsvp-name"
+                   name="name"
+                   type="text"
+                   autocomplete="name"
+                   placeholder="First and last name"
+                   required>
+          </div>
+
+          <div class="rsvp-row">
+            <div class="rsvp-field">
+              <label class="rsvp-label" for="rsvp-email">Email</label>
+              <input class="rsvp-input"
+                     id="rsvp-email"
+                     name="email"
+                     type="email"
+                     autocomplete="email"
+                     placeholder="you@example.com">
+            </div>
+            <div class="rsvp-field">
+              <label class="rsvp-label" for="rsvp-phone">Phone</label>
+              <input class="rsvp-input"
+                     id="rsvp-phone"
+                     name="phone"
+                     type="tel"
+                     autocomplete="tel"
+                     placeholder="07…">
+            </div>
+          </div>
+
+          <div class="rsvp-field">
+            <label class="rsvp-label rsvp-label-req" for="rsvp-headcount">How many of you?</label>
+            <select class="rsvp-select" id="rsvp-headcount" name="headcount" required>
+              <option value="" disabled selected>Choose a number</option>
+              <option value="1">Just me</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7+">7 or more</option>
+            </select>
+          </div>
+
+          <div class="rsvp-field">
+            <label class="rsvp-label" for="rsvp-dietary">Dietary notes</label>
+            <textarea class="rsvp-textarea"
+                      id="rsvp-dietary"
+                      name="dietary"
+                      placeholder="Allergies, vegetarian, halal, anything else we should know."
+                      rows="3"></textarea>
+          </div>
+
+          <div class="rsvp-error" id="rsvp-error" role="alert" aria-live="polite"></div>
+
+          <button type="submit" class="rsvp-submit" id="rsvp-submit">Save My Seat</button>
+
+          <p class="rsvp-fineprint-modal">
+            Sunday 17 May 2026 · 10:30 AM<br>
+            74 Carmoor Road, Manchester M13 0FB
+          </p>
+        </form>
+      </div>
+
+      <!-- Success view (hidden until submission completes) -->
+      <div class="rsvp-modal-view" data-view="success" hidden>
+        <div class="rsvp-success">
+          <div class="rsvp-success-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <h2 class="rsvp-success-title">You're on the list.</h2>
+          <p class="rsvp-success-body">Thank you, <span id="rsvp-success-name">friend</span>. We've got a seat for you and yours. We'll be in touch closer to the day.</p>
+          <p class="rsvp-success-meta">Sunday 17 May 2026 · 10:30 AM</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ============================================================
        FOOTER
@@ -2172,6 +2550,197 @@
       document.addEventListener('visibilitychange', () => {
         isPaused = document.hidden;
       });
+    })();
+  </script>
+
+  <script>
+    /* ============================================================
+       RSVP MODAL CONTROLLER
+       Open/close, focus trap, ESC + backdrop close, form submit
+       to GHL webhook (placeholder URL — swap before launch)
+       ============================================================ */
+    (function rsvpModal() {
+      // ---- CONFIG ----
+      // TODO: replace this with the real GoHighLevel webhook URL.
+      // Anything in the form submits as JSON to this endpoint.
+      const GHL_WEBHOOK_URL = '__GHL_WEBHOOK_URL_PLACEHOLDER__';
+
+      const modal     = document.getElementById('rsvp-modal');
+      const form      = document.getElementById('rsvp-form');
+      if (!modal || !form) return;
+
+      const submitBtn = document.getElementById('rsvp-submit');
+      const errorEl   = document.getElementById('rsvp-error');
+      const formView  = modal.querySelector('[data-view="form"]');
+      const okView    = modal.querySelector('[data-view="success"]');
+      const okName    = document.getElementById('rsvp-success-name');
+
+      let lastFocused = null;
+
+      function getFocusable() {
+        return modal.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+      }
+
+      function open() {
+        lastFocused = document.activeElement;
+        modal.hidden = false;
+        // double-rAF so the transition triggers from the hidden->visible flip
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          modal.classList.add('is-open');
+        }));
+        document.body.classList.add('rsvp-locked');
+        // Focus the first input after the dialog is in
+        setTimeout(() => {
+          const firstInput = document.getElementById('rsvp-name');
+          if (firstInput) firstInput.focus();
+        }, 60);
+      }
+
+      function close() {
+        modal.classList.remove('is-open');
+        document.body.classList.remove('rsvp-locked');
+        // Hide the modal after the transition completes
+        setTimeout(() => {
+          modal.hidden = true;
+          // Reset to form view in case it was on success
+          if (formView && okView) {
+            formView.hidden = false;
+            okView.hidden = true;
+          }
+          if (errorEl) errorEl.textContent = '';
+          if (lastFocused && lastFocused.focus) lastFocused.focus();
+        }, 280);
+      }
+
+      // Open triggers
+      document.querySelectorAll('[data-rsvp-open]').forEach(el => {
+        el.addEventListener('click', e => {
+          e.preventDefault();
+          open();
+        });
+      });
+
+      // Close triggers (backdrop + close button)
+      modal.querySelectorAll('[data-rsvp-close]').forEach(el => {
+        el.addEventListener('click', close);
+      });
+
+      // ESC to close + focus trap
+      document.addEventListener('keydown', e => {
+        if (modal.hidden) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+          return;
+        }
+        if (e.key === 'Tab') {
+          const focusable = Array.from(getFocusable()).filter(el => el.offsetParent !== null);
+          if (focusable.length === 0) return;
+          const first = focusable[0];
+          const last  = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      // ---- VALIDATION ----
+      function setError(msg) {
+        if (errorEl) errorEl.textContent = msg || '';
+      }
+      function isEmail(v) {
+        if (!v) return true; // optional field
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      }
+
+      // ---- SUBMIT ----
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        setError('');
+
+        const data = {
+          name:       form.name.value.trim(),
+          email:      form.email.value.trim(),
+          phone:      form.phone.value.trim(),
+          headcount:  form.headcount.value,
+          dietary:    form.dietary.value.trim(),
+          // metadata
+          source:     'anniversary-eflyer',
+          service:    '17-may-2026',
+          submitted:  new Date().toISOString()
+        };
+
+        // Honeypot: if the hidden 'website' field is filled, treat as spam
+        if (form.website && form.website.value) {
+          // Show fake success to avoid revealing the trap
+          showSuccess(data.name);
+          return;
+        }
+
+        // Required field validation
+        if (!data.name)      { setError('Please enter your name.'); form.name.focus(); return; }
+        if (!data.headcount) { setError('Please choose how many of you are coming.'); form.headcount.focus(); return; }
+        if (!isEmail(data.email)) { setError('That email address doesn\u2019t look right.'); form.email.focus(); return; }
+
+        // At least one contact method
+        if (!data.email && !data.phone) {
+          setError('Please leave us either an email or a phone number so we can reach you.');
+          form.email.focus();
+          return;
+        }
+
+        submitBtn.disabled = true;
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Saving…';
+
+        try {
+          // If the webhook URL is still the placeholder, simulate a successful submission
+          // so the form is testable on the live page before the real URL is wired in.
+          if (GHL_WEBHOOK_URL.indexOf('PLACEHOLDER') !== -1) {
+            console.warn('[RSVP] Webhook URL is a placeholder. Submission was not sent. Data:', data);
+            await new Promise(r => setTimeout(r, 600));
+            showSuccess(data.name);
+            return;
+          }
+
+          const res = await fetch(GHL_WEBHOOK_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+
+          if (!res.ok) throw new Error('Network response was not ok');
+          showSuccess(data.name);
+        } catch (err) {
+          console.error('[RSVP] Submission failed:', err);
+          setError('Something went wrong. Please try again, or message us directly.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+        }
+      });
+
+      function showSuccess(name) {
+        if (okName) okName.textContent = name ? name.split(' ')[0] : 'friend';
+        if (formView && okView) {
+          formView.hidden = true;
+          okView.hidden = false;
+        }
+        // Move focus to the success heading so screen readers hear it
+        const successTitle = okView && okView.querySelector('.rsvp-success-title');
+        if (successTitle) {
+          successTitle.setAttribute('tabindex', '-1');
+          successTitle.focus();
+        }
+        // Auto-close after a moment so the user can read the confirmation
+        setTimeout(close, 4500);
+      }
     })();
   </script>
 
