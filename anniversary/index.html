@@ -475,7 +475,6 @@
        ============================================================ */
     .proclamation {
       padding: 120px 24px 80px;
-      text-align: center;
       position: relative;
       z-index: 2;
       overflow: hidden;
@@ -497,24 +496,79 @@
       0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
       50%      { transform: translate(-50%, -52%) scale(1.04) rotate(2deg); }
     }
+    /* Two-column layout: details left, verse right */
     .proclamation-content {
       position: relative;
       z-index: 1;
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 56px;
+      text-align: left;
     }
-    .proclamation-rule {
-      width: 80px;
-      height: 1px;
+    /* Vertical divider between the two columns */
+    .proclamation-divider {
+      width: 1px;
+      align-self: stretch;
       background: var(--red);
-      margin: 0 auto 40px;
+      opacity: 0.6;
+      min-height: 220px;
+    }
+    /* ---- DETAILS column (left) ---- */
+    .proclamation-details {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+    .proclamation-eyebrow {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.32em;
+      font-weight: 600;
+    }
+    .proclamation-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .proclamation-detail-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--fg-3);
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      font-weight: 600;
+    }
+    .proclamation-detail-value {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 2.4vw, 32px);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      text-transform: uppercase;
+    }
+    .proclamation-detail-value-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(15px, 1.6vw, 18px);
+      color: var(--fg-2);
+      margin-top: 2px;
+    }
+    /* ---- VERSE column (right) ---- */
+    .proclamation-verse {
+      max-width: 480px;
     }
     .proclamation-quote {
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: clamp(24px, 3.4vw, 38px);
+      font-size: clamp(22px, 3vw, 32px);
       line-height: 1.35;
       color: var(--bone);
-      max-width: 720px;
-      margin: 0 auto 24px;
+      margin: 0 0 22px;
     }
     .proclamation-quote em {
       color: var(--red);
@@ -527,6 +581,26 @@
       text-transform: uppercase;
       letter-spacing: 0.28em;
       font-weight: 600;
+    }
+    /* Mobile: stack columns, divider becomes horizontal */
+    @media (max-width: 800px) {
+      .proclamation-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+      }
+      .proclamation-details {
+        align-items: center;
+      }
+      .proclamation-divider {
+        width: 60px;
+        height: 1px;
+        min-height: 0;
+        margin: 0 auto;
+      }
+      .proclamation-verse {
+        margin: 0 auto;
+      }
     }
 
     /* ============================================================
@@ -1165,9 +1239,18 @@
     .proclamation-attr {
       color: #888;
     }
-    .proclamation-rule {
+    .proclamation-detail-label {
+      color: #8A7F70;
+    }
+    .proclamation-detail-value {
+      color: #1A1A1A;
+    }
+    .proclamation-detail-value-sub {
+      color: #5A5046;
+    }
+    .proclamation-divider {
       background: #C41E2A;
-      opacity: 0.5;
+      opacity: 0.4;
     }
     /* Watermark eagle stays but darkened so it reads on bone */
     .proclamation-watermark {
@@ -2013,7 +2096,7 @@
   </section>
 
   <!-- ============================================================
-       PROCLAMATION
+       PROCLAMATION — service details + Psalm 100:5
        ============================================================ -->
   <section class="proclamation reveal">
     <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
@@ -2021,14 +2104,44 @@
          class="proclamation-watermark"
          aria-hidden="true">
     <div class="proclamation-content">
-      <div class="proclamation-rule"></div>
-      <div class="proclamation-quote">
-        <em>"For the Lord is good;</em><br>
-        <em>His mercy is everlasting;</em><br>
-        <em>and His truth endureth</em><br>
-        <em>to all generations."</em>
+
+      <!-- Left: service details -->
+      <div class="proclamation-details">
+        <div class="proclamation-eyebrow">The Gathering</div>
+
+        <div class="proclamation-detail">
+          <div class="proclamation-detail-label">When</div>
+          <div class="proclamation-detail-value">Sunday 17 May 2026</div>
+          <div class="proclamation-detail-value-sub">Service begins 10:30 AM</div>
+        </div>
+
+        <div class="proclamation-detail">
+          <div class="proclamation-detail-label">Where</div>
+          <div class="proclamation-detail-value">74 Carmoor Road</div>
+          <div class="proclamation-detail-value-sub">Manchester, M13 0FB</div>
+        </div>
+
+        <div class="proclamation-detail">
+          <div class="proclamation-detail-label">After Service</div>
+          <div class="proclamation-detail-value">Lunch is served</div>
+          <div class="proclamation-detail-value-sub">Stay. Eat. Be at home.</div>
+        </div>
       </div>
-      <div class="proclamation-attr">Psalm 100 : 5 &nbsp;·&nbsp; KJV</div>
+
+      <!-- Vertical red divider -->
+      <div class="proclamation-divider" aria-hidden="true"></div>
+
+      <!-- Right: scripture -->
+      <div class="proclamation-verse">
+        <div class="proclamation-quote">
+          <em>"For the Lord is good;</em><br>
+          <em>His mercy is everlasting;</em><br>
+          <em>and His truth endureth</em><br>
+          <em>to all generations."</em>
+        </div>
+        <div class="proclamation-attr">Psalm 100 : 5 &nbsp;·&nbsp; KJV</div>
+      </div>
+
     </div>
   </section>
 
