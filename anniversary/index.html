@@ -1476,7 +1476,7 @@
 
     /* ============================================================
        HERO PORTRAIT ROW — JS-driven rotation engine
-       4 slots, each rotating through a pool of 13 portraits.
+       4 slots, each rotating through a pool of 20 portraits.
        No duplicates across visible slots. No immediate repeats per slot.
        Slicker crossfades with custom cubic-bezier easing and subtle
        scale-in arrival on incoming images.
@@ -2033,7 +2033,7 @@
 
     /* ============================================================
        HERO PORTRAIT ROTATION ENGINE
-       Pool of 13 portraits, 4 visible slots, no duplicates across
+       Pool of 20 portraits, 4 visible slots, no duplicates across
        slots, no immediate repeats per slot. Each slot rotates on
        its own irregular timer for organic feel.
        ============================================================ */
@@ -2041,7 +2041,7 @@
       // Bail if reduced motion is preferred — initial photos stay static
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         // Set initial photos: Pastor Shade, Auntie Pauline, Pastor Gbenga, Pastor K
-        const initial = [1, 4, 3, 15];
+        const initial = [1, 4, 20, 15];
         document.querySelectorAll('.hero-portrait').forEach((slot, i) => {
           const firstImg = slot.querySelector('.hero-portrait-img[data-img="0"]');
           firstImg.style.backgroundImage = `url('assets/photos/hero-portrait-${initial[i]}.jpg')`;
@@ -2050,13 +2050,13 @@
         return;
       }
 
-      const POOL_SIZE = 19;
+      const POOL_SIZE = 20;
       const NUM_SLOTS = 4;
 
       // Initial assignment — give each slot a different photo
       // Anchored leadership on first paint: Pastor Shade, Auntie Pauline,
       // Pastor Gbenga, Pastor K
-      const initialPhotos = [1, 4, 3, 15];
+      const initialPhotos = [1, 4, 20, 15];
 
       // Per-slot state: which photo is showing, and which image div (0 or 1) is active
       const slotState = initialPhotos.map((photoNum, idx) => ({
