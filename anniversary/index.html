@@ -555,13 +555,21 @@
     }
     .day-headline {
       font-family: var(--font-display);
-      font-size: clamp(40px, 6vw, 72px);
-      line-height: 1.0;
+      font-size: clamp(36px, 5.2vw, 64px);
+      line-height: 1.05;
       letter-spacing: -0.02em;
       text-transform: uppercase;
       color: var(--bone);
       text-align: center;
       margin: 0 0 16px;
+      text-wrap: balance;
+    }
+    /* Keep the whole headline on one line above narrow-mobile widths.
+       Below ~600px it can wrap naturally to fit. */
+    @media (min-width: 600px) {
+      .day-headline {
+        white-space: nowrap;
+      }
     }
     .day-headline em {
       color: var(--red);
