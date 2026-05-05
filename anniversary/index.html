@@ -454,52 +454,6 @@
       line-height: 1.35;
     }
 
-    /* Countdown chips — restrained, confident */
-    .hero-countdown {
-      display: flex;
-      gap: 32px;
-      margin-top: 56px;
-      opacity: 0;
-      animation: fadeUp 1000ms var(--ease-out-quint) 1400ms forwards;
-    }
-    @media (max-width: 480px) {
-      .hero-countdown { gap: 18px; }
-    }
-    .countdown-chip {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      min-width: 64px;
-    }
-    .countdown-num {
-      font-family: var(--font-display);
-      font-size: clamp(36px, 6vw, 56px);
-      line-height: 1;
-      color: var(--bone);
-      letter-spacing: -0.02em;
-      font-variant-numeric: tabular-nums;
-      transition: transform 400ms var(--ease-out-quint),
-                  color 400ms var(--ease-out-quint);
-      display: inline-block;
-    }
-    .countdown-num.tick {
-      animation: numberTick 600ms var(--ease-out-quint);
-    }
-    @keyframes numberTick {
-      0%   { transform: translateY(0) scale(1);    color: var(--bone); }
-      30%  { transform: translateY(-6px) scale(1.08); color: var(--red); }
-      100% { transform: translateY(0) scale(1);    color: var(--bone); }
-    }
-    .countdown-label {
-      font-family: var(--font-body);
-      font-size: 10px;
-      color: var(--red);
-      text-transform: uppercase;
-      letter-spacing: 0.28em;
-      font-weight: 600;
-    }
-
     /* CTA cluster */
     .hero-cta {
       display: flex;
@@ -1977,25 +1931,6 @@
          alt="Calvary"
          class="hero-eagle">
 
-    <div class="hero-countdown" id="countdown" aria-live="polite">
-      <div class="countdown-chip">
-        <span class="countdown-num" id="cd-days">--</span>
-        <span class="countdown-label">Days</span>
-      </div>
-      <div class="countdown-chip">
-        <span class="countdown-num" id="cd-hours">--</span>
-        <span class="countdown-label">Hours</span>
-      </div>
-      <div class="countdown-chip">
-        <span class="countdown-num" id="cd-mins">--</span>
-        <span class="countdown-label">Mins</span>
-      </div>
-      <div class="countdown-chip">
-        <span class="countdown-num" id="cd-secs">--</span>
-        <span class="countdown-label">Secs</span>
-      </div>
-    </div>
-
     <div class="hero-cta">
       <a href="#rsvp" class="cv-btn cv-btn-primary">Save Me a Seat</a>
       <a href="#day" class="cv-btn cv-btn-ghost">What to Expect</a>
@@ -2247,44 +2182,6 @@
   </footer>
 
   <script>
-    // Countdown to Sunday 17 May 2026, 10:30 AM
-    (function() {
-      const target = new Date('2026-05-17T10:30:00').getTime();
-      const els = {
-        days: document.getElementById('cd-days'),
-        hours: document.getElementById('cd-hours'),
-        mins: document.getElementById('cd-mins'),
-        secs: document.getElementById('cd-secs')
-      };
-
-      function setValue(el, newVal) {
-        const padded = String(newVal).padStart(2, '0');
-        if (el.textContent !== padded) {
-          el.textContent = padded;
-          el.classList.remove('tick');
-          // force reflow so animation restarts
-          void el.offsetWidth;
-          el.classList.add('tick');
-        }
-      }
-
-      function tick() {
-        const now = Date.now();
-        const diff = Math.max(0, target - now);
-        const days = Math.floor(diff / 86400000);
-        const hrs = Math.floor(diff / 3600000) % 24;
-        const mins = Math.floor(diff / 60000) % 60;
-        const secs = Math.floor(diff / 1000) % 60;
-
-        setValue(els.days, days);
-        setValue(els.hours, hrs);
-        setValue(els.mins, mins);
-        setValue(els.secs, secs);
-      }
-      tick();
-      setInterval(tick, 1000);
-    })();
-
     // Reveal on scroll
     (function() {
       const observer = new IntersectionObserver((entries) => {
