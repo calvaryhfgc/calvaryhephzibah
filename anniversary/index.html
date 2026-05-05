@@ -357,14 +357,15 @@
       100% { background-position:   0% 50%; }
     }
 
-    /* LAYER 2: hairline stroke — barely-there warm-cream edge for definition */
+    /* LAYER 2: hairline stroke — thin Calvary red edge that defines each
+       letterform. Sits under the shimmer sweep so the sweep washes over it. */
     .hero-monument::before {
       content: attr(data-text);
       position: absolute;
       inset: 0;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      -webkit-text-stroke: 0.5px rgba(245, 238, 221, 0.35);
+      -webkit-text-stroke: 0.5px rgba(196, 30, 42, 0.95);
       pointer-events: none;
       z-index: 1;
     }
