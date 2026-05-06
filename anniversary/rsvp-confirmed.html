@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're confirmed · Calvary Hephzibah 34th Anniversary</title>
+  <meta name="description" content="Your seat is saved for Sunday 17 May 2026 — the 34th Anniversary of Calvary Hephzibah Full Gospel Church.">
+  <meta name="robots" content="noindex">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==================================================
+       Tokens
+       ================================================== */
+    :root {
+      --red: #C41E2A;
+      --red-deep: #A8161F;
+      --bone: #FAF6EE;
+      --bone-soft: rgba(245, 238, 221, 0.85);
+      --bone-mute: rgba(245, 238, 221, 0.55);
+      --bone-faint: rgba(245, 238, 221, 0.20);
+      --obsidian: #0B0908;
+      --obsidian-2: #15110D;
+      --line-soft: rgba(245, 238, 221, 0.10);
+      --t-micro: 220ms cubic-bezier(0.4, 0, 0.2, 1);
+      --t-easy: 600ms cubic-bezier(0.22, 1, 0.36, 1);
+      --font-display: 'Anton', 'Impact', sans-serif;
+      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Inter Tight', system-ui, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--obsidian);
+      color: var(--bone);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* ==================================================
+       Backdrop — peak banner photo, very faded
+       ================================================== */
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+      background-image: url('assets/photos/peak-banner.jpg');
+      background-size: cover;
+      background-position: center 35%;
+      opacity: 0.18;
+      filter: blur(6px) saturate(0.55) brightness(0.7);
+      transform: scale(1.04);
+    }
+    .backdrop-wash {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 35%, rgba(120, 50, 30, 0.16), transparent 70%),
+        linear-gradient(to bottom,
+          rgba(11, 9, 8, 0.72) 0%,
+          rgba(11, 9, 8, 0.86) 50%,
+          rgba(11, 9, 8, 0.96) 100%);
+    }
+
+    /* ==================================================
+       Page layout
+       ================================================== */
+    .page {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px 100px;
+      position: relative;
+      z-index: 1;
+    }
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--bone-mute);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-weight: 600;
+      transition: color var(--t-micro);
+      margin-bottom: 56px;
+    }
+    .home-link:hover { color: var(--bone); }
+    .home-link svg { width: 14px; height: 14px; }
+
+    /* ==================================================
+       Hero — confirmation moment
+       ================================================== */
+    .hero {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+    .hero-eagle {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 28px;
+      opacity: 0.92;
+      filter: drop-shadow(0 4px 18px rgba(196, 30, 42, 0.4));
+      animation: easeIn 800ms var(--t-easy) backwards;
+    }
+    .hero-tick {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+      font-weight: 600;
+      margin-bottom: 18px;
+      animation: easeIn 800ms var(--t-easy) 100ms backwards;
+    }
+    .hero-tick-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--red);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bone);
+    }
+    .hero-tick-mark svg { width: 12px; height: 12px; }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 9vw, 96px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin: 0 0 16px;
+      animation: easeIn 1000ms var(--t-easy) 200ms backwards;
+    }
+    .hero-title em {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+      color: var(--red);
+      letter-spacing: -0.005em;
+      text-transform: none;
+    }
+    .hero-subtitle {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.4;
+      color: var(--bone-soft);
+      max-width: 540px;
+      margin: 0 auto;
+      animation: easeIn 1000ms var(--t-easy) 350ms backwards;
+    }
+
+    @keyframes easeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==================================================
+       Card — service details
+       ================================================== */
+    .card {
+      background: rgba(21, 17, 13, 0.6);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      padding: 36px 32px;
+      margin-bottom: 28px;
+      animation: easeIn 1000ms var(--t-easy) 500ms backwards;
+    }
+    .card-eyebrow {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.32em;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .detail {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .detail:last-of-type { border-bottom: 0; padding-bottom: 0; }
+    .detail:first-of-type { padding-top: 0; }
+    .detail-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--bone-mute);
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      font-weight: 600;
+    }
+    .detail-value {
+      font-family: var(--font-display);
+      font-size: clamp(22px, 2.4vw, 30px);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      text-transform: uppercase;
+    }
+    .detail-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(15px, 1.6vw, 17px);
+      color: var(--bone-soft);
+      margin-top: 2px;
+    }
+    .detail-sub a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px solid var(--bone-faint);
+      transition: color var(--t-micro), border-color var(--t-micro);
+    }
+    .detail-sub a:hover {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+
+    /* ==================================================
+       Action sections (calendar, share)
+       ================================================== */
+    .section {
+      margin-bottom: 28px;
+      animation: easeIn 1000ms var(--t-easy) 700ms backwards;
+    }
+    .section-eyebrow {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--red);
+      text-transform: uppercase;
+      letter-spacing: 0.32em;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(22px, 2.6vw, 28px);
+      color: var(--bone);
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 540px) {
+      .actions { grid-template-columns: 1fr; }
+    }
+
+    .action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 18px;
+      background: rgba(245, 238, 221, 0.04);
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      color: var(--bone);
+      text-decoration: none;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background var(--t-micro), border-color var(--t-micro), transform var(--t-micro);
+      text-align: left;
+      width: 100%;
+    }
+    .action:hover {
+      background: rgba(245, 238, 221, 0.08);
+      border-color: rgba(245, 238, 221, 0.22);
+      transform: translateY(-1px);
+    }
+    .action:focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: 3px;
+    }
+    .action-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(196, 30, 42, 0.18);
+      color: var(--red);
+    }
+    .action-icon svg { width: 18px; height: 18px; }
+    .action-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .action-label {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--bone);
+    }
+    .action-sub {
+      font-size: 11px;
+      color: var(--bone-mute);
+      letter-spacing: 0.04em;
+    }
+
+    /* "copied" toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(40px);
+      background: var(--red);
+      color: var(--bone);
+      padding: 12px 20px;
+      border-radius: 100px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      box-shadow: 0 8px 24px rgba(196, 30, 42, 0.35);
+      opacity: 0;
+      transition: opacity 240ms ease, transform 240ms ease;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .toast.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Closing line */
+    .closing {
+      text-align: center;
+      margin-top: 64px;
+      animation: easeIn 1000ms var(--t-easy) 900ms backwards;
+    }
+    .closing-line {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(16px, 1.8vw, 20px);
+      color: var(--bone-mute);
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    .closing-attr {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--bone-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.32em;
+      font-weight: 600;
+      margin-top: 14px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-eagle, .hero-tick, .hero-title, .hero-subtitle,
+      .card, .section, .closing,
+      .toast {
+        animation: none !important;
+        transition: opacity 200ms ease;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="backdrop" aria-hidden="true"></div>
+  <div class="backdrop-wash" aria-hidden="true"></div>
+
+  <main class="page">
+
+    <a class="home-link" href="index.html" aria-label="Back to the anniversary page">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="13" y1="8" x2="3" y2="8"/>
+        <polyline points="7 4 3 8 7 12"/>
+      </svg>
+      Back to the invitation
+    </a>
+
+    <!-- ===== Hero / confirmation moment ===== -->
+    <section class="hero">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
+           alt=""
+           class="hero-eagle"
+           aria-hidden="true">
+      <div class="hero-tick">
+        <span class="hero-tick-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </span>
+        Your seat is saved
+      </div>
+      <h1 class="hero-title">Thank you, <em id="hero-name">friend</em>.</h1>
+      <p class="hero-subtitle">We've got a seat for you and yours. We'll be in touch closer to the day.</p>
+    </section>
+
+    <!-- ===== Service details ===== -->
+    <section class="card" aria-labelledby="details-title">
+      <div class="card-eyebrow" id="details-title">The Service</div>
+
+      <div class="detail">
+        <div class="detail-label">When</div>
+        <div class="detail-value">Sunday 17 May 2026</div>
+        <div class="detail-sub">Service begins 10:30 AM</div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-label">Where</div>
+        <div class="detail-value">74 Carmoor Road</div>
+        <div class="detail-sub">
+          Manchester, M13 0FB &nbsp;·&nbsp;
+          <a href="https://www.google.com/maps/dir/?api=1&destination=74+Carmoor+Road%2C+Manchester+M13+0FB"
+             target="_blank"
+             rel="noopener noreferrer">Get directions</a>
+        </div>
+      </div>
+
+      <div class="detail">
+        <div class="detail-label">Your party</div>
+        <div class="detail-value" id="party-value">—</div>
+        <div class="detail-sub">A round table will be set</div>
+      </div>
+    </section>
+
+    <!-- ===== Add to calendar ===== -->
+    <section class="section" aria-labelledby="calendar-title">
+      <div class="section-eyebrow">Don't lose the date</div>
+      <h2 class="section-title" id="calendar-title">Add it to your calendar.</h2>
+
+      <div class="actions">
+        <button type="button" class="action" id="add-ics" aria-label="Download a calendar file (works with Apple Calendar, Outlook, and most calendar apps)">
+          <span class="action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <line x1="12" y1="14" x2="12" y2="18"/>
+              <line x1="10" y1="16" x2="14" y2="16"/>
+            </svg>
+          </span>
+          <span class="action-text">
+            <span class="action-label">Apple / Outlook / others</span>
+            <span class="action-sub">Download .ics</span>
+          </span>
+        </button>
+
+        <a class="action"
+           id="add-google"
+           href="#"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Add to Google Calendar">
+          <span class="action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+              <polyline points="9 14 11 16 15 12"/>
+            </svg>
+          </span>
+          <span class="action-text">
+            <span class="action-label">Google Calendar</span>
+            <span class="action-sub">One-click add</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== Share with friends ===== -->
+    <section class="section" aria-labelledby="share-title">
+      <div class="section-eyebrow">Bring people with you</div>
+      <h2 class="section-title" id="share-title">Spread the word.</h2>
+
+      <div class="actions">
+        <a class="action"
+           id="share-whatsapp"
+           href="#"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Share on WhatsApp">
+          <span class="action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </span>
+          <span class="action-text">
+            <span class="action-label">WhatsApp</span>
+            <span class="action-sub">Send to family</span>
+          </span>
+        </a>
+
+        <button type="button" class="action" id="share-copy" aria-label="Copy link to the invitation">
+          <span class="action-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </span>
+          <span class="action-text">
+            <span class="action-label">Copy link</span>
+            <span class="action-sub" id="copy-sub">Paste anywhere</span>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ===== Closing line ===== -->
+    <div class="closing">
+      <p class="closing-line">"His mercy is everlasting; and His truth endureth to all generations."</p>
+      <div class="closing-attr">Psalm 100 : 5 &nbsp;·&nbsp; KJV</div>
+    </div>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Link copied</div>
+
+  <script>
+    (function() {
+      // --------------------------------------------------------
+      // Pull personalisation from the URL
+      // (the form on index.html will redirect here with ?name=&headcount=)
+      // --------------------------------------------------------
+      const params = new URLSearchParams(window.location.search);
+      const fullName = (params.get('name') || '').trim();
+      const firstName = fullName.split(' ')[0] || '';
+      const headcount = (params.get('headcount') || '').trim();
+
+      if (firstName) {
+        document.getElementById('hero-name').textContent = firstName;
+        document.title = `${firstName}, you're confirmed · Calvary Hephzibah`;
+      }
+
+      const partyEl = document.getElementById('party-value');
+      if (headcount === '1') {
+        partyEl.textContent = 'Just you';
+      } else if (headcount === '7+') {
+        partyEl.textContent = '7 or more';
+      } else if (headcount && !isNaN(parseInt(headcount, 10))) {
+        partyEl.textContent = headcount + ' of you';
+      } else {
+        partyEl.textContent = 'You and your family';
+      }
+
+      // --------------------------------------------------------
+      // Event details (single source of truth)
+      // --------------------------------------------------------
+      const EVENT = {
+        title: 'Calvary Hephzibah 34th Anniversary Service',
+        description: 'Celebrating 34 years of God\u2019s faithfulness at Calvary. Service begins at 10:30 AM.',
+        location: '74 Carmoor Road, Manchester M13 0FB, United Kingdom',
+        startUTC: '20260517T093000Z',  // 10:30 AM BST = 09:30 UTC
+        endUTC:   '20260517T133000Z',  // ~3 hour service window
+        url: 'https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/'
+      };
+
+      // --------------------------------------------------------
+      // .ics file generation (Apple / Outlook / etc.)
+      // --------------------------------------------------------
+      function buildIcs() {
+        const dtstamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+        const lines = [
+          'BEGIN:VCALENDAR',
+          'VERSION:2.0',
+          'PRODID:-//Calvary Hephzibah//Anniversary 2026//EN',
+          'CALSCALE:GREGORIAN',
+          'METHOD:PUBLISH',
+          'BEGIN:VEVENT',
+          'UID:anniversary-2026@calvaryhephzibah.co.uk',
+          'DTSTAMP:' + dtstamp,
+          'DTSTART:' + EVENT.startUTC,
+          'DTEND:' + EVENT.endUTC,
+          'SUMMARY:' + EVENT.title,
+          'DESCRIPTION:' + EVENT.description.replace(/\n/g, '\\n'),
+          'LOCATION:' + EVENT.location,
+          'URL:' + EVENT.url,
+          'STATUS:CONFIRMED',
+          'BEGIN:VALARM',
+          'TRIGGER:-PT1D',
+          'ACTION:DISPLAY',
+          'DESCRIPTION:Reminder \u2014 Calvary Hephzibah 34th Anniversary tomorrow',
+          'END:VALARM',
+          'END:VEVENT',
+          'END:VCALENDAR'
+        ];
+        return lines.join('\r\n');
+      }
+
+      const icsBtn = document.getElementById('add-ics');
+      icsBtn.addEventListener('click', function() {
+        const blob = new Blob([buildIcs()], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'calvary-anniversary-17-may-2026.ics';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function() { URL.revokeObjectURL(url); }, 1500);
+      });
+
+      // --------------------------------------------------------
+      // Google Calendar deep-link
+      // --------------------------------------------------------
+      const gcalUrl =
+        'https://www.google.com/calendar/render?action=TEMPLATE' +
+        '&text=' + encodeURIComponent(EVENT.title) +
+        '&dates=' + EVENT.startUTC + '/' + EVENT.endUTC +
+        '&details=' + encodeURIComponent(EVENT.description + '\n\n' + EVENT.url) +
+        '&location=' + encodeURIComponent(EVENT.location);
+      document.getElementById('add-google').href = gcalUrl;
+
+      // --------------------------------------------------------
+      // WhatsApp share
+      // --------------------------------------------------------
+      const whatsAppText =
+        'Calvary Hephzibah is celebrating 34 years on Sunday 17 May 2026 \u2014 ' +
+        'come and celebrate with us. ' + EVENT.url;
+      document.getElementById('share-whatsapp').href =
+        'https://wa.me/?text=' + encodeURIComponent(whatsAppText);
+
+      // --------------------------------------------------------
+      // Copy link
+      // --------------------------------------------------------
+      const toast = document.getElementById('toast');
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('is-visible');
+        setTimeout(function() { toast.classList.remove('is-visible'); }, 1800);
+      }
+
+      document.getElementById('share-copy').addEventListener('click', async function() {
+        try {
+          // Web Share API on supported devices (mostly mobile) gets first dibs
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: 'Calvary Hephzibah 34th Anniversary',
+                text: 'Calvary Hephzibah is celebrating 34 years on Sunday 17 May 2026 — come celebrate with us.',
+                url: EVENT.url
+              });
+              return;
+            } catch (e) {
+              // user cancelled native share or share failed — fall through to copy
+              if (e && e.name === 'AbortError') return;
+            }
+          }
+          // Clipboard fallback
+          await navigator.clipboard.writeText(EVENT.url);
+          showToast('Link copied');
+        } catch (err) {
+          // Last-ditch fallback: prompt
+          window.prompt('Copy this link:', EVENT.url);
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

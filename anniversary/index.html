@@ -2929,7 +2929,7 @@
         // Honeypot: if the hidden 'website' field is filled, treat as spam
         if (form.website && form.website.value) {
           // Show fake success to avoid revealing the trap
-          showSuccess(data.name);
+          showSuccess(data.name, data.headcount);
           return;
         }
 
@@ -2955,7 +2955,7 @@
           if (GHL_WEBHOOK_URL.indexOf('PLACEHOLDER') !== -1) {
             console.warn('[RSVP] Webhook URL is a placeholder. Submission was not sent. Data:', data);
             await new Promise(r => setTimeout(r, 600));
-            showSuccess(data.name);
+            showSuccess(data.name, data.headcount);
             return;
           }
 
@@ -2967,7 +2967,7 @@
           });
 
           if (!res.ok) throw new Error('Network response was not ok');
-          showSuccess(data.name);
+          showSuccess(data.name, data.headcount);
         } catch (err) {
           console.error('[RSVP] Submission failed:', err);
           setError('Something went wrong. Please try again, or message us directly.');
@@ -2976,20 +2976,21 @@
         }
       });
 
-      function showSuccess(name) {
+      function showSuccess(name, headcount) {
+        // Briefly flash the in-modal success view as visual confirmation
+        // while we navigate to the dedicated confirmation page.
         if (okName) okName.textContent = name ? name.split(' ')[0] : 'friend';
         if (formView && okView) {
           formView.hidden = true;
           okView.hidden = false;
         }
-        // Move focus to the success heading so screen readers hear it
-        const successTitle = okView && okView.querySelector('.rsvp-success-title');
-        if (successTitle) {
-          successTitle.setAttribute('tabindex', '-1');
-          successTitle.focus();
-        }
-        // Auto-close after a moment so the user can read the confirmation
-        setTimeout(close, 4500);
+        // Build the confirmation URL with the personalisation params
+        const params = new URLSearchParams();
+        if (name) params.set('name', name);
+        if (headcount) params.set('headcount', headcount);
+        const dest = 'rsvp-confirmed.html' + (params.toString() ? '?' + params.toString() : '');
+        // Small delay so the success flash registers, then navigate
+        setTimeout(function() { window.location.href = dest; }, 600);
       }
     })();
   </script>
