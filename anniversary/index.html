@@ -1041,37 +1041,90 @@
        FOOTER — minimal, branded
        ============================================================ */
     .footer {
-      padding: 60px 24px 80px;
+      padding: 80px 24px 90px;
       text-align: center;
-      border-top: 1px solid var(--line-soft);
       position: relative;
       z-index: 2;
+      background: #0B0908;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    /* Faded congregation photo as backdrop — heavily blurred + desaturated
+       so it reads as atmosphere, not as a competing image. */
+    .footer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url('assets/photos/peak-banner.jpg');
+      background-size: cover;
+      background-position: center 40%;
+      opacity: 0.18;
+      filter: blur(6px) saturate(0.55) brightness(0.7);
+      transform: scale(1.06);  /* hide blur edges */
+      z-index: -2;
+      pointer-events: none;
+    }
+    /* Soft top-to-bottom dark wash so text reads cleanly over the photo */
+    .footer::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 60%, rgba(120, 50, 30, 0.18), transparent 70%),
+        linear-gradient(to bottom,
+          rgba(11, 9, 8, 0.55) 0%,
+          rgba(11, 9, 8, 0.78) 60%,
+          rgba(11, 9, 8, 0.92) 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    /* Soft fade strip immediately above the footer that bridges the bone
+       page surface into the dark footer. Sits as its own block in the flow,
+       avoiding any overflow-clipping issues. */
+    .footer-fade {
+      height: 100px;
+      background: linear-gradient(
+        to bottom,
+        rgba(240, 235, 226, 0) 0%,            /* match bone above, transparent */
+        rgba(176, 156, 130, 0.20) 30%,        /* warm tan transition */
+        rgba(60, 40, 30, 0.6) 70%,
+        rgba(11, 9, 8, 1) 100%
+      );
+      pointer-events: none;
+      margin-top: -1px;  /* pull tight against previous section */
     }
     .footer-eagle {
-      width: 56px;
-      height: 56px;
-      margin-bottom: 20px;
-      opacity: 0.85;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 24px;
+      opacity: 0.92;
+      filter: drop-shadow(0 4px 18px rgba(196, 30, 42, 0.35));
+      position: relative;
+      z-index: 1;
     }
     .footer-name {
       font-family: var(--font-display);
-      font-size: 18px;
+      font-size: 20px;
       color: var(--bone);
       letter-spacing: 0.04em;
       text-transform: uppercase;
-      margin: 0 0 12px;
+      margin: 0 0 14px;
+      position: relative;
+      z-index: 1;
     }
     .footer-meta {
       font-family: var(--font-body);
       font-size: 12px;
-      color: var(--fg-3);
+      color: rgba(245, 238, 221, 0.65);
       letter-spacing: 0.08em;
-      line-height: 1.7;
+      line-height: 1.85;
+      position: relative;
+      z-index: 1;
     }
     .footer-meta a {
-      color: var(--fg-3);
+      color: rgba(245, 238, 221, 0.85);
       text-decoration: none;
-      border-bottom: 1px solid var(--line-soft);
+      border-bottom: 1px solid rgba(245, 238, 221, 0.18);
       transition: color var(--t-micro), border-color var(--t-micro);
     }
     .footer-meta a:hover {
@@ -1573,29 +1626,8 @@
       background: #A8161F;
     }
 
-    /* ----- FOOTER ----- */
-    .footer {
-      background: #EBE5DA;
-      border-top: 1px solid rgba(110, 80, 40, 0.08);
-    }
-    .footer-name {
-      color: #1A1A1A;
-    }
-    .footer-meta {
-      color: #555;
-    }
-    .footer-meta a {
-      color: #555;
-      border-bottom-color: rgba(110, 80, 40, 0.2);
-    }
-    .footer-meta a:hover {
-      color: #C41E2A;
-      border-bottom-color: #C41E2A;
-    }
-    .footer-eagle {
-      filter: grayscale(0.3) brightness(0.7);
-      opacity: 0.7;
-    }
+    /* Footer remains dark even in the bone-context page \u2014 it's the closing
+       mood-shift back into the cinematic palette. No bone override. */
 
     /* Ticker stays black at top — earned its contrast */
 
@@ -2483,6 +2515,7 @@
   <!-- ============================================================
        FOOTER
        ============================================================ -->
+  <div class="footer-fade" aria-hidden="true"></div>
   <footer class="footer">
     <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png"
          alt=""
