@@ -6,7 +6,7 @@ Five emails from Pastor Shade, leading up to Sunday 17 May 2026.
 
 | # | Send | Days out | Subject | File |
 |---|------|----------|---------|------|
-| 1 | **Tue 6 May** | 11 | We're 34 — come and celebrate with us | `01-invitation-tue-06-may.html` |
+| 1 | **Wed 6 May** | 11 | We're 34 — come and celebrate with us | `01-invitation-wed-06-may.html` |
 | 2 | **Sat 9 May** | 8 | A house full of thanksgiving | `02-anticipation-sat-09-may.html` |
 | 3 | **Wed 13 May** | 4 | Save your seat — we're cooking for the whole house | `03-rsvp-nudge-wed-13-may.html` |
 | 4 | **Fri 15 May** | 2 | Two days. Here's what Sunday looks like. | `04-final-reminder-fri-15-may.html` |

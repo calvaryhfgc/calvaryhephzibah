@@ -137,7 +137,7 @@ def paragraphs(*ps):
 
 EMAILS = [
     {
-        "filename": "01-invitation-tue-06-may.html",
+        "filename": "01-invitation-wed-06-may.html",
         "subject": "We're 34 — come and celebrate with us",
         "preheader": "Sunday 17 May. Worship, Word, and a meal at the table together.",
         "eyebrow": "Calvary Hephzibah · 34th Anniversary",
