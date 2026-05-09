@@ -1089,6 +1089,232 @@
     cursor: not-allowed;
   }
 
+  /* ============ BACKDROPS ============ */
+  .backdrop-transport {
+    display: none;
+    background: linear-gradient(135deg, rgba(196,30,42,0.15), rgba(196,30,42,0.05));
+    border: 1px solid rgba(196,30,42,0.3);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    align-items: center;
+    gap: 12px;
+  }
+  .backdrop-transport.show { display: flex; }
+  .bd-now { flex: 1; min-width: 0; }
+  .bd-now-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 2px;
+  }
+  .bd-now-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bd-now-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+  .bd-controls { display: flex; gap: 6px; flex-shrink: 0; }
+  .bd-ctrl {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    min-width: 38px;
+  }
+  .bd-ctrl:hover { background: var(--surface-2); }
+  .bd-ctrl.stop {
+    background: rgba(196,30,42,0.15);
+    border-color: rgba(196,30,42,0.5);
+    color: var(--red);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 8px 14px;
+    min-width: 0;
+  }
+  .bd-ctrl.stop:hover { background: rgba(196,30,42,0.25); }
+
+  .backdrop-list { display: flex; flex-direction: column; gap: 6px; }
+  .backdrop-list .bd-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .backdrop-list .bd-row:hover { border-color: var(--text-muted); }
+  .backdrop-list .bd-row.playing {
+    border-color: var(--red);
+    background: rgba(196,30,42,0.08);
+  }
+  .bd-row-name { flex: 1; font-weight: 600; font-size: 13px; }
+  .bd-row-meta { color: var(--text-muted); font-size: 11px; }
+  .bd-row-del {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1;
+  }
+  .bd-row-del:hover { background: var(--red); color: white; border-color: var(--red); }
+  .bd-empty {
+    padding: 14px;
+    color: var(--text-muted);
+    text-align: center;
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  .backdrop-builder { margin-top: 8px; }
+  .backdrop-builder-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 10px 0 12px;
+  }
+  .bd-builder-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--surface-2);
+    border-radius: 8px;
+  }
+  .bd-builder-thumb {
+    width: 50px;
+    height: 28px;
+    border-radius: 4px;
+    background: #000;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .bd-builder-thumb img,
+  .bd-builder-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .bd-builder-name {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bd-duration {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 50px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+  }
+  .bd-builder-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+  }
+  .bd-builder-remove:hover { color: var(--red); }
+
+  .backdrop-builder-actions { display: flex; gap: 8px; }
+  .bd-save, .bd-play-now {
+    flex: 1;
+    padding: 10px 14px;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .bd-save { background: var(--surface); color: var(--text); border: 1px solid var(--border-strong); }
+  .bd-save:hover:not(:disabled) { background: var(--surface-2); }
+  .bd-play-now { background: var(--red); color: white; }
+  .bd-play-now:hover:not(:disabled) { background: #e02b38; }
+  .bd-save:disabled, .bd-play-now:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .backdrop-library-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 16px 0 6px;
+    letter-spacing: 0.5px;
+  }
+  .backdrop-library {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .bd-lib-item {
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: 2px solid transparent;
+    transition: border-color 0.12s;
+  }
+  .bd-lib-item:hover { border-color: var(--red); }
+  .bd-lib-item img,
+  .bd-lib-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .bd-lib-item .bd-lib-name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 8px 6px 4px;
+    text-align: left;
+    line-height: 1.2;
+  }
+  .bd-lib-item .bd-lib-vid-tag {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+
   /* ============ BIBLE SEARCH ============ */
   .bible-panel {
     margin: 24px 20px 40px;
@@ -1453,6 +1679,7 @@
     <div class="gfx-tabs">
       <button class="gfx-tab active" data-tab="images" onclick="switchGfxTab('images')">Images</button>
       <button class="gfx-tab" data-tab="announcements" onclick="switchGfxTab('announcements')">Announcements</button>
+      <button class="gfx-tab" data-tab="backdrops"     onclick="switchGfxTab('backdrops')">Backdrops</button>
     </div>
 
     <!-- Images tab -->
@@ -1497,6 +1724,49 @@
           <input id="ann-body"  class="ann-input" placeholder="Subtitle / details (optional)" oninput="onAnnInput()">
         </div>
         <button id="ann-push-btn" class="ann-push" onclick="pushCustomAnn()" disabled>Push to overlay</button>
+      </div>
+    </div>
+
+    <!-- Backdrops tab -->
+    <div id="gfx-tab-backdrops" class="gfx-tab-body">
+
+      <!-- Currently playing transport (only visible when active) -->
+      <div id="backdrop-transport" class="backdrop-transport">
+        <div class="bd-now">
+          <div class="bd-now-label">Backdrop running</div>
+          <div class="bd-now-name" id="backdrop-now-name">—</div>
+          <div class="bd-now-meta" id="backdrop-now-meta">item 1 of 1</div>
+        </div>
+        <div class="bd-controls">
+          <button class="bd-ctrl"      onclick="backdropPause()" id="backdrop-pause-btn"  title="Pause auto-advance">⏸︎</button>
+          <button class="bd-ctrl"      onclick="backdropResume()" id="backdrop-resume-btn" title="Resume auto-advance" style="display:none">▶</button>
+          <button class="bd-ctrl"      onclick="backdropNext()"  title="Skip to next item">⏭</button>
+          <button class="bd-ctrl stop" onclick="backdropStop()"  title="Stop backdrop">Stop</button>
+        </div>
+      </div>
+
+      <!-- Saved playlists -->
+      <div class="img-section">
+        <div class="img-section-label">Saved backdrops</div>
+        <div id="backdrop-list" class="backdrop-list"></div>
+      </div>
+
+      <!-- Build new playlist -->
+      <div class="img-section">
+        <div class="img-section-label">Build new backdrop</div>
+        <input id="backdrop-name" class="ann-input" placeholder="Name (e.g. Pre-service welcome)">
+        <div id="backdrop-builder" class="backdrop-builder">
+          <p class="helper">Tap items from the media library below to add them. Each item plays for 8 seconds by default.</p>
+          <div id="backdrop-builder-items" class="backdrop-builder-items">
+            <div class="bd-empty">No items yet — pick from below.</div>
+          </div>
+          <div class="backdrop-builder-actions">
+            <button class="bd-save"     onclick="saveBackdrop()" id="bd-save-btn" disabled>Save backdrop</button>
+            <button class="bd-play-now" onclick="playBackdropDraft()" id="bd-play-now-btn" disabled>Play without saving</button>
+          </div>
+        </div>
+        <div class="backdrop-library-label">Pick from library:</div>
+        <div id="backdrop-library" class="backdrop-library"></div>
       </div>
     </div>
   </div>
@@ -1607,6 +1877,7 @@ async function enterApp() {
   await loadImages();
   await loadAnnouncements();
   await loadPeople();
+  await loadBackdrops();
   subscribeLive();
 }
 
@@ -2625,6 +2896,288 @@ async function pushAnnouncement(payload) {
 }
 
 // ============================================================
+// BACKDROPS — playlists of images/videos that loop behind everything
+// ============================================================
+let savedBackdrops = [];          // rows from control_room_backdrops
+let backdropDraft = [];           // [{ media_id, duration_seconds }] being built
+let currentBackdropOnLive = null; // mirror of the live row's backdrop field
+
+async function loadBackdrops() {
+  const { data, error } = await client
+    .from('control_room_backdrops')
+    .select('id, name, items, notes, created_at')
+    .order('created_at', { ascending: false });
+  if (error) { console.error('loadBackdrops:', error); return; }
+  savedBackdrops = data || [];
+  renderBackdropList();
+  renderBackdropLibrary();
+}
+
+function renderBackdropList() {
+  const el = document.getElementById('backdrop-list');
+  if (!el) return;
+  if (!savedBackdrops.length) {
+    el.innerHTML = '<div class="bd-empty">No saved backdrops yet.</div>';
+    return;
+  }
+  const livePlaylistId = currentBackdropOnLive ? currentBackdropOnLive.playlist_id : null;
+  el.innerHTML = savedBackdrops.map(bd => {
+    const itemCount = (bd.items || []).length;
+    const isPlaying = bd.id === livePlaylistId;
+    return `
+      <div class="bd-row ${isPlaying ? 'playing' : ''}" onclick="playSavedBackdrop('${bd.id}')">
+        <div class="bd-row-name">${escapeHtml(bd.name)}</div>
+        <div class="bd-row-meta">${itemCount} item${itemCount === 1 ? '' : 's'}</div>
+        <button class="bd-row-del" onclick="event.stopPropagation();deleteBackdrop('${bd.id}')" title="Delete">×</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderBackdropLibrary() {
+  const el = document.getElementById('backdrop-library');
+  if (!el) return;
+  if (!imageLibrary || !imageLibrary.length) {
+    el.innerHTML = '<div class="bd-empty" style="grid-column: 1/-1">Upload images via admin to add them here.</div>';
+    return;
+  }
+  el.innerHTML = imageLibrary.map(item => {
+    const isVideo = item.media_type === 'video';
+    const src = mediaSrc(item);
+    const thumb = isVideo
+      ? `<video src="${src}" muted playsinline preload="metadata"></video><span class="bd-lib-vid-tag">VIDEO</span>`
+      : `<img src="${src}">`;
+    return `
+      <div class="bd-lib-item" onclick="addToBackdropDraft('${item.id}')" title="${escapeHtml(item.name)}">
+        ${thumb}
+        <div class="bd-lib-name">${escapeHtml(item.name)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderBackdropDraft() {
+  const el = document.getElementById('backdrop-builder-items');
+  if (!el) return;
+  if (!backdropDraft.length) {
+    el.innerHTML = '<div class="bd-empty">No items yet — pick from below.</div>';
+  } else {
+    el.innerHTML = backdropDraft.map((slot, idx) => {
+      const item = imageLibrary.find(x => x.id === slot.media_id);
+      if (!item) return '';
+      const isVideo = item.media_type === 'video';
+      const src = mediaSrc(item);
+      const thumb = isVideo
+        ? `<video src="${src}" muted playsinline preload="metadata"></video>`
+        : `<img src="${src}">`;
+      return `
+        <div class="bd-builder-row">
+          <div class="bd-builder-thumb">${thumb}</div>
+          <div class="bd-builder-name">${escapeHtml(item.name)}${isVideo ? ' <span style="color:var(--text-muted);font-size:11px">· video</span>' : ''}</div>
+          <input type="number" class="bd-duration" min="2" max="120" value="${slot.duration_seconds}"
+                 onchange="setDraftDuration(${idx}, this.value)" title="Seconds">
+          <span style="color:var(--text-muted);font-size:11px">sec</span>
+          <button class="bd-builder-remove" onclick="removeFromBackdropDraft(${idx})" title="Remove">×</button>
+        </div>
+      `;
+    }).join('');
+  }
+  // Save / Play buttons enabled when there's content
+  const hasItems = backdropDraft.length > 0;
+  const hasName = !!document.getElementById('backdrop-name').value.trim();
+  document.getElementById('bd-save-btn').disabled = !(hasItems && hasName);
+  document.getElementById('bd-play-now-btn').disabled = !hasItems;
+}
+
+window.addToBackdropDraft = (mediaId) => {
+  backdropDraft.push({ media_id: mediaId, duration_seconds: 8 });
+  renderBackdropDraft();
+};
+
+window.removeFromBackdropDraft = (idx) => {
+  backdropDraft.splice(idx, 1);
+  renderBackdropDraft();
+};
+
+window.setDraftDuration = (idx, value) => {
+  const n = Math.max(2, Math.min(120, parseInt(value, 10) || 8));
+  backdropDraft[idx].duration_seconds = n;
+};
+
+window.saveBackdrop = async () => {
+  const name = document.getElementById('backdrop-name').value.trim();
+  if (!name || !backdropDraft.length) return;
+  const { error } = await client.from('control_room_backdrops').insert({
+    name,
+    items: backdropDraft,
+    created_by: currentUser.name
+  });
+  if (error) { console.error('saveBackdrop:', error); alert('Save failed: ' + error.message); return; }
+  document.getElementById('backdrop-name').value = '';
+  backdropDraft = [];
+  renderBackdropDraft();
+  await loadBackdrops();
+};
+
+window.playBackdropDraft = async () => {
+  if (!backdropDraft.length) return;
+  const items = backdropDraft.map(slot => buildPlayItem(slot));
+  await pushBackdrop({
+    playlist_id: null,
+    name: 'Untitled backdrop',
+    items,
+    started_at: new Date().toISOString(),
+    current_idx: null,
+    manual: false,
+    loop: true
+  });
+};
+
+window.playSavedBackdrop = async (playlistId) => {
+  const bd = savedBackdrops.find(x => x.id === playlistId);
+  if (!bd) return;
+  const items = (bd.items || []).map(slot => buildPlayItem(slot));
+  if (!items.length) return;
+  await pushBackdrop({
+    playlist_id: bd.id,
+    name: bd.name,
+    items,
+    started_at: new Date().toISOString(),
+    current_idx: null,
+    manual: false,
+    loop: true
+  });
+};
+
+window.deleteBackdrop = async (playlistId) => {
+  const bd = savedBackdrops.find(x => x.id === playlistId);
+  if (!bd) return;
+  if (!confirm('Delete "' + bd.name + '"? This cannot be undone.')) return;
+  const { error } = await client.from('control_room_backdrops').delete().eq('id', playlistId);
+  if (error) { alert('Delete failed: ' + error.message); return; }
+  await loadBackdrops();
+};
+
+// Build a runtime item record from a saved slot. Resolves the media_id
+// to its current URL/type so the overlay doesn't have to look it up.
+function buildPlayItem(slot) {
+  const media = imageLibrary.find(x => x.id === slot.media_id);
+  return {
+    media_id: slot.media_id,
+    media_url: media ? mediaSrc(media) : '',
+    media_type: media ? (media.media_type || 'image') : 'image',
+    duration_seconds: slot.duration_seconds || 8
+  };
+}
+
+async function pushBackdrop(backdrop) {
+  const { error } = await client
+    .from('control_room_live')
+    .update({
+      backdrop,
+      updated_at: new Date().toISOString(),
+      updated_by: currentUser.name
+    })
+    .eq('id', 1);
+  if (error) { console.error('pushBackdrop:', error); alert('Push failed: ' + error.message); return; }
+}
+
+window.backdropStop = async () => {
+  await pushBackdrop(null);
+};
+
+window.backdropPause = async () => {
+  if (!currentBackdropOnLive) return;
+  // Snapshot current displayed index, freeze on it
+  const idx = computeOperatorBackdropIdx(currentBackdropOnLive);
+  await pushBackdrop({
+    ...currentBackdropOnLive,
+    manual: true,
+    current_idx: idx
+  });
+};
+
+window.backdropResume = async () => {
+  if (!currentBackdropOnLive) return;
+  // Re-set started_at so the auto-advance picks up from the current item cleanly
+  const items = currentBackdropOnLive.items;
+  const currentIdx = currentBackdropOnLive.current_idx || 0;
+  const offsetMs = items.slice(0, currentIdx).reduce((sum, it) => sum + (it.duration_seconds || 8) * 1000, 0);
+  const newStart = new Date(Date.now() - offsetMs).toISOString();
+  await pushBackdrop({
+    ...currentBackdropOnLive,
+    started_at: newStart,
+    manual: false,
+    current_idx: null
+  });
+};
+
+window.backdropNext = async () => {
+  if (!currentBackdropOnLive) return;
+  const items = currentBackdropOnLive.items;
+  const idx = computeOperatorBackdropIdx(currentBackdropOnLive);
+  const nextIdx = (idx + 1) % items.length;
+  if (currentBackdropOnLive.manual) {
+    await pushBackdrop({
+      ...currentBackdropOnLive,
+      current_idx: nextIdx
+    });
+  } else {
+    // In auto mode: advance by re-anchoring started_at
+    const offsetMs = items.slice(0, nextIdx).reduce((sum, it) => sum + (it.duration_seconds || 8) * 1000, 0);
+    const newStart = new Date(Date.now() - offsetMs).toISOString();
+    await pushBackdrop({
+      ...currentBackdropOnLive,
+      started_at: newStart,
+      current_idx: null,
+      manual: false
+    });
+  }
+};
+
+// Mirror of the overlay's compute logic, used in the operator for transport actions
+function computeOperatorBackdropIdx(backdrop) {
+  if (!backdrop || !backdrop.items || !backdrop.items.length) return 0;
+  if (backdrop.manual && Number.isInteger(backdrop.current_idx)) {
+    return Math.max(0, Math.min(backdrop.items.length - 1, backdrop.current_idx));
+  }
+  const startedAt = backdrop.started_at ? Date.parse(backdrop.started_at) : Date.now();
+  const elapsedMs = Date.now() - startedAt;
+  const cycleMs = backdrop.items.reduce((sum, it) => sum + (it.duration_seconds || 8) * 1000, 0);
+  if (cycleMs <= 0) return 0;
+  const inCycleMs = backdrop.loop === false ? Math.min(elapsedMs, cycleMs - 1) : (elapsedMs % cycleMs);
+  let cursor = 0;
+  for (let i = 0; i < backdrop.items.length; i++) {
+    const itemMs = (backdrop.items[i].duration_seconds || 8) * 1000;
+    if (inCycleMs < cursor + itemMs) return i;
+    cursor += itemMs;
+  }
+  return backdrop.items.length - 1;
+}
+
+function renderBackdropTransport() {
+  const t = document.getElementById('backdrop-transport');
+  if (!t) return;
+  if (!currentBackdropOnLive) {
+    t.classList.remove('show');
+    return;
+  }
+  t.classList.add('show');
+  document.getElementById('backdrop-now-name').textContent = currentBackdropOnLive.name || 'Untitled';
+  const idx = computeOperatorBackdropIdx(currentBackdropOnLive);
+  const total = currentBackdropOnLive.items.length;
+  document.getElementById('backdrop-now-meta').textContent = `item ${idx + 1} of ${total}` + (currentBackdropOnLive.manual ? ' · paused' : '');
+  document.getElementById('backdrop-pause-btn').style.display  = currentBackdropOnLive.manual ? 'none' : '';
+  document.getElementById('backdrop-resume-btn').style.display = currentBackdropOnLive.manual ? '' : 'none';
+}
+
+// React to backdrop name input — re-evaluates Save button
+document.addEventListener('DOMContentLoaded', () => {
+  const nameInput = document.getElementById('backdrop-name');
+  if (nameInput) nameInput.addEventListener('input', renderBackdropDraft);
+});
+
+// ============================================================
 // LIVE STATE (push + subscribe)
 // ============================================================
 async function pushLive(mode, payload) {
@@ -2644,11 +3197,14 @@ function subscribeLive() {
   const text = document.getElementById('live-text');
 
   // Initial fetch
-  client.from('control_room_live').select('mode, payload, lower_third').eq('id', 1).single()
+  client.from('control_room_live').select('mode, payload, lower_third, backdrop').eq('id', 1).single()
     .then(({ data }) => {
       if (!data) return;
       renderNowPlaying(data.mode, data.payload);
       renderLowerThirdCurrent(data.lower_third);
+      currentBackdropOnLive = data.backdrop || null;
+      renderBackdropTransport();
+      renderBackdropList();
     });
 
   client.channel('control-room-live-operator')
@@ -2657,6 +3213,9 @@ function subscribeLive() {
       ({ new: row }) => {
         renderNowPlaying(row.mode, row.payload);
         renderLowerThirdCurrent(row.lower_third);
+        currentBackdropOnLive = row.backdrop || null;
+        renderBackdropTransport();
+        renderBackdropList();
       })
     .subscribe((status) => {
       indicator.classList.remove('connected', 'error');

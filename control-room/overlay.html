@@ -182,6 +182,32 @@
     paint-order: stroke fill;
   }
 
+  /* BACKDROP — looped images/videos behind everything else.
+     Lives at the start of #canvas so it has the lowest stacking order.
+     Foreground graphics naturally cover it. Lyrics/lower-thirds float on top. */
+  .backdrop-stage {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .backdrop-stage img,
+  .backdrop-stage video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 0.6s ease;
+    opacity: 1;
+  }
+  .backdrop-stage img.hidden,
+  .backdrop-stage video.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* GRAPHIC MODE — full-bleed image OR silent looping video */
   .graphic-stage {
     top: 0;
@@ -333,6 +359,12 @@
 <div id="hud" class="hud"><span class="dot"></span><span id="hud-text">connecting…</span></div>
 
 <div id="canvas">
+
+<!-- Backdrop — looped images/videos behind everything, lowest z-index -->
+<div id="backdrop-stage" class="backdrop-stage">
+  <img    id="backdrop-img"   class="hidden">
+  <video  id="backdrop-video" class="hidden" autoplay loop muted playsinline></video>
+</div>
 
 <!-- Logo bug — set via display settings, persists across modes -->
 <div id="logo-bug" class="logo-bug" data-corner="off">
@@ -583,12 +615,135 @@ function renderLowerThird(lt) {
 }
 
 // ============================================================
+// BACKDROP — looped images/videos behind everything
+// ============================================================
+let backdropState = null;        // current backdrop config from DB
+let backdropTimer = null;        // setTimeout handle for auto-advance
+let backdropDisplayedIdx = -1;   // which item we last showed
+
+function renderBackdrop(backdrop) {
+  backdropState = backdrop;
+  const stage = document.getElementById('backdrop-stage');
+  const imgEl = document.getElementById('backdrop-img');
+  const vidEl = document.getElementById('backdrop-video');
+
+  // Cancel any pending advance — we'll re-schedule based on the new state
+  if (backdropTimer) { clearTimeout(backdropTimer); backdropTimer = null; }
+
+  // No backdrop: hide everything
+  if (!backdrop || !Array.isArray(backdrop.items) || backdrop.items.length === 0) {
+    stage.style.display = 'none';
+    imgEl.classList.add('hidden');
+    vidEl.classList.add('hidden');
+    if (vidEl.src) { vidEl.pause(); vidEl.removeAttribute('src'); vidEl.load(); }
+    backdropDisplayedIdx = -1;
+    return;
+  }
+
+  stage.style.display = 'block';
+
+  // Compute which item should be showing now
+  const idx = computeCurrentBackdropIdx(backdrop);
+  if (idx === -1) {
+    // playlist done and not looping — hide
+    stage.style.display = 'none';
+    imgEl.classList.add('hidden');
+    vidEl.classList.add('hidden');
+    backdropDisplayedIdx = -1;
+    return;
+  }
+
+  showBackdropItem(backdrop.items[idx]);
+  backdropDisplayedIdx = idx;
+
+  // Schedule the next advance unless paused (manual mode)
+  if (!backdrop.manual) {
+    const msUntilNext = msUntilNextBackdropItem(backdrop, idx);
+    if (msUntilNext != null) {
+      backdropTimer = setTimeout(() => {
+        // Re-render with the same state — computeCurrentBackdropIdx will move us forward
+        renderBackdrop(backdropState);
+      }, msUntilNext + 50);  // small grace so we land cleanly past the boundary
+    }
+  }
+}
+
+// Given a backdrop config and the wall clock, return the index of the item
+// that should be on screen right now. Returns -1 if playlist is finished
+// and looping is disabled.
+function computeCurrentBackdropIdx(backdrop) {
+  if (backdrop.manual && Number.isInteger(backdrop.current_idx)) {
+    return Math.max(0, Math.min(backdrop.items.length - 1, backdrop.current_idx));
+  }
+  const startedAt = backdrop.started_at ? Date.parse(backdrop.started_at) : Date.now();
+  const elapsedMs = Date.now() - startedAt;
+  const cycleMs = backdrop.items.reduce((sum, it) => sum + (it.duration_seconds || 8) * 1000, 0);
+  if (cycleMs <= 0) return 0;
+
+  if (backdrop.loop === false && elapsedMs >= cycleMs) {
+    return -1;
+  }
+  const inCycleMs = backdrop.loop === false ? elapsedMs : (elapsedMs % cycleMs);
+  let cursor = 0;
+  for (let i = 0; i < backdrop.items.length; i++) {
+    const itemMs = (backdrop.items[i].duration_seconds || 8) * 1000;
+    if (inCycleMs < cursor + itemMs) return i;
+    cursor += itemMs;
+  }
+  return backdrop.items.length - 1; // safety
+}
+
+// How many ms until we transition to the next item?
+function msUntilNextBackdropItem(backdrop, currentIdx) {
+  if (backdrop.manual) return null;
+  const startedAt = backdrop.started_at ? Date.parse(backdrop.started_at) : Date.now();
+  const elapsedMs = Date.now() - startedAt;
+  const cycleMs = backdrop.items.reduce((sum, it) => sum + (it.duration_seconds || 8) * 1000, 0);
+  if (cycleMs <= 0) return null;
+
+  let boundary = 0;
+  for (let i = 0; i <= currentIdx; i++) {
+    boundary += (backdrop.items[i].duration_seconds || 8) * 1000;
+  }
+
+  if (backdrop.loop === false) {
+    if (elapsedMs >= cycleMs) return null;
+    return Math.max(0, boundary - elapsedMs);
+  }
+  const cyclesElapsed = Math.floor(elapsedMs / cycleMs);
+  const nextBoundaryAbs = cyclesElapsed * cycleMs + boundary;
+  return Math.max(0, nextBoundaryAbs - elapsedMs);
+}
+
+function showBackdropItem(item) {
+  const imgEl = document.getElementById('backdrop-img');
+  const vidEl = document.getElementById('backdrop-video');
+  const isVideo = item.media_type === 'video';
+
+  if (isVideo) {
+    imgEl.classList.add('hidden');
+    if (vidEl.getAttribute('src') !== item.media_url) {
+      vidEl.src = item.media_url;
+      vidEl.play().catch(() => {});  // autoplay may be blocked; muted should bypass
+    }
+    vidEl.classList.remove('hidden');
+  } else {
+    if (vidEl.src) { vidEl.pause(); vidEl.removeAttribute('src'); vidEl.load(); }
+    vidEl.classList.add('hidden');
+    if (imgEl.getAttribute('src') !== item.media_url) {
+      imgEl.src = item.media_url;
+    }
+    imgEl.classList.remove('hidden');
+  }
+}
+
+// ============================================================
 // INITIAL FETCH + REALTIME SUBSCRIPTION
 // ============================================================
 async function fetchCurrent() {
   const { data, error } = await client
     .from('control_room_live')
-    .select('mode, payload, lower_third')
+    .select('mode, payload, lower_third, backdrop')
     .eq('id', 1)
     .single();
 
@@ -599,6 +754,7 @@ async function fetchCurrent() {
   }
   render(data.mode, data.payload);
   renderLowerThird(data.lower_third);
+  renderBackdrop(data.backdrop);
   setStatus('connected', 'live');
 }
 
@@ -610,6 +766,7 @@ function subscribe() {
       ({ new: row }) => {
         render(row.mode, row.payload);
         renderLowerThird(row.lower_third);
+        renderBackdrop(row.backdrop);
       })
     .subscribe((status) => {
       if (status === 'SUBSCRIBED') setStatus('connected', 'live');
