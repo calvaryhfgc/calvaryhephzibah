@@ -1924,11 +1924,18 @@ async function loadPlan(targetDate) {
     .limit(1);
 
   if (!plans || plans.length === 0) {
-    plan = null;
-    renderEmptyPlan();
-    // Even with no song-plan, the briefing might still have an order of
-    // service published. Try the briefing fallback so the operator at
-    // least sees the running order.
+    // No plan row at all in DB. Try the briefing — it may have a published
+    // set list we can synthesize a plan from.
+    const briefingPlan = await buildPlanFromBriefing(currentPlanDate);
+    if (briefingPlan && briefingPlan.items.length) {
+      plan = briefingPlan;
+      currentSongIdx = -1;
+      currentSlideIdx = -1;
+      renderSetlist();
+    } else {
+      plan = null;
+      renderEmptyPlan();
+    }
     await loadOrderOfService(null);
     return;
   }
@@ -1939,7 +1946,19 @@ async function loadPlan(targetDate) {
     .eq('plan_id', plans[0].id)
     .order('position');
 
-  plan = { ...plans[0], items: items || [] };
+  // DB plan exists. If it has items, use them. If it's empty (plan row but
+  // no items yet — e.g. admin only set notes), fall back to the briefing.
+  if (items && items.length) {
+    plan = { ...plans[0], items };
+  } else {
+    const briefingPlan = await buildPlanFromBriefing(currentPlanDate);
+    if (briefingPlan && briefingPlan.items.length) {
+      plan = { ...plans[0], items: briefingPlan.items };
+    } else {
+      plan = { ...plans[0], items: [] };
+    }
+  }
+
   // Reset playback pointers when switching dates
   currentSongIdx = -1;
   currentSlideIdx = -1;
@@ -1947,6 +1966,83 @@ async function loadPlan(targetDate) {
 
   // Load order of service for this plan
   await loadOrderOfService(plans[0].id);
+}
+
+// Build a plan in-memory from the briefing HTML for a given date.
+//
+// Reads the songs out of the briefing (.slabel + .ssong .sname) and looks
+// each one up in the song library so we can attach the pre-cut slide
+// pairs. Returns null if there's no briefing for the date or no songs at
+// all in it. Songs in the briefing that aren't in the library show up as
+// items with kind='song' and slides=[] so the operator sees the title and
+// knows it needs adding to the library.
+async function buildPlanFromBriefing(serviceDate) {
+  try {
+    const indexResp = await fetch('../briefings.json?_=' + Date.now());
+    if (!indexResp.ok) return null;
+    const index = await indexResp.json();
+    const target = (index.briefings || []).find(b => b.service_date === serviceDate);
+    if (!target) return null;
+
+    const briefingResp = await fetch('../' + target.file + '?_=' + Date.now());
+    if (!briefingResp.ok) return null;
+    const html = await briefingResp.text();
+    const briefingSongs = parseBriefingSongs(html);
+    if (!briefingSongs.length) return null;
+
+    // Load the song library so we can attach slides.
+    const { data: librarySongs } = await client
+      .from('control_room_songs')
+      .select('id, title, section_default, slides');
+    const lib = librarySongs || [];
+
+    const items = briefingSongs.map(bs => {
+      // Match by title — case/whitespace-insensitive, ignore non-alphanum.
+      const wanted = normaliseTitle(bs.title);
+      const match = lib.find(s => normaliseTitle(s.title) === wanted);
+      return {
+        title: bs.title,
+        section: bs.section,
+        slides: match ? (match.slides || []) : [],
+        kind: 'song',
+        _libraryMissing: !match
+      };
+    });
+
+    return { id: null, service_date: serviceDate, notes: null, items, _fromBriefing: true };
+  } catch (e) {
+    console.warn('buildPlanFromBriefing failed:', e);
+    return null;
+  }
+}
+
+function normaliseTitle(s) {
+  return (s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+// Parse <div class="ssong"><...><div class="sname">Title</div>...</div>
+// rows out of the briefing, grouped by their preceding <div class="slabel">
+// (Praise / Worship / Offering / End of Service). Returns
+// [{ title, section: 'praise'|'worship'|'offering'|'end' }, ...].
+function parseBriefingSongs(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const sectionMap = { 'praise':'praise', 'worship':'worship', 'offering':'offering', 'end of service':'end', 'end':'end' };
+  const songs = [];
+  doc.querySelectorAll('.slabel').forEach(label => {
+    const labelText = label.textContent.trim().replace(/^[^A-Za-z]+/, '').toLowerCase();
+    const section = Object.keys(sectionMap).find(k => labelText.startsWith(k));
+    if (!section) return;
+    const sectionKey = sectionMap[section];
+    let sib = label.nextElementSibling;
+    while (sib && !sib.classList.contains('slabel')) {
+      sib.querySelectorAll('.sname').forEach(n => {
+        const title = n.textContent.trim();
+        if (title && title.toLowerCase() !== 'tbc') songs.push({ title, section: sectionKey });
+      });
+      sib = sib.nextElementSibling;
+    }
+  });
+  return songs;
 }
 
 window.navigateDate = (deltaDays) => {
@@ -1991,7 +2087,15 @@ function renderSetlist() {
   const sl = document.getElementById('setlist');
   if (!plan || plan.items.length === 0) return renderEmptyPlan();
 
-  sl.innerHTML = plan.items.map((item, i) => {
+  // If this plan was synthesized from the briefing rather than read from the
+  // saved DB plan, show a small banner so the operator knows.
+  const briefingBanner = plan._fromBriefing ? `
+    <div style="background:#1a1a1a;border:1px solid var(--border-strong);border-left:3px solid #BF9B30;padding:10px 14px;border-radius:8px;margin-bottom:12px;font-size:12px;color:rgba(255,255,255,0.75);line-height:1.5;">
+      <div style="font-weight:700;color:#BF9B30;margin-bottom:2px;">📄 Loaded from briefing</div>
+      Songs are read live from the published media briefing for this date. To make this permanent, build the plan in admin → Today's set list.
+    </div>` : '';
+
+  sl.innerHTML = briefingBanner + plan.items.map((item, i) => {
     const isActive = i === currentSongIdx;
     const slides = (item.slides || []).map((s, j) => {
       const isLive = isActive && j === currentSlideIdx;
@@ -2006,12 +2110,14 @@ function renderSetlist() {
       `;
     }).join('');
 
+    const missingBadge = item._libraryMissing ? ' · <span style="color:#FF6B6B;">⚠ not in library</span>' : '';
+
     return `
       <div class="song-card ${isActive ? 'active open' : ''}" data-idx="${i}">
         <div class="song-head" onclick="window.toggleSong(${i})">
           <div class="meta">
             <div class="title">${escapeHtml(item.title)}</div>
-            <div class="sub">${item.section || item.kind} · ${(item.slides || []).length} slides</div>
+            <div class="sub">${item.section || item.kind} · ${(item.slides || []).length} slides${missingBadge}</div>
           </div>
           <div class="right">${isActive ? 'Playing' : ''}</div>
         </div>
@@ -2033,7 +2139,12 @@ window.goto = async (songIdx, slideIdx) => {
   currentPassage = null;
   currentPassageSlideIdx = -1;
   const item = plan.items[songIdx];
-  const slide = item.slides[slideIdx];
+  const slide = (item.slides || [])[slideIdx];
+  if (!slide) {
+    // Song from briefing not in library yet — nothing to push.
+    renderSetlist();
+    return;
+  }
   await pushLive('lyric', {
     song_title: item.title,
     line1: slide.line1 || '',
