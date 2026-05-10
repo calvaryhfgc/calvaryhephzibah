@@ -186,8 +186,14 @@
      Lives at the start of #canvas so it has the lowest stacking order.
      Foreground graphics naturally cover it. Lyrics/lower-thirds float on top. */
   .backdrop-stage {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
     z-index: 0;
     overflow: hidden;
     pointer-events: none;
@@ -208,13 +214,18 @@
     pointer-events: none;
   }
 
-  /* GRAPHIC MODE — full-bleed image OR silent looping video */
+  /* GRAPHIC MODE — full-bleed image OR silent looping video.
+     Force absolute positioning + full canvas dimensions to avoid any
+     interaction with .stage variant rules from the lyric/verse stages. */
   .graphic-stage {
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 0;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
