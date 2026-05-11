@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Anniversary 2026 — Finance Compilation | The Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{
+  --red:#C41E2A; --red-light:#FEF2F2; --red-dark:#A51520;
+  --amber:#D97706; --amber-light:#FFFBEB; --amber-mid:#FCD34D;
+  --green:#16A34A; --green-light:#F0FDF4;
+  --blue:#2563EB; --blue-light:#EFF6FF;
+  --slate:#64748B; --slate-light:#F8FAFC;
+  --ink:#0F172A; --ink-2:#334155; --ink-3:#64748B; --ink-4:#94A3B8; --ink-5:#CBD5E1;
+  --white:#FFFFFF; --bg:#F1F5F9;
+  --r4:4px; --r8:8px; --r12:12px; --r16:16px; --r24:24px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,0.06);
+  --shadow:0 1px 3px rgba(15,23,42,0.08),0 4px 12px rgba(15,23,42,0.06);
+}
+html,body{min-height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;}
+
+.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,var(--red) 0%,#8B0A14 100%);color:white;border-radius:var(--r16);padding:32px 36px;margin-bottom:24px;box-shadow:0 8px 30px rgba(196,30,42,0.18);position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.hdr-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;margin-bottom:8px;font-weight:600;}
+.hdr h1{font-family:'Instrument Serif',serif;font-size:38px;line-height:1.1;margin-bottom:8px;font-weight:400;}
+.hdr-sub{font-size:14px;opacity:0.9;max-width:640px;}
+.hdr-meta{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;font-size:12px;opacity:0.85;}
+.hdr-meta span strong{color:white;font-weight:600;}
+
+/* ── TOTALS STRIP ── */
+.totals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+@media (max-width:780px){.totals{grid-template-columns:repeat(2,1fr);}}
+.tcard{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.tcard-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:6px;}
+.tcard-num{font-size:24px;font-weight:600;color:var(--ink);line-height:1;font-family:'Instrument Serif',serif;}
+.tcard-sub{font-size:11px;color:var(--ink-3);margin-top:4px;}
+.tcard.firm{border-left:3px solid var(--green);}
+.tcard.tbc{border-left:3px solid var(--amber);}
+.tcard.total{border-left:3px solid var(--red);background:linear-gradient(135deg,#FFF7F7,white);}
+.tcard.contingency{border-left:3px solid var(--blue);}
+
+/* ── SECTIONS ── */
+.section{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.section-head{padding:18px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.section-head-left{display:flex;align-items:center;gap:14px;}
+.section-icon{width:40px;height:40px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.si-worship{background:#F3E8FF;color:#7C3AED;}
+.si-media{background:var(--blue-light);color:var(--blue);}
+.si-decor{background:#FFF1E5;color:#EA580C;}
+.si-catering{background:var(--green-light);color:var(--green);}
+.si-guest{background:var(--red-light);color:var(--red);}
+.si-venue{background:#FEF3C7;color:#B45309;}
+.si-gifts{background:#FCE7F3;color:#BE185D;}
+.si-contingency{background:var(--slate-light);color:var(--slate);}
+.section-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);line-height:1.1;}
+.section-blurb{font-size:12px;color:var(--ink-3);margin-top:2px;}
+.section-subtotal{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);font-weight:400;}
+.section-subtotal-label{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);text-align:right;margin-bottom:2px;}
+
+/* ── ITEMS TABLE ── */
+.items{width:100%;border-collapse:collapse;}
+.items th{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);font-weight:600;text-align:left;padding:12px 24px;background:#FAFBFC;border-bottom:1px solid #F1F5F9;}
+.items th.num{text-align:right;}
+.items td{padding:16px 24px;border-bottom:1px solid #F1F5F9;vertical-align:top;}
+.items tr:last-child td{border-bottom:none;}
+.items tr:hover td{background:#FAFBFC;}
+.item-name{font-weight:600;color:var(--ink);font-size:13.5px;margin-bottom:4px;}
+.item-just{font-size:12px;color:var(--ink-2);line-height:1.55;}
+.item-amount{font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink);text-align:right;white-space:nowrap;}
+.item-amount.tbc{color:var(--amber);}
+.item-status{display:inline-block;font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:100px;margin-top:6px;}
+.status-firm{background:var(--green-light);color:var(--green);}
+.status-est{background:var(--blue-light);color:var(--blue);}
+.status-tbc{background:var(--amber-light);color:var(--amber);}
+.item-meta{font-size:11px;color:var(--ink-4);margin-top:4px;font-style:italic;}
+
+/* ── NOTES BOX ── */
+.notes-box{background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:16px 20px;margin-bottom:24px;}
+.notes-box-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.notes-box ul{list-style:none;padding:0;}
+.notes-box li{font-size:13px;color:var(--ink-2);padding:4px 0 4px 18px;position:relative;}
+.notes-box li::before{content:'→';position:absolute;left:0;color:var(--amber);font-weight:700;}
+
+/* ── JUSTIFICATION FRAMEWORK ── */
+.framework{background:white;border:1px solid #E2E8F0;border-radius:var(--r16);padding:24px 28px;margin-bottom:24px;}
+.framework h2{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:12px;}
+.framework p{font-size:13.5px;color:var(--ink-2);margin-bottom:10px;}
+.framework p:last-child{margin-bottom:0;}
+
+/* ── FOOTER ── */
+.footer{margin-top:36px;padding:24px;text-align:center;font-size:12px;color:var(--ink-4);border-top:1px solid #E2E8F0;}
+.footer a{color:var(--red);text-decoration:none;}
+
+/* ── PRINT ── */
+@media print{
+  body{background:white;}
+  .wrap{padding:0;max-width:100%;}
+  .hdr{box-shadow:none;}
+  .section,.tcard,.framework{box-shadow:none;page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ───── HEADER ───── -->
+  <div class="hdr">
+    <div class="hdr-eyebrow">Calvary Hephzibah · Finance Compilation</div>
+    <h1>Anniversary 2026 — Finance Plan</h1>
+    <div class="hdr-sub">Working compilation of confirmed and pending costs for the church anniversary service. Each line carries a justification to support leadership review and approval.</div>
+    <div class="hdr-meta">
+      <span><strong>Date:</strong> Sunday 17th May 2026</span>
+      <span><strong>Scale:</strong> Standard Sunday + Uplift (60–80 attendees)</span>
+      <span><strong>Status:</strong> Draft v1 — for review</span>
+      <span><strong>Prepared by:</strong> Bolaji Olatoye, Chief of Staff</span>
+    </div>
+  </div>
+
+  <!-- ───── TOTALS STRIP ───── -->
+  <div class="totals">
+    <div class="tcard firm">
+      <div class="tcard-label">Firm Committed</div>
+      <div class="tcard-num">£853</div>
+      <div class="tcard-sub">Quoted or in hand</div>
+    </div>
+    <div class="tcard tbc">
+      <div class="tcard-label">Estimated / TBC</div>
+      <div class="tcard-num">£1,090</div>
+      <div class="tcard-sub">Pending firm quotes</div>
+    </div>
+    <div class="tcard contingency">
+      <div class="tcard-label">+ 10% Contingency</div>
+      <div class="tcard-num">£194</div>
+      <div class="tcard-sub">Buffer line</div>
+    </div>
+    <div class="tcard total">
+      <div class="tcard-label">Working Total</div>
+      <div class="tcard-num">£2,137</div>
+      <div class="tcard-sub">Subject to approval</div>
+    </div>
+  </div>
+
+  <!-- ───── NOTES ───── -->
+  <div class="notes-box">
+    <div class="notes-box-title">⚠ Items still requiring firm quotes</div>
+    <ul>
+      <li>Catering — caterer + per-head rate not yet confirmed</li>
+      <li>Vanessa transport / accommodation — TBC</li>
+      <li>Trophy engraving — Pastor Shade procuring; quote pending</li>
+      <li>Equipment list from Bolaji Adebanjo (PA/staging additions) — awaiting</li>
+      <li>Special guest artist (Naija praise lady) — fee indicative at £150</li>
+      <li>Venue hire for setup day (Saturday 16th May) — cost confirmation needed</li>
+    </ul>
+  </div>
+
+  <!-- ───── 1. WORSHIP / PA ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-worship">🎶</div>
+        <div>
+          <div class="section-title">Worship & PA</div>
+          <div class="section-blurb">Musicians, vocalists, technical production for the service</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">£265 + TBC</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Vanessa — Worship Leader / Lead Vocal</div>
+            <div class="item-status status-firm">Firm</div>
+          </td>
+          <td>
+            <div class="item-just">Anchor vocalist for the anniversary service. Vanessa has prior experience leading Calvary worship and provides the lead voice and authority the day requires. Fee originally quoted at $200, listed in GBP at prevailing rate. Investment is in worship quality and congregational engagement at a milestone service.</div>
+          </td>
+          <td class="item-amount">£150</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Edmund — Keys</div>
+            <div class="item-status status-firm">Firm</div>
+          </td>
+          <td>
+            <div class="item-just">Keys player providing harmonic foundation for the entire set. Edmund serves at another church afterwards, so the fee reflects his time, preparation, and travel commitment to be at Calvary for the morning service. Standard rate for trained session keyboardist.</div>
+          </td>
+          <td class="item-amount">£50</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Edmund — Travel (Uber)</div>
+            <div class="item-status status-firm">Firm</div>
+          </td>
+          <td>
+            <div class="item-just">Door-to-door transport for Edmund on the service morning. Recurring cost we cover each time he plays; usually lands around £15.</div>
+          </td>
+          <td class="item-amount">£15</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Other session musicians</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Placeholder for any additional musicians beyond Edmund and core team (e.g. supplementary BVs, percussion, or additional vocalist via BJ if confirmed). Assumes 1–2 additional musicians at standard session rate.</div>
+            <div class="item-meta">Estimate — confirm with worship leader by 4th May</div>
+          </td>
+          <td class="item-amount tbc">£50–£100</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Vanessa — travel / accommodation</div>
+            <div class="item-status status-tbc">TBC</div>
+          </td>
+          <td>
+            <div class="item-just">If Vanessa is travelling in from outside Manchester, transport and overnight stay may be required. Estimate based on standard rail return + one-night travel lodge; refine once travel plan is confirmed.</div>
+            <div class="item-meta">Pending confirmation of her base location and travel plan</div>
+          </td>
+          <td class="item-amount tbc">£80–£150</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">PA / staging additions</div>
+            <div class="item-status status-tbc">TBC</div>
+          </td>
+          <td>
+            <div class="item-just">Bolaji Adebanjo (drums + sole mixing-desk operator) is compiling a list of equipment additions needed for the anniversary service beyond normal Sunday capability — likely additional mics, stands, monitoring, or cabling for the larger band setup. List awaited.</div>
+            <div class="item-meta">List in progress from Bolaji Adebanjo</div>
+          </td>
+          <td class="item-amount tbc">TBC</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── 2. SPECIAL GUEST ARTIST ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-guest">⭐</div>
+        <div>
+          <div class="section-title">Special Guest Artist</div>
+          <div class="section-blurb">Naija praise vocalist booked for the service</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">£150</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Guest praise artist — performance fee</div>
+            <div class="item-status status-firm">Indicative</div>
+          </td>
+          <td>
+            <div class="item-just">Naija praise lady booked to lead a dedicated praise segment during the anniversary service. Brings cultural resonance and a different vocal energy than the core worship band, adding distinctive flavour to the milestone service. No travel or accommodation required — local artist. Fee indicative at £150 pending final confirmation.</div>
+            <div class="item-meta">Fee to be locked in writing before service</div>
+          </td>
+          <td class="item-amount">£150</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── 3. MEDIA / PHYSICAL DISPLAY ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-media">📺</div>
+        <div>
+          <div class="section-title">Media & Physical Display</div>
+          <div class="section-blurb">Branded backdrop, printed materials, livestream provisions</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">£438 + TBC</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Pull-up banners × 3 (stage backdrop)</div>
+            <div class="item-status status-firm">Firm</div>
+          </td>
+          <td>
+            <div class="item-just">Three pull-up banners sized to cover the full width of the stage from the back, creating a unified branded backdrop for both in-room attendees and the livestream. This is the single most visible production element of the day — it appears in every photograph, every clip, and every second of stream footage. Reusable asset that supports future special services beyond this anniversary.</div>
+          </td>
+          <td class="item-amount">£438</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Printed programmes / order of service</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Printed handouts for the congregation showing the running order, theme scripture, and acknowledgements. Estimate based on 80 copies at a local print shop, full colour, A5 folded. Anniversary-grade alternative to the standard digital briefing.</div>
+            <div class="item-meta">Print quote pending</div>
+          </td>
+          <td class="item-amount tbc">£40–£60</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Photography / videography uplift</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Standard media team (Scott + recruits) covers the livestream and in-room camera. Anniversary deserves additional stills photography for archive and post-service comms. Either a hired photographer for 2 hours or honorarium for an enhanced volunteer effort.</div>
+            <div class="item-meta">Decide whether external hire or volunteer honorarium</div>
+          </td>
+          <td class="item-amount tbc">£50–£120</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── 4. DECORATIONS ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-decor">🌸</div>
+        <div>
+          <div class="section-title">Decorations</div>
+          <div class="section-blurb">Florals, table dressings, sanctuary atmosphere</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">TBC</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Florals — stage & welcome</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Fresh florals to dress the stage and welcome area. Visible in every photo and on the livestream. Estimate based on a single arrangement plus two smaller welcome pieces sourced locally.</div>
+            <div class="item-meta">Awaiting confirmation on whether florals are wanted at all this year</div>
+          </td>
+          <td class="item-amount tbc">£60–£100</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Table cloths & dressing (welcome / catering)</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Hire or purchase of coordinated table cloths and napkins for the post-service hospitality. Sets the anniversary tone vs. standard Sunday. Estimate covers 4–6 tables.</div>
+          </td>
+          <td class="item-amount tbc">£40–£80</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Balloons / soft decor</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Optional soft decor elements — balloon garland at the entrance or banner-frame, helium balloons for the hospitality space. Modest additional spend with a visible uplift.</div>
+            <div class="item-meta">Optional — decide with hospitality lead</div>
+          </td>
+          <td class="item-amount tbc">£30–£60</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── 5. CATERING ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-catering">🍽</div>
+        <div>
+          <div class="section-title">Catering</div>
+          <div class="section-blurb">Post-service hospitality meal and refreshments</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">TBC</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Main meal (caterer)</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Hot meal for the congregation after the service — central to the anniversary experience and the moment of fellowship that defines the day. Estimate based on 80 portions at typical Naija catering rates (£8–£12 per head). Final number depends on caterer choice and menu.</div>
+            <div class="item-meta">Caterer to be confirmed — quote pending</div>
+          </td>
+          <td class="item-amount tbc">£640–£960</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Drinks (soft drinks & water)</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Cases of soft drinks and bottled water to accompany the meal. Cash-and-carry sourcing keeps cost down. Estimate based on 80 attendees + leftovers.</div>
+          </td>
+          <td class="item-amount tbc">£60–£100</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Cake (anniversary)</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Anniversary cake — symbolic, photogenic, and a focal point for the post-service celebration. Sized for 80 servings. Decide whether locally baked or ordered from a specialist.</div>
+          </td>
+          <td class="item-amount tbc">£60–£120</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Disposables (plates, cutlery, napkins)</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">Bulk-pack disposables to serve the meal. Lower cost option vs. hired crockery; coordinated colour with the day's theme if possible.</div>
+          </td>
+          <td class="item-amount tbc">£30–£50</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── 6. VENUE & HIRE ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-venue">🏛</div>
+        <div>
+          <div class="section-title">Venue & Hire</div>
+          <div class="section-blurb">Service space + setup day access</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">TBC</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Service-day venue</div>
+            <div class="item-status status-firm">Confirmed (standard)</div>
+          </td>
+          <td>
+            <div class="item-just">Sunday service held at the regular Calvary venue — no additional hire cost for the service day itself beyond standard usage.</div>
+          </td>
+          <td class="item-amount">£0</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Setup-day venue hire (Saturday 16th May)</div>
+            <div class="item-status status-tbc">TBC</div>
+          </td>
+          <td>
+            <div class="item-just">Day-before access to allow stage backdrop installation, banner positioning, decor setup, and PA configuration. Avoids rushed Sunday morning setup and ensures everything is camera-ready before doors open. Cost is the additional hire fee for the venue on the Saturday.</div>
+            <div class="item-meta">Confirm rate with venue office</div>
+          </td>
+          <td class="item-amount tbc">TBC</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── 7. GIFTS & TOKENS ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-gifts">🏆</div>
+        <div>
+          <div class="section-title">Gifts & Tokens</div>
+          <div class="section-blurb">Recognition and appreciation tokens</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">TBC</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">Trophy engraving</div>
+            <div class="item-status status-tbc">TBC</div>
+          </td>
+          <td>
+            <div class="item-just">Pastor Shade has already procured the trophies; this line covers the engraving spend to personalise each one for the intended recipients. Final cost depends on number of trophies and engraving complexity — quote pending from Pastor Shade.</div>
+            <div class="item-meta">Awaiting quote from Pastor Shade</div>
+          </td>
+          <td class="item-amount tbc">TBC</td>
+        </tr>
+        <tr>
+          <td>
+            <div class="item-name">Guest artist appreciation token</div>
+            <div class="item-status status-est">Estimated</div>
+          </td>
+          <td>
+            <div class="item-just">A small additional thank-you (card, flowers, or modest gift) for the guest praise artist on top of the fee. Standard courtesy for a guest ministering at a milestone service.</div>
+            <div class="item-meta">Optional — discuss with Pastor Shade</div>
+          </td>
+          <td class="item-amount tbc">£20–£30</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── 8. CONTINGENCY ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-contingency">🛡</div>
+        <div>
+          <div class="section-title">Contingency</div>
+          <div class="section-blurb">Buffer for late-emerging costs and overruns</div>
+        </div>
+      </div>
+      <div>
+        <div class="section-subtotal-label">Subtotal</div>
+        <div class="section-subtotal">£194</div>
+      </div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th style="width:30%;">Item</th>
+          <th style="width:55%;">Justification</th>
+          <th class="num" style="width:15%;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <div class="item-name">10% contingency buffer</div>
+            <div class="item-status status-est">Recommended</div>
+          </td>
+          <td>
+            <div class="item-just">Standard 10% buffer applied to the firm + estimated total to absorb late-emerging costs (additional musician needed at the last minute, catering top-up, transport surprises, last-mile spend on the morning of). Anniversary services historically see one or two unplanned items; the buffer protects the headline budget from overrun without needing a fresh approval cycle.</div>
+          </td>
+          <td class="item-amount">£194</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ───── JUSTIFICATION FRAMEWORK ───── -->
+  <div class="framework">
+    <h2>How each line is justified</h2>
+    <p>Every line in this compilation is structured against four tests: (1) <strong>Necessity</strong> — does this directly serve worship, hospitality, or congregational care on the day? (2) <strong>Proportionality</strong> — is the spend in line with our scale and standing (~60–80 attendees, dignified anniversary)? (3) <strong>Reusability</strong> — where possible, the asset benefits future services too (the pull-up banners, for example, are a long-term backdrop investment, not a one-day spend). (4) <strong>Approval</strong> — every line above honours the governance rule that all spending requires General Overseer approval before commitment.</p>
+    <p>Items marked <span class="item-status status-firm">Firm</span> have a quote or commitment in hand. Items marked <span class="item-status status-est">Estimated</span> have a defensible working figure pending a firm quote. Items marked <span class="item-status status-tbc">TBC</span> are flagged for completion before the budget is presented for sign-off.</p>
+    <p>This document is a working compilation. Numbers will update as quotes firm up over the coming weeks. The page is hosted on the Bridge so leadership can review at any time and the latest version is always the live one.</p>
+  </div>
+
+  <!-- ───── FOOTER ───── -->
+  <div class="footer">
+    Calvary Hephzibah Full Gospel Church — Global Harvest International (Charity no. 1135709)<br>
+    Anniversary 2026 · Finance Compilation · Draft v1 · Last updated 11 May 2026<br>
+    Prepared by Bolaji Olatoye, Chief of Staff
+  </div>
+
+</div>
+</body>
+</html>
