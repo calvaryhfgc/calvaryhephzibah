@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Gear Sourcing — Anniversary 2026 | The Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{
+  --red:#C41E2A; --red-light:#FEF2F2;
+  --amber:#D97706; --amber-light:#FFFBEB; --amber-mid:#FCD34D;
+  --green:#16A34A; --green-light:#F0FDF4; --green-mid:#86EFAC;
+  --blue:#2563EB; --blue-light:#EFF6FF;
+  --slate:#64748B; --slate-light:#F8FAFC;
+  --ink:#0F172A; --ink-2:#334155; --ink-3:#64748B; --ink-4:#94A3B8; --ink-5:#CBD5E1;
+  --white:#FFFFFF; --bg:#F1F5F9;
+  --r8:8px; --r12:12px; --r16:16px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,0.06);
+}
+html,body{min-height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
+
+.hdr{background:linear-gradient(135deg,#0369A1 0%,#075985 100%);color:white;border-radius:var(--r16);padding:32px 36px;margin-bottom:24px;box-shadow:0 8px 30px rgba(3,105,161,0.18);position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.hdr-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;margin-bottom:8px;font-weight:600;}
+.hdr h1{font-family:'Instrument Serif',serif;font-size:38px;line-height:1.1;margin-bottom:8px;font-weight:400;}
+.hdr-sub{font-size:14px;opacity:0.92;max-width:680px;}
+.hdr-meta{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;font-size:12px;opacity:0.85;}
+.hdr-meta span strong{color:white;font-weight:600;}
+
+.totals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+@media (max-width:780px){.totals{grid-template-columns:1fr;}}
+.tcard{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.tcard-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:6px;}
+.tcard-num{font-size:24px;font-weight:600;color:var(--ink);line-height:1;font-family:'Instrument Serif',serif;}
+.tcard-sub{font-size:11px;color:var(--ink-3);margin-top:4px;}
+.tcard.old{border-left:3px solid var(--slate);}
+.tcard.new{border-left:3px solid var(--green);background:linear-gradient(135deg,#F0FDF4,white);}
+.tcard.saving{border-left:3px solid var(--blue);}
+
+.callout{background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:16px 20px;margin-bottom:24px;}
+.callout-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.callout p{font-size:13px;color:var(--ink-2);margin:0;}
+
+.section{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.section-head{padding:16px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;cursor:pointer;}
+.section-head:hover{background:#FAFBFC;}
+.section-head-left{display:flex;align-items:center;gap:14px;}
+.section-num{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink-4);min-width:32px;text-align:center;}
+.section-title{font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink);line-height:1.2;}
+.section-blurb{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
+.section-right{display:flex;align-items:center;gap:14px;}
+.section-price{font-family:'Instrument Serif',serif;font-size:20px;color:var(--green);font-weight:500;}
+.section-price.dropped{color:var(--ink-4);text-decoration:line-through;font-size:16px;}
+
+.detail{padding:20px 24px 24px;border-top:1px solid #F1F5F9;background:#FAFBFC;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+@media (max-width:680px){.detail-grid{grid-template-columns:1fr;}}
+.detail-cell{background:white;border:1px solid #E2E8F0;border-radius:var(--r8);padding:12px 14px;}
+.detail-cell-label{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:4px;}
+.detail-cell-value{font-size:13px;color:var(--ink);line-height:1.5;}
+.detail-cell-value a{color:var(--blue);text-decoration:none;word-break:break-all;}
+.detail-cell-value a:hover{text-decoration:underline;}
+.product-name{font-weight:600;color:var(--ink);margin-bottom:6px;font-size:14px;}
+.condition-badge{display:inline-block;font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:100px;}
+.cond-new{background:var(--green-light);color:var(--green);}
+.cond-refurb{background:var(--blue-light);color:var(--blue);}
+.cond-used{background:var(--amber-light);color:var(--amber);}
+.dropped-badge{background:#FEE2E2;color:var(--red);}
+
+.caveat{background:#FFF7ED;border-left:3px solid var(--amber);padding:10px 14px;margin-top:10px;border-radius:0 var(--r8) var(--r8) 0;}
+.caveat-label{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:3px;}
+.caveat-text{font-size:12px;color:var(--ink-2);line-height:1.5;}
+
+.alt{margin-top:12px;padding:10px 14px;background:white;border:1px dashed var(--ink-5);border-radius:var(--r8);}
+.alt-label{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:4px;}
+.alt-text{font-size:12px;color:var(--ink-2);line-height:1.5;}
+
+.action-plan{background:white;border:1px solid #E2E8F0;border-radius:var(--r16);padding:24px 28px;margin-top:24px;box-shadow:var(--shadow-sm);}
+.action-plan h2{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:14px;}
+.action-day{margin-bottom:16px;}
+.action-day-title{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:8px;}
+.action-day ol{margin-left:20px;font-size:13px;color:var(--ink-2);}
+.action-day ol li{padding:5px 0;}
+.action-day ol li strong{color:var(--ink);}
+
+.dropped-section{opacity:0.6;}
+.dropped-section .section-head{background:#FAFAFA;}
+
+.footer{margin-top:36px;padding:24px;text-align:center;font-size:12px;color:var(--ink-4);border-top:1px solid #E2E8F0;}
+
+@media print{
+  body{background:white;}
+  .wrap{padding:0;max-width:100%;}
+  .hdr{box-shadow:none;}
+  .section,.tcard,.action-plan{box-shadow:none;page-break-inside:avoid;}
+  .detail{display:block !important;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <div class="hdr-eyebrow">Calvary Hephzibah · Gear Sourcing Report</div>
+    <h1>Anniversary 2026 — Gear Sourcing</h1>
+    <div class="hdr-sub">Specific sourced suppliers, models, and prices for the Music & Sound Gear list from Bolaji Adebanjo. All recommendations verified deliverable to M13 9EE by Friday 15 May 2026. Companion to the main anniversary finance page.</div>
+    <div class="hdr-meta">
+      <span><strong>Order date:</strong> Mon 11 May 2026</span>
+      <span><strong>In-hand deadline:</strong> Fri 15 May 2026</span>
+      <span><strong>Delivery postcode:</strong> M13 9EE</span>
+      <span><strong>Prepared by:</strong> Bolaji Olatoye, Chief of Staff</span>
+    </div>
+  </div>
+
+  <div class="totals">
+    <div class="tcard old">
+      <div class="tcard-label">Original Estimate Range</div>
+      <div class="tcard-num">£900–£1,460</div>
+      <div class="tcard-sub">Mid-range UK retail (prior)</div>
+    </div>
+    <div class="tcard new">
+      <div class="tcard-label">Sourced Recommended Total</div>
+      <div class="tcard-num">£650–£724</div>
+      <div class="tcard-sub">Verified UK suppliers, after FX pedal removal</div>
+    </div>
+    <div class="tcard saving">
+      <div class="tcard-label">Saving vs Prior Estimate</div>
+      <div class="tcard-num">£176–£810</div>
+      <div class="tcard-sub">Depending on used vs new choices</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-title">⚠ Update — FX pedal removed</div>
+    <p>Morayo now has a temporary FX pedal she is using — the dedicated purchase for her has been dropped from this sourcing plan. The line is retained below as a struck-through reference only.</p>
+  </div>
+
+  <!-- ───── ITEM 1 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">01</div>
+        <div>
+          <div class="section-title">Wired in-ear monitor system (singer)</div>
+          <div class="section-blurb">Belt-pack + IEMs for lead vocalist</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£45</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Behringer Powerplay PM1 belt-pack + KZ ZS10 Pro IEMs <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">PM1 Belt-pack</div>
+          <div class="detail-cell-value"><strong>£15</strong> · Gear4music UK<br><a href="https://www.gear4music.com/Recording-and-Computers/Behringer-Powerplay-PM1-In-Ear-Monitor-Belt-Pack/1WMM" target="_blank">View product →</a></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">KZ ZS10 Pro IEMs</div>
+          <div class="detail-cell-value"><strong>~£30</strong> · Amazon UK (Linsoul, Prime)<br><a href="https://www.amazon.co.uk/Linsoul-KZ-ZS10-Earphones-Detachable-Black/dp/B07QKYTGH9" target="_blank">View product →</a></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Both next-working-day → arrives <strong>Tue 12 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Justification</div>
+          <div class="detail-cell-value">PM1 is a passive volume-controlled belt-pack with locking XLR input — sufficient for a single singer receiving a pre-mixed aux from the desk. KZ ZS10 Pro is a well-regarded 5-driver hybrid IEM with detachable cable.</div>
+        </div>
+      </div>
+      <div class="caveat">
+        <div class="caveat-label">Caveat</div>
+        <div class="caveat-text">PM1 is a passive volume control, not a 3-input mixer like a Rolls PM351. If true 3-input mixing is needed (mic + instrument + line), substitute Rolls PM351 new at Andertons/Gear4music ~£119 — adds £75 to total.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 2 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">02</div>
+        <div>
+          <div class="section-title">AV production monitoring headphones</div>
+          <div class="section-blurb">For livestream broadcast operator</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£85</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Sony MDR-7506 closed-back monitor headphones <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Price & Supplier</div>
+          <div class="detail-cell-value"><strong>£85</strong> · Gear4music UK</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Next-working-day → arrives <strong>Tue 12 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Justification</div>
+          <div class="detail-cell-value">Industry-standard reference headphones for broadcast/studio. Lets Scott verify the actual stream mix in real time rather than checking off room speakers.</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Alt cheaper route</div>
+          <div class="detail-cell-value">Used Audio-Technica ATH-M40x "Boxed, Excellent" on UK eBay BIN <strong>~£45–£55</strong>. Only choose if seller has ≥99% feedback, UK location, ≤2 working-day dispatch.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 3 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">03</div>
+        <div>
+          <div class="section-title">DI box for keyboard signal cleanup</div>
+          <div class="section-blurb">Resolves the "Keys (Cut)" issue</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£35</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Behringer Ultra-DI DI100 + 1m TRS-XLR cable <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">DI100 active DI</div>
+          <div class="detail-cell-value"><strong>£30</strong> · Gear4music UK<br><a href="https://www.gear4music.com/PA-DJ-and-Lighting/Behringer-Ultra-DI-DI100-Active-DI-Box/126" target="_blank">View product →</a></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">TRS-XLR 1m cable</div>
+          <div class="detail-cell-value"><strong>£5</strong> · Gear4music Essentials</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Bundled into main Gear4music order → arrives <strong>Tue 12 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Justification</div>
+          <div class="detail-cell-value">Active DI converts the keyboard's high-impedance unbalanced output into a clean balanced signal for the desk — resolves the routing issue Bolaji flagged.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 4 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">04</div>
+        <div>
+          <div class="section-title">Multicore stage snake (~15m)</div>
+          <div class="section-blurb">Tidies stage cabling for visuals + reliability</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£115</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">SubZero 8 Channel Stage Box, 15m <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Price & Supplier</div>
+          <div class="detail-cell-value"><strong>£115</strong> · Gear4music UK<br><a href="https://www.gear4music.com/PA-DJ-and-Lighting/SubZero-8-Channel-Stage-Box-15m/1ZLK" target="_blank">View product →</a></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Free standard delivery, next-working-day where possible → arrives <strong>Tue–Wed 12–13 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Justification</div>
+          <div class="detail-cell-value">8 channels covers a typical church band: 4 vocals + drum overheads + keys + 1 spare. Bundles all stage lines into a single tidy run to the desk.</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">If 16ch genuinely needed</div>
+          <div class="detail-cell-value">Pulse 20-Way 16/4 XLR 15m at DY Pro Audio <strong>£150</strong> in stock, 3-working-day delivery → Wed–Thu 13–14 May</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 5 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">05</div>
+        <div>
+          <div class="section-title">XLR cables × 5 (15m each)</div>
+          <div class="section-blurb">Long-run mic cables</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£55</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Gear4music Essentials XLR Microphone Cable 15m × 5 <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Unit price</div>
+          <div class="detail-cell-value"><strong>£10.99 each</strong> · 3-year warranty</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Quantity & total</div>
+          <div class="detail-cell-value">5 × £10.99 = <strong>£54.95</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Same Gear4music order → arrives <strong>Tue 12 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Supplier link</div>
+          <div class="detail-cell-value"><a href="https://www.gear4music.com/G4M/Essentials-XLR-Microphone-Cable-15m/44V3" target="_blank">Gear4music Essentials XLR 15m →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 6 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">06</div>
+        <div>
+          <div class="section-title">Microphone stands × 6</div>
+          <div class="section-blurb">Boom stands for the larger anniversary band footprint</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£144</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Tiger MCA68-BK Boom Microphone Stand × 6 <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Unit price</div>
+          <div class="detail-cell-value"><strong>£23.99 each</strong> · 1-year warranty</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Quantity & total</div>
+          <div class="detail-cell-value">6 × £23.99 = <strong>£143.94</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Prime next-day → arrives <strong>Tue 12 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Supplier link</div>
+          <div class="detail-cell-value"><a href="https://www.amazon.co.uk/Tiger-Boom-Microphone-Stand-Black/dp/B005I57GMM" target="_blank">Tiger MCA68-BK on Amazon UK →</a></div>
+        </div>
+      </div>
+      <div class="alt">
+        <div class="alt-label">Deeper-saving alternative (deadline risk)</div>
+        <div class="alt-text">Facebook Marketplace Manchester / Cash Converters Manchester sometimes have used K&M / Stagg / Quik-Lok boom stands at £10–£15 each. Worth a Monday morning check; Tiger via Prime is the locked-in fallback.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 7 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">07</div>
+        <div>
+          <div class="section-title">Y-split / DI for backing tracks</div>
+          <div class="section-blurb">Phone/iPad/laptop → desk with isolation</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£38</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Behringer DI20 2-channel Ultra-DI + 3.5mm TRS Y-cable <span class="condition-badge cond-new">New (or Ex-Demo)</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">DI20 stereo DI</div>
+          <div class="detail-cell-value"><strong>£32 new</strong> or <strong>£25 Ex-Demo</strong> · Gear4music UK<br><a href="https://www.gear4music.com/us/en/PA-DJ-and-Lighting/Behringer-DI20-Ultra-DI-Box-Ex-Demo/1JJH" target="_blank">Ex-Demo listing →</a></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Y-cable</div>
+          <div class="detail-cell-value"><strong>~£6</strong> · 3.5mm TRS to dual ¼" TS</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Bundled into Gear4music order → arrives <strong>Tue 12 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Cheaper alternative</div>
+          <div class="detail-cell-value">Plain 3.5mm TRS → dual XLR Y-cable from Amazon Prime <strong>£10–£15</strong>. No isolation/ground-lift — risk of hum from phone/laptop. If hum has been an issue historically, pay the extra for the DI20.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 8 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">08</div>
+        <div>
+          <div class="section-title">iPad (desk control / tracks / lyrics)</div>
+          <div class="section-blurb">Biggest single saving in the plan</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£94</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Apple iPad 7 (2019) 10.2" Wi-Fi 32GB · Good <span class="condition-badge cond-refurb">Refurbished</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Price & Supplier</div>
+          <div class="detail-cell-value"><strong>£94</strong> · musicMagpie<br><a href="https://www.musicmagpie.co.uk/store/category/ipads-and-tablets/apple/ipad-7/" target="_blank">View product →</a></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Free Royal Mail 48hr tracked. Order Mon → arrives <strong>Wed 13 – Thu 14 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Condition & warranty</div>
+          <div class="detail-cell-value">90-point check, 12-month warranty, 14-day money-back. Good = cosmetic wear only, fully functional.</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Compatibility</div>
+          <div class="detail-cell-value">Runs iPadOS 17 — supports Behringer X-Air, Mackie Master Fader, Allen & Heath MixingStation, ProPresenter Remote, OnSong</div>
+        </div>
+      </div>
+      <div class="caveat">
+        <div class="caveat-label">Caveat</div>
+        <div class="caveat-text">32GB is light if storing many backing tracks locally. 128GB variant at ~£119 still well under prior estimate. If iPad Pro + Apple Pencil needed, expect £200+.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 9 ───── DROPPED -->
+  <div class="section dropped-section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">09</div>
+        <div>
+          <div class="section-title" style="text-decoration:line-through;color:var(--ink-4);">FX pedal — Morayo (guitar)</div>
+          <div class="section-blurb"><span class="condition-badge dropped-badge">Removed</span> Morayo now has a temporary pedal she is using</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price dropped">£0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 10 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">10</div>
+        <div>
+          <div class="section-title">Snare drum head</div>
+          <div class="section-blurb">14" coated batter replacement</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£18</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Remo Coated Ambassador 14" (BA-0114-00) <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Price & Supplier</div>
+          <div class="detail-cell-value"><strong>£17.59</strong> · Drum Central UK<br><a href="https://www.drumcentral.co.uk/brands/remo/remo-ambassador/" target="_blank">View product →</a></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">1–3 day Royal Mail / DPD → arrives <strong>Wed–Thu 13–14 May</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Fallback</div>
+          <div class="detail-cell-value">Amazon UK Prime ~£18–£22 next-day — switch to this if Drum Central can't confirm Friday delivery</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Condition</div>
+          <div class="detail-cell-value">New</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 11 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">11</div>
+        <div>
+          <div class="section-title">Consumables bundle</div>
+          <div class="section-blurb">Toolbox, tapes, batteries, label maker</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£80</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="product-name">Argos same-day collection + Amazon Prime <span class="condition-badge cond-new">New</span></div>
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Argos M13 same-day</div>
+          <div class="detail-cell-value">Stanley 16" toolbox <strong>£20</strong><br>Coral masking tape 6-pack <strong>£7</strong><br>Energizer AA-24 <strong>£13</strong><br>Dymo Omega Embosser <strong>£20</strong><br><strong>Subtotal £60</strong></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Amazon Prime next-day</div>
+          <div class="detail-cell-value">Gorilla Tape Black 11m (gaffer) <strong>~£10</strong><br>PVC electrical tape 10-pack <strong>~£6</strong><br><strong>Subtotal £16</strong><br><em>Argos doesn't reliably stock gaffer/electrical tape</em></div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Delivery</div>
+          <div class="detail-cell-value">Argos: Click & Collect Tue 12 May · Amazon: Prime next-day</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Stock note</div>
+          <div class="detail-cell-value">Check Argos product pages with M13 9EE before driving. Fallowfield Sainsbury's & Manchester Arndale are typical options; Trafford Centre as backup.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ITEM 12 ───── -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-num">12</div>
+        <div>
+          <div class="section-title">Shipping & misc buffer</div>
+          <div class="section-blurb">Postage on used items + expedited upgrades</div>
+        </div>
+      </div>
+      <div class="section-right">
+        <div class="section-price">£15</div>
+      </div>
+    </div>
+    <div class="detail">
+      <div class="detail-grid">
+        <div class="detail-cell">
+          <div class="detail-cell-label">Buffer</div>
+          <div class="detail-cell-value"><strong>£15</strong> covers postage on any used eBay items + expedited shipping upgrades if needed.</div>
+        </div>
+        <div class="detail-cell">
+          <div class="detail-cell-label">Note</div>
+          <div class="detail-cell-value">Gear4music, Amazon Prime, and musicMagpie all offer free standard delivery. Reduced buffer reflects the FX pedal (only eBay-sourced item) being removed.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── ACTION PLAN ───── -->
+  <div class="action-plan">
+    <h2>Action Plan</h2>
+
+    <div class="action-day">
+      <div class="action-day-title">Today — Mon 11 May 2026</div>
+      <ol>
+        <li><strong>musicMagpie iPad 7 32GB Good (£94)</strong> — order before mid-afternoon for same-day dispatch on 48hr Royal Mail tracked.</li>
+        <li><strong>Single consolidated Gear4music UK order (~£375)</strong> — Behringer PM1, DI100 + TRS-XLR cable, DI20 (+ Y-cable), SubZero 8-ch 15m Stage Box, 5× XLR 15m Essentials, Sony MDR-7506. Place before the daily cut-off for next-working-day.</li>
+        <li><strong>Single consolidated Amazon UK Prime order (~£185–£200)</strong> — KZ ZS10 Pro, 6× Tiger MCA68-BK boom mic stands, Gorilla Tape, PVC electrical tape, optional Remo head if Drum Central can't confirm Fri delivery.</li>
+      </ol>
+    </div>
+
+    <div class="action-day">
+      <div class="action-day-title">Tomorrow — Tue 12 May 2026</div>
+      <ol>
+        <li><strong>Argos Click & Collect (£60)</strong> — Manchester store with M13 9EE stock. Collect Stanley toolbox, Coral masking tape 6-pack, Energizer AA-24, Dymo Omega Embosser.</li>
+        <li><strong>Verify Gear4music + Amazon deliveries arrive as expected.</strong></li>
+      </ol>
+    </div>
+
+    <div class="action-day">
+      <div class="action-day-title">Wed–Thu — 13–14 May 2026</div>
+      <ol>
+        <li>Receive musicMagpie iPad (48hr Royal Mail tracked).</li>
+        <li>Receive Drum Central Remo head (1–3 day delivery) — or fall back to Amazon Prime.</li>
+      </ol>
+    </div>
+
+    <div class="action-day">
+      <div class="action-day-title">Thresholds that change the plan</div>
+      <ol>
+        <li><strong>musicMagpie iPad 7 32GB Good out of stock</strong> → 128GB Good ~£119, or iPad 6 (2018) Good.</li>
+        <li><strong>Gear4music SubZero shows dispatch later than Wed 13 May</strong> → switch to W Audio XLR Multicore 16-ch 15m at UKDJ.co.uk £89 (24hr dispatch).</li>
+        <li><strong>Drum Central out of stock or unclear delivery</strong> → Amazon UK Prime ~£20–£22 next-day.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="footer">
+    Calvary Hephzibah Full Gospel Church — Global Harvest International (Charity no. 1135709)<br>
+    Anniversary 2026 · Gear Sourcing Report · v1 · Last updated 11 May 2026<br>
+    Companion to <a href="anniversary-finance-2026.html" style="color:var(--blue);">Anniversary Finance Compilation</a> · Prepared by Bolaji Olatoye, Chief of Staff
+  </div>
+
+</div>
+</body>
+</html>
