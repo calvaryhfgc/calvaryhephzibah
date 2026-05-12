@@ -10,810 +10,252 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
 :root{
-  --red:#C41E2A; --red-light:#FEF2F2;
-  --amber:#D97706; --amber-light:#FFFBEB; --amber-mid:#FCD34D;
-  --green:#16A34A; --green-light:#F0FDF4; --green-mid:#86EFAC;
-  --blue:#2563EB; --blue-light:#EFF6FF;
-  --slate:#64748B; --slate-light:#F8FAFC;
-  --ink:#0F172A; --ink-2:#334155; --ink-3:#64748B; --ink-4:#94A3B8; --ink-5:#CBD5E1;
-  --white:#FFFFFF; --bg:#F1F5F9;
-  --r8:8px; --r12:12px; --r16:16px;
-  --shadow-sm:0 1px 2px rgba(15,23,42,0.06);
+  --ink:#0F172A; --ink-2:#334155; --ink-3:#64748B; --ink-4:#94A3B8;
+  --blue:#2563EB; --green:#16A34A; --bg:#F8FAFC; --white:#FFFFFF;
+  --border:#E2E8F0; --r:10px;
 }
-html,body{min-height:100%;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;}
-.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;}
+.wrap{max-width:880px;margin:0 auto;padding:28px 20px 60px;}
 
-.hdr{background:linear-gradient(135deg,#0369A1 0%,#075985 100%);color:white;border-radius:var(--r16);padding:32px 36px;margin-bottom:24px;box-shadow:0 8px 30px rgba(3,105,161,0.18);position:relative;overflow:hidden;}
-.hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.06);}
-.hdr-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;margin-bottom:8px;font-weight:600;}
-.hdr h1{font-family:'Instrument Serif',serif;font-size:38px;line-height:1.1;margin-bottom:8px;font-weight:400;}
-.hdr-sub{font-size:14px;opacity:0.92;max-width:680px;}
-.hdr-meta{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;font-size:12px;opacity:0.85;}
+.hdr{background:linear-gradient(135deg,#0369A1 0%,#075985 100%);color:white;border-radius:12px;padding:24px 28px;margin-bottom:24px;}
+.hdr-eyebrow{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;opacity:0.85;margin-bottom:6px;font-weight:600;}
+.hdr h1{font-family:'Instrument Serif',serif;font-size:30px;line-height:1.1;margin-bottom:6px;font-weight:400;}
+.hdr-sub{font-size:13px;opacity:0.92;}
+.hdr-meta{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;font-size:11.5px;opacity:0.85;}
 .hdr-meta span strong{color:white;font-weight:600;}
 
-.totals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
-@media (max-width:780px){.totals{grid-template-columns:1fr;}}
-.tcard{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px 18px;box-shadow:var(--shadow-sm);}
-.tcard-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:6px;}
-.tcard-num{font-size:24px;font-weight:600;color:var(--ink);line-height:1;font-family:'Instrument Serif',serif;}
-.tcard-sub{font-size:11px;color:var(--ink-3);margin-top:4px;}
-.tcard.old{border-left:3px solid var(--slate);}
-.tcard.new{border-left:3px solid var(--green);background:linear-gradient(135deg,#F0FDF4,white);}
-.tcard.saving{border-left:3px solid var(--blue);}
+.total-bar{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.total-bar .label{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;}
+.total-bar .num{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);}
 
-.callout{background:var(--amber-light);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:16px 20px;margin-bottom:24px;}
-.callout-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
-.callout p{font-size:13px;color:var(--ink-2);margin:0;}
+table.items{width:100%;border-collapse:collapse;background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+table.items th{text-align:left;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;padding:12px 14px;background:#F1F5F9;border-bottom:1px solid var(--border);}
+table.items td{padding:14px;border-bottom:1px solid #F1F5F9;vertical-align:top;font-size:13.5px;}
+table.items tr:last-child td{border-bottom:none;}
+table.items tr.dropped td{opacity:0.45;}
+table.items tr.dropped .item-title{text-decoration:line-through;}
+.item-num{font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink-4);width:36px;}
+.item-title{font-weight:600;color:var(--ink);margin-bottom:3px;}
+.item-desc{color:var(--ink-2);font-size:12.5px;line-height:1.5;}
+.item-price{font-family:'Instrument Serif',serif;font-size:17px;color:var(--green);font-weight:500;white-space:nowrap;text-align:right;width:90px;}
+.item-link{width:90px;text-align:right;}
+.item-link a{color:var(--blue);text-decoration:none;font-size:12.5px;font-weight:600;white-space:nowrap;}
+.item-link a:hover{text-decoration:underline;}
 
-.section{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow-sm);}
-.section-head{padding:16px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;cursor:pointer;}
-.section-head:hover{background:#FAFBFC;}
-.section-head-left{display:flex;align-items:center;gap:14px;}
-.section-num{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink-4);min-width:32px;text-align:center;}
-.section-title{font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink);line-height:1.2;}
-.section-blurb{font-size:11.5px;color:var(--ink-3);margin-top:2px;}
-.section-right{display:flex;align-items:center;gap:14px;}
-.section-price{font-family:'Instrument Serif',serif;font-size:20px;color:var(--green);font-weight:500;}
-.section-price.dropped{color:var(--ink-4);text-decoration:line-through;font-size:16px;}
-
-.detail{padding:20px 24px 24px;border-top:1px solid #F1F5F9;background:#FAFBFC;}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
-@media (max-width:680px){.detail-grid{grid-template-columns:1fr;}}
-.detail-cell{background:white;border:1px solid #E2E8F0;border-radius:var(--r8);padding:12px 14px;}
-.detail-cell-label{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:4px;}
-.detail-cell-value{font-size:13px;color:var(--ink);line-height:1.5;}
-.detail-cell-value a{color:var(--blue);text-decoration:none;word-break:break-all;}
-.detail-cell-value a:hover{text-decoration:underline;}
-.product-name{font-weight:600;color:var(--ink);margin-bottom:6px;font-size:14px;}
-.condition-badge{display:inline-block;font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:100px;}
-.cond-new{background:var(--green-light);color:var(--green);}
-.cond-refurb{background:var(--blue-light);color:var(--blue);}
-.cond-used{background:var(--amber-light);color:var(--amber);}
-.dropped-badge{background:#FEE2E2;color:var(--red);}
-
-.caveat{background:#FFF7ED;border-left:3px solid var(--amber);padding:10px 14px;margin-top:10px;border-radius:0 var(--r8) var(--r8) 0;}
-.caveat-label{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--amber);font-weight:700;margin-bottom:3px;}
-.caveat-text{font-size:12px;color:var(--ink-2);line-height:1.5;}
-
-.alt{margin-top:12px;padding:10px 14px;background:white;border:1px dashed var(--ink-5);border-radius:var(--r8);}
-.alt-label{font-size:10px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:4px;}
-.alt-text{font-size:12px;color:var(--ink-2);line-height:1.5;}
-
-.action-plan{background:white;border:1px solid #E2E8F0;border-radius:var(--r16);padding:24px 28px;margin-top:24px;box-shadow:var(--shadow-sm);}
-.action-plan h2{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);margin-bottom:14px;}
-.action-day{margin-bottom:16px;}
-.action-day-title{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);font-weight:700;margin-bottom:8px;}
-.action-day ol{margin-left:20px;font-size:13px;color:var(--ink-2);}
-.action-day ol li{padding:5px 0;}
-.action-day ol li strong{color:var(--ink);}
-
-.dropped-section{opacity:0.6;}
-.dropped-section .section-head{background:#FAFAFA;}
-
-.footer{margin-top:36px;padding:24px;text-align:center;font-size:12px;color:var(--ink-4);border-top:1px solid #E2E8F0;}
-
-@media print{
-  body{background:white;}
-  .wrap{padding:0;max-width:100%;}
-  .hdr{box-shadow:none;}
-  .section,.tcard,.action-plan{box-shadow:none;page-break-inside:avoid;}
-  .detail{display:block !important;}
+@media (max-width:680px){
+  table.items, table.items thead, table.items tbody, table.items tr, table.items td{display:block;}
+  table.items thead{display:none;}
+  table.items tr{padding:12px 14px;border-bottom:1px solid #F1F5F9;}
+  table.items td{padding:2px 0;border:none;}
+  .item-num{display:inline;font-size:14px;}
+  .item-title{display:inline;margin-left:6px;}
+  .item-price,.item-link{display:inline-block;width:auto;text-align:left;margin-right:14px;margin-top:6px;}
 }
+
+.footer{margin-top:28px;text-align:center;font-size:11.5px;color:var(--ink-4);}
+.footer a{color:var(--blue);text-decoration:none;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="hdr">
-    <div class="hdr-eyebrow">Calvary Hephzibah · Gear Sourcing Report</div>
-    <h1>Anniversary 2026 — Gear Sourcing</h1>
-    <div class="hdr-sub">Specific sourced suppliers, models, and prices for the Music & Sound Gear list from Bolaji Adebanjo. All recommendations verified deliverable to M13 9EE by Friday 15 May 2026. Companion to the main anniversary finance page.</div>
+    <div class="hdr-eyebrow">Calvary Hephzibah · Gear Sourcing</div>
+    <h1>Anniversary 2026 — Gear List</h1>
+    <div class="hdr-sub">Sourced suppliers, prices, and product links. All deliverable to M13 9EE by Friday 15 May 2026.</div>
     <div class="hdr-meta">
       <span><strong>Order date:</strong> Mon 11 May 2026</span>
-      <span><strong>In-hand deadline:</strong> Fri 15 May 2026</span>
-      <span><strong>Delivery postcode:</strong> M13 9EE</span>
-      <span><strong>Prepared by:</strong> Bolaji Olatoye, Chief of Staff</span>
+      <span><strong>In-hand:</strong> Fri 15 May 2026</span>
+      <span><strong>Postcode:</strong> M13 9EE</span>
     </div>
   </div>
 
-  <div class="totals">
-    <div class="tcard old">
-      <div class="tcard-label">Original Estimate Range</div>
-      <div class="tcard-num">£900–£1,460</div>
-      <div class="tcard-sub">Mid-range UK retail (prior)</div>
+  <div class="total-bar">
+    <div>
+      <div class="label">Sourced Recommended Total</div>
+      <div class="num">£1,358–£1,558</div>
     </div>
-    <div class="tcard new">
-      <div class="tcard-label">Sourced Recommended Total</div>
-      <div class="tcard-num">£1,358–£1,558</div>
-      <div class="tcard-sub">Inc. lapel mic, PTZ, power kit, Starlink case</div>
-    </div>
-    <div class="tcard saving">
-      <div class="tcard-label">Long-term value</div>
-      <div class="tcard-num">Permanent assets</div>
-      <div class="tcard-sub">Pastoral mic + camera = 10+ year capability</div>
-    </div>
+    <div style="font-size:12px;color:var(--ink-3);">15 items · 1 dropped</div>
   </div>
 
-  <div class="callout">
-    <div class="callout-title">⚠ Updates since v1</div>
-    <p><strong>FX pedal removed</strong> — Morayo has a temporary pedal she is using. Line retained struck-through for reference (item 09).<br><strong>Keyboard removed</strong> — descoped from this anniversary budget.<br><strong>Wireless lapel mic for Pastor Shade (item 13)</strong> — explicitly requested. Sennheiser XSW 2-ME2-GB UHF wireless lavalier set, £359 at Andertons UK. The standard church-grade pick at this tier.<br><strong>Logitech PTZ Pro 2 broadcast camera + tripod (item 14)</strong> — replaces phone-camera livestream. Back Market refurbished £180–£250 + Amazon tripod £25–£35. Block 2–3 hrs on Sat 16 May with Scott for OBS setup and preset programming.<br><strong>Extension reel + USB-C chargers + cables (item 15)</strong> — 10m 4-way SLx reel + 2× Anker 65W GaN chargers + 3× USB-C cables. £85–£105 total.<br><strong>Starlink Gen 3 carry case (item 16)</strong> — £60–£85 hard EVA case for the recently acquired Starlink kit.</p>
+  <table class="items">
+    <thead>
+      <tr>
+        <th style="width:36px;">#</th>
+        <th>Item</th>
+        <th style="width:90px;text-align:right;">Price</th>
+        <th style="width:90px;text-align:right;">Link</th>
+      </tr>
+    </thead>
+    <tbody>
 
-    <p style="margin-top:14px;font-size:13px;color:var(--ink-2);line-height:1.6;"><strong>Note:</strong> The 17 May anniversary is the catalyst for this round of equipping, but every item here is a needed permanent capability for the church. The anniversary is the milestone; the gear is the foundation for everything afterwards.</p>
-  </div>
+      <tr>
+        <td class="item-num">1</td>
+        <td>
+          <div class="item-title">Wired in-ear monitor system (singer)</div>
+          <div class="item-desc">Behringer Powerplay PM1 belt pack + KZ ZS10 Pro IEMs. Reliable wired monitoring path for the lead vocalist.</div>
+        </td>
+        <td class="item-price">£45</td>
+        <td class="item-link"><a href="https://www.gear4music.com/Recording-and-Computers/Behringer-Powerplay-PM1-In-Ear-Monitor-Belt-Pack/1WMM" target="_blank">Gear4music</a><br><a href="https://www.amazon.co.uk/Linsoul-KZ-ZS10-Earphones-Detachable-Black/dp/B07QKYTGH9" target="_blank">Amazon</a></td>
+      </tr>
 
-  <!-- ───── ITEM 1 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">01</div>
-        <div>
-          <div class="section-title">Wired in-ear monitor system (singer)</div>
-          <div class="section-blurb">Belt-pack + IEMs for lead vocalist</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£45</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Behringer Powerplay PM1 belt-pack + KZ ZS10 Pro IEMs <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">PM1 Belt-pack</div>
-          <div class="detail-cell-value"><strong>£15</strong> · Gear4music UK<br><a href="https://www.gear4music.com/Recording-and-Computers/Behringer-Powerplay-PM1-In-Ear-Monitor-Belt-Pack/1WMM" target="_blank">View product →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">KZ ZS10 Pro IEMs</div>
-          <div class="detail-cell-value"><strong>~£30</strong> · Amazon UK (Linsoul, Prime)<br><a href="https://www.amazon.co.uk/Linsoul-KZ-ZS10-Earphones-Detachable-Black/dp/B07QKYTGH9" target="_blank">View product →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Both next-working-day → arrives <strong>Tue 12 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Justification</div>
-          <div class="detail-cell-value">PM1 is a passive volume-controlled belt-pack with locking XLR input — sufficient for a single singer receiving a pre-mixed aux from the desk. KZ ZS10 Pro is a well-regarded 5-driver hybrid IEM with detachable cable.</div>
-        </div>
-      </div>
-      <div class="caveat">
-        <div class="caveat-label">Caveat</div>
-        <div class="caveat-text">PM1 is a passive volume control, not a 3-input mixer like a Rolls PM351. If true 3-input mixing is needed (mic + instrument + line), substitute Rolls PM351 new at Andertons/Gear4music ~£119 — adds £75 to total.</div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">2</td>
+        <td>
+          <div class="item-title">AV production monitoring headphones</div>
+          <div class="item-desc">Sony MDR-7506. Industry-standard closed-back reference headphones for the mixing position and broadcast monitoring.</div>
+        </td>
+        <td class="item-price">£85</td>
+        <td class="item-link"><a href="https://www.gear4music.com" target="_blank">Gear4music</a></td>
+      </tr>
 
-  <!-- ───── ITEM 2 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">02</div>
-        <div>
-          <div class="section-title">AV production monitoring headphones</div>
-          <div class="section-blurb">For livestream broadcast operator</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£85</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Sony MDR-7506 closed-back monitor headphones <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Price & Supplier</div>
-          <div class="detail-cell-value"><strong>£85</strong> · Gear4music UK</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Next-working-day → arrives <strong>Tue 12 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Justification</div>
-          <div class="detail-cell-value">Industry-standard reference headphones for broadcast/studio. Lets Scott verify the actual stream mix in real time rather than checking off room speakers.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Alt cheaper route</div>
-          <div class="detail-cell-value">Used Audio-Technica ATH-M40x "Boxed, Excellent" on UK eBay BIN <strong>~£45–£55</strong>. Only choose if seller has ≥99% feedback, UK location, ≤2 working-day dispatch.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">3</td>
+        <td>
+          <div class="item-title">DI box for keyboard signal cleanup</div>
+          <div class="item-desc">Behringer Ultra-DI DI100 active DI box + TRS-to-XLR cable. Resolves the keyboard signal issue ("Keys (Cut)") flagged by Bolaji A.</div>
+        </td>
+        <td class="item-price">£35</td>
+        <td class="item-link"><a href="https://www.gear4music.com/PA-DJ-and-Lighting/Behringer-Ultra-DI-DI100-Active-DI-Box/126" target="_blank">Gear4music</a></td>
+      </tr>
 
-  <!-- ───── ITEM 3 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">03</div>
-        <div>
-          <div class="section-title">DI box for keyboard signal cleanup</div>
-          <div class="section-blurb">Resolves the "Keys (Cut)" issue</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£35</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Behringer Ultra-DI DI100 + 1m TRS-XLR cable <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">DI100 active DI</div>
-          <div class="detail-cell-value"><strong>£30</strong> · Gear4music UK<br><a href="https://www.gear4music.com/PA-DJ-and-Lighting/Behringer-Ultra-DI-DI100-Active-DI-Box/126" target="_blank">View product →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">TRS-XLR 1m cable</div>
-          <div class="detail-cell-value"><strong>£5</strong> · Gear4music Essentials</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Bundled into main Gear4music order → arrives <strong>Tue 12 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Justification</div>
-          <div class="detail-cell-value">Active DI converts the keyboard's high-impedance unbalanced output into a clean balanced signal for the desk — resolves the routing issue Bolaji flagged.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">4</td>
+        <td>
+          <div class="item-title">Multicore stage snake (~15m, 8-channel)</div>
+          <div class="item-desc">SubZero 8-Channel Stage Box, 15m. Cleans up the cable run from the stage to the desk.</div>
+        </td>
+        <td class="item-price">£115</td>
+        <td class="item-link"><a href="https://www.gear4music.com/PA-DJ-and-Lighting/SubZero-8-Channel-Stage-Box-15m/1ZLK" target="_blank">Gear4music</a></td>
+      </tr>
 
-  <!-- ───── ITEM 4 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">04</div>
-        <div>
-          <div class="section-title">Multicore stage snake (~15m)</div>
-          <div class="section-blurb">Tidies stage cabling for visuals + reliability</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£115</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">SubZero 8 Channel Stage Box, 15m <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Price & Supplier</div>
-          <div class="detail-cell-value"><strong>£115</strong> · Gear4music UK<br><a href="https://www.gear4music.com/PA-DJ-and-Lighting/SubZero-8-Channel-Stage-Box-15m/1ZLK" target="_blank">View product →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Free standard delivery, next-working-day where possible → arrives <strong>Tue–Wed 12–13 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Justification</div>
-          <div class="detail-cell-value">8 channels covers a typical church band: 4 vocals + drum overheads + keys + 1 spare. Bundles all stage lines into a single tidy run to the desk.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">If 16ch genuinely needed</div>
-          <div class="detail-cell-value">Pulse 20-Way 16/4 XLR 15m at DY Pro Audio <strong>£150</strong> in stock, 3-working-day delivery → Wed–Thu 13–14 May</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">5</td>
+        <td>
+          <div class="item-title">XLR cables × 5 (15m each)</div>
+          <div class="item-desc">Gear4music Essentials 15m XLR microphone cables. Standard live cables for vocal and instrument mics.</div>
+        </td>
+        <td class="item-price">£55</td>
+        <td class="item-link"><a href="https://www.gear4music.com/G4M/Essentials-XLR-Microphone-Cable-15m/44V3" target="_blank">Gear4music</a></td>
+      </tr>
 
-  <!-- ───── ITEM 5 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">05</div>
-        <div>
-          <div class="section-title">XLR cables × 5 (15m each)</div>
-          <div class="section-blurb">Long-run mic cables</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£55</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Gear4music Essentials XLR Microphone Cable 15m × 5 <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Unit price</div>
-          <div class="detail-cell-value"><strong>£10.99 each</strong> · 3-year warranty</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Quantity & total</div>
-          <div class="detail-cell-value">5 × £10.99 = <strong>£54.95</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Same Gear4music order → arrives <strong>Tue 12 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Supplier link</div>
-          <div class="detail-cell-value"><a href="https://www.gear4music.com/G4M/Essentials-XLR-Microphone-Cable-15m/44V3" target="_blank">Gear4music Essentials XLR 15m →</a></div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">6</td>
+        <td>
+          <div class="item-title">Microphone stands × 6</div>
+          <div class="item-desc">Tiger MCA68-BK black boom mic stands. For vocals, instruments, and choir setup.</div>
+        </td>
+        <td class="item-price">£144</td>
+        <td class="item-link"><a href="https://www.amazon.co.uk/Tiger-Boom-Microphone-Stand-Black/dp/B005I57GMM" target="_blank">Amazon Prime</a></td>
+      </tr>
 
-  <!-- ───── ITEM 6 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">06</div>
-        <div>
-          <div class="section-title">Microphone stands × 6</div>
-          <div class="section-blurb">Boom stands for the larger anniversary band footprint</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£144</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Tiger MCA68-BK Boom Microphone Stand × 6 <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Unit price</div>
-          <div class="detail-cell-value"><strong>£23.99 each</strong> · 1-year warranty</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Quantity & total</div>
-          <div class="detail-cell-value">6 × £23.99 = <strong>£143.94</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Prime next-day → arrives <strong>Tue 12 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Supplier link</div>
-          <div class="detail-cell-value"><a href="https://www.amazon.co.uk/Tiger-Boom-Microphone-Stand-Black/dp/B005I57GMM" target="_blank">Tiger MCA68-BK on Amazon UK →</a></div>
-        </div>
-      </div>
-      <div class="alt">
-        <div class="alt-label">Deeper-saving alternative (deadline risk)</div>
-        <div class="alt-text">Facebook Marketplace Manchester / Cash Converters Manchester sometimes have used K&M / Stagg / Quik-Lok boom stands at £10–£15 each. Worth a Monday morning check; Tiger via Prime is the locked-in fallback.</div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">7</td>
+        <td>
+          <div class="item-title">Y-split / DI for backing tracks</div>
+          <div class="item-desc">Behringer DI20 stereo DI + Y-cable. Sends backing tracks cleanly to the desk on two channels.</div>
+        </td>
+        <td class="item-price">£38</td>
+        <td class="item-link"><a href="https://www.gear4music.com/us/en/PA-DJ-and-Lighting/Behringer-DI20-Ultra-DI-Box-Ex-Demo/1JJH" target="_blank">Gear4music</a></td>
+      </tr>
 
-  <!-- ───── ITEM 7 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">07</div>
-        <div>
-          <div class="section-title">Y-split / DI for backing tracks</div>
-          <div class="section-blurb">Phone/iPad/laptop → desk with isolation</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£38</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Behringer DI20 2-channel Ultra-DI + 3.5mm TRS Y-cable <span class="condition-badge cond-new">New (or Ex-Demo)</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">DI20 stereo DI</div>
-          <div class="detail-cell-value"><strong>£32 new</strong> or <strong>£25 Ex-Demo</strong> · Gear4music UK<br><a href="https://www.gear4music.com/us/en/PA-DJ-and-Lighting/Behringer-DI20-Ultra-DI-Box-Ex-Demo/1JJH" target="_blank">Ex-Demo listing →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Y-cable</div>
-          <div class="detail-cell-value"><strong>~£6</strong> · 3.5mm TRS to dual ¼" TS</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Bundled into Gear4music order → arrives <strong>Tue 12 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Cheaper alternative</div>
-          <div class="detail-cell-value">Plain 3.5mm TRS → dual XLR Y-cable from Amazon Prime <strong>£10–£15</strong>. No isolation/ground-lift — risk of hum from phone/laptop. If hum has been an issue historically, pay the extra for the DI20.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">8</td>
+        <td>
+          <div class="item-title">iPad (desk control, tracks, lyrics)</div>
+          <div class="item-desc">Refurbished iPad 7 32GB (Good condition) from musicMagpie. Used for digital desk control, track playback, lyric display.</div>
+        </td>
+        <td class="item-price">£94</td>
+        <td class="item-link"><a href="https://www.musicmagpie.co.uk/store/category/ipads-and-tablets/apple/ipad-7/" target="_blank">musicMagpie</a></td>
+      </tr>
 
-  <!-- ───── ITEM 8 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">08</div>
-        <div>
-          <div class="section-title">iPad (desk control / tracks / lyrics)</div>
-          <div class="section-blurb">Biggest single saving in the plan</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£94</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Apple iPad 7 (2019) 10.2" Wi-Fi 32GB · Good <span class="condition-badge cond-refurb">Refurbished</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Price & Supplier</div>
-          <div class="detail-cell-value"><strong>£94</strong> · musicMagpie<br><a href="https://www.musicmagpie.co.uk/store/category/ipads-and-tablets/apple/ipad-7/" target="_blank">View product →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Free Royal Mail 48hr tracked. Order Mon → arrives <strong>Wed 13 – Thu 14 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Condition & warranty</div>
-          <div class="detail-cell-value">90-point check, 12-month warranty, 14-day money-back. Good = cosmetic wear only, fully functional.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Compatibility</div>
-          <div class="detail-cell-value">Runs iPadOS 17 — supports Behringer X-Air, Mackie Master Fader, Allen & Heath MixingStation, ProPresenter Remote, OnSong</div>
-        </div>
-      </div>
-      <div class="caveat">
-        <div class="caveat-label">Caveat</div>
-        <div class="caveat-text">32GB is light if storing many backing tracks locally. 128GB variant at ~£119 still well under prior estimate. If iPad Pro + Apple Pencil needed, expect £200+.</div>
-      </div>
-    </div>
-  </div>
+      <tr class="dropped">
+        <td class="item-num">9</td>
+        <td>
+          <div class="item-title">FX pedal — Morayo (guitar)</div>
+          <div class="item-desc">Dropped — Morayo has a temporary pedal she is using.</div>
+        </td>
+        <td class="item-price">—</td>
+        <td class="item-link">—</td>
+      </tr>
 
-  <!-- ───── ITEM 9 ───── DROPPED -->
-  <div class="section dropped-section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">09</div>
-        <div>
-          <div class="section-title" style="text-decoration:line-through;color:var(--ink-4);">FX pedal — Morayo (guitar)</div>
-          <div class="section-blurb"><span class="condition-badge dropped-badge">Removed</span> Morayo now has a temporary pedal she is using</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price dropped">£0</div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">10</td>
+        <td>
+          <div class="item-title">Snare drum head</div>
+          <div class="item-desc">Remo Coated Ambassador 14" replacement snare head from Drum Central UK.</div>
+        </td>
+        <td class="item-price">£18</td>
+        <td class="item-link"><a href="https://www.drumcentral.co.uk/brands/remo/remo-ambassador/" target="_blank">Drum Central</a></td>
+      </tr>
 
-  <!-- ───── ITEM 10 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">10</div>
-        <div>
-          <div class="section-title">Snare drum head</div>
-          <div class="section-blurb">14" coated batter replacement</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£18</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Remo Coated Ambassador 14" (BA-0114-00) <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Price & Supplier</div>
-          <div class="detail-cell-value"><strong>£17.59</strong> · Drum Central UK<br><a href="https://www.drumcentral.co.uk/brands/remo/remo-ambassador/" target="_blank">View product →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">1–3 day Royal Mail / DPD → arrives <strong>Wed–Thu 13–14 May</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Fallback</div>
-          <div class="detail-cell-value">Amazon UK Prime ~£18–£22 next-day — switch to this if Drum Central can't confirm Friday delivery</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Condition</div>
-          <div class="detail-cell-value">New</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">11</td>
+        <td>
+          <div class="item-title">Consumables bundle</div>
+          <div class="item-desc">Stanley toolbox, masking tape 6-pack, gaffer tape, electrical tape, AA batteries, Dymo label maker. Argos M13 Click & Collect + Amazon Prime.</div>
+        </td>
+        <td class="item-price">£80</td>
+        <td class="item-link">Argos / Amazon</td>
+      </tr>
 
-  <!-- ───── ITEM 11 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">11</div>
-        <div>
-          <div class="section-title">Consumables bundle</div>
-          <div class="section-blurb">Toolbox, tapes, batteries, label maker</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£80</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Argos same-day collection + Amazon Prime <span class="condition-badge cond-new">New</span></div>
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Argos M13 same-day</div>
-          <div class="detail-cell-value">Stanley 16" toolbox <strong>£20</strong><br>Coral masking tape 6-pack <strong>£7</strong><br>Energizer AA-24 <strong>£13</strong><br>Dymo Omega Embosser <strong>£20</strong><br><strong>Subtotal £60</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Amazon Prime next-day</div>
-          <div class="detail-cell-value">Gorilla Tape Black 11m (gaffer) <strong>~£10</strong><br>PVC electrical tape 10-pack <strong>~£6</strong><br><strong>Subtotal £16</strong><br><em>Argos doesn't reliably stock gaffer/electrical tape</em></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Argos: Click & Collect Tue 12 May · Amazon: Prime next-day</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Stock note</div>
-          <div class="detail-cell-value">Check Argos product pages with M13 9EE before driving. Fallowfield Sainsbury's & Manchester Arndale are typical options; Trafford Centre as backup.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">12</td>
+        <td>
+          <div class="item-title">Shipping & misc buffer</div>
+          <div class="item-desc">Allowance for delivery across multiple suppliers and small last-minute items.</div>
+        </td>
+        <td class="item-price">£15</td>
+        <td class="item-link">—</td>
+      </tr>
 
-  <!-- ───── ITEM 12 ───── -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">12</div>
-        <div>
-          <div class="section-title">Shipping & misc buffer</div>
-          <div class="section-blurb">Postage on used items + expedited upgrades</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£15</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Buffer</div>
-          <div class="detail-cell-value"><strong>£15</strong> covers postage on any used eBay items + expedited shipping upgrades if needed.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Note</div>
-          <div class="detail-cell-value">Gear4music, Amazon Prime, and musicMagpie all offer free standard delivery. Reduced buffer reflects the FX pedal (only eBay-sourced item) being removed.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+      <tr>
+        <td class="item-num">13</td>
+        <td>
+          <div class="item-title">Wireless lapel mic for Pastor Shade</div>
+          <div class="item-desc">Sennheiser XSW 2-ME2-GB UHF wireless lavalier set. Bodypack + ME 2 omni mic + true-diversity receiver. In stock, 2-year warranty.</div>
+        </td>
+        <td class="item-price">£359</td>
+        <td class="item-link"><a href="https://www.andertons.co.uk/sennheiser-xsw-2-me2-gb-lavalier-set-inc-me-3" target="_blank">Andertons</a></td>
+      </tr>
 
-  <!-- ───── ITEM 13 ───── NEW: LAPEL MIC FOR PASTOR SHADE -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">13</div>
-        <div>
-          <div class="section-title">Wireless lapel microphone for Pastor Shade <span class="condition-badge cond-new" style="margin-left:8px;">New addition</span></div>
-          <div class="section-blurb">UHF wireless lavalier · explicitly requested by Pastor Shade · for preaching, livestream, and hands-free movement</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£359</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Sennheiser XSW 2-ME2-GB Wireless Lavalier Microphone Set — Andertons UK</div>
-      <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 16px;">Mid-tier UHF wireless lavalier system from Sennheiser — the standard church recommendation in this price band. Includes the ME 2 omnidirectional clip-on microphone, bodypack transmitter, rack-mountable true-diversity receiver, all cables and antennas. GB-band variant is the correct UK frequency licence. Automatic frequency management, robust metal housing, 12 compatible channels. The right call for a senior pastor's primary preaching mic — discreet, professional, durable.</p>
+      <tr>
+        <td class="item-num">14</td>
+        <td>
+          <div class="item-title">Logitech PTZ Pro 2 broadcast camera + tripod</div>
+          <div class="item-desc">Refurbished PTZ camera with 10x optical zoom, pan/tilt, 1080p, IR remote. Plus aluminium tripod from Amazon. Replaces phone-camera livestream.</div>
+        </td>
+        <td class="item-price">£205–£285</td>
+        <td class="item-link"><a href="https://www.backmarket.co.uk/en-gb/p/logitech-ptz-pro-2-webcam/6801aadf-6a11-4212-90ac-1ce4261bd2dc" target="_blank">Back Market</a><br><a href="https://www.amazon.co.uk/s?k=neewer+camera+tripod+aluminium" target="_blank">Tripod</a></td>
+      </tr>
 
-      <div style="background:white;border:2px solid #16A34A;border-radius:8px;padding:14px 16px;margin-bottom:16px;">
-        <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#16A34A;font-weight:700;margin-bottom:6px;">Recommended · Andertons UK</div>
-        <div style="font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);font-weight:500;margin-bottom:4px;">£359</div>
-        <div style="font-size:11px;color:var(--ink-3);margin-bottom:10px;">In stock · free UK delivery · 2-year Sennheiser warranty</div>
-        <div style="font-size:12px;color:var(--ink-2);line-height:1.5;">Andertons is the UK Sennheiser authorised dealer with the keenest pricing on this set. Stock confirmed in their listing as "In Stock". Standard next-working-day shipping for UK mainland orders before 4pm.</div>
-        <div style="margin-top:10px;"><a href="https://www.andertons.co.uk/sennheiser-xsw-2-me2-gb-lavalier-set-inc-me-3" target="_blank" style="color:#2563EB;font-size:12px;font-weight:600;">View at Andertons →</a></div>
-      </div>
+      <tr>
+        <td class="item-num">15</td>
+        <td>
+          <div class="item-title">Power kit — extension reel + USB-C chargers</div>
+          <div class="item-desc">SLx 10m 4-way heavy-duty extension reel + 2× Anker 543 (65W II) 4-port GaN chargers + 3× USB-C cables.</div>
+        </td>
+        <td class="item-price">£85–£105</td>
+        <td class="item-link"><a href="https://www.amazon.co.uk/Extension-Easy-Wind-Cassette-Thermal-Hi-Visibility/dp/B09PF4JFRT" target="_blank">Reel</a><br><a href="https://www.amazon.co.uk/Anker-Charger-4-Port-MacBook-Laptops-Black/dp/B098X7X251" target="_blank">Charger</a></td>
+      </tr>
 
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Why this mic specifically</div>
-          <div class="detail-cell-value">The XSW 2 sits in the worship-band sweet spot: significantly better RF reliability and audio quality than 2.4GHz consumer kits (no dropouts mid-sermon), but without the £600+ price tag of the EW-D pro range. The included ME 2 omni capsule is forgiving on clip placement — important when the pastor is mobile and gesturing during preaching.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Setup &amp; signal path</div>
-          <div class="detail-cell-value">Receiver plugs into the mixing desk via standard XLR. Bodypack clips to the pastor's belt/clothing; lavalier mic clips to the lapel/collar 15–20cm from the mouth. Quick-pair on infrared sync — Scott or Bolaji A can set it up in under 10 minutes once channels are scanned.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Order Mon 12 May → arrives <strong>Tue 13 May or Wed 14 May</strong>. Plenty of margin before Sunday. No reasonable risk of missing the deadline.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Long-term value</div>
-          <div class="detail-cell-value">Replaces handheld mic use during sermons. Pastor Shade gets hands-free movement and consistent audio levels on livestream. The XSW 2 line is built for 10+ years of regular Sunday use. Adds a permanent professional capability to the church.</div>
-        </div>
-      </div>
-      <div class="caveat">
-        <div class="caveat-label">Specification</div>
-        <div class="caveat-text">UHF GB band (606–630 MHz, OFCOM channel 38, licence-exempt for UK use) · ME 2 omnidirectional condenser lavalier · True diversity receiver in metal housing · 12 compatible channels · Automatic frequency management with infrared sync · 75m line-of-sight range · 8 hours runtime on 2× AA · Includes receiver, bodypack, ME 2 mic, 2× antennas, mains adapter, rackmount kit, batteries.</div>
-      </div>
+      <tr>
+        <td class="item-num">16</td>
+        <td>
+          <div class="item-title">Starlink Standard Gen 3 carry case</div>
+          <div class="item-desc">Hard EVA waterproof case with custom precision-cut foam for the Starlink kit. ToKismet, EAZUSE, or equivalent Starlink-specific brand.</div>
+        </td>
+        <td class="item-price">£60–£85</td>
+        <td class="item-link"><a href="https://www.amazon.co.uk/starlink-case/s?k=starlink+gen+3+case" target="_blank">Amazon UK</a></td>
+      </tr>
 
-      <div style="margin-top:18px;background:#EFF6FF;border:1px solid #BFDBFE;padding:12px 16px;border-radius:8px;font-size:12.5px;color:#1E3A8A;">
-        <strong>Alternative tiers considered:</strong> Shure BLX14/CVL at ~£250 (entry UHF — works fine but less robust RF, no automatic freq scan); Sennheiser EW-D ME2 at ~£600–£700 (pro tier — overkill for one-mic-one-preacher use case). XSW 2 is the right tier for Calvary's scale and budget.
-      </div>
-    </div>
-  </div>
-
-  <!-- ───── ITEM 14 ───── NEW: PTZ CAMERA -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">14</div>
-        <div>
-          <div class="section-title">Logitech PTZ Pro 2 broadcast camera (refurbished) <span class="condition-badge cond-new" style="margin-left:8px;">New addition</span></div>
-          <div class="section-blurb">10x optical zoom · pan/tilt · 1080p · replaces phone-camera setup for livestream</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£205–£285</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Logitech PTZ Pro 2 (refurbished) — Back Market UK · plus NEEWER aluminium tripod</div>
-      <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 16px;">Pan/tilt/zoom USB broadcast camera with 10x optical zoom, 90° wide field of view, 1080p HD, remote control, and standard tripod thread. Replaces the phone camera currently used for livestream. Plugs into Scott's laptop via USB, runs in OBS as a standard camera source. Same camera used by countless church livestream setups in this price band. New retail £361+ on PriceSpy UK; refurbished via Back Market significantly cheaper with a 12-month warranty.</p>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
-        <div style="background:white;border:2px solid #16A34A;border-radius:8px;padding:14px 16px;">
-          <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#16A34A;font-weight:700;margin-bottom:6px;">Camera · Back Market</div>
-          <div style="font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);font-weight:500;margin-bottom:4px;">£180–£250</div>
-          <div style="font-size:11px;color:var(--ink-3);margin-bottom:10px;">Refurbished · 12-month warranty · 30-day returns</div>
-          <div style="font-size:12px;color:var(--ink-2);line-height:1.5;">Professionally refurbished by Back Market's verified sellers. Condition grades range Fair / Good / Excellent — pick Good or Excellent for a Sunday-deploy unit. Confirm exact delivery date is by Fri 15 May before placing the order.</div>
-          <div style="margin-top:10px;"><a href="https://www.backmarket.co.uk/en-gb/p/logitech-ptz-pro-2-webcam/6801aadf-6a11-4212-90ac-1ce4261bd2dc" target="_blank" style="color:#2563EB;font-size:12px;font-weight:600;">View on Back Market →</a></div>
-        </div>
-        <div style="background:white;border:1px solid #E2E8F0;border-radius:8px;padding:14px 16px;">
-          <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-3);font-weight:700;margin-bottom:6px;">Tripod · Amazon UK Prime</div>
-          <div style="font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);font-weight:500;margin-bottom:4px;">£25–£35</div>
-          <div style="font-size:11px;color:var(--ink-3);margin-bottom:10px;">Aluminium, 1.5m+ extension, fluid head</div>
-          <div style="font-size:12px;color:var(--ink-2);line-height:1.5;">NEEWER, K&amp;F Concept, or UBeesize aluminium tripod with 1/4-20 thread. Camera body is 580g — any standard photography tripod handles this with room to spare. Prime next-day for Tuesday arrival.</div>
-          <div style="margin-top:10px;"><a href="https://www.amazon.co.uk/s?k=neewer+camera+tripod+aluminium" target="_blank" style="color:#2563EB;font-size:12px;font-weight:600;">Browse Amazon UK Prime →</a></div>
-        </div>
-      </div>
-
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">Fallback if Back Market delivery slips</div>
-          <div class="detail-cell-value">Amazon UK Renewed has the PTZ Pro 2 at £219.99 with Prime guaranteed next-day and 1-year Amazon Renewed Guarantee. Same camera, slightly higher price, lower delivery risk. <a href="https://www.amazon.co.uk/Logitech-PTZ-Video-Conference-System/dp/B06Y472LYT" target="_blank">View on Amazon UK Renewed</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Software &amp; control</div>
-          <div class="detail-cell-value">USB plug-and-play to Scott's laptop. Recognised natively in OBS Studio as a camera source. Pan/tilt/zoom controlled via the included IR remote or Logitech's free CameraSettings software for preset programming.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Setup time before Sunday</div>
-          <div class="detail-cell-value"><strong>Critical:</strong> needs 2–3 hours of setup before Sunday — OBS source config, exposure/white balance under stage lights, programmed preset positions (wide / preacher / band), driver checks. Ideally Sat 16 May with Scott present. <strong>If no setup time → fall back to phone for Sunday, deploy PTZ properly the following week.</strong></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Use case</div>
-          <div class="detail-cell-value">Replaces phone-camera setup that has caused recurring framing, charger-cable, and battery issues every Sunday. Real broadcast capability: tight preacher shot, wide worship shot, smooth zooms during sermon emphasis. Permanent media infrastructure asset that holds value for 5+ years.</div>
-        </div>
-      </div>
-      <div class="caveat">
-        <div class="caveat-label">Specification</div>
-        <div class="caveat-text">1080p HD at 30fps · 10x optical zoom · 90° diagonal field of view · 260° pan, 130° tilt motorised with IR remote · USB 2.0 / 3.0 plug-and-play · 3 programmable preset positions via remote · Logitech-manufactured optics · standard 1/4-20 tripod thread · 580g camera body · originally retailed £400–£500 new.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ───── ITEM 15 ───── EXTENSION REEL + USB-C CHARGERS -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">15</div>
-        <div>
-          <div class="section-title">10m extension reel + 2× USB-C multi-port chargers + cables <span class="condition-badge cond-new" style="margin-left:8px;">New addition</span></div>
-          <div class="section-blurb">Reliable power for the platform · ends the perennial "where's a plug" Sunday-morning scramble</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£85–£105</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">SLx 10m 4-socket reel + 2× Anker 543 (65W II) 4-port GaN chargers + 3× USB-C cables</div>
-      <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 16px;">Practical infrastructure for the platform. The 4-way reel ends the recurring problem of needing more sockets than the wall provides during service setup. The 65W GaN chargers fast-charge laptops, iPads, and phones simultaneously — covering the streaming phone, OBS laptop, Pastor Shade's iPad, and a spare. All Amazon Prime, all next-day.</p>
-
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">10m 4-way extension reel</div>
-          <div class="detail-cell-value"><strong>£30</strong> · Amazon UK Prime<br>SLx Heavy Duty 10m 4-socket cable reel, 13A fused UK plug, thermal cut-out safety. Wind-up drum design — rolls up neatly after each service rather than getting tangled. Heavy-duty rated for 3,000W loaded.<br><a href="https://www.amazon.co.uk/Extension-Easy-Wind-Cassette-Thermal-Hi-Visibility/dp/B09PF4JFRT" target="_blank">View on Amazon UK →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">2× USB-C multi-port chargers</div>
-          <div class="detail-cell-value"><strong>£30 × 2 = £60</strong> · Amazon UK Prime<br>Anker 543 Charger (65W II) — 4-port GaN charger with 2× USB-C (45W + 20W) and 2× USB-A. Fast-charges MacBook Air, iPad Pro 12.9", iPhone, and a fourth device simultaneously. 18-month Anker warranty. GaN tech runs cool under load.<br><a href="https://www.amazon.co.uk/Anker-Charger-4-Port-MacBook-Laptops-Black/dp/B098X7X251" target="_blank">View on Amazon UK →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">3× USB-C cables</div>
-          <div class="detail-cell-value"><strong>£12–£18</strong> · Amazon UK Prime<br>Anker or Amazon Basics 3-pack USB-C to USB-C 1m cables, 60W rated. Sufficient for the streaming phone, Pastor Shade's iPad, OBS laptop. Bundles available around £15.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Why this matters</div>
-          <div class="detail-cell-value">The current setup relies on whatever cables and chargers people happen to bring on the day. The phone-streaming USB-C charger has been a recurring failure point in the weekly media briefings. Owning a reliable charging-and-power kit, kept with the media gear, removes a weekly source of pre-service stress.</div>
-        </div>
-      </div>
-      <div class="caveat">
-        <div class="caveat-label">Why two chargers, not one</div>
-        <div class="caveat-text">Redundancy: if one fails or is being used elsewhere, the service doesn't lose its streaming charging path. Also lets the streaming phone and the preacher's iPad charge simultaneously without sharing one charger across two locations on the platform. £30 well spent.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ───── ITEM 16 ───── STARLINK CASE -->
-  <div class="section">
-    <div class="section-head">
-      <div class="section-head-left">
-        <div class="section-num">16</div>
-        <div>
-          <div class="section-title">Starlink Standard Gen 3 carry case <span class="condition-badge cond-new" style="margin-left:8px;">New addition</span></div>
-          <div class="section-blurb">Protective hard case for the recently acquired Starlink kit · storage and transport</div>
-        </div>
-      </div>
-      <div class="section-right">
-        <div class="section-price">£60–£85</div>
-      </div>
-    </div>
-    <div class="detail">
-      <div class="product-name">Hard EVA waterproof case with custom foam — Amazon UK Prime (third-party Starlink-specific brands)</div>
-      <p style="font-size:12.5px;color:var(--ink-2);margin:0 0 16px;">Starlink doesn't make an official case — this is a third-party category. The Standard Gen 3 kit (dish, kickstand, router, PSU, cables) needs proper protection for storage and transport. The original Starlink retail box is not engineered for ongoing storage or moving the kit around — it's packaging. Amazon UK has several Starlink-specific hard EVA cases with custom precision-cut foam at £60–£85, all Prime next-day. Brands worth shortlisting at this tier: ToKismet, EAZUSE, LuxiSync, Mwin — all purpose-built for the Gen 3 form factor.</p>
-
-      <div class="detail-grid">
-        <div class="detail-cell">
-          <div class="detail-cell-label">What to look for</div>
-          <div class="detail-cell-value">Hard EVA shell · custom precision-cut foam fitting the Gen 3 dish (26×30cm), router, PSU, kickstand, cables · IP-rated waterproof seal · sturdy carry handle. £60–£85 hits the right point for a church use case; the £180+ Pelican-style specialist cases are overkill unless the kit is travelling regularly.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Recommended brands on Amazon UK</div>
-          <div class="detail-cell-value"><strong>ToKismet</strong> (most-reviewed, Starlink-specialist brand), <strong>EAZUSE</strong>, <strong>LuxiSync</strong>, <strong>Mwin</strong>. Pick whichever shows in-stock and Prime next-day at order time. All purpose-designed for the Gen 3 form factor.<br><a href="https://www.amazon.co.uk/starlink-case/s?k=starlink+gen+3+case" target="_blank">Browse Amazon UK selection →</a></div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Delivery</div>
-          <div class="detail-cell-value">Amazon UK Prime next-day → arrives Tue 13 May. No deadline risk.</div>
-        </div>
-        <div class="detail-cell">
-          <div class="detail-cell-label">Premium alternative</div>
-          <div class="detail-cell-value"><strong>starlinktravelcase.com</strong> — UK specialist supplier to Thames River Police, North Wales Police, UK Fire Brigades. Military-grade IP67 Pelican-style hard case with custom EVA, 1–3 day UK delivery. £180+. Worth knowing about but not justified for current church use case.</div>
-        </div>
-      </div>
-      <div class="caveat">
-        <div class="caveat-label">Specification (target case)</div>
-        <div class="caveat-text">Hard EVA shell · Precision-cut foam interior fitting Starlink Standard Gen 3 dish, kickstand, router, PSU, all included cables · IPX-rated water resistance (IP54 minimum, IP67 preferred) · Reinforced carry handle, often also shoulder strap · Approximate external dimensions 67×48×13cm.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ───── ACTION PLAN ───── -->
-  <div class="action-plan">
-    <h2>Action Plan</h2>
-
-    <div class="action-day">
-      <div class="action-day-title">Today — Mon 11 May 2026</div>
-      <ol>
-        <li><strong>musicMagpie iPad 7 32GB Good (£94)</strong> — order before mid-afternoon for same-day dispatch on 48hr Royal Mail tracked.</li>
-        <li><strong>Single consolidated Gear4music UK order (~£375)</strong> — Behringer PM1, DI100 + TRS-XLR cable, DI20 (+ Y-cable), SubZero 8-ch 15m Stage Box, 5× XLR 15m Essentials, Sony MDR-7506. Place before the daily cut-off for next-working-day.</li>
-        <li><strong>Single consolidated Amazon UK Prime order (~£360–£405)</strong> — KZ ZS10 Pro, 6× Tiger MCA68-BK boom mic stands, Gorilla Tape, PVC electrical tape, optional Remo head if Drum Central can't confirm Fri delivery, <strong>SLx 10m 4-way extension reel, 2× Anker 543 65W GaN chargers, 3× USB-C cables (item 15)</strong>, NEEWER tripod for PTZ camera, <strong>Starlink Gen 3 hard EVA case — ToKismet or equivalent (item 16)</strong>.</li>
-        <li><strong>Sennheiser XSW 2-ME2-GB lapel mic (£359)</strong> — order today at Andertons for Tue/Wed delivery. In stock, free UK delivery, 2-year Sennheiser warranty. No risk of missing Friday.</li>
-        <li><strong>Logitech PTZ Pro 2 — Back Market (£180–£250) + NEEWER tripod Amazon Prime (£25–£35)</strong> — Check Back Market exact price and confirmed delivery date before ordering; pick Good or Excellent condition only. If Back Market delivery isn't confirmed by Fri 15 May, fall back to Amazon UK Renewed at £219.99 Prime. Block 2–3 hours on Sat 16 May with Scott to configure OBS source, exposure under stage lighting, and program 3 preset positions (wide / preacher / band). If Saturday setup isn't possible → use phone for anniversary Sunday and deploy PTZ the following week.</li>
-      </ol>
-    </div>
-
-    <div class="action-day">
-      <div class="action-day-title">Tomorrow — Tue 12 May 2026</div>
-      <ol>
-        <li><strong>Argos Click & Collect (£60)</strong> — Manchester store with M13 9EE stock. Collect Stanley toolbox, Coral masking tape 6-pack, Energizer AA-24, Dymo Omega Embosser.</li>
-        <li><strong>Verify Gear4music + Amazon deliveries arrive as expected.</strong></li>
-      </ol>
-    </div>
-
-    <div class="action-day">
-      <div class="action-day-title">Wed–Thu — 13–14 May 2026</div>
-      <ol>
-        <li>Receive musicMagpie iPad (48hr Royal Mail tracked).</li>
-        <li>Receive Drum Central Remo head (1–3 day delivery) — or fall back to Amazon Prime.</li>
-      </ol>
-    </div>
-
-    <div class="action-day">
-      <div class="action-day-title">Thresholds that change the plan</div>
-      <ol>
-        <li><strong>musicMagpie iPad 7 32GB Good out of stock</strong> → 128GB Good ~£119, or iPad 6 (2018) Good.</li>
-        <li><strong>Gear4music SubZero shows dispatch later than Wed 13 May</strong> → switch to W Audio XLR Multicore 16-ch 15m at UKDJ.co.uk £89 (24hr dispatch).</li>
-        <li><strong>Drum Central out of stock or unclear delivery</strong> → Amazon UK Prime ~£20–£22 next-day.</li>
-      </ol>
-    </div>
-  </div>
+    </tbody>
+  </table>
 
   <div class="footer">
     Calvary Hephzibah Full Gospel Church — Global Harvest International (Charity no. 1135709)<br>
-    Anniversary 2026 · Gear Sourcing Report · v1 · Last updated 11 May 2026<br>
-    Companion to <a href="anniversary-finance-2026.html" style="color:var(--blue);">Anniversary Finance Compilation</a> · Prepared by Bolaji Olatoye, Chief of Staff
+    Anniversary 2026 · Gear Sourcing · Last updated 12 May 2026<br>
+    Companion to <a href="anniversary-finance-2026.html">Anniversary Finance Compilation</a> · Prepared by Bolaji Olatoye
   </div>
 
 </div>
