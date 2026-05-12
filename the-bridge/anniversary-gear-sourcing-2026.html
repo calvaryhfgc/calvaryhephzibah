@@ -3,258 +3,675 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Gear Sourcing — Anniversary 2026 | The Bridge</title>
+<title>Purchase Order — Anniversary 2026 Gear | The Bridge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
 :root{
   --ink:#0F172A; --ink-2:#334155; --ink-3:#64748B; --ink-4:#94A3B8;
-  --blue:#2563EB; --green:#16A34A; --bg:#F8FAFC; --white:#FFFFFF;
-  --border:#E2E8F0; --r:10px;
+  --blue:#2563EB; --green:#16A34A; --amber:#D97706; --red:#DC2626;
+  --bg:#F8FAFC; --white:#FFFFFF;
+  --border:#E2E8F0; --border-strong:#CBD5E1; --r:10px;
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.55;}
-.wrap{max-width:880px;margin:0 auto;padding:28px 20px 60px;}
+.wrap{max-width:960px;margin:0 auto;padding:28px 20px 60px;}
 
-.hdr{background:linear-gradient(135deg,#0369A1 0%,#075985 100%);color:white;border-radius:12px;padding:24px 28px;margin-bottom:24px;}
+.hdr{background:linear-gradient(135deg,#0369A1 0%,#075985 100%);color:white;border-radius:12px;padding:24px 28px;margin-bottom:20px;}
 .hdr-eyebrow{font-size:10px;letter-spacing:1.8px;text-transform:uppercase;opacity:0.85;margin-bottom:6px;font-weight:600;}
 .hdr h1{font-family:'Instrument Serif',serif;font-size:30px;line-height:1.1;margin-bottom:6px;font-weight:400;}
 .hdr-sub{font-size:13px;opacity:0.92;}
-.hdr-meta{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;font-size:11.5px;opacity:0.85;}
-.hdr-meta span strong{color:white;font-weight:600;}
+.hdr-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:18px;font-size:12px;}
+.hdr-meta-item{background:rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;}
+.hdr-meta-label{font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;opacity:0.75;font-weight:600;margin-bottom:3px;}
+.hdr-meta-value{font-size:13.5px;font-weight:600;}
 
-.total-bar{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
-.total-bar .label{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;}
-.total-bar .num{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);}
+.purpose{background:#FFFBEB;border:1px solid #FCD34D;border-radius:var(--r);padding:14px 18px;margin-bottom:20px;font-size:13px;color:#78350F;line-height:1.6;}
+.purpose strong{color:#78350F;}
 
-table.items{width:100%;border-collapse:collapse;background:var(--white);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-table.items th{text-align:left;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;padding:12px 14px;background:#F1F5F9;border-bottom:1px solid var(--border);}
-table.items td{padding:14px;border-bottom:1px solid #F1F5F9;vertical-align:top;font-size:13.5px;}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px;}
+.scard{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;}
+.scard.grand{background:var(--ink);color:white;border:none;}
+.scard-label{font-size:10px;letter-spacing:1.3px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:4px;}
+.scard.grand .scard-label{color:rgba(255,255,255,0.7);}
+.scard-num{font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink);line-height:1.1;}
+.scard.grand .scard-num{color:white;}
+.scard-sub{font-size:11px;color:var(--ink-3);margin-top:3px;}
+.scard.grand .scard-sub{color:rgba(255,255,255,0.6);}
+
+.supplier{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:18px;overflow:hidden;}
+.supplier-hdr{background:#F1F5F9;padding:12px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.supplier-name{font-weight:600;font-size:15px;color:var(--ink);}
+.supplier-name .supplier-tag{display:inline-block;background:white;border:1px solid var(--border-strong);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:6px;color:var(--ink-3);font-weight:600;margin-left:8px;vertical-align:middle;}
+.supplier-meta{font-size:12px;color:var(--ink-3);}
+.supplier-meta strong{color:var(--ink);font-weight:600;}
+.supplier-total{font-family:'Instrument Serif',serif;font-size:18px;color:var(--green);font-weight:500;}
+
+table.items{width:100%;border-collapse:collapse;font-size:13px;}
+table.items thead th{text-align:left;font-size:9.5px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:700;padding:9px 14px;background:#F8FAFC;border-bottom:1px solid var(--border);}
+table.items thead th.num{text-align:right;}
+table.items thead th.center{text-align:center;}
+table.items td{padding:13px 14px;border-bottom:1px solid #F1F5F9;vertical-align:top;}
 table.items tr:last-child td{border-bottom:none;}
-table.items tr.dropped td{opacity:0.45;}
-table.items tr.dropped .item-title{text-decoration:line-through;}
-.item-num{font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink-4);width:36px;}
-.item-title{font-weight:600;color:var(--ink);margin-bottom:3px;}
-.item-desc{color:var(--ink-2);font-size:12.5px;line-height:1.5;}
-.item-price{font-family:'Instrument Serif',serif;font-size:17px;color:var(--green);font-weight:500;white-space:nowrap;text-align:right;width:90px;}
-.item-link{width:90px;text-align:right;}
-.item-link a{color:var(--blue);text-decoration:none;font-size:12.5px;font-weight:600;white-space:nowrap;}
-.item-link a:hover{text-decoration:underline;}
+.item-row-num{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-3);width:34px;font-weight:500;}
+.item-name{font-weight:600;color:var(--ink);font-size:13.5px;margin-bottom:2px;}
+.item-sku{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-3);}
+.item-note{font-size:11.5px;color:var(--ink-3);margin-top:4px;font-style:italic;}
+.qty{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);font-weight:600;text-align:center;width:50px;}
+.unit-price,.line-total{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);text-align:right;white-space:nowrap;}
+.line-total{font-weight:600;color:var(--green);}
+.unit-price{width:90px;}
+.line-total-col{width:90px;}
+.link-col{width:95px;text-align:right;}
+.link-col a{color:var(--blue);text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;display:inline-block;}
+.link-col a:hover{text-decoration:underline;}
+.status-col{width:30px;text-align:center;}
+.status-box{display:inline-block;width:18px;height:18px;border:1.5px solid var(--border-strong);border-radius:4px;}
+
+.price-tbc{color:var(--amber)!important;font-weight:600;}
+.price-tbc::after{content:" ⚠";font-size:11px;}
+
+.flag{display:inline-block;font-size:10px;letter-spacing:0.6px;text-transform:uppercase;padding:2px 7px;border-radius:4px;font-weight:700;vertical-align:middle;margin-left:6px;}
+.flag-tbc{background:#FEF3C7;color:#92400E;}
+.flag-firm{background:#D1FAE5;color:#065F46;}
 
 @media (max-width:680px){
-  table.items, table.items thead, table.items tbody, table.items tr, table.items td{display:block;}
   table.items thead{display:none;}
-  table.items tr{padding:12px 14px;border-bottom:1px solid #F1F5F9;}
-  table.items td{padding:2px 0;border:none;}
-  .item-num{display:inline;font-size:14px;}
-  .item-title{display:inline;margin-left:6px;}
-  .item-price,.item-link{display:inline-block;width:auto;text-align:left;margin-right:14px;margin-top:6px;}
+  table.items tr{display:block;padding:12px 14px;border-bottom:1px solid var(--border);}
+  table.items td{display:block;padding:2px 0;border:none;text-align:left!important;width:auto!important;}
+  .item-row-num{display:inline;margin-right:8px;}
+  .qty::before{content:"Qty: ";color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:1px;}
+  .unit-price::before{content:"Unit: ";color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:1px;}
+  .line-total::before{content:"Line total: ";color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:1px;}
 }
 
 .footer{margin-top:28px;text-align:center;font-size:11.5px;color:var(--ink-4);}
 .footer a{color:var(--blue);text-decoration:none;}
+.legend{background:white;border:1px solid var(--border);border-radius:var(--r);padding:12px 18px;margin-bottom:20px;font-size:12px;color:var(--ink-2);}
+.legend strong{color:var(--ink);}
+.legend-row{display:flex;gap:18px;flex-wrap:wrap;}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="hdr">
-    <div class="hdr-eyebrow">Calvary Hephzibah · Gear Sourcing</div>
-    <h1>Anniversary 2026 — Gear List</h1>
-    <div class="hdr-sub">Sourced suppliers, prices, and product links. All deliverable to M13 9EE by Friday 15 May 2026.</div>
+    <div class="hdr-eyebrow">Calvary Hephzibah · Purchase Order</div>
+    <h1>Anniversary 2026 — Gear Purchase Order</h1>
+    <div class="hdr-sub">Single source of truth for the finance team. One row = one product, one quantity, one direct link. No interpretation required.</div>
     <div class="hdr-meta">
-      <span><strong>Order date:</strong> Mon 11 May 2026</span>
-      <span><strong>In-hand:</strong> Fri 15 May 2026</span>
-      <span><strong>Postcode:</strong> M13 9EE</span>
+      <div class="hdr-meta-item">
+        <div class="hdr-meta-label">Order Date</div>
+        <div class="hdr-meta-value">Mon 12 May 2026</div>
+      </div>
+      <div class="hdr-meta-item">
+        <div class="hdr-meta-label">Required In-Hand</div>
+        <div class="hdr-meta-value">Fri 15 May 2026</div>
+      </div>
+      <div class="hdr-meta-item">
+        <div class="hdr-meta-label">Ship-To</div>
+        <div class="hdr-meta-value">M13 9EE, Manchester</div>
+      </div>
+      <div class="hdr-meta-item">
+        <div class="hdr-meta-label">Spec Authority</div>
+        <div class="hdr-meta-value">Bolaji Adebanjo</div>
+      </div>
+      <div class="hdr-meta-item">
+        <div class="hdr-meta-label">Approver</div>
+        <div class="hdr-meta-value">Pastor Shade Olatoye</div>
+      </div>
+      <div class="hdr-meta-item">
+        <div class="hdr-meta-label">PO Owner</div>
+        <div class="hdr-meta-value">Bolaji Olatoye, CoS</div>
+      </div>
     </div>
   </div>
 
-  <div class="total-bar">
+  <div class="purpose">
+    <strong>How to use this document.</strong> Each row below specifies one product at one quantity. Click the link to go directly to that exact product page. Buy the quantity stated in the Qty column. Multiply by the Unit Price to get the Line Total, which is pre-calculated. Place one order per supplier section (suppliers are grouped). Items marked <strong>⚠ PRICE TBC</strong> have an estimated cost — confirm the actual price at supplier checkout and update this document. If anything is unclear, contact Bolaji Olatoye <strong>before</strong> placing the order.
+  </div>
+
+  <div class="legend">
+    <div class="legend-row">
+      <span><strong>⚠ PRICE TBC</strong> = unit price needs confirming at supplier checkout</span>
+      <span><strong>☐</strong> = status checkbox (Pending / Ordered / Received)</span>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="scard">
+      <div class="scard-label">Confirmed Line Items</div>
+      <div class="scard-num">£1,158.90</div>
+      <div class="scard-sub">Prices verified at supplier · 13 lines</div>
+    </div>
+    <div class="scard">
+      <div class="scard-label">Price TBC Items</div>
+      <div class="scard-num">£875.00</div>
+      <div class="scard-sub">Mid-point estimate · 9 lines</div>
+    </div>
+    <div class="scard">
+      <div class="scard-label">Suppliers</div>
+      <div class="scard-num">8</div>
+      <div class="scard-sub">Place 8 separate orders</div>
+    </div>
+    <div class="scard grand">
+      <div class="scard-label">Grand Total (est.)</div>
+      <div class="scard-num">£2,033.90</div>
+      <div class="scard-sub">Excl. shipping where free</div>
+    </div>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 1 — ANDERTONS ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">Andertons UK <span class="supplier-tag">1 order</span></div>
+        <div class="supplier-meta">Free UK delivery · 2-year Sennheiser warranty · <a href="https://www.andertons.co.uk" target="_blank" style="color:var(--blue);text-decoration:none;">andertons.co.uk</a></div>
+      </div>
+      <div class="supplier-total">£359.00</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">1.1</td>
+          <td>
+            <div class="item-name">Sennheiser XSW 2-ME2-GB Wireless Lavalier Set <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Sennheiser XSW 2-ME2-GB · UHF GB-band · ME 2 omni mic + bodypack + true-diversity receiver + antennas + PSU + rackmount</div>
+            <div class="item-note">For Pastor Shade — primary preaching mic</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price">£359.00</td>
+          <td class="line-total">£359.00</td>
+          <td class="link-col"><a href="https://www.andertons.co.uk/sennheiser-xsw-2-me2-gb-lavalier-set-inc-me-3" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 2 — THOMANN UK ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">Thomann UK <span class="supplier-tag">1 order</span></div>
+        <div class="supplier-meta">Free UK shipping over £149 · 3-year Thomann warranty · <a href="https://www.thomann.co.uk" target="_blank" style="color:var(--blue);text-decoration:none;">thomann.co.uk</a></div>
+      </div>
+      <div class="supplier-total">£360.90</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">2.1</td>
+          <td>
+            <div class="item-name">Behringer HA8000 V2 — 8-channel headphone amplifier <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Behringer HA8000 V2 · 1U rackmount · 8 stereo channels · Thomann item 405451</div>
+            <div class="item-note">Core of the wired IEM rack for multi-singer monitoring</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price">£105.00</td>
+          <td class="line-total">£105.00</td>
+          <td class="link-col"><a href="https://www.thomann.co.uk/behringer_ha8000_v2.htm" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">2.2</td>
+          <td>
+            <div class="item-name">Kirlin Y-362PRL-06 BK — Y-patch cable <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Kirlin Y-362PRL-06 BK · 1.8m · 1× 3.5mm stereo jack → 2× 6.3mm jack</div>
+            <div class="item-note">Backing tracks Y-split (used with item 2.3)</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price">£6.90</td>
+          <td class="line-total">£6.90</td>
+          <td class="link-col"><a href="https://www.thomann.co.uk/kirlin_y_362prl_06_bk.htm" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">2.3</td>
+          <td>
+            <div class="item-name">Klark Teknik DI22P — passive stereo DI box <span class="flag flag-tbc">Price TBC</span></div>
+            <div class="item-sku">SKU: Klark Teknik DI22P · MIDAS transformers · stereo input ¼"/⅛"TRS/RCA</div>
+            <div class="item-note">Confirm £ at Thomann checkout · MSRP ~£90</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price price-tbc">£90.00</td>
+          <td class="line-total">£90.00</td>
+          <td class="link-col"><a href="https://www.thomann.co.uk/klark_teknik_di_22p.htm" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">2.4</td>
+          <td>
+            <div class="item-name">Pro Snake TPM 20 — 20m XLR microphone cable (blue) <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: pro snake TPM 200 CC Micro Cable deepbl · 20m · Neutrik connectors</div>
+            <div class="item-note">For long stage-to-desk runs</div>
+          </td>
+          <td class="qty">5</td>
+          <td class="unit-price">£18.00</td>
+          <td class="line-total">£90.00</td>
+          <td class="link-col"><a href="https://www.thomann.co.uk/pro_snake_tpm_200_cc_micro_cable_deepbl.htm" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">2.5</td>
+          <td>
+            <div class="item-name">Pro Snake TPM 5 — 5m XLR microphone cable (green) <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: pro snake TPM 50 CC Micro Cable green · 5m · Neutrik connectors</div>
+            <div class="item-note">For short instrument and BV runs</div>
+          </td>
+          <td class="qty">10</td>
+          <td class="unit-price">£6.90</td>
+          <td class="line-total">£69.00</td>
+          <td class="link-col"><a href="https://www.thomann.co.uk/pro_snake_tpm_50_cc_micro_cable_green.htm" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 3 — BAX-SHOP UK ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">Bax-Shop UK <span class="supplier-tag">1 order</span></div>
+        <div class="supplier-meta">2-day delivery · 3-year warranty · <a href="https://www.bax-shop.co.uk" target="_blank" style="color:var(--blue);text-decoration:none;">bax-shop.co.uk</a></div>
+      </div>
+      <div class="supplier-total">£230.00</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">3.1</td>
+          <td>
+            <div class="item-name">Devine SND-30-24-8 — 24-way XLR stage snake reel, 30m <span class="flag flag-tbc">Price TBC</span></div>
+            <div class="item-sku">SKU: Devine SND-30-24-8 · 24-in/8-out · 30m · reel-mounted on wheels</div>
+            <div class="item-note">Confirm £ at Bax-Shop checkout · estimated £200–£260, midpoint £230</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price price-tbc">£230.00</td>
+          <td class="line-total">£230.00</td>
+          <td class="link-col"><a href="https://www.bax-shop.co.uk/stage-box/devine-snd-30-24-8-24-way-xlr-stage-snake-reel-30m" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 4 — CPC FARNELL ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">CPC Farnell <span class="supplier-tag">1 order</span></div>
+        <div class="supplier-meta">Trade supplier · UK delivery · <a href="https://cpc.farnell.com" target="_blank" style="color:var(--blue);text-decoration:none;">cpc.farnell.com</a></div>
+      </div>
+      <div class="supplier-total">£175.00</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">4.1</td>
+          <td>
+            <div class="item-name">Pulse PLS00040 — heavy-duty boom microphone stand <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Pulse PLS00040 · CPC order code ST01600 · adjustable boom 520–920mm · height 100–1710mm</div>
+            <div class="item-note">For vocals, instruments, choir, and preaching positions</div>
+          </td>
+          <td class="qty">7</td>
+          <td class="unit-price">£25.00</td>
+          <td class="line-total">£175.00</td>
+          <td class="link-col"><a href="https://cpc.farnell.com/pulse/pls00040/microphone-stand-with-ext-boom/dp/ST01600" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 5 — AMAZON UK ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">Amazon UK (Prime) <span class="supplier-tag">1 consolidated order</span></div>
+        <div class="supplier-meta">Next-day Prime delivery · place as a single basket order · <a href="https://www.amazon.co.uk" target="_blank" style="color:var(--blue);text-decoration:none;">amazon.co.uk</a></div>
+      </div>
+      <div class="supplier-total">£540.00</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">5.1</td>
+          <td>
+            <div class="item-name">Wired IEMs — model per Bolaji A's link <span class="flag flag-tbc">Confirm SKU</span></div>
+            <div class="item-sku">SKU: open Bolaji A's link to confirm exact product before ordering</div>
+            <div class="item-note">5× units · estimated £15 each · for HA8000 V2 monitoring feed (used with item 2.1)</div>
+          </td>
+          <td class="qty">5</td>
+          <td class="unit-price price-tbc">£15.00</td>
+          <td class="line-total">£75.00</td>
+          <td class="link-col"><a href="https://amzn.eu/d/0jaQ79JG" target="_blank">Open link →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.2</td>
+          <td>
+            <div class="item-name">¼" Female to XLR adapter cable <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Amazon B01K51SAMI · 6.35mm female to XLR balanced patch</div>
+            <div class="item-note">2× units · for IEM rack adapters into HA8000 V2</div>
+          </td>
+          <td class="qty">2</td>
+          <td class="unit-price">£15.00</td>
+          <td class="line-total">£30.00</td>
+          <td class="link-col"><a href="https://www.amazon.co.uk/Female-6-35mm-Stereo-Balanced-Patch/dp/B01K51SAMI/" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.3</td>
+          <td>
+            <div class="item-name">TRS patch leads — per Bolaji A's link <span class="flag flag-tbc">Confirm SKU</span></div>
+            <div class="item-sku">SKU: open Bolaji A's link to confirm exact product before ordering</div>
+            <div class="item-note">5× units · estimated £6 each · for HA8000 V2 channel patching</div>
+          </td>
+          <td class="qty">5</td>
+          <td class="unit-price price-tbc">£6.00</td>
+          <td class="line-total">£30.00</td>
+          <td class="link-col"><a href="https://amzn.eu/d/06OfhY4j" target="_blank">Open link →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.4</td>
+          <td>
+            <div class="item-name">Snare drum head — per Bolaji A's link <span class="flag flag-tbc">Confirm SKU</span></div>
+            <div class="item-sku">SKU: open Bolaji A's link to confirm exact product before ordering</div>
+            <div class="item-note">Replacement snare head</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price price-tbc">£20.00</td>
+          <td class="line-total">£20.00</td>
+          <td class="link-col"><a href="https://amzn.eu/d/0iAJEDsq" target="_blank">Open link →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.5</td>
+          <td>
+            <div class="item-name">RISEOFLE 180cm telescopic phone tripod with Bluetooth remote <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Amazon B0DXFB83YT · 180cm aluminium · Bluetooth shutter remote</div>
+            <div class="item-note">2× units · for livestream redundancy + secondary angles</div>
+          </td>
+          <td class="qty">2</td>
+          <td class="unit-price">£20.00</td>
+          <td class="line-total">£40.00</td>
+          <td class="link-col"><a href="https://www.amazon.co.uk/RISEOFLE-Aluminum-Extendable-Smartphone-Portable/dp/B0DXFB83YT" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.6</td>
+          <td>
+            <div class="item-name">SLx 10m 4-way heavy-duty extension reel <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Amazon B09PF4JFRT · 10m · 4-socket · thermal cut-out</div>
+            <div class="item-note">Platform power for streaming phone, OBS laptop, chargers</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price">£30.00</td>
+          <td class="line-total">£30.00</td>
+          <td class="link-col"><a href="https://www.amazon.co.uk/Extension-Easy-Wind-Cassette-Thermal-Hi-Visibility/dp/B09PF4JFRT" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.7</td>
+          <td>
+            <div class="item-name">Anker 543 Charger (65W II) — 4-port GaN USB-C charger <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Amazon B098X7X251 · 65W GaN · 2× USB-C + 2× USB-A</div>
+            <div class="item-note">2× units · redundancy for streaming phone + iPad simultaneously</div>
+          </td>
+          <td class="qty">2</td>
+          <td class="unit-price">£30.00</td>
+          <td class="line-total">£60.00</td>
+          <td class="link-col"><a href="https://www.amazon.co.uk/Anker-Charger-4-Port-MacBook-Laptops-Black/dp/B098X7X251" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.8</td>
+          <td>
+            <div class="item-name">USB-C to USB-C cable (1m, 60W) <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Anker or Amazon Basics USB-C to USB-C 1m 60W (pick any in-stock at order time)</div>
+            <div class="item-note">3× units · for streaming phone, iPad, laptop</div>
+          </td>
+          <td class="qty">3</td>
+          <td class="unit-price">£5.00</td>
+          <td class="line-total">£15.00</td>
+          <td class="link-col"><a href="https://www.amazon.co.uk/s?k=anker+usb-c+to+usb-c+cable+1m+60w" target="_blank">Search →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.9</td>
+          <td>
+            <div class="item-name">Starlink Standard Gen 3 hard EVA carry case <span class="flag flag-tbc">SKU TBC</span></div>
+            <div class="item-sku">SKU: ToKismet, EAZUSE, LuxiSync or Mwin — pick highest-rated Starlink-specific brand in stock at order time</div>
+            <div class="item-note">For protecting and transporting the recently acquired Starlink kit</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price price-tbc">£70.00</td>
+          <td class="line-total">£70.00</td>
+          <td class="link-col"><a href="https://www.amazon.co.uk/starlink-case/s?k=starlink+gen+3+case" target="_blank">Browse →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.10</td>
+          <td>
+            <div class="item-name">FX pedal — Boss GT-1 (used) <span class="flag flag-tbc">Source: eBay UK</span></div>
+            <div class="item-sku">SKU: Boss GT-1 (used) · target UK eBay BIN · ≥99% feedback seller · max £90 inc postage · or Zoom G1X Four new ~£75</div>
+            <div class="item-note">Multi-effects pedal for electric guitar</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price price-tbc">£85.00</td>
+          <td class="line-total">£85.00</td>
+          <td class="link-col"><a href="https://www.ebay.co.uk/sch/i.html?_nkw=boss+gt-1&_sop=15&LH_BIN=1&LH_PrefLoc=1&_udhi=90" target="_blank">eBay →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+        <tr>
+          <td class="item-row-num">5.11</td>
+          <td>
+            <div class="item-name">Sony MDR-7506 — closed-back monitoring headphones <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Sony MDR-7506 · industry-standard closed-back · for broadcast operator monitoring position</div>
+            <div class="item-note">Reference headphones for the mixing position</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price">£85.00</td>
+          <td class="line-total">£85.00</td>
+          <td class="link-col"><a href="https://www.amazon.co.uk/s?k=sony+mdr-7506" target="_blank">Search →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 6 — BACK MARKET ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">Back Market UK <span class="supplier-tag">1 order</span></div>
+        <div class="supplier-meta">Refurbished electronics · 12-month warranty · <a href="https://www.backmarket.co.uk" target="_blank" style="color:var(--blue);text-decoration:none;">backmarket.co.uk</a></div>
+      </div>
+      <div class="supplier-total">£215.00</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">6.1</td>
+          <td>
+            <div class="item-name">Logitech PTZ Pro 2 broadcast camera (refurbished) <span class="flag flag-tbc">Price TBC</span></div>
+            <div class="item-sku">SKU: Logitech PTZ Pro 2 · 1080p · 10× optical zoom · pan/tilt · IR remote · USB · pick "Excellent" or "Good" condition</div>
+            <div class="item-note">Confirm £ and delivery date at Back Market checkout before placing order · estimated £180–£250</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price price-tbc">£215.00</td>
+          <td class="line-total">£215.00</td>
+          <td class="link-col"><a href="https://www.backmarket.co.uk/en-gb/p/logitech-ptz-pro-2-webcam/6801aadf-6a11-4212-90ac-1ce4261bd2dc" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 7 — MUSICMAGPIE ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">musicMagpie <span class="supplier-tag">1 order</span></div>
+        <div class="supplier-meta">Refurbished tech · 12-month warranty · <a href="https://www.musicmagpie.co.uk" target="_blank" style="color:var(--blue);text-decoration:none;">musicmagpie.co.uk</a></div>
+      </div>
+      <div class="supplier-total">£94.00</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">7.1</td>
+          <td>
+            <div class="item-name">Apple iPad 7 32GB — refurbished (Good condition) <span class="flag flag-firm">Firm</span></div>
+            <div class="item-sku">SKU: Apple iPad 7 32GB Wi-Fi · musicMagpie "Good" grade</div>
+            <div class="item-note">For digital desk control, track playback, lyric display</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price">£94.00</td>
+          <td class="line-total">£94.00</td>
+          <td class="link-col"><a href="https://www.musicmagpie.co.uk/store/category/ipads-and-tablets/apple/ipad-7/" target="_blank">Buy →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ SUPPLIER 8 — ARGOS / IN-PERSON ═════════════ -->
+  <div class="supplier">
+    <div class="supplier-hdr">
+      <div>
+        <div class="supplier-name">Argos M13 — Click &amp; Collect <span class="supplier-tag">1 order</span></div>
+        <div class="supplier-meta">In-store collection at the local Argos · <a href="https://www.argos.co.uk" target="_blank" style="color:var(--blue);text-decoration:none;">argos.co.uk</a></div>
+      </div>
+      <div class="supplier-total">£60.00</div>
+    </div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th class="num">#</th>
+          <th>Product</th>
+          <th class="center">Qty</th>
+          <th class="num">Unit £</th>
+          <th class="num">Line £</th>
+          <th>Link</th>
+          <th class="center">☐</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="item-row-num">8.1</td>
+          <td>
+            <div class="item-name">Consumables bundle (Stanley toolbox, tapes, batteries, label maker) <span class="flag flag-tbc">Specific SKUs TBC</span></div>
+            <div class="item-sku">SKU: Stanley toolbox + 6× masking tape + gaffer tape + electrical tape + AA batteries (12-pack) + Dymo label maker</div>
+            <div class="item-note">Pick highest-rated equivalents at Argos at order time · estimated £60 combined</div>
+          </td>
+          <td class="qty">1</td>
+          <td class="unit-price price-tbc">£60.00</td>
+          <td class="line-total">£60.00</td>
+          <td class="link-col"><a href="https://www.argos.co.uk" target="_blank">Browse →</a></td>
+          <td class="status-col"><div class="status-box"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═════════════ GRAND TOTAL ═════════════ -->
+  <div style="background:var(--ink);color:white;border-radius:var(--r);padding:18px 24px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
-      <div class="label">Sourced Recommended Total</div>
-      <div class="num">£1,709–£2,297</div>
+      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.7);font-weight:600;margin-bottom:3px;">Grand Total — Estimated</div>
+      <div style="font-size:11.5px;color:rgba(255,255,255,0.65);">Confirmed lines £1,158.90 · Price TBC midpoints £875.00 · 8 suppliers · 22 line items</div>
     </div>
-    <div style="font-size:12px;color:var(--ink-3);">16 items · spec by Bolaji Adebanjo</div>
+    <div style="font-family:'Instrument Serif',serif;font-size:32px;font-weight:500;">£2,033.90</div>
   </div>
 
-  <table class="items">
-    <thead>
-      <tr>
-        <th style="width:36px;">#</th>
-        <th>Item</th>
-        <th style="width:90px;text-align:right;">Price</th>
-        <th style="width:90px;text-align:right;">Link</th>
-      </tr>
-    </thead>
-    <tbody>
-
-      <tr>
-        <td class="item-num">1</td>
-        <td>
-          <div class="item-title">Wired in-ear monitor system (multi-singer)</div>
-          <div class="item-desc">Behringer HA8000 V2 8-channel rackmount headphone amplifier (£105) + 5× wired IEMs + 2× ¼" female to XLR adapters + 5× TRS patch leads. Spec confirmed by Bolaji Adebanjo.</div>
-        </td>
-        <td class="item-price">£220–£270</td>
-        <td class="item-link"><a href="https://www.thomann.co.uk/behringer_ha8000_v2.htm" target="_blank">Thomann</a><br><a href="https://amzn.eu/d/0jaQ79JG" target="_blank">5× IEMs</a><br><a href="https://www.amazon.co.uk/Female-6-35mm-Stereo-Balanced-Patch/dp/B01K51SAMI/" target="_blank">¼F-XLR ×2</a><br><a href="https://amzn.eu/d/06OfhY4j" target="_blank">5× patch</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">2</td>
-        <td>
-          <div class="item-title">AV production monitoring headphones</div>
-          <div class="item-desc">Sony MDR-7506. Industry-standard closed-back reference headphones for the mixing position and broadcast monitoring.</div>
-        </td>
-        <td class="item-price">£85</td>
-        <td class="item-link"><a href="https://www.gear4music.com" target="_blank">Gear4music</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">3</td>
-        <td>
-          <div class="item-title">Multicore stage snake — 30m, 24-way</div>
-          <div class="item-desc">Devine SND-30-24-8 24-in/8-out XLR stage snake reel, 30 metres. Reel-mounted on wheels, 32 colour-coded XLR cables in bundled sheath. Spec confirmed by Bolaji Adebanjo. Price to be confirmed at checkout.</div>
-        </td>
-        <td class="item-price">£200–£260</td>
-        <td class="item-link"><a href="https://www.bax-shop.co.uk/stage-box/devine-snd-30-24-8-24-way-xlr-stage-snake-reel-30m" target="_blank">Bax-Shop UK</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">4</td>
-        <td>
-          <div class="item-title">XLR cables — 5× 20m + 10× 5m (Pro Snake)</div>
-          <div class="item-desc">5× Pro Snake TPM 20 (20m, blue) at ~£18 each + 10× Pro Snake TPM 5 CC (5m, green) at ~£9 each. Neutrik connectors, professional standard. Spec confirmed by Bolaji Adebanjo.</div>
-        </td>
-        <td class="item-price">£170–£190</td>
-        <td class="item-link"><a href="https://www.thomann.co.uk/pro_snake_tpm_200_cc_micro_cable_deepbl.htm" target="_blank">20m TPM</a><br><a href="https://www.thomann.co.uk/pro_snake_tpm_50_cc_micro_cable_green.htm" target="_blank">5m TPM</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">5</td>
-        <td>
-          <div class="item-title">Microphone stands × 7</div>
-          <div class="item-desc">Pulse PLS00040 heavy-duty metal microphone stand with extendable adjustable boom. Stage quality, folding legs, 3/8" thread. Spec confirmed by Bolaji Adebanjo. 7× at ~£25 each.</div>
-        </td>
-        <td class="item-price">£165–£185</td>
-        <td class="item-link"><a href="https://cpc.farnell.com/pulse/pls00040/microphone-stand-with-ext-boom/dp/ST01600" target="_blank">CPC Farnell</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">6</td>
-        <td>
-          <div class="item-title">Y-split + DI box for backing tracks</div>
-          <div class="item-desc">Kirlin Y-362PRL-06 BK 3.5mm stereo to 2× 6.3mm jack Y-cable + Klark Teknik DI22P passive stereo DI box (MIDAS transformers, professional grade). Spec confirmed by Bolaji Adebanjo.</div>
-        </td>
-        <td class="item-price">£80–£95</td>
-        <td class="item-link"><a href="https://www.thomann.co.uk/kirlin_y_362prl_06_bk.htm" target="_blank">Kirlin Y</a><br><a href="https://www.thomann.co.uk/klark_teknik_di_22p.htm" target="_blank">Klark DI22P</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">iPad (desk control, tracks, lyrics)</div>
-          <div class="item-desc">Refurbished iPad 7 32GB (Good condition) from musicMagpie. Used for digital desk control, track playback, lyric display.</div>
-        </td>
-        <td class="item-price">£94</td>
-        <td class="item-link"><a href="https://www.musicmagpie.co.uk/store/category/ipads-and-tablets/apple/ipad-7/" target="_blank">musicMagpie</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">FX pedal — electric guitar</div>
-          <div class="item-desc">Boss GT-1 multi-effects pedal, used. Target UK eBay Buy It Now, ≥99% feedback UK seller, max £90 inc postage. Fallback if no used surfaces: Zoom G1X Four new at ~£75 Amazon Prime. Replaces the current temporary stopgap pedal.</div>
-        </td>
-        <td class="item-price">£75–£90</td>
-        <td class="item-link"><a href="https://www.ebay.co.uk/sch/i.html?_nkw=boss+gt-1&_sop=15&LH_BIN=1&LH_PrefLoc=1&_udhi=90" target="_blank">eBay UK</a><br><a href="https://www.amazon.co.uk/s?k=zoom+g1x+four" target="_blank">Zoom (fallback)</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Snare drum head</div>
-          <div class="item-desc">Replacement snare head. Spec confirmed by Bolaji Adebanjo via Amazon UK link.</div>
-        </td>
-        <td class="item-price">£18–£22</td>
-        <td class="item-link"><a href="https://amzn.eu/d/0iAJEDsq" target="_blank">Amazon UK</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Consumables bundle</div>
-          <div class="item-desc">Stanley toolbox, masking tape 6-pack, gaffer tape, electrical tape, AA batteries, Dymo label maker. Argos M13 Click & Collect + Amazon Prime.</div>
-        </td>
-        <td class="item-price">£80</td>
-        <td class="item-link">Argos / Amazon</td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Shipping & misc buffer</div>
-          <div class="item-desc">Allowance for delivery across multiple suppliers and small last-minute items.</div>
-        </td>
-        <td class="item-price">£15</td>
-        <td class="item-link">—</td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Wireless lapel mic for Pastor Shade</div>
-          <div class="item-desc">Sennheiser XSW 2-ME2-GB UHF wireless lavalier set. Bodypack + ME 2 omni mic + true-diversity receiver. In stock, 2-year warranty.</div>
-        </td>
-        <td class="item-price">£359</td>
-        <td class="item-link"><a href="https://www.andertons.co.uk/sennheiser-xsw-2-me2-gb-lavalier-set-inc-me-3" target="_blank">Andertons</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Logitech PTZ Pro 2 broadcast camera + tripod</div>
-          <div class="item-desc">Refurbished PTZ camera with 10x optical zoom, pan/tilt, 1080p, IR remote. Plus aluminium tripod from Amazon. Replaces phone-camera livestream.</div>
-        </td>
-        <td class="item-price">£205–£285</td>
-        <td class="item-link"><a href="https://www.backmarket.co.uk/en-gb/p/logitech-ptz-pro-2-webcam/6801aadf-6a11-4212-90ac-1ce4261bd2dc" target="_blank">Back Market</a><br><a href="https://www.amazon.co.uk/s?k=neewer+camera+tripod+aluminium" target="_blank">Tripod</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Power kit — extension reel + USB-C chargers</div>
-          <div class="item-desc">SLx 10m 4-way heavy-duty extension reel + 2× Anker 543 (65W II) 4-port GaN chargers + 3× USB-C cables.</div>
-        </td>
-        <td class="item-price">£85–£105</td>
-        <td class="item-link"><a href="https://www.amazon.co.uk/Extension-Easy-Wind-Cassette-Thermal-Hi-Visibility/dp/B09PF4JFRT" target="_blank">Reel</a><br><a href="https://www.amazon.co.uk/Anker-Charger-4-Port-MacBook-Laptops-Black/dp/B098X7X251" target="_blank">Charger</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Starlink Standard Gen 3 carry case</div>
-          <div class="item-desc">Hard EVA waterproof case with custom precision-cut foam for the Starlink kit. ToKismet, EAZUSE, or equivalent Starlink-specific brand.</div>
-        </td>
-        <td class="item-price">£60–£85</td>
-        <td class="item-link"><a href="https://www.amazon.co.uk/starlink-case/s?k=starlink+gen+3+case" target="_blank">Amazon UK</a></td>
-      </tr>
-
-      <tr>
-        <td class="item-num">7</td>
-        <td>
-          <div class="item-title">Compact telescopic phone tripods × 2</div>
-          <div class="item-desc">RISEOFLE 180cm aluminium telescopic phone tripod with Bluetooth remote. Folds compact, extends tall. For livestream redundancy, secondary angle shots, and platform-side capture.</div>
-        </td>
-        <td class="item-price">£36–£50</td>
-        <td class="item-link"><a href="https://www.amazon.co.uk/RISEOFLE-Aluminum-Extendable-Smartphone-Portable/dp/B0DXFB83YT" target="_blank">Amazon UK</a></td>
-      </tr>
-
-    </tbody>
-  </table>
+  <div style="background:white;border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-top:18px;font-size:12.5px;color:var(--ink-2);line-height:1.6;">
+    <strong style="color:var(--ink);">After ordering — update this document.</strong> When an order is placed, tick the status box ☐ for each line in this document and record the actual price paid (replacing the TBC estimate). When goods arrive, tick again. This document is the single record of what was ordered and at what price; do not duplicate it elsewhere.
+  </div>
 
   <div class="footer">
     Calvary Hephzibah Full Gospel Church — Global Harvest International (Charity no. 1135709)<br>
-    Anniversary 2026 · Gear Sourcing · Last updated 12 May 2026<br>
+    Anniversary 2026 · Gear Purchase Order · Last updated 12 May 2026<br>
     Companion to <a href="anniversary-finance-2026.html">Anniversary Finance Compilation</a> · Prepared by Bolaji Olatoye
   </div>
 
