@@ -66,7 +66,7 @@ table.items tr:last-child td{border-bottom:none;}
 .link-col{width:95px;text-align:right;}
 .link-col a{color:var(--blue);text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;display:inline-block;}
 .link-col a:hover{text-decoration:underline;}
-.status-col{width:30px;text-align:center;}
+.status-col{width:120px;text-align:center;vertical-align:middle;}
 .status-box{display:inline-block;width:18px;height:18px;border:1.5px solid var(--border-strong);border-radius:4px;}
 
 .price-tbc{color:var(--amber)!important;font-weight:600;}
@@ -92,6 +92,8 @@ table.items tr:last-child td{border-bottom:none;}
 .legend strong{color:var(--ink);}
 .legend-row{display:flex;gap:18px;flex-wrap:wrap;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="po-tracker.js"></script>
 </head>
 <body>
 <div class="wrap">
@@ -162,6 +164,22 @@ table.items tr:last-child td{border-bottom:none;}
     </div>
   </div>
 
+  <!-- ═════════════ PROCUREMENT TRACKER BAR ═════════════ -->
+  <div class="pot-refresh-bar" style="margin:24px 0 8px;">
+    <div style="display:flex;flex-direction:column;gap:4px;">
+      <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#86868B;font-weight:700;">Procurement Progress</div>
+      <div id="po-overall-tally" style="display:flex;flex-wrap:wrap;align-items:baseline;">— loading —</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+      <button class="pot-refresh-btn" onclick="POTracker.refresh()">⟳ Refresh</button>
+      <span id="po-last-updated" style="font-size:11px;color:#86868B;"></span>
+    </div>
+  </div>
+
+  <div id="po-auth-notice" style="display:none;padding:14px 18px;background:#FFF8E1;border:1px solid #F5D78A;border-radius:10px;font-size:13px;color:#8B6914;margin:0 0 24px;">
+    <strong>Not signed in.</strong> You're viewing this PO in read-only mode. To mark items as claimed or ordered, log in to <a href="https://calvaryhfgc.github.io/calvaryhephzibah/the-bridge/" style="color:#8B6914;font-weight:700;">The Bridge</a> first, then come back.
+  </div>
+
   <!-- ═════════════ SUPPLIER 1 — ANDERTONS ═════════════ -->
   <div class="supplier">
     <div class="supplier-hdr">
@@ -171,6 +189,7 @@ table.items tr:last-child td{border-bottom:none;}
       </div>
       <div class="supplier-total">£359.00</div>
     </div>
+    <div class="supplier-tally" style="padding:0 18px 12px; display:flex; flex-wrap:wrap; gap:6px;"></div>
     <table class="items">
       <thead>
         <tr>
@@ -184,7 +203,7 @@ table.items tr:last-child td{border-bottom:none;}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-line-ref="1.1" data-line-name="Sennheiser XSW 2-ME2-GB Wireless Lavalier Set" data-line-amount="359.00">
           <td class="item-row-num">1.1</td>
           <td>
             <div class="item-name">Sennheiser XSW 2-ME2-GB Wireless Lavalier Set <span class="flag flag-firm">Firm</span></div>
@@ -195,7 +214,7 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£359.00</td>
           <td class="line-total">£359.00</td>
           <td class="link-col"><a href="https://www.andertons.co.uk/sennheiser-xsw-2-me2-gb-lavalier-set-inc-me-3" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="1.1"><div class="status-box"></div></td>
         </tr>
       </tbody>
     </table>
@@ -210,6 +229,7 @@ table.items tr:last-child td{border-bottom:none;}
       </div>
       <div class="supplier-total">£360.90</div>
     </div>
+    <div class="supplier-tally" style="padding:0 18px 12px; display:flex; flex-wrap:wrap; gap:6px;"></div>
     <table class="items">
       <thead>
         <tr>
@@ -223,7 +243,7 @@ table.items tr:last-child td{border-bottom:none;}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-line-ref="2.1" data-line-name="Behringer HA8000 V2 — 8-channel headphone amplifier" data-line-amount="105.00">
           <td class="item-row-num">2.1</td>
           <td>
             <div class="item-name">Behringer HA8000 V2 — 8-channel headphone amplifier <span class="flag flag-firm">Firm</span></div>
@@ -234,9 +254,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£105.00</td>
           <td class="line-total">£105.00</td>
           <td class="link-col"><a href="https://www.thomann.co.uk/behringer_ha8000_v2.htm" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="2.1"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="2.2" data-line-name="Kirlin Y-362PRL-06 BK — Y-patch cable" data-line-amount="6.90">
           <td class="item-row-num">2.2</td>
           <td>
             <div class="item-name">Kirlin Y-362PRL-06 BK — Y-patch cable <span class="flag flag-firm">Firm</span></div>
@@ -247,9 +267,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£6.90</td>
           <td class="line-total">£6.90</td>
           <td class="link-col"><a href="https://www.thomann.co.uk/kirlin_y_362prl_06_bk.htm" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="2.2"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="2.3" data-line-name="Klark Teknik DI22P — passive stereo DI box" data-line-amount="90.00">
           <td class="item-row-num">2.3</td>
           <td>
             <div class="item-name">Klark Teknik DI22P — passive stereo DI box <span class="flag flag-tbc">Price TBC</span></div>
@@ -260,9 +280,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£90.00</td>
           <td class="line-total">£90.00</td>
           <td class="link-col"><a href="https://www.thomann.co.uk/klark_teknik_di_22p.htm" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="2.3"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="2.4" data-line-name="Pro Snake TPM 20 — 20m XLR microphone cable (blue)" data-line-amount="90.00">
           <td class="item-row-num">2.4</td>
           <td>
             <div class="item-name">Pro Snake TPM 20 — 20m XLR microphone cable (blue) <span class="flag flag-firm">Firm</span></div>
@@ -273,9 +293,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£18.00</td>
           <td class="line-total">£90.00</td>
           <td class="link-col"><a href="https://www.thomann.co.uk/pro_snake_tpm_200_cc_micro_cable_deepbl.htm" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="2.4"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="2.5" data-line-name="Pro Snake TPM 5 — 5m XLR microphone cable (green)" data-line-amount="69.00">
           <td class="item-row-num">2.5</td>
           <td>
             <div class="item-name">Pro Snake TPM 5 — 5m XLR microphone cable (green) <span class="flag flag-firm">Firm</span></div>
@@ -286,7 +306,7 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£6.90</td>
           <td class="line-total">£69.00</td>
           <td class="link-col"><a href="https://www.thomann.co.uk/pro_snake_tpm_50_cc_micro_cable_green.htm" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="2.5"><div class="status-box"></div></td>
         </tr>
       </tbody>
     </table>
@@ -301,6 +321,7 @@ table.items tr:last-child td{border-bottom:none;}
       </div>
       <div class="supplier-total">£230.00</div>
     </div>
+    <div class="supplier-tally" style="padding:0 18px 12px; display:flex; flex-wrap:wrap; gap:6px;"></div>
     <table class="items">
       <thead>
         <tr>
@@ -314,7 +335,7 @@ table.items tr:last-child td{border-bottom:none;}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-line-ref="3.1" data-line-name="Devine SND-30-24-8 — 24-way XLR stage snake reel, 30m" data-line-amount="230.00">
           <td class="item-row-num">3.1</td>
           <td>
             <div class="item-name">Devine SND-30-24-8 — 24-way XLR stage snake reel, 30m <span class="flag flag-tbc">Price TBC</span></div>
@@ -325,7 +346,7 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£230.00</td>
           <td class="line-total">£230.00</td>
           <td class="link-col"><a href="https://www.bax-shop.co.uk/stage-box/devine-snd-30-24-8-24-way-xlr-stage-snake-reel-30m" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="3.1"><div class="status-box"></div></td>
         </tr>
       </tbody>
     </table>
@@ -340,6 +361,7 @@ table.items tr:last-child td{border-bottom:none;}
       </div>
       <div class="supplier-total">£175.00</div>
     </div>
+    <div class="supplier-tally" style="padding:0 18px 12px; display:flex; flex-wrap:wrap; gap:6px;"></div>
     <table class="items">
       <thead>
         <tr>
@@ -353,7 +375,7 @@ table.items tr:last-child td{border-bottom:none;}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-line-ref="4.1" data-line-name="Pulse PLS00040 — heavy-duty boom microphone stand" data-line-amount="175.00">
           <td class="item-row-num">4.1</td>
           <td>
             <div class="item-name">Pulse PLS00040 — heavy-duty boom microphone stand <span class="flag flag-firm">Firm</span></div>
@@ -364,7 +386,7 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£25.00</td>
           <td class="line-total">£175.00</td>
           <td class="link-col"><a href="https://cpc.farnell.com/pulse/pls00040/microphone-stand-with-ext-boom/dp/ST01600" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="4.1"><div class="status-box"></div></td>
         </tr>
       </tbody>
     </table>
@@ -379,6 +401,7 @@ table.items tr:last-child td{border-bottom:none;}
       </div>
       <div class="supplier-total">£906.00</div>
     </div>
+    <div class="supplier-tally" style="padding:0 18px 12px; display:flex; flex-wrap:wrap; gap:6px;"></div>
     <table class="items">
       <thead>
         <tr>
@@ -392,7 +415,7 @@ table.items tr:last-child td{border-bottom:none;}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-line-ref="5.1" data-line-name="Wired IEMs — model per Bolaji A's link" data-line-amount="75.00">
           <td class="item-row-num">5.1</td>
           <td>
             <div class="item-name">Wired IEMs — model per Bolaji A's link <span class="flag flag-tbc">Confirm SKU</span></div>
@@ -403,9 +426,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£15.00</td>
           <td class="line-total">£75.00</td>
           <td class="link-col"><a href="https://amzn.eu/d/0jaQ79JG" target="_blank">Open link →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.1"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.2" data-line-name="¼&quot; Female to XLR adapter cable" data-line-amount="30.00">
           <td class="item-row-num">5.2</td>
           <td>
             <div class="item-name">¼" Female to XLR adapter cable <span class="flag flag-firm">Firm</span></div>
@@ -416,9 +439,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£15.00</td>
           <td class="line-total">£30.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/Female-6-35mm-Stereo-Balanced-Patch/dp/B01K51SAMI/" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.2"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.3" data-line-name="TRS patch leads — per Bolaji A's link" data-line-amount="30.00">
           <td class="item-row-num">5.3</td>
           <td>
             <div class="item-name">TRS patch leads — per Bolaji A's link <span class="flag flag-tbc">Confirm SKU</span></div>
@@ -429,9 +452,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£6.00</td>
           <td class="line-total">£30.00</td>
           <td class="link-col"><a href="https://amzn.eu/d/06OfhY4j" target="_blank">Open link →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.3"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.4" data-line-name="Snare drum head — per Bolaji A's link" data-line-amount="20.00">
           <td class="item-row-num">5.4</td>
           <td>
             <div class="item-name">Snare drum head — per Bolaji A's link <span class="flag flag-tbc">Confirm SKU</span></div>
@@ -442,9 +465,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£20.00</td>
           <td class="line-total">£20.00</td>
           <td class="link-col"><a href="https://amzn.eu/d/0iAJEDsq" target="_blank">Open link →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.4"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.5" data-line-name="RISEOFLE 180cm telescopic phone tripod with Bluetooth remote" data-line-amount="40.00">
           <td class="item-row-num">5.5</td>
           <td>
             <div class="item-name">RISEOFLE 180cm telescopic phone tripod with Bluetooth remote <span class="flag flag-firm">Firm</span></div>
@@ -455,9 +478,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£20.00</td>
           <td class="line-total">£40.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/RISEOFLE-Aluminum-Extendable-Smartphone-Portable/dp/B0DXFB83YT" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.5"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.6" data-line-name="SLx 10m 4-way heavy-duty extension reel" data-line-amount="30.00">
           <td class="item-row-num">5.6</td>
           <td>
             <div class="item-name">SLx 10m 4-way heavy-duty extension reel <span class="flag flag-firm">Firm</span></div>
@@ -468,9 +491,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£30.00</td>
           <td class="line-total">£30.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/Extension-Easy-Wind-Cassette-Thermal-Hi-Visibility/dp/B09PF4JFRT" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.6"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.7" data-line-name="Anker 543 Charger (65W II) — 4-port GaN USB-C charger" data-line-amount="60.00">
           <td class="item-row-num">5.7</td>
           <td>
             <div class="item-name">Anker 543 Charger (65W II) — 4-port GaN USB-C charger <span class="flag flag-firm">Firm</span></div>
@@ -481,9 +504,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£30.00</td>
           <td class="line-total">£60.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/Anker-Charger-4-Port-MacBook-Laptops-Black/dp/B098X7X251" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.7"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.8" data-line-name="USB-C to USB-C cable (1m, 60W)" data-line-amount="15.00">
           <td class="item-row-num">5.8</td>
           <td>
             <div class="item-name">USB-C to USB-C cable (1m, 60W) <span class="flag flag-firm">Firm</span></div>
@@ -494,9 +517,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£5.00</td>
           <td class="line-total">£15.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/s?k=anker+usb-c+to+usb-c+cable+1m+60w" target="_blank">Search →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.8"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.9" data-line-name="Starlink Standard Gen 3 hard EVA carry case" data-line-amount="70.00">
           <td class="item-row-num">5.9</td>
           <td>
             <div class="item-name">Starlink Standard Gen 3 hard EVA carry case <span class="flag flag-tbc">SKU TBC</span></div>
@@ -507,9 +530,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£70.00</td>
           <td class="line-total">£70.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/starlink-case/s?k=starlink+gen+3+case" target="_blank">Browse →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.9"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.10" data-line-name="FX pedal — Boss GT-1 (used)" data-line-amount="85.00">
           <td class="item-row-num">5.10</td>
           <td>
             <div class="item-name">FX pedal — Boss GT-1 (used) <span class="flag flag-tbc">Source: eBay UK</span></div>
@@ -520,9 +543,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£85.00</td>
           <td class="line-total">£85.00</td>
           <td class="link-col"><a href="https://www.ebay.co.uk/sch/i.html?_nkw=boss+gt-1&_sop=15&LH_BIN=1&LH_PrefLoc=1&_udhi=90" target="_blank">eBay →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.10"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.11" data-line-name="Sony MDR-7506 — closed-back monitoring headphones" data-line-amount="85.00">
           <td class="item-row-num">5.11</td>
           <td>
             <div class="item-name">Sony MDR-7506 — closed-back monitoring headphones <span class="flag flag-firm">Firm</span></div>
@@ -533,9 +556,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price">£85.00</td>
           <td class="line-total">£85.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/s?k=sony+mdr-7506" target="_blank">Search →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.11"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.12" data-line-name="IEM extension cables — per Bolaji A's link" data-line-amount="40.00">
           <td class="item-row-num">5.12</td>
           <td>
             <div class="item-name">IEM extension cables — per Bolaji A's link <span class="flag flag-tbc">Confirm SKU</span></div>
@@ -546,9 +569,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£8.00</td>
           <td class="line-total">£40.00</td>
           <td class="link-col"><a href="https://amzn.eu/d/03WVRpiH" target="_blank">Open link →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.12"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.13" data-line-name="Stanley 16&quot; Essential Toolbox" data-line-amount="10.00">
           <td class="item-row-num">5.13</td>
           <td>
             <div class="item-name">Stanley 16" Essential Toolbox <span class="flag flag-tbc">Pick SKU at checkout</span></div>
@@ -559,9 +582,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£10.00</td>
           <td class="line-total">£10.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/s?k=stanley+16+inch+toolbox" target="_blank">Search →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.13"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.14" data-line-name="Masking tape, 6-pack (25mm × 50m)" data-line-amount="8.00">
           <td class="item-row-num">5.14</td>
           <td>
             <div class="item-name">Masking tape, 6-pack (25mm × 50m) <span class="flag flag-tbc">Pick SKU at checkout</span></div>
@@ -572,9 +595,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£8.00</td>
           <td class="line-total">£8.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/s?k=masking+tape+6+pack+25mm" target="_blank">Search →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.14"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.15" data-line-name="Gorilla tape / heavy-duty cloth tape (48mm × 11m+)" data-line-amount="8.00">
           <td class="item-row-num">5.15</td>
           <td>
             <div class="item-name">Gorilla tape / heavy-duty cloth tape (48mm × 11m+) <span class="flag flag-tbc">Pick SKU at checkout</span></div>
@@ -585,9 +608,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£8.00</td>
           <td class="line-total">£8.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/s?k=gorilla+tape+heavy+duty+48mm" target="_blank">Search →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.15"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.16" data-line-name="Electrical / PVC insulation tape (multi-pack, assorted colours)" data-line-amount="5.00">
           <td class="item-row-num">5.16</td>
           <td>
             <div class="item-name">Electrical / PVC insulation tape (multi-pack, assorted colours) <span class="flag flag-tbc">Pick SKU at checkout</span></div>
@@ -598,9 +621,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£5.00</td>
           <td class="line-total">£5.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/s?k=electrical+tape+multi+colour+pack" target="_blank">Search →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.16"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.17" data-line-name="Duracell Plus or Energizer Max AA, 12-pack" data-line-amount="10.00">
           <td class="item-row-num">5.17</td>
           <td>
             <div class="item-name">Duracell Plus or Energizer Max AA, 12-pack <span class="flag flag-tbc">Pick SKU at checkout</span></div>
@@ -611,9 +634,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£10.00</td>
           <td class="line-total">£10.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/s?k=duracell+plus+aa+12+pack" target="_blank">Search →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.17"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.18" data-line-name="Dymo LetraTag LT-100H handheld label maker" data-line-amount="25.00">
           <td class="item-row-num">5.18</td>
           <td>
             <div class="item-name">Dymo LetraTag LT-100H handheld label maker <span class="flag flag-tbc">Confirm £ at checkout</span></div>
@@ -624,9 +647,9 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£25.00</td>
           <td class="line-total">£25.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/Dymo-Letratag-LT-100H-Handheld-Label/dp/B0056140MM" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.18"><div class="status-box"></div></td>
         </tr>
-        <tr>
+        <tr data-line-ref="5.19" data-line-name="Tenveo VHD10U PTZ broadcast camera (10× optical zoom, 1080p60, USB3.0 + HDMI)" data-line-amount="260.00">
           <td class="item-row-num">5.19</td>
           <td>
             <div class="item-name">Tenveo VHD10U PTZ broadcast camera (10× optical zoom, 1080p60, USB3.0 + HDMI) <span class="flag flag-tbc">Confirm £ at checkout</span></div>
@@ -637,7 +660,7 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£260.00</td>
           <td class="line-total">£260.00</td>
           <td class="link-col"><a href="https://www.amazon.co.uk/Tenveo-Conference-Optical-Streaming-Education/dp/B0CNRLMTC2" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="5.19"><div class="status-box"></div></td>
         </tr>
       </tbody>
     </table>
@@ -652,6 +675,7 @@ table.items tr:last-child td{border-bottom:none;}
       </div>
       <div class="supplier-total">£80.00</div>
     </div>
+    <div class="supplier-tally" style="padding:0 18px 12px; display:flex; flex-wrap:wrap; gap:6px;"></div>
     <table class="items">
       <thead>
         <tr>
@@ -665,7 +689,7 @@ table.items tr:last-child td{border-bottom:none;}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-line-ref="6.1" data-line-name="Apple iPad 10.2&quot; (2019) 7th gen 32GB — Wi-Fi + 4G — Silver (refurbished)" data-line-amount="80.00">
           <td class="item-row-num">6.1</td>
           <td>
             <div class="item-name">Apple iPad 10.2" (2019) 7th gen 32GB — Wi-Fi + 4G — Silver (refurbished) <span class="flag flag-tbc">Price TBC</span></div>
@@ -676,7 +700,7 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£80.00</td>
           <td class="line-total">£80.00</td>
           <td class="link-col"><a href="https://www.backmarket.co.uk/en-gb/p/ipad-102-7th-gen-2019-hdd-32-gb-silver-wifi-4g/c457f52d-769a-4c37-9dc8-a63d9a6e827c" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="6.1"><div class="status-box"></div></td>
         </tr>
       </tbody>
     </table>
@@ -691,6 +715,7 @@ table.items tr:last-child td{border-bottom:none;}
       </div>
       <div class="supplier-total">£50.00</div>
     </div>
+    <div class="supplier-tally" style="padding:0 18px 12px; display:flex; flex-wrap:wrap; gap:6px;"></div>
     <table class="items">
       <thead>
         <tr>
@@ -704,7 +729,7 @@ table.items tr:last-child td{border-bottom:none;}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-line-ref="7.1" data-line-name="Behringer C-2 Condenser Microphone — matched pair" data-line-amount="50.00">
           <td class="item-row-num">7.1</td>
           <td>
             <div class="item-name">Behringer C-2 Condenser Microphone — matched pair <span class="flag flag-tbc">Price TBC</span></div>
@@ -715,7 +740,7 @@ table.items tr:last-child td{border-bottom:none;}
           <td class="unit-price price-tbc">£50.00</td>
           <td class="line-total">£50.00</td>
           <td class="link-col"><a href="https://www.gear4music.com/PA-DJ-and-Lighting/Behringer-C-2-Condenser-Microphone-Matched-Pair/K3" target="_blank">Buy →</a></td>
-          <td class="status-col"><div class="status-box"></div></td>
+          <td class="status-col" data-line-ref="7.1"><div class="status-box"></div></td>
         </tr>
       </tbody>
     </table>
@@ -741,5 +766,23 @@ table.items tr:last-child td{border-bottom:none;}
   </div>
 
 </div>
+
+<script>
+  // ── Initialise PO Tracker ──────────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof POTracker === 'undefined') {
+      console.warn('po-tracker.js failed to load');
+      return;
+    }
+    POTracker.init({ poSlug: 'anniversary-2026-gear' });
+    // Show read-only notice if not signed in
+    const u = POTracker.user();
+    if (!u) {
+      const notice = document.getElementById('po-auth-notice');
+      if (notice) notice.style.display = 'block';
+    }
+  });
+</script>
+
 </body>
 </html>
