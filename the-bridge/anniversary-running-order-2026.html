@@ -4,142 +4,584 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Anniversary 2026 — Running Order | The Bridge</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<meta name="description" content="Updated running order for the 34th Anniversary service, Sunday 17 May 2026, with confirmations from the 11 May planning meeting.">
+
+<!-- Calvary anniversary design system -->
+<link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
+
+<link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png">
+
 <style>
+/* ============================================================
+   RUNNING ORDER — hybrid build
+   Operational structure + anniversary brand tokens
+   ============================================================ */
+
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+
 :root{
-  --red:#C41E2A; --red-light:#FEF2F2; --red-dark:#A51520;
-  --amber:#D97706; --amber-light:#FFFBEB; --amber-mid:#FCD34D;
-  --green:#16A34A; --green-light:#F0FDF4;
-  --blue:#2563EB; --blue-light:#EFF6FF;
-  --purple:#7C3AED; --purple-light:#F3E8FF;
-  --slate:#64748B; --slate-light:#F8FAFC;
-  --ink:#0F172A; --ink-2:#334155; --ink-3:#64748B; --ink-4:#94A3B8; --ink-5:#CBD5E1;
-  --white:#FFFFFF; --bg:#F1F5F9;
-  --r4:4px; --r8:8px; --r12:12px; --r16:16px; --r24:24px;
-  --shadow-sm:0 1px 2px rgba(15,23,42,0.06);
-  --shadow:0 1px 3px rgba(15,23,42,0.08),0 4px 12px rgba(15,23,42,0.06);
+  /* Surfaces — light theme, brand-aware */
+  --page-bg: #F4EFE6;
+  --page-bg-soft: #FBF8F2;
+  --card-bg: #FFFFFF;
+  --card-bg-soft: #FAF7F0;
+  --card-border: rgba(20, 20, 26, 0.08);
+  --card-border-strong: rgba(20, 20, 26, 0.14);
+  --row-tint-pastor: rgba(208, 68, 28, 0.05);
+  --row-tint-pastor-hover: rgba(208, 68, 28, 0.09);
+  --row-tint-worship: rgba(154, 47, 17, 0.05);
+  --row-tint-worship-hover: rgba(154, 47, 17, 0.09);
+  --row-tint-meal: rgba(200, 162, 75, 0.06);
+  --row-tint-meal-hover: rgba(200, 162, 75, 0.12);
+  --row-hover: #FAF7F0;
+
+  --ink-1: var(--fg-1-on-light);
+  --ink-2: var(--fg-2-on-light);
+  --ink-3: var(--fg-3-on-light);
+  --ink-4: #9A9AA5;
+  --ink-5: #CBCBD3;
+
+  --status-confirmed: #2F6E3D;
+  --status-confirmed-bg: rgba(79, 138, 91, 0.10);
+  --status-open: #B07020;
+  --status-open-bg: rgba(224, 167, 66, 0.12);
+  --status-open-border: rgba(224, 167, 66, 0.4);
+  --status-pastor-bg: rgba(208, 68, 28, 0.10);
+
+  --r-card: 8px;
+  --shadow-card: 0 1px 3px rgba(20, 20, 26, 0.04), 0 4px 16px rgba(20, 20, 26, 0.05);
 }
-html,body{min-height:100%;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;}
-.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
 
-/* Header */
-.hdr{background:linear-gradient(135deg,var(--red) 0%,#8B0A14 100%);color:white;border-radius:var(--r16);padding:32px 36px;margin-bottom:24px;box-shadow:0 8px 30px rgba(196,30,42,0.18);position:relative;overflow:hidden;}
-.hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.06);}
-.hdr-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;margin-bottom:8px;font-weight:600;}
-.hdr h1{font-family:'Instrument Serif',serif;font-size:38px;line-height:1.1;margin-bottom:8px;font-weight:400;}
-.hdr-sub{font-size:14px;opacity:0.92;max-width:680px;}
-.hdr-meta{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;font-size:12px;opacity:0.88;}
-.hdr-meta span strong{color:white;font-weight:600;}
-.hdr-meta a{color:white;text-decoration:underline;}
+html, body{
+  background: var(--page-bg);
+  color: var(--ink-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  min-height: 100%;
+}
 
-/* Summary strip */
-.totals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+body{ position: relative; }
+
+/* Subtle brand grain on the page */
+body::before{
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.27  0 0 0 0 0.11  0 0 0 0.03 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+.wrap{
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 40px 24px 96px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   HEADER — obsidian band, anniversary brand cues
+   ============================================================ */
+.hdr{
+  background: var(--obsidian);
+  color: var(--bone);
+  border-radius: var(--r-card);
+  padding: 44px 44px 38px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+}
+
+.hdr::before{
+  content:'';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(208, 68, 28, 0.20), transparent 60%),
+    radial-gradient(ellipse 80% 40% at 50% 100%, rgba(110, 26, 15, 0.28), transparent 60%);
+  pointer-events: none;
+}
+
+.hdr::after{
+  content:'';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(208, 68, 28, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.hdr-inner{ position: relative; z-index: 1; }
+
+.hdr-eyebrow{
+  font-family: var(--font-body);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--red-bright);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hdr-eyebrow::after{
+  content: "";
+  height: 1px;
+  width: 60px;
+  background: var(--red);
+  opacity: 0.6;
+}
+
+.hdr h1{
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.6vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--bone);
+  margin-bottom: 12px;
+}
+.hdr h1 .accent{ color: var(--red-bright); }
+
+.hdr-tagline{
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 22px);
+  color: var(--fg-2);
+  line-height: 1.35;
+  margin-bottom: 22px;
+  max-width: 680px;
+}
+
+.hdr-meta{
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--fg-2);
+}
+.hdr-meta span strong{
+  color: var(--bone);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.hdr-meta a{ color: var(--red-bright); text-decoration: none; border-bottom: 1px solid rgba(208,68,28,0.4); }
+.hdr-meta a:hover{ color: var(--bone); border-bottom-color: var(--bone); }
+
+/* ============================================================
+   SUMMARY STRIP
+   ============================================================ */
+.totals{
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
 @media (max-width:780px){.totals{grid-template-columns:repeat(2,1fr);}}
-.tcard{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px 18px;box-shadow:var(--shadow-sm);}
-.tcard-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:6px;}
-.tcard-num{font-size:24px;font-weight:600;color:var(--ink);line-height:1;font-family:'Instrument Serif',serif;}
-.tcard-sub{font-size:11px;color:var(--ink-3);margin-top:4px;}
-.tcard.items{border-left:3px solid var(--red);}
-.tcard.duration{border-left:3px solid var(--blue);}
-.tcard.confirmed{border-left:3px solid var(--green);}
-.tcard.open{border-left:3px solid var(--amber);}
 
-/* What changed banner */
-.changes{background:linear-gradient(135deg,#FFFBEB,white);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:18px 22px;margin-bottom:24px;}
-.changes-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
-.changes ul{list-style:none;padding:0;}
-.changes li{font-size:13px;color:var(--ink-2);padding:5px 0 5px 22px;position:relative;line-height:1.55;}
-.changes li::before{content:'→';position:absolute;left:0;color:var(--amber);font-weight:700;}
-.changes li strong{color:var(--ink);}
+.tcard{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-card);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+.tcard::before{
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+}
+.tcard.items::before{ background: var(--red); }
+.tcard.duration::before{ background: var(--ink-2); }
+.tcard.confirmed::before{ background: var(--success); }
+.tcard.open::before{ background: var(--warn); }
 
-/* Order of service */
-.order{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow-sm);}
-.order-head{padding:20px 28px;border-bottom:1px solid #F1F5F9;background:#FAFBFC;}
-.order-head h2{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);margin-bottom:4px;font-weight:400;}
-.order-head p{font-size:13px;color:var(--ink-3);}
-
-.row{display:grid;grid-template-columns:60px 1fr 90px;gap:0;border-bottom:1px solid #F1F5F9;padding:18px 28px;align-items:start;transition:background 0.15s;}
-.row:last-child{border-bottom:none;}
-.row:hover{background:#FAFBFC;}
-
-.row-num{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink-4);line-height:1;padding-top:2px;}
-.row-num.pastor{color:var(--red);}
-.row-num.worship{color:var(--purple);}
-.row-num.meal{color:var(--green);}
-
-.row-body{padding-right:16px;}
-.row-name{font-weight:600;color:var(--ink);font-size:15px;line-height:1.3;margin-bottom:4px;}
-.row-lead{font-size:12.5px;color:var(--ink-3);margin-bottom:6px;}
-.row-lead strong{color:var(--ink-2);font-weight:600;}
-.row-note{font-size:12px;color:var(--ink-3);line-height:1.55;background:#F8FAFC;padding:8px 12px;border-radius:var(--r8);border-left:2px solid var(--ink-5);margin-top:6px;}
-.row-note.confirmed{border-left-color:var(--green);background:var(--green-light);color:#166534;}
-.row-note.open{border-left-color:var(--amber);background:var(--amber-light);color:#92400E;}
-
-.row-time{font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink-2);text-align:right;white-space:nowrap;padding-top:2px;}
-.row-time-sub{font-size:10px;color:var(--ink-4);letter-spacing:0.5px;text-transform:uppercase;margin-top:2px;font-family:'DM Sans',sans-serif;font-weight:600;}
-
-/* Row tints */
-.row.tint-pastor{background:linear-gradient(90deg,#FEF2F2 0%,white 60%);}
-.row.tint-pastor:hover{background:linear-gradient(90deg,#FEE2E2 0%,white 60%);}
-.row.tint-worship{background:linear-gradient(90deg,#F3E8FF 0%,white 60%);}
-.row.tint-worship:hover{background:linear-gradient(90deg,#E9D5FF 0%,white 60%);}
-.row.tint-meal{background:linear-gradient(90deg,#F0FDF4 0%,white 60%);}
-.row.tint-meal:hover{background:linear-gradient(90deg,#DCFCE7 0%,white 60%);}
-
-/* Pills */
-.pill{display:inline-block;font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:100px;margin-left:6px;vertical-align:middle;}
-.pill-confirmed{background:var(--green-light);color:var(--green);}
-.pill-open{background:var(--amber-light);color:var(--amber);}
-.pill-pastor{background:var(--red-light);color:var(--red);}
-.pill-worship{background:var(--purple-light);color:var(--purple);}
-.pill-meal{background:var(--green-light);color:var(--green);}
-.pill-generic{background:#F1F5F9;color:var(--ink-3);}
-
-/* Decisions */
-.section{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow-sm);}
-.section-head{padding:18px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
-.section-head-left{display:flex;align-items:center;gap:14px;}
-.section-icon{width:40px;height:40px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.si-confirmed{background:var(--green-light);color:var(--green);}
-.si-open{background:var(--amber-light);color:var(--amber);}
-.si-meeting{background:var(--blue-light);color:var(--blue);}
-.section-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);line-height:1.1;}
-.section-blurb{font-size:12px;color:var(--ink-3);margin-top:2px;}
-
-.list-items{padding:8px 0;}
-.list-row{padding:14px 28px;border-bottom:1px solid #F1F5F9;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;}
-.list-row:last-child{border-bottom:none;}
-.list-name{font-weight:600;color:var(--ink);font-size:13.5px;margin-bottom:2px;}
-.list-detail{font-size:12.5px;color:var(--ink-2);line-height:1.55;}
-.list-owner{font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-4);font-weight:600;white-space:nowrap;text-align:right;}
-
-/* Footer */
-.footer{margin-top:36px;padding:24px;text-align:center;font-size:12px;color:var(--ink-4);border-top:1px solid #E2E8F0;}
-.footer a{color:var(--red);text-decoration:none;}
-
-/* Mobile */
-@media (max-width:640px){
-  .wrap{padding:20px 16px 60px;}
-  .hdr{padding:24px;}
-  .hdr h1{font-size:30px;}
-  .row{grid-template-columns:42px 1fr;padding:16px 18px;gap:12px;}
-  .row-time{grid-column:2;text-align:left;padding-top:8px;}
-  .row-time-sub{display:inline-block;margin-left:8px;margin-top:0;}
-  .order-head,.section-head{padding:16px 18px;}
-  .list-row{padding:14px 18px;grid-template-columns:1fr;gap:6px;}
-  .list-owner{text-align:left;}
+.tcard-label{
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.tcard-num{
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--ink-1);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.tcard-sub{
+  font-family: var(--font-body);
+  font-size: 11.5px;
+  color: var(--ink-3);
+  margin-top: 6px;
 }
 
+/* ============================================================
+   CHANGES BANNER
+   ============================================================ */
+.changes{
+  background: linear-gradient(135deg, rgba(200, 162, 75, 0.10), var(--card-bg-soft));
+  border: 1px solid rgba(200, 162, 75, 0.4);
+  border-radius: var(--r-card);
+  padding: 22px 26px;
+  margin-bottom: 28px;
+}
+.changes-title{
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.changes ul{ list-style: none; padding: 0; }
+.changes li{
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink-2);
+  padding: 6px 0 6px 22px;
+  position: relative;
+  line-height: 1.55;
+}
+.changes li::before{
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--red);
+  font-weight: 700;
+}
+.changes li strong{ color: var(--ink-1); font-weight: 600; }
+
+/* ============================================================
+   ORDER OF SERVICE
+   ============================================================ */
+.order{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-card);
+  margin-bottom: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.order-head{
+  padding: 26px 32px 22px;
+  border-bottom: 1px solid var(--card-border);
+  background: var(--card-bg-soft);
+}
+.order-head h2{
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 28px;
+  color: var(--ink-1);
+  margin-bottom: 6px;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.order-head p{
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink-2);
+  max-width: 720px;
+}
+
+.row{
+  display: grid;
+  grid-template-columns: 70px 1fr 110px;
+  gap: 0;
+  border-bottom: 1px solid var(--card-border);
+  padding: 20px 32px;
+  align-items: start;
+  transition: background 0.18s var(--ease-out-quint);
+}
+.row:last-child{ border-bottom: none; }
+.row:hover{ background: var(--row-hover); }
+
+.row-num{
+  font-family: var(--font-display);
+  font-size: 30px;
+  color: var(--ink-4);
+  line-height: 1;
+  padding-top: 2px;
+  letter-spacing: -0.01em;
+}
+.row-num.pastor{ color: var(--red); }
+.row-num.worship{ color: var(--ember); }
+.row-num.meal{ color: var(--gold-deep); }
+
+.row-body{ padding-right: 20px; }
+.row-name{
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--ink-1);
+  font-size: 15.5px;
+  line-height: 1.3;
+  margin-bottom: 6px;
+  letter-spacing: -0.005em;
+}
+.row-lead{
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-bottom: 8px;
+}
+.row-lead strong{ color: var(--ink-2); font-weight: 600; }
+
+.row-note{
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  background: var(--card-bg-soft);
+  padding: 10px 14px;
+  border-radius: 4px;
+  border-left: 2px solid var(--line-mid);
+  margin-top: 8px;
+}
+.row-note.confirmed{
+  border-left-color: var(--success);
+  background: var(--status-confirmed-bg);
+  color: #1f4a28;
+}
+.row-note.open{
+  border-left-color: var(--warn);
+  background: var(--status-open-bg);
+  color: #7a4e15;
+}
+
+.row-time{
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink-2);
+  text-align: right;
+  white-space: nowrap;
+  padding-top: 2px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+.row-time-sub{
+  font-family: var(--font-body);
+  font-size: 10px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.row.tint-pastor{ background: var(--row-tint-pastor); }
+.row.tint-pastor:hover{ background: var(--row-tint-pastor-hover); }
+.row.tint-worship{ background: var(--row-tint-worship); }
+.row.tint-worship:hover{ background: var(--row-tint-worship-hover); }
+.row.tint-meal{ background: var(--row-tint-meal); }
+.row.tint-meal:hover{ background: var(--row-tint-meal-hover); }
+
+/* ============================================================
+   PILLS
+   ============================================================ */
+.pill{
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: var(--r-pill);
+  margin-left: 8px;
+  vertical-align: middle;
+  border: 1px solid transparent;
+}
+.pill-confirmed{ background: var(--status-confirmed-bg); color: var(--status-confirmed); }
+.pill-open{ background: var(--status-open-bg); color: var(--status-open); border-color: var(--status-open-border); }
+.pill-pastor{ background: var(--status-pastor-bg); color: var(--red-deep); }
+.pill-worship{ background: rgba(110, 26, 15, 0.10); color: var(--ember-soft); }
+.pill-meal{ background: rgba(200, 162, 75, 0.15); color: var(--gold-deep); }
+.pill-generic{ background: rgba(20,20,26,0.05); color: var(--ink-3); }
+
+/* ============================================================
+   DECISION SECTIONS
+   ============================================================ */
+.section{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-card);
+  margin-bottom: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+.section-head{
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  background: var(--card-bg-soft);
+}
+.section-head-left{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.section-icon{
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.si-confirmed{ background: var(--status-confirmed-bg); color: var(--status-confirmed); }
+.si-open{ background: var(--status-open-bg); color: var(--status-open); }
+.si-risk{ background: rgba(208, 68, 28, 0.10); color: var(--red); }
+
+.section-title{
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--ink-1);
+  line-height: 1.15;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+.section-blurb{
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: 4px;
+  max-width: 640px;
+}
+
+.list-items{ padding: 6px 0; }
+.list-row{
+  padding: 16px 32px;
+  border-bottom: 1px solid var(--card-border);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+.list-row:last-child{ border-bottom: none; }
+.list-name{
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--ink-1);
+  font-size: 14px;
+  margin-bottom: 4px;
+  letter-spacing: -0.005em;
+}
+.list-detail{
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.list-owner{
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: right;
+  background: var(--status-pastor-bg);
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{
+  margin-top: 40px;
+  padding: 28px 0 0;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--ink-4);
+  border-top: 1px solid var(--card-border);
+}
+.footer-mark{
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  color: var(--red);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+.footer a{ color: var(--red); text-decoration: none; border-bottom: 1px solid rgba(208,68,28,0.3); }
+.footer a:hover{ border-bottom-color: var(--red); }
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+@media (max-width:640px){
+  .wrap{ padding: 20px 16px 60px; }
+  .hdr{ padding: 32px 24px 28px; }
+  .hdr h1{ font-size: 34px; }
+  .row{ grid-template-columns: 48px 1fr; padding: 18px 20px; gap: 14px; }
+  .row-time{ grid-column: 2; text-align: left; padding-top: 10px; font-size: 18px; }
+  .row-time-sub{ display: inline-block; margin-left: 10px; margin-top: 0; }
+  .row-body{ padding-right: 0; }
+  .order-head{ padding: 22px 20px 18px; }
+  .order-head h2{ font-size: 24px; }
+  .section-head{ padding: 20px; }
+  .list-row{ padding: 16px 20px; grid-template-columns: 1fr; gap: 8px; }
+  .list-owner{ text-align: left; justify-self: start; }
+  .hdr-meta{ gap: 14px; }
+}
+
+/* ============================================================
+   PRINT — for leadership PDF export
+   ============================================================ */
 @media print{
-  body{background:white;}
-  .wrap{padding:0;max-width:100%;}
-  .hdr{box-shadow:none;}
-  .section,.tcard,.order,.changes{box-shadow:none;page-break-inside:avoid;}
-  .row:hover{background:transparent;}
+  body{ background: white; }
+  body::before{ display: none; }
+  .wrap{ padding: 0; max-width: 100%; }
+  .hdr{
+    background: white !important;
+    color: var(--ink-1) !important;
+    box-shadow: none;
+    border: 1px solid var(--ink-5);
+  }
+  .hdr::before, .hdr::after{ display: none; }
+  .hdr h1, .hdr h1 .accent{ color: var(--ink-1) !important; }
+  .hdr-eyebrow{ color: var(--red) !important; }
+  .hdr-tagline, .hdr-meta{ color: var(--ink-2) !important; }
+  .hdr-meta span strong{ color: var(--ink-1) !important; }
+  .hdr-meta a{ color: var(--red) !important; }
+  .section, .tcard, .order, .changes{ box-shadow: none; page-break-inside: avoid; }
+  .row:hover{ background: transparent; }
+  .row.tint-pastor, .row.tint-worship, .row.tint-meal{ background: rgba(0,0,0,0.02) !important; }
 }
 </style>
 </head>
@@ -148,15 +590,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
 
   <!-- Header -->
   <div class="hdr">
-    <div class="hdr-eyebrow">Calvary Hephzibah · 34th Anniversary</div>
-    <h1>Anniversary 2026 — Running Order</h1>
-    <div class="hdr-sub">Updated programme for Sunday 17th May 2026, folding in confirmations from the planning meeting on Monday 11 May. Generic presentation slots, named Show of Appreciation, cabaret-style seating with a sit-down meal at the tables together.</div>
-    <div class="hdr-meta">
-      <span><strong>Date:</strong> Sunday 17 May 2026</span>
-      <span><strong>Start:</strong> 10:30 AM · Doors 10:00</span>
-      <span><strong>Venue:</strong> 74 Carmoor Road, Manchester M13 0FB</span>
-      <span><strong>Status:</strong> Draft v3 · post-meeting update</span>
-      <span><strong>Companions:</strong> <a href="anniversary-finance-2026.html">Finance</a> · <a href="anniversary-gear-sourcing-2026.html">Gear</a></span>
+    <div class="hdr-inner">
+      <div class="hdr-eyebrow">Calvary Hephzibah · 34th Anniversary</div>
+      <h1>Running Order <span class="accent">·</span> Sun 17 May</h1>
+      <div class="hdr-tagline">Reasons to be Thankful. Updated programme folding in confirmations from the planning meeting of Monday 11 May 2026.</div>
+      <div class="hdr-meta">
+        <span><strong>Date:</strong> Sunday 17 May 2026</span>
+        <span><strong>Start:</strong> 10:30 AM · Doors 10:00</span>
+        <span><strong>Venue:</strong> 74 Carmoor Road, Manchester M13 0FB</span>
+        <span><strong>Status:</strong> Draft v3 · post-meeting</span>
+        <span><strong>Companions:</strong> <a href="anniversary-finance-2026.html">Finance</a> · <a href="anniversary-gear-sourcing-2026.html">Gear</a></span>
+      </div>
     </div>
   </div>
 
@@ -165,7 +609,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
     <div class="tcard items">
       <div class="tcard-label">Programme items</div>
       <div class="tcard-num">19</div>
-      <div class="tcard-sub">From pre-service to closing</div>
+      <div class="tcard-sub">Pre-service to closing</div>
     </div>
     <div class="tcard duration">
       <div class="tcard-label">Total runtime</div>
@@ -203,7 +647,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <p>Time blocks in minutes per item. Presentations sit at items 4, 6, 9 and 13 — generically labelled, allocated to confirmed departments behind the scenes.</p>
     </div>
 
-    <!-- 1 -->
     <div class="row tint-meal">
       <div class="row-num meal">1</div>
       <div class="row-body">
@@ -214,7 +657,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">30 min<div class="row-time-sub">10:00–10:30</div></div>
     </div>
 
-    <!-- 2 -->
     <div class="row tint-pastor">
       <div class="row-num pastor">2</div>
       <div class="row-body">
@@ -225,7 +667,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">10 min<div class="row-time-sub">10:30–10:40</div></div>
     </div>
 
-    <!-- 3 -->
     <div class="row tint-worship">
       <div class="row-num worship">3</div>
       <div class="row-body">
@@ -236,7 +677,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">20 min<div class="row-time-sub">10:40–11:00</div></div>
     </div>
 
-    <!-- 4 -->
     <div class="row">
       <div class="row-num">4</div>
       <div class="row-body">
@@ -247,7 +687,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">3 min<div class="row-time-sub">11:00–11:03</div></div>
     </div>
 
-    <!-- 5 -->
     <div class="row">
       <div class="row-num">5</div>
       <div class="row-body">
@@ -258,7 +697,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">5 min<div class="row-time-sub">11:03–11:08</div></div>
     </div>
 
-    <!-- 6 -->
     <div class="row">
       <div class="row-num">6</div>
       <div class="row-body">
@@ -269,7 +707,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">3 min<div class="row-time-sub">11:08–11:11</div></div>
     </div>
 
-    <!-- 7 -->
     <div class="row tint-pastor">
       <div class="row-num pastor">7</div>
       <div class="row-body">
@@ -280,7 +717,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">10 min<div class="row-time-sub">11:11–11:21</div></div>
     </div>
 
-    <!-- 8 -->
     <div class="row tint-pastor">
       <div class="row-num pastor">8</div>
       <div class="row-body">
@@ -291,7 +727,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">10–12 min<div class="row-time-sub">11:21–11:33</div></div>
     </div>
 
-    <!-- 9 -->
     <div class="row">
       <div class="row-num">9</div>
       <div class="row-body">
@@ -302,7 +737,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">3 min<div class="row-time-sub">11:33–11:36</div></div>
     </div>
 
-    <!-- 10 -->
     <div class="row">
       <div class="row-num">10</div>
       <div class="row-body">
@@ -313,7 +747,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">10 min<div class="row-time-sub">11:36–11:46</div></div>
     </div>
 
-    <!-- 11 -->
     <div class="row">
       <div class="row-num">11</div>
       <div class="row-body">
@@ -324,7 +757,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">3 min<div class="row-time-sub">11:46–11:49</div></div>
     </div>
 
-    <!-- 12 -->
     <div class="row">
       <div class="row-num">12</div>
       <div class="row-body">
@@ -335,7 +767,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">25–30 min<div class="row-time-sub">11:49–12:19</div></div>
     </div>
 
-    <!-- 13 -->
     <div class="row">
       <div class="row-num">13</div>
       <div class="row-body">
@@ -346,7 +777,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">3 min<div class="row-time-sub">12:19–12:22</div></div>
     </div>
 
-    <!-- 14 -->
     <div class="row">
       <div class="row-num">14</div>
       <div class="row-body">
@@ -357,7 +787,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">10 min<div class="row-time-sub">12:22–12:32</div></div>
     </div>
 
-    <!-- 15 -->
     <div class="row tint-worship">
       <div class="row-num worship">15</div>
       <div class="row-body">
@@ -368,7 +797,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">4 min<div class="row-time-sub">12:32–12:36</div></div>
     </div>
 
-    <!-- 16 -->
     <div class="row tint-worship">
       <div class="row-num worship">16</div>
       <div class="row-body">
@@ -379,7 +807,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">20 min<div class="row-time-sub">12:36–12:56</div></div>
     </div>
 
-    <!-- 17 -->
     <div class="row tint-pastor">
       <div class="row-num pastor">17</div>
       <div class="row-body">
@@ -390,7 +817,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">5 min<div class="row-time-sub">12:56–13:01</div></div>
     </div>
 
-    <!-- 18 -->
     <div class="row tint-meal">
       <div class="row-num meal">18</div>
       <div class="row-body">
@@ -401,7 +827,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
       <div class="row-time">60–75 min<div class="row-time-sub">13:01–14:15</div></div>
     </div>
 
-    <!-- 19 -->
     <div class="row tint-pastor">
       <div class="row-num pastor">19</div>
       <div class="row-body">
@@ -518,7 +943,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
   <div class="section">
     <div class="section-head">
       <div class="section-head-left">
-        <div class="section-icon si-meeting">⚓</div>
+        <div class="section-icon si-risk">⚓</div>
         <div>
           <div class="section-title">Risks to manage on the day</div>
           <div class="section-blurb">Three risks specific to a 19-item, cabaret-style, meal-included programme of this length.</div>
@@ -551,7 +976,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font
   </div>
 
   <div class="footer">
-    Anniversary 2026 · Running Order · Draft v3 · Last updated 13 May 2026<br>
+    <span class="footer-mark">Calvary Hephzibah · 34th Anniversary</span>
+    Running Order · Draft v3 · Last updated 13 May 2026<br>
     Companion documents: <a href="anniversary-finance-2026.html">Finance Compilation</a> · <a href="anniversary-gear-sourcing-2026.html">Gear Sourcing</a>
   </div>
 
