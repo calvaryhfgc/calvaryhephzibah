@@ -166,16 +166,21 @@
 
   async function upsertLine(lineRef, patch) {
     if (!supa) throw new Error('Supabase not available');
+    console.log('[POTracker] upsertLine called — line_ref:', lineRef, 'patch:', JSON.stringify(patch));
     // Try update first (will be a no-op if no row exists)
     const existing = state[lineRef];
     if (existing && existing.id) {
+      console.log('[POTracker] UPDATE path, existing.id:', existing.id);
       const { data, error } = await supa
         .from(config.table)
         .update(patch)
         .eq('id', existing.id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+        console.error('[POTracker] UPDATE failed. Patch was:', patch, 'Error:', error);
+        throw error;
+      }
       return data;
     } else {
       // Insert new row
@@ -183,12 +188,14 @@
         po_slug: config.poSlug,
         line_ref: lineRef,
       }, patch);
+      console.log('[POTracker] INSERT path, full row:', JSON.stringify(row));
       const { data, error } = await supa
         .from(config.table)
         .insert(row)
         .select()
         .single();
       if (error) {
+        console.error('[POTracker] INSERT failed. Row was:', row, 'Error:', error);
         // 23505 = unique_violation — someone else claimed it microseconds ago
         if (error.code === '23505') {
           await hydrate();
