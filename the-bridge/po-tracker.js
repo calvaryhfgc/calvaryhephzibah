@@ -50,7 +50,7 @@
   };
 
   const STATUS_LABELS = {
-    pending:   { label: 'Open',     icon: '○',  color: '#86868B' },
+    pending:   { label: 'Record purchase',     icon: '○',  color: '#86868B' },
     claimed:   { label: 'Claimed',  icon: '◐',  color: '#0071E3' },
     ordered:   { label: 'Ordered',  icon: '◑',  color: '#BF9B30' },
     received:  { label: 'Received', icon: '●',  color: '#34C759' },
