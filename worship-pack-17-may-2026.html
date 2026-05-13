@@ -251,6 +251,13 @@
       border-color: var(--red);
       background: var(--red);
     }
+    .song-tag.practise {
+      animation: pulse-tag 2.4s ease-in-out infinite;
+    }
+    @keyframes pulse-tag {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(208, 68, 28, 0.5); }
+      50%      { box-shadow: 0 0 0 6px rgba(208, 68, 28, 0); }
+    }
     .song-tag.no-ref {
       color: var(--fg-3);
       border-color: var(--line-mid);
@@ -406,7 +413,7 @@
           <div class="set-block-label">Worship</div>
         </div>
 
-        <div class="song" data-title="Open the Eyes of My Heart">
+        <div class="song" data-title="Open the Eyes of My Heart" data-arrangement-id="926ef6e5-3571-4fe2-9c06-8c44128bc3c3">
           <div class="song-num">05</div>
           <div class="song-title">Open the Eyes of My Heart</div>
           <div class="song-tag loading">Checking…</div>
@@ -439,7 +446,7 @@
       </div>
 
       <div class="ref-hint">
-        <strong>Reference audio</strong> — songs marked <em>Open</em> link straight into the Rehearsal Studio with the reference track and stems. Tap any of them to practise your part on your phone.
+        <strong>Reference audio</strong> — songs marked <em>Open ↗</em> jump into the song page in the Rehearsal Studio. Songs marked <em>Practise ↗</em> drop you straight into the practice view with the arrangement loaded — pick your part, hit play, rehearse with stems.
       </div>
 
     </section>
@@ -447,7 +454,7 @@
     <!-- FOOTER -->
     <section class="pack-footer">
       <p class="signoff">
-        <strong>Worship Pack v5</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
+        <strong>Worship Pack v6</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
       </p>
     </section>
 
@@ -490,9 +497,22 @@
         // Match each row
         songRows.forEach(row => {
           const title = row.getAttribute('data-title');
-          const songId = titleToId.get(norm(title));
+          const arrangementOverride = row.getAttribute('data-arrangement-id');
           const tag = row.querySelector('.song-tag');
           tag.classList.remove('loading');
+
+          // If an explicit arrangement is pinned to this row, link straight
+          // to Practice View — that's the most useful destination for the team.
+          if (arrangementOverride) {
+            const practiceUrl = `${STUDIO_BASE}practice.html?arrangement_id=${arrangementOverride}`;
+            tag.textContent = 'Practise ↗';
+            tag.classList.add('has-ref', 'practise');
+            row.classList.add('has-ref');
+            row.addEventListener('click', () => window.open(practiceUrl, '_blank'));
+            return;
+          }
+
+          const songId = titleToId.get(norm(title));
 
           if (!songId) {
             // Song not in the library yet
