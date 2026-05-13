@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Worship Pack · Anniversary Sunday · 17 May 2026 · Calvary Hephzibah</title>
-  <meta name="description" content="Worship team pack for the 34th Anniversary Service — Sunday 17 May 2026. Order of day, set list, notes per song.">
+  <meta name="description" content="Worship team pack for the 34th Anniversary Service — Sunday 17 May 2026. Line-up and set list.">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Worship Pack · Anniversary 17 May 2026">
-  <meta property="og:description" content="Order of day, set list, and per-song notes for the worship team.">
+  <meta property="og:description" content="Line-up and set list for the worship team.">
   <meta property="og:url" content="https://calvaryhfgc.github.io/calvaryhephzibah/worship-pack-17-may-2026.html">
   <meta property="og:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/hero-poster.jpg">
   <meta name="twitter:card" content="summary_large_image">
@@ -45,8 +45,9 @@
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
     }
 
-    .container { max-width: 920px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+    .container { max-width: 820px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
 
+    /* TICKER */
     .ticker {
       position: sticky; top: 0; z-index: 50;
       background: var(--obsidian);
@@ -71,8 +72,9 @@
     }
     .ticker-right { color: var(--fg-3); font-size: 11px; }
 
+    /* HERO */
     .hero {
-      padding: 80px 0 64px;
+      padding: 80px 0 56px;
       border-bottom: 1px solid var(--line-soft);
     }
     .hero-eyebrow {
@@ -115,7 +117,8 @@
       line-height: 1.3;
     }
 
-    section { padding: 64px 0; border-bottom: 1px solid var(--line-soft); }
+    /* SECTIONS */
+    section { padding: 56px 0; border-bottom: 1px solid var(--line-soft); }
     section:last-of-type { border-bottom: none; }
 
     .section-eyebrow {
@@ -136,6 +139,7 @@
       margin-bottom: 36px;
     }
 
+    /* TEAM */
     .team-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -180,84 +184,15 @@
       text-align: right;
     }
 
-    .order-list { list-style: none; }
-    .order-item {
-      display: grid;
-      grid-template-columns: 50px 90px 1fr 1fr;
-      gap: 20px;
-      align-items: baseline;
-      padding: 20px 0;
-      border-bottom: 1px solid var(--line-soft);
-    }
-    .order-num {
-      font-family: var(--font-display);
-      font-size: 28px;
-      color: var(--red);
-      line-height: 1;
-    }
-    .order-time {
-      font-size: 12px;
-      letter-spacing: 0.06em;
-      color: var(--fg-3);
-      font-variant-numeric: tabular-nums;
-    }
-    .order-what {
-      font-family: var(--font-serif);
-      font-size: 19px;
-      color: var(--fg-1);
-      line-height: 1.3;
-    }
-    .order-what small {
-      display: block;
-      margin-top: 3px;
-      font-size: 12px;
-      color: var(--fg-3);
-      font-family: var(--font-body);
-    }
-    .order-who {
-      font-size: 13px;
-      color: var(--fg-2);
-    }
-    .order-item.cue {
-      background: linear-gradient(90deg, rgba(208, 68, 28, 0.10), transparent 70%);
-      margin: 0 -20px;
-      padding-left: 20px;
-      padding-right: 20px;
-      border-bottom-color: rgba(208, 68, 28, 0.2);
-    }
-    .order-item.cue .order-num { color: var(--bone); }
-    .order-item.cue .order-what { color: var(--bone); font-weight: 500; }
-    .cue-tag {
-      display: inline-block;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--red);
-      font-weight: 700;
-      padding: 2px 8px;
-      border: 1px solid var(--red);
-      margin-left: 6px;
-      vertical-align: middle;
-    }
-
-    @media (max-width: 640px) {
-      .order-item {
-        grid-template-columns: 36px 1fr;
-        gap: 10px 14px;
-      }
-      .order-time { grid-column: 2; margin-top: -6px; }
-      .order-what { grid-column: 1 / -1; }
-      .order-who { grid-column: 1 / -1; }
-    }
-
-    .set-block { margin-bottom: 48px; }
+    /* SET LIST */
+    .set-block { margin-bottom: 40px; }
     .set-block:last-child { margin-bottom: 0; }
     .set-block-header {
       display: flex;
       align-items: baseline;
       gap: 16px;
       padding-bottom: 14px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       border-bottom: 1px solid var(--red);
       flex-wrap: wrap;
     }
@@ -276,98 +211,51 @@
     }
 
     .song {
-      padding: 24px 0;
+      padding: 18px 0;
       border-bottom: 1px solid var(--line-soft);
       display: grid;
-      grid-template-columns: 60px 1fr;
-      gap: 24px;
-      align-items: start;
+      grid-template-columns: 60px 1fr auto;
+      gap: 20px;
+      align-items: baseline;
     }
     .song:last-child { border-bottom: none; }
     .song-num {
       font-family: var(--font-display);
-      font-size: 48px;
+      font-size: 40px;
       line-height: 0.85;
       color: var(--red);
     }
-    .song-body { min-width: 0; }
-    .song-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
     .song-title {
       font-family: var(--font-display);
-      font-size: clamp(24px, 3.2vw, 36px);
+      font-size: clamp(22px, 2.8vw, 32px);
       line-height: 1;
       letter-spacing: -0.01em;
       color: var(--bone);
       text-transform: uppercase;
     }
-    .song-meta {
-      display: flex;
-      gap: 14px;
-      font-size: 11px;
+    .song-tag {
+      font-size: 10px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--fg-3);
+      padding: 4px 10px;
+      border: 1px solid var(--line-mid);
+      white-space: nowrap;
     }
-    .song-notes {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px;
-    }
-    .note-block {
-      background: var(--slate);
-      padding: 14px 16px;
-      border-top: 1px solid var(--red);
-    }
-    .note-label {
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+    .song-tag.warn {
       color: var(--red);
-      font-weight: 700;
-      margin-bottom: 6px;
+      border-color: var(--red);
     }
-    .note-block p {
-      font-size: 14px;
-      color: var(--fg-2);
-      line-height: 1.55;
-    }
-    .note-block strong { color: var(--fg-1); font-weight: 600; }
 
     @media (max-width: 640px) {
-      .song { grid-template-columns: 1fr; gap: 12px; }
-      .song-num { font-size: 36px; }
+      .song { grid-template-columns: 44px 1fr; gap: 14px; }
+      .song-num { font-size: 32px; }
+      .song-tag { grid-column: 2; justify-self: start; margin-top: 6px; }
     }
 
-    .callout {
-      padding: 24px 28px;
-      background: linear-gradient(135deg, rgba(208, 68, 28, 0.08), rgba(110, 26, 15, 0.04));
-      border-left: 3px solid var(--red);
-      margin-top: 32px;
-    }
-    .callout .label {
-      font-size: 11px;
-      letter-spacing: var(--track-eyebrow);
-      text-transform: uppercase;
-      color: var(--red);
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    .callout p {
-      font-family: var(--font-serif);
-      font-size: 17px;
-      color: var(--fg-1);
-      line-height: 1.5;
-    }
-
+    /* FOOTER */
     .pack-footer {
-      padding: 48px 0;
+      padding: 40px 0;
       border-top: 1px solid var(--line-soft);
     }
     .pack-footer .signoff {
@@ -434,7 +322,7 @@
         <div class="team-block">
           <h3>Band</h3>
           <ul class="team-list">
-            <li><span class="name">Bolaji A.</span><span class="role">Drums · MD</span></li>
+            <li><span class="name">Bolaji A.</span><span class="role">Drums</span></li>
             <li><span class="name">Edmund</span><span class="role">1st Keys</span></li>
             <li><span class="name">Uncle B</span><span class="role">2nd Keys</span></li>
             <li><span class="name">Uncle Michael</span><span class="role">Bass</span></li>
@@ -444,131 +332,9 @@
       </div>
     </section>
 
-    <!-- ORDER OF DAY -->
-    <section>
-      <div class="section-eyebrow">02 · Order of Day</div>
-      <h2 class="section-title">Where You Come In</h2>
-
-      <ul class="order-list">
-
-        <li class="order-item">
-          <div class="order-num">·</div>
-          <div class="order-time">08:30</div>
-          <div class="order-what">Team call · Sound check</div>
-          <div class="order-who">All</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">·</div>
-          <div class="order-time">09:30</div>
-          <div class="order-what">Pre-service prayer</div>
-          <div class="order-who">Uncle Caster</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">·</div>
-          <div class="order-time">10:00</div>
-          <div class="order-what">Doors open · Pre-service playlist</div>
-          <div class="order-who">Media</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">01</div>
-          <div class="order-time">10:30</div>
-          <div class="order-what">Welcome &amp; Bible Reading</div>
-          <div class="order-who">Pastor Shade</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">02</div>
-          <div class="order-time">10:35</div>
-          <div class="order-what">Opening Prayer</div>
-          <div class="order-who">Pastor Kayode</div>
-        </li>
-
-        <li class="order-item cue">
-          <div class="order-num">03</div>
-          <div class="order-time">10:40</div>
-          <div class="order-what">Opener + Praise + Worship set <span class="cue-tag">You're up</span><small>Opener → Praise (3) → Worship (3). ~28 min.</small></div>
-          <div class="order-who">Uncle Caster + team</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">04</div>
-          <div class="order-time">11:08</div>
-          <div class="order-what">Welcome to first-timers · Anniversary moment</div>
-          <div class="order-who">Pastor Shade</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">05</div>
-          <div class="order-time">11:15</div>
-          <div class="order-what">Communion</div>
-          <div class="order-who">TBC</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">06</div>
-          <div class="order-time">11:25</div>
-          <div class="order-what">Announcements</div>
-          <div class="order-who">Pastor Kayode</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">07</div>
-          <div class="order-time">11:30</div>
-          <div class="order-what">Bible Reading</div>
-          <div class="order-who">TBC</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">08</div>
-          <div class="order-time">11:35</div>
-          <div class="order-what">Anniversary Sermon</div>
-          <div class="order-who">Pastor Shade</div>
-        </li>
-
-        <li class="order-item cue">
-          <div class="order-num">09</div>
-          <div class="order-time">12:15</div>
-          <div class="order-what">Offering · 1 song <span class="cue-tag">You're up</span><small>Lord I Lift Your Name on High. Sustain to time.</small></div>
-          <div class="order-who">Worship Team</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">10</div>
-          <div class="order-time">12:23</div>
-          <div class="order-what">Thanksgiving &amp; Testimonies</div>
-          <div class="order-who">Pastor Shade</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">11</div>
-          <div class="order-time">12:35</div>
-          <div class="order-what">Afro praise set</div>
-          <div class="order-who">External lead</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">12</div>
-          <div class="order-time">12:45</div>
-          <div class="order-what">Benediction</div>
-          <div class="order-who">TBC</div>
-        </li>
-
-        <li class="order-item">
-          <div class="order-num">·</div>
-          <div class="order-time">12:50</div>
-          <div class="order-what">Reception · Round-table lunch</div>
-          <div class="order-who">All</div>
-        </li>
-
-      </ul>
-    </section>
-
     <!-- SET LIST -->
     <section>
-      <div class="section-eyebrow">03 · Set List</div>
+      <div class="section-eyebrow">02 · Set List</div>
       <h2 class="section-title">The Songs</h2>
 
       <!-- OPENER -->
@@ -580,186 +346,60 @@
 
         <div class="song">
           <div class="song-num">01</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">Thanks Thanks I Give You Thanks</h3>
-              <div class="song-meta"><span>Up-tempo</span><span>~3–4 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p><strong>Bolaji</strong> sets the count. Full band from bar 1 — Edmund piano hook, Uncle B pads, Morayo rhythm chops, Uncle Michael locks with kick. No intro vamp, straight in.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p><strong>Caster</strong> leads. Full wall on the chorus. Trade lines on "for all you've done for me." Esther high, Uncle Shola low, Aunty Jess mid.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Transition</div>
-                <p><strong>No stop into Trading My Sorrows.</strong> Land the final chord on the downbeat, Bolaji counts straight into the next song. Caster bridges with one line if needed.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">Thanks Thanks I Give You Thanks</div>
+          <div class="song-tag">Up-tempo</div>
         </div>
       </div>
 
       <!-- PRAISE -->
       <div class="set-block">
         <div class="set-block-header">
-          <div class="set-block-label">Praise Set</div>
-          <div class="set-block-meta">Three songs · continuous · ~14 min</div>
+          <div class="set-block-label">Praise</div>
+          <div class="set-block-meta">Three songs · continuous</div>
         </div>
 
         <div class="song">
           <div class="song-num">02</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">Trading My Sorrows</h3>
-              <div class="song-meta"><span>Key: E</span><span>~5 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p>The groove is the song. <strong>Bolaji</strong> lock it, don't get fancy. <strong>Morayo</strong>'s rhythm part is the hook. <strong>Edmund</strong> stabs on chorus. <strong>Uncle B</strong> Rhodes on verse, organ on chorus.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p>Trade lines on "yes Lord, yes Lord, yes yes Lord." Bridge ("I am pressed but not crushed…") — <strong>Esther leads</strong>, she's been working it.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Arrangement</div>
-                <p>V → Ch → V → Ch → Bridge → Ch → Yes-Lord tag ×4 → Big finish. Land it, segue.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">Trading My Sorrows</div>
+          <div class="song-tag">Key: E</div>
         </div>
 
         <div class="song">
           <div class="song-num">03</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">Lord You Are Good</h3>
-              <div class="song-meta"><span>Key: G</span><span>~5 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p><strong>Edmund</strong> opens with the piano hook. <strong>Morayo</strong> rhythm chops, hold lead lines until second chorus. <strong>Bolaji</strong> open hats on chorus.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p><strong>Caster</strong> verse and chorus. Full wall on "And your mercy endureth forever." Save the runs for the second chorus.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Arrangement</div>
-                <p>Intro → V1 → Ch → V2 → Ch → Tag ×3 → Outro. Don't extend. Move into Friend of God on Caster's call.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">Lord You Are Good</div>
+          <div class="song-tag">Key: G</div>
         </div>
 
         <div class="song">
           <div class="song-num">04</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">Friend of God</h3>
-              <div class="song-meta"><span>Key: G</span><span>~5 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p><strong>Bolaji</strong> 4-on-the-floor on chorus, brushes on verse. <strong>Morayo</strong> lead line on second chorus, keep it singable. <strong>Uncle B</strong> Hammond/organ on bridge.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p>Wall on every "I am a friend of God." <strong>Caster</strong> calls "He calls me…" — the room responds "Friend." Don't sing the response, let them.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Arrangement</div>
-                <p>V → Ch → V → Ch → Bridge → Ch ×2. Land hard, then drop to stillness for the worship set.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">Friend of God</div>
+          <div class="song-tag">Key: G</div>
         </div>
       </div>
 
       <!-- WORSHIP -->
       <div class="set-block">
         <div class="set-block-header">
-          <div class="set-block-label">Worship Set</div>
-          <div class="set-block-meta">Three songs · bring it down · ~14 min</div>
+          <div class="set-block-label">Worship</div>
+          <div class="set-block-meta">Three songs · bring it down</div>
         </div>
 
         <div class="song">
           <div class="song-num">05</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">Open the Eyes of My Heart</h3>
-              <div class="song-meta"><span>New arrangement</span><span>~5 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Arrangement</div>
-                <p><strong>New arrangement — Caster to walk through at Saturday rehearsal.</strong> Bring charts blank, no assumptions from the classic version.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p>Strip back from praise set. Hold parts until Caster shows the structure. Expect verse stripped, chorus full.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p>Confirm lead at rehearsal. Whole team on "Holy holy holy" — that section stays familiar.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">Open the Eyes of My Heart</div>
+          <div class="song-tag warn">New arrangement</div>
         </div>
 
         <div class="song">
           <div class="song-num">06</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">My Jesus My Saviour</h3>
-              <div class="song-meta"><span>Shout to the Lord</span><span>~5 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p><strong>Edmund</strong> piano-led intro. Drums and bass enter on first chorus. <strong>Morayo</strong> out for verse, sustained ambience on chorus. <strong>Uncle B</strong> strings patch on second verse.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p><strong>Caster</strong> verse 1 solo. Aunty Jess joins V2. Full wall from first chorus. Let the room carry "Shout to the Lord."</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Arrangement</div>
-                <p>V1 → Ch → V2 → Ch → Ch (key lift optional, Caster's call) → Tag. Hold space at the end.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">My Jesus My Saviour</div>
+          <div class="song-tag">Shout to the Lord</div>
         </div>
 
         <div class="song">
           <div class="song-num">07</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">Here I Am to Worship</h3>
-              <div class="song-meta"><span>Key: A</span><span>~4 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p>Soft top. <strong>Edmund</strong> piano alone for V1. <strong>Uncle B</strong> joins with pads on chorus. Drums (rim and hat) and bass enter on bridge.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p>Verse intimate, chorus full wall. Bridge ("I'll never know how much it cost…") — build across three passes from whisper to full.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Arrangement</div>
-                <p>V → Ch → V → Ch → Bridge ×3 → Ch → Hold. <strong>Land softly</strong> — no button. Final chord fades, hands off to Pastor Shade.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">Here I Am to Worship</div>
+          <div class="song-tag">Key: A</div>
         </div>
       </div>
 
@@ -767,37 +407,14 @@
       <div class="set-block">
         <div class="set-block-header">
           <div class="set-block-label">Offering</div>
-          <div class="set-block-meta">One song · sustain to time</div>
+          <div class="set-block-meta">One song</div>
         </div>
 
         <div class="song">
           <div class="song-num">08</div>
-          <div class="song-body">
-            <div class="song-header">
-              <h3 class="song-title">Lord I Lift Your Name on High</h3>
-              <div class="song-meta"><span>Up-tempo</span><span>~5 min</span></div>
-            </div>
-            <div class="song-notes">
-              <div class="note-block">
-                <div class="note-label">Band</div>
-                <p>Full energy from bar 1. <strong>Bolaji</strong> open hats throughout, big fills before chorus. <strong>Morayo</strong> rhythm part, lead on second chorus. <strong>Edmund</strong> piano stabs. <strong>Uncle Michael</strong> walking bass on verses.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Vocals</div>
-                <p>Wall on every chorus. Call-and-response on "you came from heaven to earth…" — let the room sing back.</p>
-              </div>
-              <div class="note-block">
-                <div class="note-label">Arrangement</div>
-                <p>V → Ch → V → Ch → Ch (key lift) → Tag. <strong>Time to the offering</strong> — if buckets aren't back, extend the chorus. Watch the back of the room.</p>
-              </div>
-            </div>
-          </div>
+          <div class="song-title">Lord I Lift Your Name on High</div>
+          <div class="song-tag">Up-tempo</div>
         </div>
-      </div>
-
-      <div class="callout">
-        <div class="label">End of service</div>
-        <p>No closing song from us. The afro praise lead will carry the back end of the service — don't double up. Step off cleanly after the offering and reset for the reception.</p>
       </div>
 
     </section>
@@ -805,7 +422,7 @@
     <!-- FOOTER -->
     <section class="pack-footer">
       <p class="signoff">
-        <strong>Worship Pack v2</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
+        <strong>Worship Pack v3</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
       </p>
     </section>
 
