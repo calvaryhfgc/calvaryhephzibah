@@ -44,6 +44,9 @@
     table: 'po_line_purchases',
     autoRender: true,
     pollOnFocus: true,
+    authMode: 'bridge',          // 'bridge' (default) or 'pin'
+    pin: null,                   // required when authMode === 'pin'
+    purchasers: null,            // required when authMode === 'pin' — array of names
   };
 
   const STATUS_LABELS = {
@@ -60,8 +63,9 @@
 
   let config = null;
   let supa = null;
-  let currentUser = null;
-  let state = {};   // line_ref -> purchase row
+  let currentUser = null;       // { id, name, level } in bridge mode; { name:'pin-unlocked', level:'admin' } in pin mode
+  let state = {};               // line_ref -> purchase row
+  let pinUnlocked = false;      // pin auth gate
   let renderQueue = new Set();
 
   // ── INIT ───────────────────────────────────────────────────────────────────
@@ -69,13 +73,27 @@
     config = Object.assign({}, DEFAULTS, opts || {});
     if (!config.poSlug) throw new Error('POTracker.init requires poSlug');
 
-    // Load current user from Bridge session — try sessionStorage first (per-tab),
-    // then localStorage (cross-tab). Bridge writes to both on login.
-    try {
-      let raw = sessionStorage.getItem('bridge_user');
-      if (!raw) raw = localStorage.getItem('bridge_user');
-      if (raw) currentUser = JSON.parse(raw);
-    } catch(e) { /* ignore */ }
+    if (config.authMode === 'pin') {
+      if (!config.pin) throw new Error('POTracker.init: pin required when authMode=pin');
+      if (!Array.isArray(config.purchasers) || config.purchasers.length === 0) {
+        throw new Error('POTracker.init: purchasers array required when authMode=pin');
+      }
+      // PIN mode: gate is the page itself. No bridge user.
+      // Check if PIN already entered this tab.
+      pinUnlocked = sessionStorage.getItem('po_pin_unlocked_' + config.poSlug) === '1';
+      if (pinUnlocked) {
+        // Synthesise a "user" that satisfies the action-permission checks.
+        // Real purchaser identity is captured at action time via the dropdown.
+        currentUser = { id: null, name: null, level: 'admin' };
+      }
+    } else {
+      // Bridge auth: load current user from sessionStorage / localStorage
+      try {
+        let raw = sessionStorage.getItem('bridge_user');
+        if (!raw) raw = localStorage.getItem('bridge_user');
+        if (raw) currentUser = JSON.parse(raw);
+      } catch(e) { /* ignore */ }
+    }
 
     // Inject styles once
     injectStyles();
@@ -90,27 +108,32 @@
     // Build the action sheet (one shared instance)
     buildActionSheet();
 
+    // PIN mode: show the gate overlay if not yet unlocked
+    if (config.authMode === 'pin' && !pinUnlocked) {
+      buildPinGate();
+    }
+
     // Initial hydrate
     if (config.autoRender) {
       hydrate();
-      // Refresh when the tab regains focus — also re-checks login state
       if (config.pollOnFocus) {
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'visible') {
-            // Re-read session in case user logged in via another tab
-            try {
-              let raw = sessionStorage.getItem('bridge_user');
-              if (!raw) raw = localStorage.getItem('bridge_user');
-              if (raw) {
-                const fresh = JSON.parse(raw);
-                if (!currentUser || currentUser.id !== fresh.id) {
-                  currentUser = fresh;
-                  // Dismiss the read-only notice if it's showing
-                  const notice = document.getElementById('po-auth-notice');
-                  if (notice) notice.style.display = 'none';
+            if (config.authMode === 'bridge') {
+              // Re-read session in case user logged in via another tab
+              try {
+                let raw = sessionStorage.getItem('bridge_user');
+                if (!raw) raw = localStorage.getItem('bridge_user');
+                if (raw) {
+                  const fresh = JSON.parse(raw);
+                  if (!currentUser || currentUser.id !== fresh.id) {
+                    currentUser = fresh;
+                    const notice = document.getElementById('po-auth-notice');
+                    if (notice) notice.style.display = 'none';
+                  }
                 }
-              }
-            } catch(e) { /* ignore */ }
+              } catch(e) { /* ignore */ }
+            }
             hydrate();
           }
         });
@@ -291,15 +314,113 @@
     sheetEl.querySelector('.pot-sheet-backdrop').addEventListener('click', closeActionSheet);
   }
 
+  // ── PIN GATE ───────────────────────────────────────────────────────────────
+  let pinGateEl = null;
+
+  function buildPinGate() {
+    if (document.getElementById('pot-pin-gate')) return;
+    pinGateEl = document.createElement('div');
+    pinGateEl.id = 'pot-pin-gate';
+    pinGateEl.className = 'pot-pin-gate';
+    pinGateEl.innerHTML = `
+      <div class="pot-pin-card">
+        <div class="pot-pin-title">PO Access</div>
+        <div class="pot-pin-sub">Enter the 4-digit PIN to view and update this purchase order.</div>
+        <div class="pot-pin-dots">
+          <span class="pot-pin-dot"></span>
+          <span class="pot-pin-dot"></span>
+          <span class="pot-pin-dot"></span>
+          <span class="pot-pin-dot"></span>
+        </div>
+        <div class="pot-pin-msg" id="pot-pin-msg"></div>
+        <div class="pot-pin-keypad">
+          <button class="pot-pin-key" data-d="1">1</button>
+          <button class="pot-pin-key" data-d="2">2</button>
+          <button class="pot-pin-key" data-d="3">3</button>
+          <button class="pot-pin-key" data-d="4">4</button>
+          <button class="pot-pin-key" data-d="5">5</button>
+          <button class="pot-pin-key" data-d="6">6</button>
+          <button class="pot-pin-key" data-d="7">7</button>
+          <button class="pot-pin-key" data-d="8">8</button>
+          <button class="pot-pin-key" data-d="9">9</button>
+          <button class="pot-pin-key pot-pin-key-blank"></button>
+          <button class="pot-pin-key" data-d="0">0</button>
+          <button class="pot-pin-key pot-pin-key-del" data-action="del">⌫</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(pinGateEl);
+
+    let entry = '';
+    const dots = pinGateEl.querySelectorAll('.pot-pin-dot');
+    const msg = pinGateEl.querySelector('#pot-pin-msg');
+
+    function updateDots() {
+      dots.forEach((d, i) => d.classList.toggle('on', i < entry.length));
+    }
+    function tryPin() {
+      if (entry === String(config.pin)) {
+        sessionStorage.setItem('po_pin_unlocked_' + config.poSlug, '1');
+        pinUnlocked = true;
+        currentUser = { id: null, name: null, level: 'admin' };
+        pinGateEl.style.opacity = '0';
+        setTimeout(() => { pinGateEl.remove(); pinGateEl = null; renderAll(); }, 180);
+      } else {
+        msg.textContent = 'Incorrect PIN. Try again.';
+        dots.forEach(d => d.classList.add('shake'));
+        setTimeout(() => { entry = ''; updateDots(); dots.forEach(d => d.classList.remove('shake')); }, 320);
+      }
+    }
+
+    pinGateEl.addEventListener('click', e => {
+      const k = e.target.closest('.pot-pin-key');
+      if (!k) return;
+      msg.textContent = '';
+      if (k.getAttribute('data-action') === 'del') {
+        entry = entry.slice(0, -1);
+        updateDots();
+        return;
+      }
+      const d = k.getAttribute('data-d');
+      if (!d) return;
+      if (entry.length >= 4) return;
+      entry += d;
+      updateDots();
+      if (entry.length === 4) setTimeout(tryPin, 120);
+    });
+
+    // Hardware keyboard support
+    pinGateEl._keydown = function(e) {
+      if (!pinGateEl || pinGateEl.style.opacity === '0') return;
+      if (/^[0-9]$/.test(e.key) && entry.length < 4) {
+        msg.textContent = '';
+        entry += e.key; updateDots();
+        if (entry.length === 4) setTimeout(tryPin, 120);
+      } else if (e.key === 'Backspace') {
+        entry = entry.slice(0, -1); updateDots();
+      } else if (e.key === 'Enter' && entry.length === 4) {
+        tryPin();
+      }
+    };
+    document.addEventListener('keydown', pinGateEl._keydown);
+  }
+
   function openActionSheet(lineRef) {
-    if (!currentUser) {
-      alert('Please log in to The Bridge first.');
+    if (config.authMode === 'pin' && !pinUnlocked) {
+      // PIN not entered yet — gate is still up
       return;
     }
-    if (!ACTION_LEVELS.has(currentUser.level)) {
-      alert('You need lead-level access to record purchases.');
-      return;
+    if (config.authMode === 'bridge') {
+      if (!currentUser) {
+        alert('Please log in to The Bridge first.');
+        return;
+      }
+      if (!ACTION_LEVELS.has(currentUser.level)) {
+        alert('You need lead-level access to record purchases.');
+        return;
+      }
     }
+    const isPinMode = config.authMode === 'pin';
     const row = state[lineRef];
     const rowEl = document.querySelector(`tr[data-line-ref="${cssEscape(lineRef)}"]`);
     const lineName = rowEl ? (rowEl.getAttribute('data-line-name') || `Line ${lineRef}`) : `Line ${lineRef}`;
@@ -307,9 +428,27 @@
     const body = sheetEl.querySelector('.pot-sheet-body');
 
     const status = (row && row.status) || 'pending';
-    const isMine = row && currentUser && row.purchaser_id === currentUser.id;
-    const isAdmin = currentUser.level === 'admin';
-    const canEdit = isMine || isAdmin;
+    // In PIN mode anyone with the PIN can edit any row. In Bridge mode, only your own or admin.
+    const isMine = !isPinMode && row && currentUser && row.purchaser_id === currentUser.id;
+    const isAdmin = isPinMode || (currentUser && currentUser.level === 'admin');
+    const canEdit = isPinMode || isMine || isAdmin;
+
+    // Build the purchaser dropdown HTML for PIN mode actions that record a purchaser.
+    // The current purchaser (if any) is pre-selected; otherwise the first option.
+    function purchaserSelect(idPrefix) {
+      if (!isPinMode) return '';
+      const current = row && row.purchaser ? row.purchaser : '';
+      const options = config.purchasers.map(p =>
+        `<option value="${escapeAttr(p)}"${p === current ? ' selected' : ''}>${escapeHtml(p)}</option>`
+      ).join('');
+      return `
+        <label>Recorded by</label>
+        <select id="${idPrefix}-purchaser">
+          ${current && !config.purchasers.includes(current) ? `<option value="${escapeAttr(current)}" selected>${escapeHtml(current)}</option>` : ''}
+          ${options}
+        </select>
+      `;
+    }
 
     let html = `
       <div class="pot-sheet-header">
@@ -320,15 +459,34 @@
     `;
 
     if (status === 'pending') {
-      html += `
-        <button class="pot-btn pot-btn-primary" data-action="claim">Claim — I'll order this</button>
-        <button class="pot-btn pot-btn-secondary" data-action="ordered">I've already ordered it</button>
-        <button class="pot-btn pot-btn-ghost" data-action="cancel">Cancel</button>
-      `;
+      if (isPinMode) {
+        // Combined claim-or-order form. User picks purchaser + optionally fills final/ref to skip straight to ordered.
+        html += `
+          <div class="pot-form">
+            ${purchaserSelect('pot')}
+            <label>Final amount paid (£) — optional, leave blank to just claim</label>
+            <input type="number" step="0.01" id="pot-final" placeholder="${lineAmount || '0.00'}">
+            <label>Order reference (optional)</label>
+            <input type="text" id="pot-order-ref" placeholder="Order #, eBay item ID, etc">
+            <label>Notes (optional)</label>
+            <textarea id="pot-notes" placeholder="Substitutions, comments, condition..."></textarea>
+          </div>
+          <button class="pot-btn pot-btn-primary" data-action="ordered">Record purchase</button>
+          <button class="pot-btn pot-btn-secondary" data-action="claim">Just claim — I'll order later</button>
+          <button class="pot-btn pot-btn-ghost" data-action="cancel">Cancel</button>
+        `;
+      } else {
+        html += `
+          <button class="pot-btn pot-btn-primary" data-action="claim">Claim — I'll order this</button>
+          <button class="pot-btn pot-btn-secondary" data-action="ordered">I've already ordered it</button>
+          <button class="pot-btn pot-btn-ghost" data-action="cancel">Cancel</button>
+        `;
+      }
     } else if (status === 'claimed' && canEdit) {
       html += `
-        <div class="pot-sheet-status">Claimed by <strong>${escapeHtml(row.purchaser)}</strong> · ${timeAgo(row.claimed_at)}</div>
+        <div class="pot-sheet-status">Claimed by <strong>${escapeHtml(row.purchaser || '—')}</strong> · ${timeAgo(row.claimed_at)}</div>
         <div class="pot-form">
+          ${purchaserSelect('pot')}
           <label>Final amount paid (£)</label>
           <input type="number" step="0.01" id="pot-final" placeholder="${lineAmount || '0.00'}" value="${row.final_amount || ''}">
           <label>Order reference (optional)</label>
@@ -343,13 +501,13 @@
       `;
     } else if (status === 'claimed' && !canEdit) {
       html += `
-        <div class="pot-sheet-status">Claimed by <strong>${escapeHtml(row.purchaser)}</strong> · ${timeAgo(row.claimed_at)}</div>
-        <p class="pot-sheet-readonly">Only ${escapeHtml(row.purchaser.split(' ')[0])} can release this. Message them on WhatsApp if you need to take it over.</p>
+        <div class="pot-sheet-status">Claimed by <strong>${escapeHtml(row.purchaser || '—')}</strong> · ${timeAgo(row.claimed_at)}</div>
+        <p class="pot-sheet-readonly">Only ${escapeHtml((row.purchaser || '').split(' ')[0] || 'the claimer')} can release this. Message them on WhatsApp if you need to take it over.</p>
         <button class="pot-btn pot-btn-ghost" data-action="cancel">Close</button>
       `;
     } else if (status === 'ordered' && canEdit) {
       html += `
-        <div class="pot-sheet-status">Ordered by <strong>${escapeHtml(row.purchaser)}</strong> · ${timeAgo(row.ordered_at)}</div>
+        <div class="pot-sheet-status">Ordered by <strong>${escapeHtml(row.purchaser || '—')}</strong> · ${timeAgo(row.ordered_at)}</div>
         ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}</div>` : ''}
         ${row.order_ref ? `<div class="pot-sheet-est"><strong>Order ref:</strong> ${escapeHtml(row.order_ref)}</div>` : ''}
         ${row.notes ? `<div class="pot-sheet-est"><strong>Notes:</strong> ${escapeHtml(row.notes)}</div>` : ''}
@@ -359,15 +517,15 @@
       `;
     } else if (status === 'ordered' && !canEdit) {
       html += `
-        <div class="pot-sheet-status">Ordered by <strong>${escapeHtml(row.purchaser)}</strong> · ${timeAgo(row.ordered_at)}</div>
+        <div class="pot-sheet-status">Ordered by <strong>${escapeHtml(row.purchaser || '—')}</strong> · ${timeAgo(row.ordered_at)}</div>
         ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}</div>` : ''}
         ${row.order_ref ? `<div class="pot-sheet-est"><strong>Order ref:</strong> ${escapeHtml(row.order_ref)}</div>` : ''}
-        <p class="pot-sheet-readonly">Read-only — only ${escapeHtml(row.purchaser.split(' ')[0])} or an admin can edit.</p>
+        <p class="pot-sheet-readonly">Read-only — only ${escapeHtml((row.purchaser || '').split(' ')[0] || 'the purchaser')} or an admin can edit.</p>
         <button class="pot-btn pot-btn-ghost" data-action="cancel">Close</button>
       `;
     } else if (status === 'received') {
       html += `
-        <div class="pot-sheet-status">Received · ordered by <strong>${escapeHtml(row.purchaser)}</strong></div>
+        <div class="pot-sheet-status">Received · ordered by <strong>${escapeHtml(row.purchaser || '—')}</strong></div>
         ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}</div>` : ''}
         ${row.order_ref ? `<div class="pot-sheet-est"><strong>Order ref:</strong> ${escapeHtml(row.order_ref)}</div>` : ''}
         ${isAdmin ? `<button class="pot-btn pot-btn-ghost" data-action="reopen">Reopen (admin)</button>` : ''}
@@ -396,28 +554,48 @@
   // ── ACTIONS ────────────────────────────────────────────────────────────────
   async function handleAction(action, lineRef) {
     if (action === 'cancel') { closeActionSheet(); return; }
+    const isPinMode = config.authMode === 'pin';
     const now = new Date().toISOString();
-    const userPatch = {
-      purchaser:    currentUser.name,
-      purchaser_id: currentUser.id,
-    };
+
+    // In PIN mode the purchaser comes from the dropdown in the sheet.
+    // In Bridge mode it comes from the logged-in user.
+    function getPinPurchaser() {
+      const sel = document.getElementById('pot-purchaser');
+      if (!sel) return null;
+      return sel.value || null;
+    }
+
+    function buildUserPatch() {
+      if (isPinMode) {
+        const p = getPinPurchaser();
+        if (!p) {
+          alert('Please pick who is recording this purchase.');
+          return null;
+        }
+        return { purchaser: p, purchaser_id: null };
+      }
+      return { purchaser: currentUser.name, purchaser_id: currentUser.id };
+    }
+
     try {
       let patch = null;
-      let promptedAmount = null;
       switch(action) {
-        case 'claim':
+        case 'claim': {
+          const userPatch = buildUserPatch();
+          if (!userPatch) return;
           patch = Object.assign({ status: 'claimed', claimed_at: now }, userPatch);
           break;
+        }
         case 'release':
           patch = { status: 'pending', purchaser: null, purchaser_id: null, claimed_at: null, final_amount: null, order_ref: null };
           break;
         case 'ordered': {
+          const userPatch = buildUserPatch();
+          if (!userPatch) return;
           const finalEl = document.getElementById('pot-final');
           const refEl = document.getElementById('pot-order-ref');
           const notesEl = document.getElementById('pot-notes');
           let final = finalEl ? parseFloat(finalEl.value) : NaN;
-          // If the user is going straight from pending -> ordered (skipping claim),
-          // prompt for the amount inline
           if (!finalEl) {
             const v = prompt('Final amount paid in £:');
             if (v === null) return;
@@ -441,6 +619,7 @@
           patch = { status: 'received', received_at: now };
           break;
         case 'cancelled': {
+          const userPatch = buildUserPatch() || { purchaser: 'Finance team', purchaser_id: null };
           const reason = prompt('Reason for cancellation (optional):') || '';
           patch = Object.assign({
             status: 'cancelled',
@@ -612,6 +791,72 @@
         color: #1D1D1F;
       }
       .pot-refresh-btn:hover { background: #F5F5F5; }
+
+      /* PIN gate */
+      .pot-pin-gate {
+        position: fixed; inset: 0; z-index: 10000;
+        background: rgba(15, 15, 18, 0.85);
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        display: flex; align-items: center; justify-content: center;
+        transition: opacity 0.18s;
+      }
+      .pot-pin-card {
+        background: #fff; border-radius: 24px;
+        padding: 32px 28px 28px;
+        width: calc(100% - 32px); max-width: 360px;
+        text-align: center;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+      }
+      .pot-pin-title {
+        font-family: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+        font-size: 28px; color: #1D1D1F; margin-bottom: 6px;
+      }
+      .pot-pin-sub { font-size: 13px; color: #86868B; margin-bottom: 26px; line-height: 1.5; }
+      .pot-pin-dots {
+        display: flex; justify-content: center; gap: 14px; margin-bottom: 8px;
+      }
+      .pot-pin-dot {
+        width: 14px; height: 14px; border-radius: 50%;
+        background: rgba(0,0,0,0.08); transition: background 0.12s, transform 0.12s;
+      }
+      .pot-pin-dot.on { background: #0071E3; }
+      .pot-pin-dot.shake { animation: pot-shake 0.32s; background: #FF3B30; }
+      @keyframes pot-shake {
+        0%,100% { transform: translateX(0); }
+        20%,60% { transform: translateX(-4px); }
+        40%,80% { transform: translateX(4px); }
+      }
+      .pot-pin-msg { font-size: 12px; color: #FF3B30; min-height: 18px; margin: 6px 0 14px; }
+      .pot-pin-keypad {
+        display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+        margin-top: 6px;
+      }
+      .pot-pin-key {
+        font-family: inherit; font-size: 22px; font-weight: 500;
+        height: 56px; border-radius: 14px;
+        border: 1px solid rgba(0,0,0,0.06); background: #FAFAFA;
+        color: #1D1D1F; cursor: pointer;
+        transition: background 0.08s, transform 0.05s;
+      }
+      .pot-pin-key:hover { background: #F0F0F0; }
+      .pot-pin-key:active { transform: scale(0.96); background: #E8E8E8; }
+      .pot-pin-key-blank { visibility: hidden; pointer-events: none; }
+      .pot-pin-key-del { font-size: 18px; color: #86868B; }
+
+      /* Select dropdown */
+      .pot-form select {
+        width: 100%; padding: 10px 12px;
+        border: 1px solid rgba(0,0,0,0.12);
+        border-radius: 8px;
+        font-family: inherit; font-size: 14px;
+        background: #FAFAFA;
+        box-sizing: border-box;
+        appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'><path fill='%23555' d='M5 6L0 0h10z'/></svg>");
+        background-repeat: no-repeat; background-position: right 14px center; background-size: 10px;
+        padding-right: 36px;
+      }
+      .pot-form select:focus { outline: none; border-color: #0071E3; background-color: #fff; }
     `;
     document.head.appendChild(style);
   }

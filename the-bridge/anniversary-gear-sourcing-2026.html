@@ -176,9 +176,7 @@ table.items tr:last-child td{border-bottom:none;}
     </div>
   </div>
 
-  <div id="po-auth-notice" style="display:none;padding:14px 18px;background:#FFF8E1;border:1px solid #F5D78A;border-radius:10px;font-size:13px;color:#8B6914;margin:0 0 24px;">
-    <strong>Not signed in.</strong> You're viewing this PO in read-only mode. <a href="app.html" target="_blank" style="color:#8B6914;font-weight:700;">Open The Bridge login →</a> · Sign in with your PIN, then come back here and tap the refresh button.
-  </div>
+  <div id="po-auth-notice" style="display:none;"></div>
 
   <!-- ═════════════ SUPPLIER 1 — ANDERTONS ═════════════ -->
   <div class="supplier">
@@ -774,13 +772,12 @@ table.items tr:last-child td{border-bottom:none;}
       console.warn('po-tracker.js failed to load');
       return;
     }
-    POTracker.init({ poSlug: 'anniversary-2026-gear' });
-    // Show read-only notice if not signed in
-    const u = POTracker.user();
-    if (!u) {
-      const notice = document.getElementById('po-auth-notice');
-      if (notice) notice.style.display = 'block';
-    }
+    POTracker.init({
+      poSlug: 'anniversary-2026-gear',
+      authMode: 'pin',
+      pin: '1234',
+      purchasers: ['Pastor Shade', 'Pastor Kayode', 'Bolaji O', 'Bolaji A'],
+    });
   });
 </script>
 
