@@ -238,7 +238,7 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
           <div class="frow">
             <label class="flabel">Level</label>
             <select class="fselect" id="f-level" onchange="levelChanged()">
-              <option value="cos">CoS — full access</option>
+              <option value="admin">Admin — full access</option>
               <option value="functional" selected>Functional — assigned sections</option>
             </select>
           </div>
@@ -277,7 +277,7 @@ const ALL_SECTIONS = [
   {id:'media',           label:'Media team'},
   {id:'worship',         label:'Worship'},
   {id:'pastoral',        label:'Pastoral'},
-  {id:'cos',             label:'Chief of Staff'},
+
   {id:'pastors-corner',  label:"Pastor's Corner"},
   {id:'notes',           label:'Notes'},
 ];
@@ -314,7 +314,7 @@ async function init() {
 
 // Hardcoded fallback (used if Supabase unavailable)
 const FALLBACK_USERS = [
-  { id:1, name:'Bolaji Olatoye', level:'cos', pin_hash:'bp_yhwbc0', sections:[], active:true }
+  { id:1, name:'Bolaji Olatoye', level:'admin', pin_hash:'bp_yhwbc0', sections:[], active:true }
 ];
 
 async function loadUsers() {
@@ -357,9 +357,9 @@ function renderUserList() {
       <div class="user-avatar">${initials(u.name)}</div>
       <div style="text-align:left;">
         <div class="user-info-name">${u.name}</div>
-        <div class="user-info-role">${u.level === 'cos' ? 'Chief of Staff' : 'Team member'}</div>
+        <div class="user-info-role">${u.level === 'admin' ? 'Admin' : 'Team member'}</div>
       </div>
-      <span class="level-badge ${u.level === 'cos' ? 'lb-cos' : 'lb-func'}">${u.level === 'cos' ? 'CoS' : 'Functional'}</span>
+      <span class="level-badge ${u.level === 'admin' ? 'lb-cos' : 'lb-func'}">${u.level === 'admin' ? 'Admin' : 'Functional'}</span>
     </button>`).join('');
 }
 
@@ -455,7 +455,7 @@ function showPinError(msg) {
 
 // ── LAUNCH ───────────────────────────────────────────────────────────────────
 function launch() {
-  const sections = currentUser.level === 'cos'
+  const sections = currentUser.level === 'admin'
     ? ALL_SECTIONS.map(s => s.id)
     : (currentUser.sections || []);
 
@@ -524,7 +524,7 @@ function toggleSec(id) {
 function levelChanged() {
   const isFunc = document.getElementById('f-level').value === 'functional';
   document.getElementById('sec-row').style.display = isFunc ? 'block' : 'none';
-  if (document.getElementById('f-level').value === 'cos') {
+  if (document.getElementById('f-level').value === 'admin') {
     selectedSections = new Set(ALL_SECTIONS.map(s => s.id));
     document.querySelectorAll('.stog').forEach(el => el.classList.add('on'));
   }
@@ -538,8 +538,8 @@ async function loadAdminList() {
     <div class="urow">
       <div class="urow-av">${initials(u.name)}</div>
       <div class="urow-info">
-        <div class="urow-name">${u.name} <span class="level-badge ${u.level==='cos'?'lb-cos':'lb-func'}" style="margin-left:4px;">${u.level==='cos'?'CoS':'Functional'}</span></div>
-        <div class="urow-meta">PIN: ${u.pin_hash ? 'set' : 'not set'} · ${u.active ? 'Active' : 'Suspended'} · ${u.email || 'no email'} · Sections: ${u.level==='cos'?'All':(u.sections||[]).join(', ')||'none'}</div>
+        <div class="urow-name">${u.name} <span class="level-badge ${u.level==='admin'?'lb-cos':'lb-func'}" style="margin-left:4px;">${u.level==='admin'?'Admin':'Functional'}</span></div>
+        <div class="urow-meta">PIN: ${u.pin_hash ? 'set' : 'not set'} · ${u.active ? 'Active' : 'Suspended'} · ${u.email || 'no email'} · Sections: ${u.level==='admin'?'All':(u.sections||[]).join(', ')||'none'}</div>
       </div>
       <div class="urow-acts">
         <button class="xbtn" onclick="editUser(${u.id})">Edit</button>
@@ -576,7 +576,7 @@ async function saveUser() {
 
   if (!name) { msg.textContent = 'Name is required.'; msg.className = 'amsg err'; return; }
 
-  const sections = level === 'cos'
+  const sections = level === 'admin'
     ? ALL_SECTIONS.map(s => s.id)
     : [...selectedSections];
 

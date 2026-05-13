@@ -55,8 +55,8 @@
   };
 
   // Levels permitted to act (claim/order/receive). All others are read-only.
-  // Aligns with bridge_users_v2.level values: 'cos' = admin-equivalent.
-  const ACTION_LEVELS = new Set(['cos', 'lead', 'admin']);
+  // Aligns with bridge_users_v2.level values: 'admin' = full access.
+  const ACTION_LEVELS = new Set(['admin', 'lead']);
 
   let config = null;
   let supa = null;
@@ -308,7 +308,7 @@
 
     const status = (row && row.status) || 'pending';
     const isMine = row && currentUser && row.purchaser_id === currentUser.id;
-    const isAdmin = currentUser.level === 'cos';
+    const isAdmin = currentUser.level === 'admin';
     const canEdit = isMine || isAdmin;
 
     let html = `

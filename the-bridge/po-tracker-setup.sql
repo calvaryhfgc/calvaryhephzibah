@@ -49,7 +49,7 @@ create trigger trg_po_line_purchases_updated_at
 -- ============================================================================
 -- RLS — permissive for v1 (same pattern as bridge_users_v2)
 -- ============================================================================
--- Permission gating is enforced in the client (only 'cos' or 'lead' users get
+-- Permission gating is enforced in the client (only 'admin' or 'lead' users get
 -- the claim UI; only the claimer can release/upgrade their own claim).
 -- If we ever expose this DB outside Bridge, tighten with auth.uid() policies.
 -- ============================================================================

@@ -5,7 +5,7 @@
 create table if not exists bridge_users_v2 (
   id        bigserial primary key,
   name      text not null,
-  level     text not null default 'functional', -- 'cos' | 'functional'
+  level     text not null default 'functional', -- 'admin' | 'functional'
   pin_hash  text not null,
   sections  text[] default '{}',
   active    boolean default true,
@@ -21,8 +21,8 @@ create policy "Allow all" on bridge_users_v2
 insert into bridge_users_v2 (name, level, pin_hash, sections, active)
 values (
   'Bolaji Olatoye',
-  'cos',
+  'admin',
   'bp_yhwbc0',
-  ARRAY['priorities','actions','overview','finance','vision','protocols','media','worship','pastoral','cos','notes'],
+  ARRAY['priorities','actions','overview','finance','vision','protocols','media','worship','pastoral','notes'],
   true
 );
