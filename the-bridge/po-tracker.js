@@ -81,6 +81,7 @@
       // PIN mode: gate is the page itself. No bridge user.
       // Check if PIN already entered this tab.
       pinUnlocked = sessionStorage.getItem('po_pin_unlocked_' + config.poSlug) === '1';
+      console.log('[POTracker] PIN mode init. pinUnlocked from storage:', pinUnlocked, '(slug:', config.poSlug + ')');
       if (pinUnlocked) {
         // Synthesise a "user" that satisfies the action-permission checks.
         // Real purchaser identity is captured at action time via the dropdown.
@@ -110,7 +111,15 @@
 
     // PIN mode: show the gate overlay if not yet unlocked
     if (config.authMode === 'pin' && !pinUnlocked) {
-      buildPinGate();
+      console.log('[POTracker] Building PIN gate overlay');
+      try {
+        buildPinGate();
+      } catch(e) {
+        console.error('[POTracker] PIN gate build failed:', e);
+        alert('PIN gate failed to render. Open the browser console for details, or run POTracker.lock() to reset.');
+      }
+    } else if (config.authMode === 'pin' && pinUnlocked) {
+      console.log('[POTracker] PIN already unlocked, skipping gate. To re-show, run: POTracker.lock()');
     }
 
     // Initial hydrate
@@ -867,6 +876,13 @@
     refresh: hydrate,
     state: () => state,
     user:  () => currentUser,
+    lock: () => {
+      if (!config) return;
+      sessionStorage.removeItem('po_pin_unlocked_' + config.poSlug);
+      pinUnlocked = false;
+      currentUser = null;
+      location.reload();
+    },
   };
 
 })(window);
