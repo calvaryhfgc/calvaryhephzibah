@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Anniversary 2026 — Running Order | The Bridge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+:root{
+  --red:#C41E2A; --red-light:#FEF2F2; --red-dark:#A51520;
+  --amber:#D97706; --amber-light:#FFFBEB; --amber-mid:#FCD34D;
+  --green:#16A34A; --green-light:#F0FDF4;
+  --blue:#2563EB; --blue-light:#EFF6FF;
+  --purple:#7C3AED; --purple-light:#F3E8FF;
+  --slate:#64748B; --slate-light:#F8FAFC;
+  --ink:#0F172A; --ink-2:#334155; --ink-3:#64748B; --ink-4:#94A3B8; --ink-5:#CBD5E1;
+  --white:#FFFFFF; --bg:#F1F5F9;
+  --r4:4px; --r8:8px; --r12:12px; --r16:16px; --r24:24px;
+  --shadow-sm:0 1px 2px rgba(15,23,42,0.06);
+  --shadow:0 1px 3px rgba(15,23,42,0.08),0 4px 12px rgba(15,23,42,0.06);
+}
+html,body{min-height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6;}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 80px;}
+
+/* Header */
+.hdr{background:linear-gradient(135deg,var(--red) 0%,#8B0A14 100%);color:white;border-radius:var(--r16);padding:32px 36px;margin-bottom:24px;box-shadow:0 8px 30px rgba(196,30,42,0.18);position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.hdr-eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;margin-bottom:8px;font-weight:600;}
+.hdr h1{font-family:'Instrument Serif',serif;font-size:38px;line-height:1.1;margin-bottom:8px;font-weight:400;}
+.hdr-sub{font-size:14px;opacity:0.92;max-width:680px;}
+.hdr-meta{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;font-size:12px;opacity:0.88;}
+.hdr-meta span strong{color:white;font-weight:600;}
+.hdr-meta a{color:white;text-decoration:underline;}
+
+/* Summary strip */
+.totals{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+@media (max-width:780px){.totals{grid-template-columns:repeat(2,1fr);}}
+.tcard{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r12);padding:16px 18px;box-shadow:var(--shadow-sm);}
+.tcard-label{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--ink-4);font-weight:600;margin-bottom:6px;}
+.tcard-num{font-size:24px;font-weight:600;color:var(--ink);line-height:1;font-family:'Instrument Serif',serif;}
+.tcard-sub{font-size:11px;color:var(--ink-3);margin-top:4px;}
+.tcard.items{border-left:3px solid var(--red);}
+.tcard.duration{border-left:3px solid var(--blue);}
+.tcard.confirmed{border-left:3px solid var(--green);}
+.tcard.open{border-left:3px solid var(--amber);}
+
+/* What changed banner */
+.changes{background:linear-gradient(135deg,#FFFBEB,white);border:1px solid var(--amber-mid);border-radius:var(--r12);padding:18px 22px;margin-bottom:24px;}
+.changes-title{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.changes ul{list-style:none;padding:0;}
+.changes li{font-size:13px;color:var(--ink-2);padding:5px 0 5px 22px;position:relative;line-height:1.55;}
+.changes li::before{content:'→';position:absolute;left:0;color:var(--amber);font-weight:700;}
+.changes li strong{color:var(--ink);}
+
+/* Order of service */
+.order{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.order-head{padding:20px 28px;border-bottom:1px solid #F1F5F9;background:#FAFBFC;}
+.order-head h2{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink);margin-bottom:4px;font-weight:400;}
+.order-head p{font-size:13px;color:var(--ink-3);}
+
+.row{display:grid;grid-template-columns:60px 1fr 90px;gap:0;border-bottom:1px solid #F1F5F9;padding:18px 28px;align-items:start;transition:background 0.15s;}
+.row:last-child{border-bottom:none;}
+.row:hover{background:#FAFBFC;}
+
+.row-num{font-family:'Instrument Serif',serif;font-size:24px;color:var(--ink-4);line-height:1;padding-top:2px;}
+.row-num.pastor{color:var(--red);}
+.row-num.worship{color:var(--purple);}
+.row-num.meal{color:var(--green);}
+
+.row-body{padding-right:16px;}
+.row-name{font-weight:600;color:var(--ink);font-size:15px;line-height:1.3;margin-bottom:4px;}
+.row-lead{font-size:12.5px;color:var(--ink-3);margin-bottom:6px;}
+.row-lead strong{color:var(--ink-2);font-weight:600;}
+.row-note{font-size:12px;color:var(--ink-3);line-height:1.55;background:#F8FAFC;padding:8px 12px;border-radius:var(--r8);border-left:2px solid var(--ink-5);margin-top:6px;}
+.row-note.confirmed{border-left-color:var(--green);background:var(--green-light);color:#166534;}
+.row-note.open{border-left-color:var(--amber);background:var(--amber-light);color:#92400E;}
+
+.row-time{font-family:'Instrument Serif',serif;font-size:18px;color:var(--ink-2);text-align:right;white-space:nowrap;padding-top:2px;}
+.row-time-sub{font-size:10px;color:var(--ink-4);letter-spacing:0.5px;text-transform:uppercase;margin-top:2px;font-family:'DM Sans',sans-serif;font-weight:600;}
+
+/* Row tints */
+.row.tint-pastor{background:linear-gradient(90deg,#FEF2F2 0%,white 60%);}
+.row.tint-pastor:hover{background:linear-gradient(90deg,#FEE2E2 0%,white 60%);}
+.row.tint-worship{background:linear-gradient(90deg,#F3E8FF 0%,white 60%);}
+.row.tint-worship:hover{background:linear-gradient(90deg,#E9D5FF 0%,white 60%);}
+.row.tint-meal{background:linear-gradient(90deg,#F0FDF4 0%,white 60%);}
+.row.tint-meal:hover{background:linear-gradient(90deg,#DCFCE7 0%,white 60%);}
+
+/* Pills */
+.pill{display:inline-block;font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:100px;margin-left:6px;vertical-align:middle;}
+.pill-confirmed{background:var(--green-light);color:var(--green);}
+.pill-open{background:var(--amber-light);color:var(--amber);}
+.pill-pastor{background:var(--red-light);color:var(--red);}
+.pill-worship{background:var(--purple-light);color:var(--purple);}
+.pill-meal{background:var(--green-light);color:var(--green);}
+.pill-generic{background:#F1F5F9;color:var(--ink-3);}
+
+/* Decisions */
+.section{background:var(--white);border:1px solid #E2E8F0;border-radius:var(--r16);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow-sm);}
+.section-head{padding:18px 24px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.section-head-left{display:flex;align-items:center;gap:14px;}
+.section-icon{width:40px;height:40px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.si-confirmed{background:var(--green-light);color:var(--green);}
+.si-open{background:var(--amber-light);color:var(--amber);}
+.si-meeting{background:var(--blue-light);color:var(--blue);}
+.section-title{font-family:'Instrument Serif',serif;font-size:20px;color:var(--ink);line-height:1.1;}
+.section-blurb{font-size:12px;color:var(--ink-3);margin-top:2px;}
+
+.list-items{padding:8px 0;}
+.list-row{padding:14px 28px;border-bottom:1px solid #F1F5F9;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;}
+.list-row:last-child{border-bottom:none;}
+.list-name{font-weight:600;color:var(--ink);font-size:13.5px;margin-bottom:2px;}
+.list-detail{font-size:12.5px;color:var(--ink-2);line-height:1.55;}
+.list-owner{font-size:11px;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-4);font-weight:600;white-space:nowrap;text-align:right;}
+
+/* Footer */
+.footer{margin-top:36px;padding:24px;text-align:center;font-size:12px;color:var(--ink-4);border-top:1px solid #E2E8F0;}
+.footer a{color:var(--red);text-decoration:none;}
+
+/* Mobile */
+@media (max-width:640px){
+  .wrap{padding:20px 16px 60px;}
+  .hdr{padding:24px;}
+  .hdr h1{font-size:30px;}
+  .row{grid-template-columns:42px 1fr;padding:16px 18px;gap:12px;}
+  .row-time{grid-column:2;text-align:left;padding-top:8px;}
+  .row-time-sub{display:inline-block;margin-left:8px;margin-top:0;}
+  .order-head,.section-head{padding:16px 18px;}
+  .list-row{padding:14px 18px;grid-template-columns:1fr;gap:6px;}
+  .list-owner{text-align:left;}
+}
+
+@media print{
+  body{background:white;}
+  .wrap{padding:0;max-width:100%;}
+  .hdr{box-shadow:none;}
+  .section,.tcard,.order,.changes{box-shadow:none;page-break-inside:avoid;}
+  .row:hover{background:transparent;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="hdr-eyebrow">Calvary Hephzibah · 34th Anniversary</div>
+    <h1>Anniversary 2026 — Running Order</h1>
+    <div class="hdr-sub">Updated programme for Sunday 17th May 2026, folding in confirmations from the planning meeting on Monday 11 May. Generic presentation slots, named Show of Appreciation, cabaret-style seating with a sit-down meal at the tables together.</div>
+    <div class="hdr-meta">
+      <span><strong>Date:</strong> Sunday 17 May 2026</span>
+      <span><strong>Start:</strong> 10:30 AM · Doors 10:00</span>
+      <span><strong>Venue:</strong> 74 Carmoor Road, Manchester M13 0FB</span>
+      <span><strong>Status:</strong> Draft v3 · post-meeting update</span>
+      <span><strong>Companions:</strong> <a href="anniversary-finance-2026.html">Finance</a> · <a href="anniversary-gear-sourcing-2026.html">Gear</a></span>
+    </div>
+  </div>
+
+  <!-- Top-line summary -->
+  <div class="totals">
+    <div class="tcard items">
+      <div class="tcard-label">Programme items</div>
+      <div class="tcard-num">19</div>
+      <div class="tcard-sub">From pre-service to closing</div>
+    </div>
+    <div class="tcard duration">
+      <div class="tcard-label">Total runtime</div>
+      <div class="tcard-num">~3h 25m</div>
+      <div class="tcard-sub">10:30 AM – ~1:55 PM</div>
+    </div>
+    <div class="tcard confirmed">
+      <div class="tcard-label">Confirmed since 11 May</div>
+      <div class="tcard-num">6</div>
+      <div class="tcard-sub">Departments + banner approved</div>
+    </div>
+    <div class="tcard open">
+      <div class="tcard-label">Still open</div>
+      <div class="tcard-num">5</div>
+      <div class="tcard-sub">See decisions table below</div>
+    </div>
+  </div>
+
+  <!-- What changed since 11 May -->
+  <div class="changes">
+    <div class="changes-title">⚡ What changed since the 11 May planning meeting</div>
+    <ul>
+      <li><strong>Department contributions firmed up.</strong> Sunday School + Youth (Tash coordinating), Hospitality, Men's Group (Scott Shokoya, in coordination with Pastor Kayode), and the Ladies (Sister Funke planning something) have all indicated they'll bring a presentation. Brother Ernest has also indicated.</li>
+      <li><strong>Worship Team standing down from a separate "presentation" slot.</strong> They're already the engine of the day — Pastor Kayode flagged their hands are full. Their contribution stays through items 3, 15, and 16.</li>
+      <li><strong>Banner approved.</strong> Three pull-up banners commissioned (left/middle/right), Calvary-generic so reusable. £468 for the three, courier cost pending. Arriving Friday/Saturday.</li>
+      <li><strong>Equipment order being placed.</strong> Bolaji Adebanjo's gear list (mic stands, XLR, multicore, headphones, stage boxes) being purchased this week via church card. Preference for Amazon / Gear4Music over eBay following past reliability issues.</li>
+      <li><strong>Presentations dotted, not clustered.</strong> Confirmed structural decision from this round of planning — no children's / men's / ladies' labels, just "Presentation" in each slot. The Show of Appreciation stays distinct and named.</li>
+    </ul>
+  </div>
+
+  <!-- Order of Service -->
+  <div class="order">
+    <div class="order-head">
+      <h2>Order of service</h2>
+      <p>Time blocks in minutes per item. Presentations sit at items 4, 6, 9 and 13 — generically labelled, allocated to confirmed departments behind the scenes.</p>
+    </div>
+
+    <!-- 1 -->
+    <div class="row tint-meal">
+      <div class="row-num meal">1</div>
+      <div class="row-body">
+        <div class="row-name">Pre-service · small chops &amp; drinks <span class="pill pill-meal">Hospitality</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Hospitality Team (Janet Oviri)</div>
+        <div class="row-note">Doors open at 10:00. Light bites and drinks at the tables to set a reception atmosphere from arrival. Worship instrumentals playing softly.</div>
+      </div>
+      <div class="row-time">30 min<div class="row-time-sub">10:00–10:30</div></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="row tint-pastor">
+      <div class="row-num pastor">2</div>
+      <div class="row-body">
+        <div class="row-name">Welcome &amp; Opening Prayer <span class="pill pill-pastor">Pastor Shade</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+        <div class="row-note confirmed">Pastor Shade opens the day, sets the tone — thanksgiving, 34 years, the table together.</div>
+      </div>
+      <div class="row-time">10 min<div class="row-time-sub">10:30–10:40</div></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="row tint-worship">
+      <div class="row-num worship">3</div>
+      <div class="row-body">
+        <div class="row-name">Praise &amp; Worship <span class="pill pill-worship">Worship</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Calvary Worship Team — Caster Martins / Jess</div>
+        <div class="row-note">First worship block — lifts the room into thanksgiving. Full band with new equipment in place.</div>
+      </div>
+      <div class="row-time">20 min<div class="row-time-sub">10:40–11:00</div></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="row">
+      <div class="row-num">4</div>
+      <div class="row-body">
+        <div class="row-name">Presentation <span class="pill pill-generic">3 min slot</span></div>
+        <div class="row-lead"><strong>Allocated to:</strong> Sunday School + Youth (coordinated by Tash)</div>
+        <div class="row-note confirmed">Confirmed since 11 May. Generic label on the printed programme — no "Children's Presentation" branding. Hard 3-minute cap, MC enforces.</div>
+      </div>
+      <div class="row-time">3 min<div class="row-time-sub">11:00–11:03</div></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="row">
+      <div class="row-num">5</div>
+      <div class="row-body">
+        <div class="row-name">Welcome to Visitors <span class="pill pill-generic">MC</span></div>
+        <div class="row-lead"><strong>Lead:</strong> MC <span class="pill pill-open">TBC</span></div>
+        <div class="row-note open">MC name to be confirmed by Pastor Shade. Brief visitor welcome — invite to stand, congregation responds, no individual call-outs.</div>
+      </div>
+      <div class="row-time">5 min<div class="row-time-sub">11:03–11:08</div></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="row">
+      <div class="row-num">6</div>
+      <div class="row-body">
+        <div class="row-name">Presentation <span class="pill pill-generic">3 min slot</span></div>
+        <div class="row-lead"><strong>Allocated to:</strong> Hospitality Ministry — short word (Janet Oviri)</div>
+        <div class="row-note confirmed">Confirmed indication 11 May. Generic label on the printed programme.</div>
+      </div>
+      <div class="row-time">3 min<div class="row-time-sub">11:08–11:11</div></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="row tint-pastor">
+      <div class="row-num pastor">7</div>
+      <div class="row-body">
+        <div class="row-name">"Reasons to be Thankful" — Anniversary Reflection <span class="pill pill-pastor">Pastor Shade</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+        <div class="row-note confirmed">Pastor Shade's main reflection — 34 years of God's faithfulness, the journey, the people, the future. Sets up the Show of Appreciation that follows.</div>
+      </div>
+      <div class="row-time">10 min<div class="row-time-sub">11:11–11:21</div></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="row tint-pastor">
+      <div class="row-num pastor">8</div>
+      <div class="row-body">
+        <div class="row-name">Show of Appreciation &amp; Honour <span class="pill pill-pastor">Pastor Shade</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye — calling members by name</div>
+        <div class="row-note">Pastor Shade publicly honours members by name. Long-serving, character-based, relational. List to be drafted by Wednesday — small token per name optional (card / certificate). Distinct in kind from items 4, 6, 9 and 13 — kept named on the programme.</div>
+      </div>
+      <div class="row-time">10–12 min<div class="row-time-sub">11:21–11:33</div></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="row">
+      <div class="row-num">9</div>
+      <div class="row-body">
+        <div class="row-name">Presentation <span class="pill pill-generic">3 min slot</span></div>
+        <div class="row-lead"><strong>Allocated to:</strong> Men's Group (Scott Shokoya, coordinated with Pastor Kayode)</div>
+        <div class="row-note confirmed">In discussion at 11 May — Pastor Kayode following up with Scott. Generic label. Sister Funke (Ladies) may also slot here if ready — otherwise her piece moves to item 13.</div>
+      </div>
+      <div class="row-time">3 min<div class="row-time-sub">11:33–11:36</div></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="row">
+      <div class="row-num">10</div>
+      <div class="row-body">
+        <div class="row-name">Testimonies <span class="pill pill-generic">Curated</span></div>
+        <div class="row-lead"><strong>Lead:</strong> 3 testimonies, curated</div>
+        <div class="row-note">Three short testimonies of God's faithfulness this year. Speakers and order to be drafted before Friday rehearsal.</div>
+      </div>
+      <div class="row-time">10 min<div class="row-time-sub">11:36–11:46</div></div>
+    </div>
+
+    <!-- 11 -->
+    <div class="row">
+      <div class="row-num">11</div>
+      <div class="row-body">
+        <div class="row-name">Prayer Ministry — Corporate Thanksgiving</div>
+        <div class="row-lead"><strong>Lead:</strong> Pastor Gbenga Adebanjo <span class="pill pill-open">scope TBC</span></div>
+        <div class="row-note open">Open or named-group format to be confirmed by Pastor Shade. Brief corporate thanksgiving prayer to set up the sermon.</div>
+      </div>
+      <div class="row-time">3 min<div class="row-time-sub">11:46–11:49</div></div>
+    </div>
+
+    <!-- 12 -->
+    <div class="row">
+      <div class="row-num">12</div>
+      <div class="row-body">
+        <div class="row-name">Sermon — <em>Reasons to be Thankful</em></div>
+        <div class="row-lead"><strong>Preacher:</strong> Pastor Gbenga Adebanjo <span class="pill pill-confirmed">Confirmed</span></div>
+        <div class="row-note confirmed">Sermon package previously prepared in Pastor Shade's voice. Pastor Gbenga delivering. 25–30 minute target.</div>
+      </div>
+      <div class="row-time">25–30 min<div class="row-time-sub">11:49–12:19</div></div>
+    </div>
+
+    <!-- 13 -->
+    <div class="row">
+      <div class="row-num">13</div>
+      <div class="row-body">
+        <div class="row-name">Presentation <span class="pill pill-generic">3 min slot</span></div>
+        <div class="row-lead"><strong>Allocated to:</strong> Evangelism — testimony from someone reached this year / Ladies' piece if ready</div>
+        <div class="row-note">Generic label. Either Pastor Gbenga brings an evangelism testimony (someone Calvary reached this year) or Sister Funke's piece sits here if she's ready.</div>
+      </div>
+      <div class="row-time">3 min<div class="row-time-sub">12:19–12:22</div></div>
+    </div>
+
+    <!-- 14 -->
+    <div class="row">
+      <div class="row-num">14</div>
+      <div class="row-body">
+        <div class="row-name">Communion — at the tables</div>
+        <div class="row-lead"><strong>Lead:</strong> Designated elder <span class="pill pill-open">TBC — Brother Michael Kabalu?</span></div>
+        <div class="row-note open">Cabaret-style works in our favour here — elements distributed to tables, communion taken together. Lead to be confirmed by Pastor Shade.</div>
+      </div>
+      <div class="row-time">10 min<div class="row-time-sub">12:22–12:32</div></div>
+    </div>
+
+    <!-- 15 -->
+    <div class="row tint-worship">
+      <div class="row-num worship">15</div>
+      <div class="row-body">
+        <div class="row-name">Worship Ministry — focused song <span class="pill pill-worship">Worship</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Worship Team</div>
+        <div class="row-note">Response song after communion — single focused piece, room standing.</div>
+      </div>
+      <div class="row-time">4 min<div class="row-time-sub">12:32–12:36</div></div>
+    </div>
+
+    <!-- 16 -->
+    <div class="row tint-worship">
+      <div class="row-num worship">16</div>
+      <div class="row-body">
+        <div class="row-name">Thanksgiving Offering — Naija Praise <span class="pill pill-worship">Worship</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Visiting praise leader <span class="pill pill-open">Name TBC</span> · with own drummer + talking drum</div>
+        <div class="row-note open">Naija praise segment Pastor Shade specifically requested. Visiting praise leader bringing her own drummer and talking drum player. Functions as the thanksgiving offering moment — high-energy, drives engagement before the meal. Name + technical rider to be confirmed.</div>
+      </div>
+      <div class="row-time">20 min<div class="row-time-sub">12:36–12:56</div></div>
+    </div>
+
+    <!-- 17 -->
+    <div class="row tint-pastor">
+      <div class="row-num pastor">17</div>
+      <div class="row-body">
+        <div class="row-name">Grace &amp; Blessing of the Meal <span class="pill pill-pastor">Pastor Shade</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+        <div class="row-note">Pastor Shade blesses the meal. Hospitality team begins service to tables.</div>
+      </div>
+      <div class="row-time">5 min<div class="row-time-sub">12:56–13:01</div></div>
+    </div>
+
+    <!-- 18 -->
+    <div class="row tint-meal">
+      <div class="row-num meal">18</div>
+      <div class="row-body">
+        <div class="row-name">The Meal <span class="pill pill-meal">Hospitality</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Hospitality Team (Janet Oviri)</div>
+        <div class="row-note confirmed">Sit-down meal at the tables together — the heart of the day. No rushing away. Background instrumentals. Photography stations open.</div>
+      </div>
+      <div class="row-time">60–75 min<div class="row-time-sub">13:01–14:15</div></div>
+    </div>
+
+    <!-- 19 -->
+    <div class="row tint-pastor">
+      <div class="row-num pastor">19</div>
+      <div class="row-body">
+        <div class="row-name">Acknowledgements &amp; Closing <span class="pill pill-pastor">Pastor Shade</span></div>
+        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+        <div class="row-note">Thanks the day's serving team — kitchen, hospitality, ushers, media, worship, volunteers. Distinct from item 8: today's logistics, not the church's life. Closing prayer and benediction.</div>
+      </div>
+      <div class="row-time">10 min<div class="row-time-sub">14:15–14:25</div></div>
+    </div>
+
+  </div>
+
+  <!-- Decisions still open -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-open">⚠️</div>
+        <div>
+          <div class="section-title">Still open — for Pastor Shade to confirm</div>
+          <div class="section-blurb">Five items that block the printed programme and the MC script. Target: confirm by Wednesday 14 May.</div>
+        </div>
+      </div>
+    </div>
+    <div class="list-items">
+      <div class="list-row">
+        <div>
+          <div class="list-name">MC for the day</div>
+          <div class="list-detail">Holds visitor welcome (item 5), enforces 3-minute cap on presentations, transitions between items. Needs to be someone with calm authority.</div>
+        </div>
+        <div class="list-owner">Pastor Shade</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Visiting praise leader — name &amp; technical rider</div>
+          <div class="list-detail">For item 16 Naija praise. Bringing own drummer + talking drum. Sound team needs notice on mics, monitor needs, set length.</div>
+        </div>
+        <div class="list-owner">Pastor Shade</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Communion lead</div>
+          <div class="list-detail">For item 14, taken at the tables. Likely Brother Michael Kabalu — Pastor Shade to confirm.</div>
+        </div>
+        <div class="list-owner">Pastor Shade</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Prayer Ministry scope (item 11)</div>
+          <div class="list-detail">Open corporate prayer, or named intercessory group leading? Pastor Gbenga to brief either way.</div>
+        </div>
+        <div class="list-owner">Pastor Shade</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Show of Appreciation — names &amp; tokens</div>
+          <div class="list-detail">Draft list of members to honour at item 8. Pastor Shade to draft Wednesday at the latest. Decision on whether to print certificates / give a small token per name.</div>
+        </div>
+        <div class="list-owner">Pastor Shade</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmed at 11 May meeting -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-confirmed">✓</div>
+        <div>
+          <div class="section-title">Confirmed at the 11 May planning meeting</div>
+          <div class="section-blurb">What the working group locked in — Pastor Shade chairing with Pastor Kayode, Pastor Gbenga, Sister Petty, Brother Ernest and Bolaji.</div>
+        </div>
+      </div>
+    </div>
+    <div class="list-items">
+      <div class="list-row">
+        <div>
+          <div class="list-name">Department contributions — indicated</div>
+          <div class="list-detail">Sunday School + Youth (Tash), Hospitality, Men's Group (Scott Shokoya with Pastor Kayode), Ladies (Sister Funke), Brother Ernest. All indicated they'll bring something. Worship team standing down from a separate presentation — already carrying items 3, 15, 16.</div>
+        </div>
+        <div class="list-owner">Pastor Kayode</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Banner approved — three pull-up banners</div>
+          <div class="list-detail">£468 for three (Isaiah 61 / Calvary wordmark / Welcome), Calvary-generic so reusable beyond Sunday. QR code to <em>calvaryhephzibah.co.uk</em>. Courier cost still to confirm. Arriving Friday via Bolaji's car / Saturday via the girls.</div>
+        </div>
+        <div class="list-owner">Bolaji</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Equipment order in progress</div>
+          <div class="list-detail">Mic stands, XLR cables, multicore, stage boxes, headphones — from Bolaji Adebanjo's spec. Being purchased via church card across Amazon, Gear4Music, and (cautiously) eBay. Pastor Shade asked for Amazon / Gear4Music preferred over eBay. Coordination handled by Bolaji.</div>
+        </div>
+        <div class="list-owner">Bolaji</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Presentations generic on the printed programme</div>
+          <div class="list-detail">No "Children's" or "Men's" or "Ladies'" labelling. Each appears as "Presentation" in the printed running order. Behind the scenes, department coordinators know their slot and the 3-minute hard cap.</div>
+        </div>
+        <div class="list-owner">All coordinators</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Show of Appreciation kept as a distinct named moment</div>
+          <div class="list-detail">Item 8 stays explicitly named on the programme. Different in kind from the generic presentations — this is named recognition by Pastor Shade, not a department piece.</div>
+        </div>
+        <div class="list-owner">Pastor Shade</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Risks -->
+  <div class="section">
+    <div class="section-head">
+      <div class="section-head-left">
+        <div class="section-icon si-meeting">⚓</div>
+        <div>
+          <div class="section-title">Risks to manage on the day</div>
+          <div class="section-blurb">Three risks specific to a 19-item, cabaret-style, meal-included programme of this length.</div>
+        </div>
+      </div>
+    </div>
+    <div class="list-items">
+      <div class="list-row">
+        <div>
+          <div class="list-name">Service overrun</div>
+          <div class="list-detail">Every 3-minute slot that runs to 8 minutes blows a transition. MC enforces hard, discreet timer visible from the stage. Each coordinator briefed not just on their slot but on what's before and after them.</div>
+        </div>
+        <div class="list-owner">MC</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Attention drop after the meal</div>
+          <div class="list-detail">Items 18 → 19 is the hardest transition of the day. People will be settled, eating, talking. Worship team should be ready to lift the room briefly before Pastor Shade closes if needed.</div>
+        </div>
+        <div class="list-owner">Worship Team</div>
+      </div>
+      <div class="list-row">
+        <div>
+          <div class="list-name">Sound complexity — many mic transitions</div>
+          <div class="list-detail">Two worship blocks, visiting praise leader, sermon, communion, plus four short presentations and three testimonies. Bolaji Adebanjo on the desk with the new gear in place — needs the run sheet by Friday rehearsal.</div>
+        </div>
+        <div class="list-owner">Bolaji Adebanjo</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Anniversary 2026 · Running Order · Draft v3 · Last updated 13 May 2026<br>
+    Companion documents: <a href="anniversary-finance-2026.html">Finance Compilation</a> · <a href="anniversary-gear-sourcing-2026.html">Gear Sourcing</a>
+  </div>
+
+</div>
+</body>
+</html>
