@@ -289,14 +289,24 @@ let selectedSections = new Set();
 
 // ── INIT ────────────────────────────────────────────────────────────────────
 async function init() {
-  // Check for saved session
-  const saved = sessionStorage.getItem('bridge_user');
+  // Check for saved session — try sessionStorage first (per-tab), then localStorage (cross-tab)
+  let saved = sessionStorage.getItem('bridge_user');
+  if (!saved) {
+    saved = localStorage.getItem('bridge_user');
+    if (saved) {
+      // Re-prime sessionStorage so subsequent reads are fast
+      try { sessionStorage.setItem('bridge_user', saved); } catch(e) {}
+    }
+  }
   if (saved) {
     try {
       currentUser = JSON.parse(saved);
       launch();
       return;
-    } catch(e) { sessionStorage.removeItem('bridge_user'); }
+    } catch(e) {
+      sessionStorage.removeItem('bridge_user');
+      localStorage.removeItem('bridge_user');
+    }
   }
   showScreen('s-who');
   loadUsers(); // don't await — show screen immediately
@@ -405,6 +415,11 @@ async function checkPin() {
       return;
     }
     currentUser = { ...fallback };
+    try {
+      const json = JSON.stringify(currentUser);
+      sessionStorage.setItem('bridge_user', json);
+      localStorage.setItem('bridge_user', json);
+    } catch(e) {}
     launch();
     return;
   }
@@ -417,6 +432,11 @@ async function checkPin() {
     if (error || !data) { showPinError('Incorrect PIN. Try again.'); return; }
     if (hashPin(pinEntry) !== data.pin_hash) { showPinError('Incorrect PIN. Try again.'); return; }
     currentUser = data;
+    try {
+      const json = JSON.stringify(currentUser);
+      sessionStorage.setItem('bridge_user', json);
+      localStorage.setItem('bridge_user', json);
+    } catch(e) {}
     launch();
   } catch(e) {
     showPinError('Connection issue. Try again.');
@@ -451,6 +471,7 @@ function launch() {
 
 function signOut() {
   sessionStorage.removeItem('bridge_user');
+  localStorage.removeItem('bridge_user');
   currentUser = null;
   pinEntry = ''; updateDots();
   document.getElementById('app').style.display = 'none';

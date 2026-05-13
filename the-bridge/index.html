@@ -4077,6 +4077,7 @@ function toggleMobUserMenu() {
 }
 function mobSwitchUser() {
   sessionStorage.removeItem('bridge_user');
+  localStorage.removeItem('bridge_user');
   window.location.href = 'app.html';
 }
 document.addEventListener('click', e => {

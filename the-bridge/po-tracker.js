@@ -69,9 +69,11 @@
     config = Object.assign({}, DEFAULTS, opts || {});
     if (!config.poSlug) throw new Error('POTracker.init requires poSlug');
 
-    // Load current user from Bridge session
+    // Load current user from Bridge session — try sessionStorage first (per-tab),
+    // then localStorage (cross-tab). Bridge writes to both on login.
     try {
-      const raw = sessionStorage.getItem('bridge_user');
+      let raw = sessionStorage.getItem('bridge_user');
+      if (!raw) raw = localStorage.getItem('bridge_user');
       if (raw) currentUser = JSON.parse(raw);
     } catch(e) { /* ignore */ }
 
@@ -91,10 +93,26 @@
     // Initial hydrate
     if (config.autoRender) {
       hydrate();
-      // Refresh when the tab regains focus
+      // Refresh when the tab regains focus — also re-checks login state
       if (config.pollOnFocus) {
         document.addEventListener('visibilitychange', () => {
-          if (document.visibilityState === 'visible') hydrate();
+          if (document.visibilityState === 'visible') {
+            // Re-read session in case user logged in via another tab
+            try {
+              let raw = sessionStorage.getItem('bridge_user');
+              if (!raw) raw = localStorage.getItem('bridge_user');
+              if (raw) {
+                const fresh = JSON.parse(raw);
+                if (!currentUser || currentUser.id !== fresh.id) {
+                  currentUser = fresh;
+                  // Dismiss the read-only notice if it's showing
+                  const notice = document.getElementById('po-auth-notice');
+                  if (notice) notice.style.display = 'none';
+                }
+              }
+            } catch(e) { /* ignore */ }
+            hydrate();
+          }
         });
       }
     }
