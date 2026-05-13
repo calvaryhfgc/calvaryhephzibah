@@ -232,6 +232,11 @@
     if (row && row.purchaser && status !== 'pending') {
       const who = escapeHtml(row.purchaser.split(' ')[0]); // first name only
       inner += `<div class="pot-purchaser">${who}${row.final_amount ? ` · £${Number(row.final_amount).toFixed(2)}` : ''}</div>`;
+      if (row.payment_method) {
+        const pmClass = row.payment_method === 'pocket' ? 'pot-paid-pocket' : 'pot-paid-church';
+        const pmLabel = row.payment_method === 'pocket' ? 'Out of pocket' : 'Church';
+        inner += `<div class="pot-paid-badge ${pmClass}">${pmLabel}</div>`;
+      }
     }
     cell.innerHTML = inner;
     const btn = cell.querySelector('.pot-pill');
@@ -262,13 +267,19 @@
   }
 
   function summarise(lineRefs) {
-    const t = { total: lineRefs.length, pending: 0, claimed: 0, ordered: 0, received: 0, cancelled: 0, spent: 0 };
+    const t = { total: lineRefs.length, pending: 0, claimed: 0, ordered: 0, received: 0, cancelled: 0, spent: 0, church_spent: 0, pocket_owed: 0 };
     lineRefs.forEach(ref => {
       const r = state[ref];
       const status = (r && r.status) || 'pending';
       t[status] = (t[status] || 0) + 1;
       if (r && r.final_amount && (status === 'ordered' || status === 'received')) {
-        t.spent += Number(r.final_amount);
+        const amt = Number(r.final_amount);
+        t.spent += amt;
+        if (r.payment_method === 'pocket') {
+          t.pocket_owed += amt;
+        } else if (r.payment_method === 'church') {
+          t.church_spent += amt;
+        }
       }
     });
     return t;
@@ -281,12 +292,16 @@
       parts.push(`<span class="pot-tally-chip">${done}/${t.total} ordered</span>`);
       if (t.claimed) parts.push(`<span class="pot-tally-chip pot-tally-claimed">${t.claimed} claimed</span>`);
       if (t.spent) parts.push(`<span class="pot-tally-chip pot-tally-spent">£${t.spent.toFixed(2)} spent</span>`);
+      if (t.pocket_owed) parts.push(`<span class="pot-tally-chip pot-tally-owed">£${t.pocket_owed.toFixed(2)} owed</span>`);
     } else {
       parts.push(`<span class="pot-tally-stat"><strong>${t.total}</strong> lines</span>`);
       parts.push(`<span class="pot-tally-stat"><strong>${t.claimed}</strong> claimed</span>`);
       parts.push(`<span class="pot-tally-stat"><strong>${t.ordered}</strong> ordered</span>`);
       parts.push(`<span class="pot-tally-stat"><strong>${t.received}</strong> received</span>`);
       parts.push(`<span class="pot-tally-stat"><strong>£${t.spent.toFixed(2)}</strong> spent</span>`);
+      if (t.pocket_owed) {
+        parts.push(`<span class="pot-tally-stat pot-tally-stat-owed"><strong>£${t.pocket_owed.toFixed(2)}</strong> owed to volunteers</span>`);
+      }
     }
     return parts.join(' ');
   }
@@ -475,6 +490,11 @@
             ${purchaserSelect('pot')}
             <label>Final amount paid (£) — optional, leave blank to just claim</label>
             <input type="number" step="0.01" id="pot-final" placeholder="${lineAmount || '0.00'}">
+            <label>Paid by</label>
+            <div class="pot-segmented" id="pot-payment-method-group">
+              <button type="button" class="pot-seg-opt" data-value="church">Church</button>
+              <button type="button" class="pot-seg-opt" data-value="pocket">Out of pocket</button>
+            </div>
             <label>Order reference (optional)</label>
             <input type="text" id="pot-order-ref" placeholder="Order #, eBay item ID, etc">
             <label>Notes (optional)</label>
@@ -498,6 +518,11 @@
           ${purchaserSelect('pot')}
           <label>Final amount paid (£)</label>
           <input type="number" step="0.01" id="pot-final" placeholder="${lineAmount || '0.00'}" value="${row.final_amount || ''}">
+          <label>Paid by</label>
+          <div class="pot-segmented" id="pot-payment-method-group" data-current="${row.payment_method ? escapeAttr(row.payment_method) : ''}">
+            <button type="button" class="pot-seg-opt${row.payment_method === 'church' ? ' pot-seg-opt-active' : ''}" data-value="church">Church</button>
+            <button type="button" class="pot-seg-opt${row.payment_method === 'pocket' ? ' pot-seg-opt-active' : ''}" data-value="pocket">Out of pocket</button>
+          </div>
           <label>Order reference (optional)</label>
           <input type="text" id="pot-order-ref" placeholder="Order #, eBay item ID, etc" value="${row.order_ref ? escapeAttr(row.order_ref) : ''}">
           <label>Notes (optional)</label>
@@ -517,7 +542,7 @@
     } else if (status === 'ordered' && canEdit) {
       html += `
         <div class="pot-sheet-status">Ordered by <strong>${escapeHtml(row.purchaser || '—')}</strong> · ${timeAgo(row.ordered_at)}</div>
-        ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}</div>` : ''}
+        ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}${paymentMethodLabel(row.payment_method)}</div>` : ''}
         ${row.order_ref ? `<div class="pot-sheet-est"><strong>Order ref:</strong> ${escapeHtml(row.order_ref)}</div>` : ''}
         ${row.notes ? `<div class="pot-sheet-est"><strong>Notes:</strong> ${escapeHtml(row.notes)}</div>` : ''}
         <button class="pot-btn pot-btn-primary" data-action="received">Mark received</button>
@@ -527,7 +552,7 @@
     } else if (status === 'ordered' && !canEdit) {
       html += `
         <div class="pot-sheet-status">Ordered by <strong>${escapeHtml(row.purchaser || '—')}</strong> · ${timeAgo(row.ordered_at)}</div>
-        ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}</div>` : ''}
+        ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}${paymentMethodLabel(row.payment_method)}</div>` : ''}
         ${row.order_ref ? `<div class="pot-sheet-est"><strong>Order ref:</strong> ${escapeHtml(row.order_ref)}</div>` : ''}
         <p class="pot-sheet-readonly">Read-only — only ${escapeHtml((row.purchaser || '').split(' ')[0] || 'the purchaser')} or an admin can edit.</p>
         <button class="pot-btn pot-btn-ghost" data-action="cancel">Close</button>
@@ -535,7 +560,7 @@
     } else if (status === 'received') {
       html += `
         <div class="pot-sheet-status">Received · ordered by <strong>${escapeHtml(row.purchaser || '—')}</strong></div>
-        ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}</div>` : ''}
+        ${row.final_amount ? `<div class="pot-sheet-est"><strong>Paid:</strong> £${Number(row.final_amount).toFixed(2)}${paymentMethodLabel(row.payment_method)}</div>` : ''}
         ${row.order_ref ? `<div class="pot-sheet-est"><strong>Order ref:</strong> ${escapeHtml(row.order_ref)}</div>` : ''}
         ${isAdmin ? `<button class="pot-btn pot-btn-ghost" data-action="reopen">Reopen (admin)</button>` : ''}
         <button class="pot-btn pot-btn-ghost" data-action="cancel">Close</button>
@@ -552,6 +577,17 @@
     body.innerHTML = html;
     body.querySelectorAll('button[data-action]').forEach(btn => {
       btn.addEventListener('click', (e) => handleAction(e.target.getAttribute('data-action'), lineRef));
+    });
+    // Segmented control: payment method toggle
+    body.querySelectorAll('.pot-segmented .pot-seg-opt').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const group = e.currentTarget.closest('.pot-segmented');
+        if (!group) return;
+        const wasActive = e.currentTarget.classList.contains('pot-seg-opt-active');
+        group.querySelectorAll('.pot-seg-opt').forEach(b => b.classList.remove('pot-seg-opt-active'));
+        // Allow toggle-off so payment_method can be cleared
+        if (!wasActive) e.currentTarget.classList.add('pot-seg-opt-active');
+      });
     });
     sheetEl.classList.remove('pot-sheet-hidden');
   }
@@ -596,7 +632,7 @@
           break;
         }
         case 'release':
-          patch = { status: 'pending', purchaser: null, purchaser_id: null, claimed_at: null, final_amount: null, order_ref: null };
+          patch = { status: 'pending', purchaser: null, purchaser_id: null, claimed_at: null, final_amount: null, order_ref: null, payment_method: null };
           break;
         case 'ordered': {
           const userPatch = buildUserPatch();
@@ -604,6 +640,7 @@
           const finalEl = document.getElementById('pot-final');
           const refEl = document.getElementById('pot-order-ref');
           const notesEl = document.getElementById('pot-notes');
+          const pmEl = document.querySelector('.pot-segmented .pot-seg-opt-active');
           let final = finalEl ? parseFloat(finalEl.value) : NaN;
           if (!finalEl) {
             const v = prompt('Final amount paid in £:');
@@ -621,6 +658,7 @@
             final_amount: final,
             order_ref: refEl ? refEl.value.trim() || null : (state[lineRef] && state[lineRef].order_ref) || null,
             notes:     notesEl ? notesEl.value.trim() || null : (state[lineRef] && state[lineRef].notes) || null,
+            payment_method: pmEl ? pmEl.getAttribute('data-value') : (state[lineRef] && state[lineRef].payment_method) || null,
           }, userPatch);
           break;
         }
@@ -637,7 +675,7 @@
           break;
         }
         case 'reopen':
-          patch = { status: 'pending', purchaser: null, purchaser_id: null, claimed_at: null, ordered_at: null, received_at: null, final_amount: null, order_ref: null };
+          patch = { status: 'pending', purchaser: null, purchaser_id: null, claimed_at: null, ordered_at: null, received_at: null, final_amount: null, order_ref: null, payment_method: null };
           break;
         case 'edit-ordered':
           // Re-open the sheet in "claimed" edit mode so they can revise final_amount/ref/notes
@@ -666,6 +704,11 @@
   function escapeAttr(s) { return escapeHtml(s); }
   function cssEscape(s) {
     return String(s).replace(/(["\\])/g, '\\$1');
+  }
+  function paymentMethodLabel(pm) {
+    if (pm === 'pocket') return ' <span class="pot-paid-inline pot-paid-pocket">Out of pocket</span>';
+    if (pm === 'church') return ' <span class="pot-paid-inline pot-paid-church">Church</span>';
+    return '';
   }
   function timeAgo(iso) {
     if (!iso) return '';
@@ -724,8 +767,69 @@
       }
       .pot-tally-claimed { background: #E8F2FE; color: #0071E3; }
       .pot-tally-spent   { background: #FFF8E1; color: #8B6914; }
+      .pot-tally-owed    { background: #FBE5E7; color: #C41E2A; }
       .pot-tally-stat { font-size: 12px; color: #555; margin-right: 14px; }
       .pot-tally-stat strong { color: #1D1D1F; font-size: 14px; }
+      .pot-tally-stat-owed strong { color: #C41E2A; }
+
+      /* Paid-by badge on the row (under the purchaser line) */
+      .pot-paid-badge {
+        display: inline-block;
+        font-size: 9.5px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-top: 3px;
+        line-height: 1.3;
+      }
+      .pot-paid-church { background: #E0F5E5; color: #1E7E34; }
+      .pot-paid-pocket { background: #FBE5E7; color: #C41E2A; }
+
+      /* Inline paid-by tag (in sheet read-only display) */
+      .pot-paid-inline {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        padding: 1px 6px;
+        border-radius: 4px;
+        margin-left: 8px;
+        vertical-align: middle;
+      }
+
+      /* Segmented control for payment method in the order sheet */
+      .pot-segmented {
+        display: inline-flex;
+        border: 1px solid rgba(0,0,0,0.12);
+        border-radius: 8px;
+        overflow: hidden;
+        background: rgba(0,0,0,0.02);
+      }
+      .pot-seg-opt {
+        appearance: none;
+        background: transparent;
+        border: none;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 500;
+        color: #555;
+        padding: 9px 16px;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+      }
+      .pot-seg-opt + .pot-seg-opt {
+        border-left: 1px solid rgba(0,0,0,0.12);
+      }
+      .pot-seg-opt:hover:not(.pot-seg-opt-active) {
+        background: rgba(0,0,0,0.04);
+      }
+      .pot-seg-opt-active {
+        background: #1D1D1F;
+        color: white;
+      }
       .pot-sheet {
         position: fixed; inset: 0; z-index: 9999;
         display: flex; align-items: flex-end; justify-content: center;
