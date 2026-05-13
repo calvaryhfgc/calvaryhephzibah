@@ -17,6 +17,7 @@
   --card-bg: #FFFFFF;
   --card-bg-soft: #FAF7F0;
   --card-border: rgba(20, 20, 26, 0.08);
+
   --row-tint-pastor: rgba(208, 68, 28, 0.05);
   --row-tint-pastor-hover: rgba(208, 68, 28, 0.09);
   --row-tint-worship: rgba(154, 47, 17, 0.05);
@@ -58,7 +59,7 @@ body::before{
 }
 
 .wrap{
-  max-width: 920px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: 40px 24px 96px;
   position: relative;
@@ -87,8 +88,10 @@ body::before{
 .hdr::after{
   content:'';
   position: absolute;
-  top: -60px; right: -60px;
-  width: 240px; height: 240px;
+  top: -60px;
+  right: -60px;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, rgba(208, 68, 28, 0.12), transparent 70%);
   pointer-events: none;
@@ -160,7 +163,7 @@ body::before{
   gap: 0;
   border-bottom: 1px solid var(--card-border);
   padding: 22px 32px;
-  align-items: center;
+  align-items: start;
   transition: background 0.18s var(--ease-out-quint);
 }
 .row:last-child{ border-bottom: none; }
@@ -171,6 +174,7 @@ body::before{
   font-size: 32px;
   color: var(--ink-4);
   line-height: 1;
+  padding-top: 2px;
   letter-spacing: -0.01em;
 }
 .row-num.pastor{ color: var(--red); }
@@ -196,10 +200,11 @@ body::before{
 
 .row-time{
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 24px;
   color: var(--ink-2);
   text-align: right;
   white-space: nowrap;
+  padding-top: 2px;
   letter-spacing: -0.01em;
   line-height: 1;
 }
@@ -220,30 +225,11 @@ body::before{
 .row.tint-meal{ background: var(--row-tint-meal); }
 .row.tint-meal:hover{ background: var(--row-tint-meal-hover); }
 
-.footer{
-  margin-top: 40px;
-  padding: 28px 0 0;
-  text-align: center;
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: var(--ink-4);
-  border-top: 1px solid var(--card-border);
-}
-.footer-mark{
-  font-family: var(--font-display);
-  font-size: 14px;
-  letter-spacing: 0.16em;
-  color: var(--red);
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  display: block;
-}
-
 @media (max-width:640px){
   .wrap{ padding: 20px 16px 60px; }
   .hdr{ padding: 32px 24px 28px; }
   .hdr h1{ font-size: 34px; }
-  .row{ grid-template-columns: 48px 1fr; padding: 18px 20px; gap: 14px; align-items: start; }
+  .row{ grid-template-columns: 48px 1fr; padding: 20px 20px; gap: 14px; }
   .row-time{ grid-column: 2; text-align: left; padding-top: 8px; font-size: 18px; }
   .row-time-sub{ display: inline-block; margin-left: 10px; margin-top: 0; }
   .row-body{ padding-right: 0; }
@@ -293,7 +279,7 @@ body::before{
       <div class="row-num meal">1</div>
       <div class="row-body">
         <div class="row-name">Pre-service · small chops &amp; drinks</div>
-        <div class="row-lead"><strong>Lead:</strong> Hospitality Team</div>
+        <div class="row-lead"><strong>Lead:</strong> Hospitality Team (Janet Oviri)</div>
       </div>
       <div class="row-time">30 min<div class="row-time-sub">10:00–10:30</div></div>
     </div>
@@ -422,7 +408,7 @@ body::before{
       <div class="row-num worship">16</div>
       <div class="row-body">
         <div class="row-name">Thanksgiving Offering — Naija Praise</div>
-        <div class="row-lead"><strong>Lead:</strong> Visiting praise leader · drummer + talking drum</div>
+        <div class="row-lead"><strong>Lead:</strong> Visiting praise leader (TBC) · with drummer + talking drum</div>
       </div>
       <div class="row-time">20 min<div class="row-time-sub">12:36–12:56</div></div>
     </div>
@@ -440,7 +426,7 @@ body::before{
       <div class="row-num meal">18</div>
       <div class="row-body">
         <div class="row-name">The Meal</div>
-        <div class="row-lead"><strong>Lead:</strong> Hospitality Team</div>
+        <div class="row-lead"><strong>Lead:</strong> Hospitality Team (Janet Oviri)</div>
       </div>
       <div class="row-time">60–75 min<div class="row-time-sub">13:01–14:15</div></div>
     </div>
@@ -454,11 +440,6 @@ body::before{
       <div class="row-time">10 min<div class="row-time-sub">14:15–14:25</div></div>
     </div>
 
-  </div>
-
-  <div class="footer">
-    <span class="footer-mark">Calvary Hephzibah · 34th Anniversary</span>
-    Last updated 13 May 2026
   </div>
 
 </div>
