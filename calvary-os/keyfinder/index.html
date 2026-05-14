@@ -3,37 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#0A0A0A">
+<meta name="theme-color" content="#0B0B0E">
 <title>Keyfinder · Calvary</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Anton&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0A0A0A;
-    --bg-elev: #141414;
-    --bg-card: #1A1A1A;
-    --line: rgba(255,255,255,0.08);
-    --line-strong: rgba(255,255,255,0.15);
-    --ink: #FAFAFA;
-    --ink-dim: rgba(250,250,250,0.55);
-    --ink-faint: rgba(250,250,250,0.32);
-    --accent: #E6B450;        /* warm brass — feels musical, not techy */
-    --accent-soft: rgba(230,180,80,0.12);
-    --danger: #FF6B5C;
+    --obsidian: #0B0B0E;
+    --obsidian-elev: #16161A;
+    --obsidian-card: #1C1C20;
+    --calvary-red: #D0441C;
+    --calvary-red-soft: rgba(208,68,28,0.12);
+    --sage: #7D8471;
+    --cream: #F4EFE6;
+    --warm-beige: #C9C3B6;
+    --silver: #A29C90;
+    --line: rgba(244,239,230,0.08);
+    --line-strong: rgba(244,239,230,0.18);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html, body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Fraunces', Georgia, serif;
+    background: var(--obsidian);
+    color: var(--cream);
+    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
     min-height: 100vh;
     min-height: 100dvh;
     overflow-x: hidden;
     user-select: none;
     -webkit-user-select: none;
+    font-weight: 400;
+  }
+
+  /* Noise texture overlay — anniversary system */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.96  0 0 0 0 0.94  0 0 0 0 0.90  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.5;
+    mix-blend-mode: overlay;
   }
 
   body {
@@ -41,57 +54,92 @@
     flex-direction: column;
     min-height: 100vh;
     min-height: 100dvh;
-    padding: max(env(safe-area-inset-top), 16px) 20px max(env(safe-area-inset-bottom), 20px);
+    padding: max(env(safe-area-inset-top), 20px) 24px max(env(safe-area-inset-bottom), 28px);
+    position: relative;
   }
 
-  /* HEADER */
+  body > * { position: relative; z-index: 1; }
+
+  /* ====== TOPBAR ====== */
   .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    padding-bottom: 8px;
+    padding-bottom: 24px;
   }
-  .topbar .brand { color: var(--ink-dim); }
-  .topbar .brand b { color: var(--ink); font-weight: 500; }
-  .topbar button {
+  .brand {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--calvary-red);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--calvary-red);
+  }
+  .home-btn {
     background: none;
     border: 1px solid var(--line);
-    color: var(--ink-dim);
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 0.15em;
+    color: var(--warm-beige);
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    padding: 6px 10px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 100px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
-  .topbar button:hover, .topbar button:active { color: var(--ink); border-color: var(--line-strong); }
+  .home-btn:hover, .home-btn:active {
+    color: var(--cream);
+    border-color: var(--line-strong);
+    background: var(--obsidian-elev);
+  }
+  .home-btn .home-key {
+    color: var(--calvary-red);
+    font-weight: 700;
+  }
 
-  /* MAIN — THE ANSWER */
-  .stage {
+  /* ====== HERO — THE KEY ====== */
+  .hero {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 20px 0;
+    padding: 20px 0 32px;
     position: relative;
   }
 
-  .label {
-    font-family: 'JetBrains Mono', monospace;
+  .eyebrow {
+    font-family: 'Inter Tight', sans-serif;
     font-size: 11px;
-    letter-spacing: 0.3em;
+    font-weight: 600;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 18px;
+    color: var(--calvary-red);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--calvary-red);
   }
 
   .keybox {
@@ -99,104 +147,135 @@
     display: inline-flex;
     align-items: baseline;
     justify-content: center;
-    gap: 4px;
-    margin-bottom: 22px;
+    gap: 6px;
+    margin-bottom: 18px;
   }
 
   .key-letter {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: clamp(180px, 42vw, 280px);
-    line-height: 0.85;
+    font-family: 'Anton', Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(220px, 48vw, 340px);
+    line-height: 0.82;
     letter-spacing: -0.04em;
-    color: var(--ink);
-    font-feature-settings: "ss01";
+    color: var(--cream);
+    text-transform: uppercase;
   }
 
   .key-accidental {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: clamp(80px, 18vw, 120px);
+    font-family: 'Anton', Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(96px, 22vw, 150px);
     line-height: 1;
-    color: var(--accent);
-    transform: translateY(-0.15em);
+    color: var(--calvary-red);
+    transform: translateY(-0.35em);
+    letter-spacing: -0.04em;
   }
 
   .key-mode {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
+    font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: clamp(20px, 5vw, 28px);
-    color: var(--ink-dim);
-    letter-spacing: 0.01em;
-    margin-bottom: 28px;
+    font-weight: 400;
+    font-size: clamp(22px, 5.5vw, 32px);
+    color: var(--calvary-red);
+    letter-spacing: 0.02em;
+    margin-bottom: 32px;
   }
 
   .delta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.2em;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    color: var(--silver);
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 14px;
+    padding: 12px 20px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
   }
-  .delta b { color: var(--ink-dim); font-weight: 500; }
-  .delta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-faint); }
+  .delta b {
+    color: var(--cream);
+    font-weight: 700;
+  }
+  .delta .sep {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--calvary-red);
+  }
 
-  /* TRANSPOSE CONTROLS */
+  /* ====== TRANSPOSE CONTROLS ====== */
   .transpose {
     display: flex;
     align-items: stretch;
     justify-content: center;
     gap: 14px;
-    margin-top: 30px;
-    margin-bottom: 24px;
+    margin-top: 36px;
+    margin-bottom: 28px;
   }
 
   .tbtn {
     flex: 1;
-    max-width: 160px;
-    background: var(--bg-card);
+    max-width: 170px;
+    background: var(--obsidian-card);
     border: 1px solid var(--line);
-    color: var(--ink);
+    color: var(--cream);
     border-radius: 18px;
-    padding: 22px 18px;
+    padding: 24px 18px 20px;
     cursor: pointer;
-    transition: all 0.12s ease;
+    transition: all 0.15s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     touch-action: manipulation;
+    position: relative;
+    overflow: hidden;
   }
-  .tbtn:hover { border-color: var(--line-strong); background: var(--bg-elev); }
-  .tbtn:active { transform: scale(0.97); background: var(--accent-soft); border-color: var(--accent); }
+  .tbtn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, var(--calvary-red-soft));
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+  .tbtn:hover { border-color: var(--line-strong); }
+  .tbtn:hover::before { opacity: 1; }
+  .tbtn:active {
+    transform: scale(0.97);
+    border-color: var(--calvary-red);
+  }
+  .tbtn:active::before { opacity: 1; }
 
   .tbtn .glyph {
-    font-family: 'Fraunces', serif;
-    font-weight: 300;
-    font-size: 36px;
-    line-height: 1;
-    color: var(--accent);
+    font-family: 'Anton', Impact, sans-serif;
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 0.9;
+    color: var(--calvary-red);
   }
   .tbtn .word {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter Tight', sans-serif;
     font-size: 10px;
-    letter-spacing: 0.2em;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: var(--ink-dim);
+    color: var(--warm-beige);
   }
 
+  /* ====== MODE TOGGLE ====== */
   .mode-toggle {
     display: flex;
     justify-content: center;
     gap: 0;
-    margin-bottom: 24px;
-    background: var(--bg-card);
+    margin-bottom: 22px;
+    background: var(--obsidian-card);
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 100px;
     padding: 4px;
     width: fit-content;
     margin-left: auto;
@@ -205,107 +284,121 @@
   .mode-toggle button {
     background: none;
     border: none;
-    color: var(--ink-dim);
-    font-family: 'Fraunces', serif;
+    color: var(--warm-beige);
+    font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: 14px;
-    padding: 8px 18px;
-    border-radius: 8px;
+    font-size: 16px;
+    padding: 9px 22px;
+    border-radius: 100px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
   }
   .mode-toggle button.active {
-    background: var(--accent-soft);
-    color: var(--accent);
+    background: var(--calvary-red);
+    color: var(--cream);
   }
 
-  /* NASHVILLE NUMBERS */
+  /* ====== RESET ====== */
+  .reset-btn {
+    background: none;
+    border: 1px dashed var(--line-strong);
+    color: var(--silver);
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 11px 20px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 auto 20px;
+    display: block;
+  }
+  .reset-btn:hover {
+    color: var(--cream);
+    border-color: var(--warm-beige);
+    border-style: solid;
+  }
+  .reset-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  /* ====== ALSO KNOWN AS ====== */
   .panel {
-    background: var(--bg-card);
+    background: var(--obsidian-card);
     border: 1px solid var(--line);
-    border-radius: 18px;
-    padding: 20px 18px;
-    margin-bottom: 14px;
-  }
-
-  .panel-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
+    border-radius: 20px;
+    padding: 22px 22px 20px;
+    margin-bottom: 16px;
   }
   .panel-title {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter Tight', sans-serif;
     font-size: 10px;
-    letter-spacing: 0.25em;
+    font-weight: 600;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
-    color: var(--ink-faint);
+    color: var(--calvary-red);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-
-  .numbers-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 6px;
+  .panel-title::before {
+    content: '';
+    width: 18px;
+    height: 1px;
+    background: var(--calvary-red);
   }
-  .num-cell {
-    text-align: center;
-    padding: 10px 4px;
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-  }
-  .num-cell .roman {
-    font-family: 'Fraunces', serif;
-    font-style: italic;
-    font-size: 14px;
-    color: var(--ink-faint);
-    display: block;
-    margin-bottom: 4px;
-  }
-  .num-cell .chord {
-    font-family: 'Fraunces', serif;
-    font-weight: 400;
-    font-size: 18px;
-    color: var(--ink);
-    display: block;
-    line-height: 1;
-  }
-  .num-cell .chord .sharp { color: var(--accent); font-size: 0.8em; }
-  .num-cell .quality {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 8px;
-    letter-spacing: 0.1em;
-    color: var(--ink-faint);
-    display: block;
-    margin-top: 3px;
-  }
-
-  /* RELATIVE */
   .relative-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    font-family: 'Fraunces', serif;
-    font-size: 15px;
-    color: var(--ink-dim);
+    align-items: baseline;
+    font-family: 'Instrument Serif', serif;
+    font-size: 16px;
+    color: var(--warm-beige);
   }
-  .relative-row + .relative-row { margin-top: 10px; }
-  .relative-row .v {
-    color: var(--ink);
-    font-weight: 400;
+  .relative-row + .relative-row {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
   }
-  .relative-row .v .sharp { color: var(--accent); }
   .relative-row .k {
     font-style: italic;
+    color: var(--silver);
+  }
+  .relative-row .v {
+    color: var(--cream);
+    font-family: 'Inter Tight', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  .relative-row .v .acc {
+    color: var(--calvary-red);
   }
 
-  /* SETTINGS DRAWER */
+  /* ====== FOOTER ====== */
+  .footer {
+    text-align: center;
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--silver);
+    padding-top: 16px;
+    margin-top: auto;
+  }
+  .footer .red { color: var(--calvary-red); }
+
+  /* ====== DRAWER ====== */
   .drawer {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(11,11,14,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     display: none;
     align-items: flex-end;
     justify-content: center;
@@ -313,63 +406,97 @@
   }
   .drawer.open { display: flex; }
   .drawer-card {
-    background: var(--bg-elev);
+    background: var(--obsidian-elev);
     border: 1px solid var(--line);
-    border-radius: 24px 24px 0 0;
+    border-bottom: none;
+    border-radius: 28px 28px 0 0;
     width: 100%;
-    max-width: 520px;
-    padding: 24px 20px max(env(safe-area-inset-bottom), 24px);
-    animation: slideUp 0.25s ease;
+    max-width: 540px;
+    padding: 28px 24px max(env(safe-area-inset-bottom), 28px);
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
   }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
+  .drawer-eyebrow {
+    font-family: 'Inter Tight', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--calvary-red);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .drawer-eyebrow::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--calvary-red);
+  }
   .drawer h2 {
-    font-family: 'Fraunces', serif;
+    font-family: 'Anton', Impact, sans-serif;
     font-weight: 400;
-    font-size: 24px;
-    margin-bottom: 6px;
-    letter-spacing: -0.01em;
+    font-size: 42px;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin-bottom: 14px;
   }
   .drawer .sub {
-    font-family: 'Fraunces', serif;
+    font-family: 'Instrument Serif', serif;
     font-style: italic;
-    color: var(--ink-dim);
-    font-size: 14px;
-    margin-bottom: 22px;
+    color: var(--warm-beige);
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 26px;
   }
   .drawer .field-label {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter Tight', sans-serif;
     font-size: 10px;
-    letter-spacing: 0.25em;
+    font-weight: 600;
+    letter-spacing: 0.26em;
     text-transform: uppercase;
-    color: var(--ink-faint);
-    margin-bottom: 10px;
+    color: var(--silver);
+    margin-bottom: 12px;
   }
   .key-picker {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
-    gap: 6px;
-    margin-bottom: 18px;
+    gap: 8px;
+    margin-bottom: 22px;
   }
   .key-pick {
-    background: var(--bg-card);
+    background: var(--obsidian-card);
     border: 1px solid var(--line);
-    color: var(--ink);
-    font-family: 'Fraunces', serif;
-    font-size: 16px;
-    padding: 12px 4px;
-    border-radius: 10px;
+    color: var(--cream);
+    font-family: 'Anton', Impact, sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    padding: 14px 4px 12px;
+    border-radius: 14px;
     cursor: pointer;
-    transition: all 0.12s ease;
+    transition: all 0.15s ease;
+    letter-spacing: -0.01em;
   }
-  .key-pick:hover { border-color: var(--line-strong); }
+  .key-pick:hover {
+    border-color: var(--warm-beige);
+    color: var(--cream);
+  }
   .key-pick.selected {
-    background: var(--accent-soft);
-    border-color: var(--accent);
-    color: var(--accent);
+    background: var(--calvary-red);
+    border-color: var(--calvary-red);
+    color: var(--cream);
   }
-  .key-pick .sharp { color: var(--accent); }
-  .key-pick.selected .sharp { color: var(--accent); }
+  .key-pick .acc {
+    color: var(--calvary-red);
+  }
+  .key-pick.selected .acc {
+    color: var(--cream);
+  }
 
   .drawer-actions {
     display: flex;
@@ -378,64 +505,51 @@
   }
   .drawer-actions button {
     flex: 1;
-    padding: 14px;
-    border-radius: 12px;
-    font-family: 'JetBrains Mono', monospace;
+    padding: 16px;
+    border-radius: 100px;
+    font-family: 'Inter Tight', sans-serif;
     font-size: 11px;
-    letter-spacing: 0.2em;
+    font-weight: 700;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
   }
   .btn-secondary {
     background: none;
-    border: 1px solid var(--line);
-    color: var(--ink-dim);
+    border-color: var(--line-strong);
+    color: var(--warm-beige);
   }
-  .btn-secondary:hover { border-color: var(--line-strong); color: var(--ink); }
+  .btn-secondary:hover {
+    border-color: var(--warm-beige);
+    color: var(--cream);
+  }
   .btn-primary {
-    background: var(--accent);
-    border: 1px solid var(--accent);
-    color: #1A1A1A;
-    font-weight: 500;
+    background: var(--calvary-red);
+    border-color: var(--calvary-red);
+    color: var(--cream);
   }
-  .btn-primary:hover { background: #F2C566; }
-
-  /* RESET BUTTON */
-  .reset-btn {
-    background: none;
-    border: 1px dashed var(--line-strong);
-    color: var(--ink-faint);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 10px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    margin: 0 auto 16px;
-    display: block;
+  .btn-primary:hover {
+    background: #E04A1F;
   }
-  .reset-btn:hover { color: var(--ink); border-color: var(--ink-dim); }
-  .reset-btn:disabled { opacity: 0.4; cursor: default; }
 
-  /* TOAST */
+  /* ====== TOAST ====== */
   .toast {
     position: fixed;
-    bottom: 30px;
+    bottom: 36px;
     left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: var(--bg-elev);
+    transform: translateX(-50%) translateY(120px);
+    background: var(--obsidian-elev);
     border: 1px solid var(--line-strong);
-    color: var(--ink);
-    padding: 12px 20px;
+    color: var(--cream);
+    padding: 14px 22px;
     border-radius: 100px;
-    font-family: 'Fraunces', serif;
+    font-family: 'Instrument Serif', serif;
     font-style: italic;
-    font-size: 14px;
+    font-size: 15px;
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     pointer-events: none;
     z-index: 200;
   }
@@ -444,44 +558,32 @@
     transform: translateX(-50%) translateY(0);
   }
 
-  /* FOOTER */
-  .footer {
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    padding-top: 12px;
-    margin-top: auto;
-  }
-  .footer span { color: var(--accent); }
-
-  /* KEY CHANGE ANIMATION */
-  @keyframes pulse {
+  /* ====== KEY CHANGE ANIMATION ====== */
+  @keyframes keypulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
+    40% { transform: scale(1.03); }
     100% { transform: scale(1); }
   }
   .key-letter.changed, .key-accidental.changed {
-    animation: pulse 0.25s ease;
+    animation: keypulse 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  /* Larger screens — stay centered, don't sprawl */
   @media (min-width: 640px) {
-    body { max-width: 560px; margin: 0 auto; }
+    body { max-width: 580px; margin: 0 auto; }
   }
 </style>
 </head>
 <body>
 
 <header class="topbar">
-  <div class="brand">Keyfinder <b>·</b> v1</div>
-  <button id="settingsBtn" aria-label="Settings">Home · <span id="homeKeyLabel">E♭</span></button>
+  <div class="brand">Keyfinder</div>
+  <button id="settingsBtn" class="home-btn" aria-label="Settings">
+    Home <span class="home-key" id="homeKeyLabel">—</span>
+  </button>
 </header>
 
-<main class="stage">
-  <div class="label">You're in</div>
+<main class="hero">
+  <div class="eyebrow">You're in</div>
 
   <div class="keybox" id="keybox">
     <span class="key-letter" id="keyLetter">E</span><span class="key-accidental" id="keyAcc">♭</span>
@@ -490,8 +592,8 @@
   <div class="key-mode" id="keyMode">major</div>
 
   <div class="delta">
-    <span><b id="deltaSemi">0</b> semitones from home</span>
-    <span class="dot"></span>
+    <span><b id="deltaSemi">0</b> SEMITONES</span>
+    <span class="sep"></span>
     <span id="deltaInterval">unison</span>
   </div>
 
@@ -515,9 +617,7 @@
 </main>
 
 <section class="panel">
-  <div class="panel-head">
-    <div class="panel-title">Also Known As</div>
-  </div>
+  <div class="panel-title">Also Known As</div>
   <div class="relative-row">
     <span class="k">Relative <span id="relName">minor</span></span>
     <span class="v" id="relativeKey">C minor</span>
@@ -528,13 +628,14 @@
   </div>
 </section>
 
-<footer class="footer">Built for <span>Calvary Hephzibah</span> · One job, well done</footer>
+<footer class="footer">Built for <span class="red">Calvary Hephzibah</span></footer>
 
-<!-- Settings Drawer -->
+<!-- Settings / First-Run Drawer -->
 <div class="drawer" id="drawer">
   <div class="drawer-card">
-    <h2 id="drawerTitle">Set your home key</h2>
-    <p class="sub" id="drawerSub">The key you naturally play in. Everything's calculated from here.</p>
+    <div class="drawer-eyebrow" id="drawerEyebrow">Setup</div>
+    <h2 id="drawerTitle">Your home key</h2>
+    <p class="sub" id="drawerSub">The key you naturally play in. Everything is calculated from here.</p>
     <div class="field-label">Choose home</div>
     <div class="key-picker" id="keyPicker"></div>
     <div class="drawer-actions">
@@ -550,66 +651,9 @@
 (function() {
   'use strict';
 
-  // ====== MUSIC THEORY ======
-  // Using sharps as default spelling for the chromatic ladder.
-  // We pick sharps-vs-flats per-display based on the home key's nature.
   const SHARP_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
   const FLAT_NAMES  = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 
-  // Canonical spelling per pitch class for major keys.
-  // The circle of fifths tells us which keys spell with sharps vs flats.
-  const PC_FLAT_PREF = {
-    0: false,  // C
-    1: true,   // D♭ (more common in worship than C#)
-    2: false,  // D
-    3: true,   // E♭
-    4: false,  // E
-    5: true,   // F (its 4th is B♭)
-    6: true,   // G♭ (more common than F# as a key in worship)
-    7: false,  // G
-    8: true,   // A♭
-    9: false,  // A
-   10: true,   // B♭
-   11: false   // B
-  };
-  function pcPrefersFlats(pc) { return PC_FLAT_PREF[pc] === true; }
-
-  // KEY-SIGNATURE-AWARE chord spelling.
-  // Each major key has its own diatonic chord spelling — A major spells iii as C#, not D♭.
-  // The 7 chord scale-degrees, spelled with the correct accidentals for each key.
-  const KEY_SPELLINGS = {
-    // Major keys
-    'C':   ['C',  'D',  'E',  'F',  'G',  'A',  'B'],
-    'G':   ['G',  'A',  'B',  'C',  'D',  'E',  'F#'],
-    'D':   ['D',  'E',  'F#', 'G',  'A',  'B',  'C#'],
-    'A':   ['A',  'B',  'C#', 'D',  'E',  'F#', 'G#'],
-    'E':   ['E',  'F#', 'G#', 'A',  'B',  'C#', 'D#'],
-    'B':   ['B',  'C#', 'D#', 'E',  'F#', 'G#', 'A#'],
-    'F#':  ['F#', 'G#', 'A#', 'B',  'C#', 'D#', 'E#'],
-    'F':   ['F',  'G',  'A',  'B♭', 'C',  'D',  'E'],
-    'B♭':  ['B♭', 'C',  'D',  'E♭', 'F',  'G',  'A'],
-    'E♭':  ['E♭', 'F',  'G',  'A♭', 'B♭', 'C',  'D'],
-    'A♭':  ['A♭', 'B♭', 'C',  'D♭', 'E♭', 'F',  'G'],
-    'D♭':  ['D♭', 'E♭', 'F',  'G♭', 'A♭', 'B♭', 'C'],
-    'G♭':  ['G♭', 'A♭', 'B♭', 'C♭', 'D♭', 'E♭', 'F']
-  };
-
-  // For pitch classes that prefer sharps in worship, choose the simpler enharmonic.
-  // Map a pc to the canonical major-key NAME used in our spelling table.
-  function canonicalKeyNameForPc(pc) {
-    // pick the spelling preferred for that pc per PC_FLAT_PREF, then check we have a table
-    const useFlats = pcPrefersFlats(pc);
-    let name = useFlats ? FLAT_NAMES[pc] : SHARP_NAMES[pc];
-    // F# table exists; C#/G♭ — prefer G♭. Make sure name is one of our table keys.
-    if (!KEY_SPELLINGS[name]) {
-      // Try the other spelling
-      const alt = useFlats ? SHARP_NAMES[pc] : FLAT_NAMES[pc];
-      if (KEY_SPELLINGS[alt]) name = alt;
-    }
-    return name;
-  }
-
-  // Intervals (semitones from root) — names for the delta display
   const INTERVAL_NAMES = [
     'unison',
     'minor 2nd', 'major 2nd',
@@ -621,10 +665,8 @@
     'minor 7th', 'major 7th'
   ];
 
-  // All 12 home-key options (musician-friendly spelling)
   const HOME_OPTIONS = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 
-  // Map every name back to a pitch class 0–11
   const NAME_TO_PC = {
     'C':0,'B#':0,
     'C#':1,'D♭':1,'Db':1,
@@ -640,12 +682,44 @@
     'B':11,'C♭':11
   };
 
+  const PC_FLAT_PREF = {
+    0: false, 1: true, 2: false, 3: true, 4: false, 5: true,
+    6: true,  7: false, 8: true, 9: false, 10: true, 11: false
+  };
+  function pcPrefersFlats(pc) { return PC_FLAT_PREF[pc] === true; }
+
+  const KEY_SPELLINGS = {
+    'C':   ['C',  'D',  'E',  'F',  'G',  'A',  'B'],
+    'G':   ['G',  'A',  'B',  'C',  'D',  'E',  'F#'],
+    'D':   ['D',  'E',  'F#', 'G',  'A',  'B',  'C#'],
+    'A':   ['A',  'B',  'C#', 'D',  'E',  'F#', 'G#'],
+    'E':   ['E',  'F#', 'G#', 'A',  'B',  'C#', 'D#'],
+    'B':   ['B',  'C#', 'D#', 'E',  'F#', 'G#', 'A#'],
+    'F#':  ['F#', 'G#', 'A#', 'B',  'C#', 'D#', 'E#'],
+    'F':   ['F',  'G',  'A',  'B♭', 'C',  'D',  'E'],
+    'B♭':  ['B♭', 'C',  'D',  'E♭', 'F',  'G',  'A'],
+    'E♭':  ['E♭', 'F',  'G',  'A♭', 'B♭', 'C',  'D'],
+    'A♭':  ['A♭', 'B♭', 'C',  'D♭', 'E♭', 'F',  'G'],
+    'D♭':  ['D♭', 'E♭', 'F',  'G♭', 'A♭', 'B♭', 'C'],
+    'G♭':  ['G♭', 'A♭', 'B♭', 'C♭', 'D♭', 'E♭', 'F']
+  };
+
+  function canonicalKeyNameForPc(pc) {
+    const useFlats = pcPrefersFlats(pc);
+    let name = useFlats ? FLAT_NAMES[pc] : SHARP_NAMES[pc];
+    if (!KEY_SPELLINGS[name]) {
+      const alt = useFlats ? SHARP_NAMES[pc] : FLAT_NAMES[pc];
+      if (KEY_SPELLINGS[alt]) name = alt;
+    }
+    return name;
+  }
+
   // ====== STATE ======
   const STATE_KEY = 'keyfinder_state_v1';
   const savedState = loadState();
   const isFirstRun = !savedState;
   const state = savedState || {
-    homeKey: 'C',        // placeholder — first-run drawer will overwrite this
+    homeKey: 'C',
     transpose: 0,
     mode: 'major'
   };
@@ -661,68 +735,41 @@
   }
 
   // ====== HELPERS ======
-  function pcOf(name) {
-    return NAME_TO_PC[name] ?? 0;
-  }
+  function pcOf(name) { return NAME_TO_PC[name] ?? 0; }
+  function currentPc() { return (pcOf(state.homeKey) + state.transpose + 144) % 12; }
 
-  function currentPc() {
-    return (pcOf(state.homeKey) + state.transpose + 144) % 12;
-  }
-
-  // Pick spelling (sharps or flats) based on the CURRENT key, not the home key.
-  // Each key in the circle of fifths has its own canonical spelling.
-  function preferFlats() {
-    return pcPrefersFlats(currentPc());
-  }
-
-  function nameOfPc(pc, preferFlatsOverride) {
-    const useFlats = (preferFlatsOverride !== undefined) ? preferFlatsOverride : preferFlats();
-    return useFlats ? FLAT_NAMES[pc] : SHARP_NAMES[pc];
-  }
-
-  // Split "E♭" or "F#" into letter + accidental
   function splitKey(name) {
     if (name.length === 1) return { letter: name, acc: '' };
     return { letter: name[0], acc: name.slice(1) };
   }
 
-  // Render an accidental as proper unicode glyph
   function prettyAcc(acc) {
     if (acc === '#') return '♯';
     if (acc === 'b') return '♭';
-    return acc; // already pretty
+    return acc;
   }
 
-  // Enharmonic equivalent — the "other spelling"
   function enharmonicOf(name) {
     const pc = pcOf(name);
     const sharp = SHARP_NAMES[pc];
     const flat = FLAT_NAMES[pc];
-    if (sharp === flat) return null; // natural — no alt spelling
+    if (sharp === flat) return null;
     return (name === sharp) ? flat : sharp;
   }
 
-  // Relative minor / major
   function relativeOf(rootPc, mode) {
-    if (mode === 'major') {
-      // relative minor is 9 semitones up (or 3 down)
-      return (rootPc + 9) % 12;
-    } else {
-      // relative major is 3 semitones up
-      return (rootPc + 3) % 12;
-    }
+    if (mode === 'major') return (rootPc + 9) % 12;
+    return (rootPc + 3) % 12;
   }
 
-  // Delta display
   function deltaDisplay(t) {
     const abs = Math.abs(t);
-    const dir = t === 0 ? '' : (t > 0 ? '↑' : '↓');
     const interval = INTERVAL_NAMES[abs % 12];
     const octaves = Math.floor(abs / 12);
     let label = interval;
     if (octaves > 0) label = octaves + ' oct + ' + interval;
     if (abs === 0) label = 'unison';
-    return { semi: (t > 0 ? '+' : '') + t, dir, interval: label };
+    return { semi: (t > 0 ? '+' : '') + t, interval: label };
   }
 
   // ====== RENDER ======
@@ -731,12 +778,12 @@
     const keyName = canonicalKeyNameForPc(pc);
     const { letter, acc } = splitKey(keyName);
 
-    // Key letter + accidental
     const elL = document.getElementById('keyLetter');
     const elA = document.getElementById('keyAcc');
     const prevText = elL.textContent + elA.textContent;
     elL.textContent = letter;
     elA.textContent = prettyAcc(acc);
+    elA.style.display = acc ? '' : 'none';
 
     if (animate && (elL.textContent + elA.textContent) !== prevText) {
       elL.classList.remove('changed');
@@ -746,47 +793,39 @@
       elA.classList.add('changed');
     }
 
-    // Mode
     document.getElementById('keyMode').textContent = state.mode;
-
-    // Home key label in topbar
     document.getElementById('homeKeyLabel').textContent = state.homeKey;
 
-    // Delta
     const d = deltaDisplay(state.transpose);
     document.getElementById('deltaSemi').textContent = d.semi;
     document.getElementById('deltaInterval').textContent = d.interval;
 
-    // Mode toggle
     document.getElementById('majBtn').classList.toggle('active', state.mode === 'major');
     document.getElementById('minBtn').classList.toggle('active', state.mode === 'minor');
 
-    // Reset button enabled state
     document.getElementById('resetBtn').disabled = (state.transpose === 0);
 
-    // Relative
     const relPc = relativeOf(pc, state.mode);
     const relMode = state.mode === 'major' ? 'minor' : 'major';
     const relKeyName = canonicalKeyNameForPc(relPc);
     document.getElementById('relName').textContent = relMode;
     document.getElementById('relativeKey').innerHTML = formatChord(relKeyName) + ' ' + relMode;
 
-    // Enharmonic
     const enh = enharmonicOf(keyName);
-    document.getElementById('enharmKey').innerHTML = enh ? formatChord(enh) + ' ' + state.mode : '<span style="color:var(--ink-faint)">none</span>';
+    document.getElementById('enharmKey').innerHTML = enh
+      ? formatChord(enh) + ' ' + state.mode
+      : '<span style="color:var(--silver); font-style:italic; font-family:\'Instrument Serif\',serif;">none</span>';
   }
 
-  // Format a chord name with the accidental highlighted
   function formatChord(name) {
     const { letter, acc } = splitKey(name);
     if (!acc) return letter;
-    return letter + '<span class="sharp">' + prettyAcc(acc) + '</span>';
+    return letter + '<span class="acc">' + prettyAcc(acc) + '</span>';
   }
 
   // ====== ACTIONS ======
   function transposeBy(n) {
     state.transpose += n;
-    // Keep within a reasonable range (-12..+12)
     if (state.transpose > 12) state.transpose = 12;
     if (state.transpose < -12) state.transpose = -12;
     saveState();
@@ -814,21 +853,24 @@
     toast('Home set to ' + k);
   }
 
-  // ====== SETTINGS DRAWER ======
+  // ====== DRAWER ======
   function openDrawer(firstRun) {
     renderPicker();
+    const eyebrow = document.getElementById('drawerEyebrow');
     const title = document.getElementById('drawerTitle');
     const sub = document.getElementById('drawerSub');
     const cancel = document.getElementById('cancelBtn');
     const save = document.getElementById('saveBtn');
     if (firstRun) {
-      title.textContent = 'Welcome';
-      sub.textContent = "Pick the key you play in most. It's your reference point — every transposition is calculated from here. You can change it later.";
+      eyebrow.textContent = 'Welcome';
+      title.textContent = 'Pick your home key';
+      sub.textContent = "The key you play in most. Every transposition is calculated from here. You can change it any time.";
       cancel.style.display = 'none';
       save.textContent = 'Get started';
     } else {
-      title.textContent = 'Set your home key';
-      sub.textContent = "The key you naturally play in. Everything's calculated from here.";
+      eyebrow.textContent = 'Settings';
+      title.textContent = 'Your home key';
+      sub.textContent = "The key you naturally play in. Everything is calculated from here.";
       cancel.style.display = '';
       save.textContent = 'Save';
     }
@@ -843,19 +885,17 @@
     picker.innerHTML = '';
     HOME_OPTIONS.forEach(k => {
       const b = document.createElement('button');
-      b.className = 'key-pick' + (k === state.homeKey ? ' selected' : '');
+      b.className = 'key-pick' + (k === state.homeKey && !isFirstRun ? ' selected' : '');
       b.innerHTML = formatChord(k);
       b.addEventListener('click', () => {
-        // Visually select
         document.querySelectorAll('.key-pick').forEach(x => x.classList.remove('selected'));
         b.classList.add('selected');
-        b.dataset.choice = k;
         picker._choice = k;
       });
       b.dataset.choice = k;
       picker.appendChild(b);
     });
-    picker._choice = state.homeKey;
+    picker._choice = isFirstRun ? null : state.homeKey;
   }
 
   // ====== TOAST ======
@@ -865,7 +905,7 @@
     el.textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 1500);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
   }
 
   // ====== EVENTS ======
@@ -874,15 +914,18 @@
   document.getElementById('resetBtn').addEventListener('click', reset);
   document.getElementById('majBtn').addEventListener('click', () => setMode('major'));
   document.getElementById('minBtn').addEventListener('click', () => setMode('minor'));
-  document.getElementById('settingsBtn').addEventListener('click', openDrawer);
+  document.getElementById('settingsBtn').addEventListener('click', () => openDrawer(false));
   document.getElementById('cancelBtn').addEventListener('click', closeDrawer);
   document.getElementById('saveBtn').addEventListener('click', () => {
     const picker = document.getElementById('keyPicker');
-    if (picker._choice) setHome(picker._choice);
-    closeDrawer();
+    if (picker._choice) {
+      setHome(picker._choice);
+      closeDrawer();
+    } else if (!document.getElementById('drawer').dataset.firstRun) {
+      closeDrawer();
+    }
   });
 
-  // Tap outside drawer to close (but not on first run — they have to pick)
   document.getElementById('drawer').addEventListener('click', (e) => {
     if (e.target.id === 'drawer') {
       if (document.getElementById('drawer').dataset.firstRun) return;
@@ -890,7 +933,6 @@
     }
   });
 
-  // Keyboard shortcuts (handy on desktop)
   document.addEventListener('keydown', (e) => {
     if (document.getElementById('drawer').classList.contains('open')) {
       if (e.key === 'Escape' && !document.getElementById('drawer').dataset.firstRun) closeDrawer();
@@ -902,10 +944,8 @@
     else if (e.key.toLowerCase() === 'm') setMode(state.mode === 'major' ? 'minor' : 'major');
   });
 
-  // First render
   render(false);
 
-  // If this is the user's first time, prompt them to set their home key
   if (isFirstRun) {
     openDrawer(true);
   }
