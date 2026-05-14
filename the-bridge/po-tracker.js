@@ -65,6 +65,7 @@
   let supa = null;
   let currentUser = null;       // { id, name, level } in bridge mode; { name:'pin-unlocked', level:'admin' } in pin mode
   let state = {};               // line_ref -> purchase row
+  let orders = {};              // order_id -> order row
   let pinUnlocked = false;      // pin auth gate
   let renderQueue = new Set();
 
@@ -164,6 +165,118 @@
     return data || [];
   }
 
+  async function fetchAllOrders() {
+    if (!supa) return [];
+    const { data, error } = await supa
+      .from('po_orders')
+      .select('*')
+      .eq('po_slug', config.poSlug);
+    if (error) {
+      // Common case: po_orders table not yet migrated. Don't blow up.
+      console.warn('[POTracker] fetchAllOrders failed (po_orders table may not exist yet):', error.message);
+      return [];
+    }
+    return data || [];
+  }
+
+  /**
+   * Create an order, then update each line to point to it.
+   * @param {object} orderData — supplier, order_ref, purchaser, payment_method,
+   *                             lines_total, extras_total, grand_total, extras, notes
+   * @param {Array<{lineRef:string, final_amount:number, order_ref?:string}>} lineEntries
+   */
+  async function createOrder(orderData, lineEntries) {
+    if (!supa) throw new Error('Supabase not available');
+    const now = new Date().toISOString();
+
+    // 1. Insert the order
+    const orderRow = Object.assign({
+      po_slug: config.poSlug,
+      placed_at: now,
+      status: 'placed',
+    }, orderData);
+    console.log('[POTracker] Creating order:', orderRow);
+    const { data: order, error: orderErr } = await supa
+      .from('po_orders')
+      .insert(orderRow)
+      .select()
+      .single();
+    if (orderErr) {
+      console.error('[POTracker] Order insert failed:', orderErr);
+      throw orderErr;
+    }
+
+    // 2. Update each line. Mix of update-existing-claim and insert-new.
+    for (const entry of lineEntries) {
+      const patch = {
+        status: 'ordered',
+        ordered_at: now,
+        claimed_at: now,
+        final_amount: entry.final_amount,
+        order_ref: orderData.order_ref || null,
+        order_id: order.id,
+        purchaser: orderData.purchaser,
+        purchaser_id: null,
+        payment_method: orderData.payment_method || null,
+      };
+      const existing = state[entry.lineRef];
+      if (existing && existing.id) {
+        const { error } = await supa
+          .from(config.table)
+          .update(patch)
+          .eq('id', existing.id);
+        if (error) { console.error('[POTracker] line update failed', entry.lineRef, error); throw error; }
+      } else {
+        const row = Object.assign({
+          po_slug: config.poSlug,
+          line_ref: entry.lineRef,
+        }, patch);
+        const { error } = await supa
+          .from(config.table)
+          .insert(row);
+        if (error) { console.error('[POTracker] line insert failed', entry.lineRef, error); throw error; }
+      }
+    }
+    return order;
+  }
+
+  async function deleteOrder(orderId) {
+    if (!supa) throw new Error('Supabase not available');
+    // First detach all lines (set them back to pending, clear order_id)
+    const { error: detachErr } = await supa
+      .from(config.table)
+      .update({
+        status: 'pending',
+        order_id: null,
+        ordered_at: null,
+        claimed_at: null,
+        final_amount: null,
+        order_ref: null,
+        purchaser: null,
+        purchaser_id: null,
+        payment_method: null,
+      })
+      .eq('order_id', orderId);
+    if (detachErr) throw detachErr;
+    const { error } = await supa.from('po_orders').delete().eq('id', orderId);
+    if (error) throw error;
+  }
+
+  async function markOrderReceived(orderId) {
+    if (!supa) throw new Error('Supabase not available');
+    const now = new Date().toISOString();
+    const { error: oErr } = await supa
+      .from('po_orders')
+      .update({ status: 'received', received_at: now })
+      .eq('id', orderId);
+    if (oErr) throw oErr;
+    const { error: lErr } = await supa
+      .from(config.table)
+      .update({ status: 'received', received_at: now })
+      .eq('order_id', orderId);
+    if (lErr) throw lErr;
+  }
+
   async function upsertLine(lineRef, patch) {
     if (!supa) throw new Error('Supabase not available');
     console.log('[POTracker] upsertLine called — line_ref:', lineRef, 'patch:', JSON.stringify(patch));
@@ -208,9 +321,11 @@
   }
 
   async function hydrate() {
-    const rows = await fetchAll();
+    const [rows, orderRows] = await Promise.all([fetchAll(), fetchAllOrders()]);
     state = {};
     rows.forEach(r => { state[r.line_ref] = r; });
+    orders = {};
+    orderRows.forEach(o => { orders[o.id] = o; });
     renderAll();
   }
 
@@ -244,6 +359,13 @@
         const pmLabel = row.payment_method === 'pocket' ? 'Out of pocket' : 'Church';
         inner += `<div class="pot-paid-badge ${pmClass}">${pmLabel}</div>`;
       }
+      if (row.order_id && orders[row.order_id]) {
+        const order = orders[row.order_id];
+        const siblingCount = Object.values(state).filter(r => r.order_id === row.order_id).length - 1;
+        if (siblingCount > 0) {
+          inner += `<div class="pot-order-link" title="Part of group order with ${siblingCount} other line${siblingCount === 1 ? '' : 's'}">⛓ + ${siblingCount}</div>`;
+        }
+      }
     }
     cell.innerHTML = inner;
     const btn = cell.querySelector('.pot-pill');
@@ -253,14 +375,22 @@
   }
 
   function renderTallies() {
-    // Per-supplier tally
+    // Per-supplier tally + group-order entry point
     document.querySelectorAll('.supplier').forEach(block => {
       const lineRefs = Array.from(block.querySelectorAll('[data-line-ref]'))
         .map(el => el.getAttribute('data-line-ref'))
         .filter((v, i, a) => a.indexOf(v) === i);   // dedupe
-      const tally = summarise(lineRefs);
+      const tally = summariseWithOrders(block, lineRefs);
       const tallyEl = block.querySelector('.supplier-tally');
       if (tallyEl) tallyEl.innerHTML = renderTallyHtml(tally, 'compact');
+
+      // Group-order button — only show when there's at least one pending line and user can act
+      const canAct = currentUser && ACTION_LEVELS.has(currentUser.level);
+      const pendingCount = lineRefs.filter(ref => {
+        const r = state[ref];
+        return !r || r.status === 'pending';
+      }).length;
+      ensureGroupOrderButton(block, canAct && pendingCount >= 2, pendingCount);
     });
     // Page tally
     const overall = document.getElementById('po-overall-tally');
@@ -269,8 +399,63 @@
         .map(el => el.getAttribute('data-line-ref'))
         .filter((v, i, a) => a.indexOf(v) === i);
       const tally = summarise(allRefs);
+      // Roll in extras_total from all orders for the page-level view
+      tally.extras_total = Object.values(orders).reduce((sum, o) => sum + Number(o.extras_total || 0), 0);
+      tally.order_count = Object.keys(orders).length;
       overall.innerHTML = renderTallyHtml(tally, 'full');
     }
+  }
+
+  function ensureGroupOrderButton(block, visible, pendingCount) {
+    const supplierName = extractSupplierName(block);
+    let btn = block.querySelector('.pot-group-order-btn');
+    if (!visible) {
+      if (btn) btn.remove();
+      return;
+    }
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.className = 'pot-group-order-btn';
+      btn.type = 'button';
+      // Attach to the supplier-tally container if present, otherwise at top of supplier block
+      const tallyEl = block.querySelector('.supplier-tally');
+      if (tallyEl) {
+        tallyEl.parentNode.insertBefore(btn, tallyEl.nextSibling);
+      } else {
+        block.insertBefore(btn, block.firstChild);
+      }
+    }
+    btn.textContent = `+ Record group order for ${supplierName} (${pendingCount} open)`;
+    btn.onclick = () => openGroupOrderSheet(supplierName, block);
+  }
+
+  function extractSupplierName(block) {
+    const nameEl = block.querySelector('.supplier-name');
+    if (!nameEl) return 'Supplier';
+    // The name is the text before any inner span (e.g. <span class="supplier-tag">1 order</span>)
+    return nameEl.childNodes[0] && nameEl.childNodes[0].nodeValue
+      ? nameEl.childNodes[0].nodeValue.trim()
+      : nameEl.textContent.replace(/\d+\s*orders?$/i, '').trim();
+  }
+
+  // Like summarise() but also folds in extras_total from any orders that
+  // have lines in this supplier block. Lets per-supplier tallies show
+  // postage/warranty money alongside the line totals.
+  function summariseWithOrders(block, lineRefs) {
+    const t = summarise(lineRefs);
+    // Find orders that include any of this block's lines
+    const orderIds = new Set();
+    lineRefs.forEach(ref => {
+      const r = state[ref];
+      if (r && r.order_id) orderIds.add(r.order_id);
+    });
+    let extras = 0;
+    orderIds.forEach(id => {
+      const o = orders[id];
+      if (o) extras += Number(o.extras_total || 0);
+    });
+    t.extras_total = extras;
+    return t;
   }
 
   function summarise(lineRefs) {
@@ -299,13 +484,20 @@
       parts.push(`<span class="pot-tally-chip">${done}/${t.total} ordered</span>`);
       if (t.claimed) parts.push(`<span class="pot-tally-chip pot-tally-claimed">${t.claimed} claimed</span>`);
       if (t.spent) parts.push(`<span class="pot-tally-chip pot-tally-spent">£${t.spent.toFixed(2)} spent</span>`);
+      if (t.extras_total) parts.push(`<span class="pot-tally-chip pot-tally-extras">+ £${Number(t.extras_total).toFixed(2)} extras</span>`);
       if (t.pocket_owed) parts.push(`<span class="pot-tally-chip pot-tally-owed">£${t.pocket_owed.toFixed(2)} owed</span>`);
     } else {
       parts.push(`<span class="pot-tally-stat"><strong>${t.total}</strong> lines</span>`);
       parts.push(`<span class="pot-tally-stat"><strong>${t.claimed}</strong> claimed</span>`);
       parts.push(`<span class="pot-tally-stat"><strong>${t.ordered}</strong> ordered</span>`);
       parts.push(`<span class="pot-tally-stat"><strong>${t.received}</strong> received</span>`);
-      parts.push(`<span class="pot-tally-stat"><strong>£${t.spent.toFixed(2)}</strong> spent</span>`);
+      parts.push(`<span class="pot-tally-stat"><strong>£${t.spent.toFixed(2)}</strong> on lines</span>`);
+      if (t.extras_total) {
+        parts.push(`<span class="pot-tally-stat pot-tally-stat-extras"><strong>£${Number(t.extras_total).toFixed(2)}</strong> in extras</span>`);
+      }
+      if (t.order_count != null) {
+        parts.push(`<span class="pot-tally-stat"><strong>${t.order_count}</strong> ${t.order_count === 1 ? 'order' : 'orders'}</span>`);
+      }
       if (t.pocket_owed) {
         parts.push(`<span class="pot-tally-stat pot-tally-stat-owed"><strong>£${t.pocket_owed.toFixed(2)}</strong> owed to volunteers</span>`);
       }
@@ -450,6 +642,12 @@
         alert('You need lead-level access to record purchases.');
         return;
       }
+    }
+    // If this line is part of an order, show the order detail view instead.
+    const lineRow = state[lineRef];
+    if (lineRow && lineRow.order_id && orders[lineRow.order_id]) {
+      openOrderDetailSheet(lineRow.order_id);
+      return;
     }
     const isPinMode = config.authMode === 'pin';
     const row = state[lineRef];
@@ -601,6 +799,353 @@
 
   function closeActionSheet() {
     if (sheetEl) sheetEl.classList.add('pot-sheet-hidden');
+  }
+
+  // ── GROUP ORDER SHEET ──────────────────────────────────────────────────────
+  function openGroupOrderSheet(supplierName, supplierBlock) {
+    if (config.authMode === 'pin' && !pinUnlocked) return;
+    const isPinMode = config.authMode === 'pin';
+
+    // Gather candidate lines: pending lines in this supplier block
+    const candidates = Array.from(supplierBlock.querySelectorAll('tr[data-line-ref]')).map(tr => {
+      const ref = tr.getAttribute('data-line-ref');
+      const r = state[ref];
+      const status = (r && r.status) || 'pending';
+      if (status !== 'pending') return null;
+      return {
+        ref,
+        name: tr.getAttribute('data-line-name') || `Line ${ref}`,
+        amount: parseFloat(tr.getAttribute('data-line-amount') || '0') || 0,
+      };
+    }).filter(Boolean);
+
+    if (candidates.length === 0) {
+      alert('No open lines to group for this supplier.');
+      return;
+    }
+
+    const body = sheetEl.querySelector('.pot-sheet-body');
+    const purchaserOptions = isPinMode
+      ? config.purchasers.map(p => `<option value="${escapeAttr(p)}">${escapeHtml(p)}</option>`).join('')
+      : '';
+
+    body.innerHTML = `
+      <div class="pot-sheet-header">
+        <div class="pot-sheet-lineref">Group Order</div>
+        <div class="pot-sheet-linename">${escapeHtml(supplierName)}</div>
+        <div class="pot-sheet-est">Tick the lines included in this checkout. Add postage / warranties as extras.</div>
+      </div>
+
+      <div class="pot-group-lines">
+        ${candidates.map(c => `
+          <label class="pot-group-line">
+            <input type="checkbox" class="pot-group-line-check" data-ref="${escapeAttr(c.ref)}" data-est="${c.amount}" checked>
+            <span class="pot-group-line-info">
+              <span class="pot-group-line-ref">${escapeHtml(c.ref)}</span>
+              <span class="pot-group-line-name">${escapeHtml(c.name)}</span>
+            </span>
+            <span class="pot-group-line-amt">
+              <span class="pot-group-line-est">est £${c.amount.toFixed(2)}</span>
+              <input type="number" step="0.01" class="pot-group-line-final" data-ref="${escapeAttr(c.ref)}" placeholder="${c.amount.toFixed(2)}" value="${c.amount.toFixed(2)}">
+            </span>
+          </label>
+        `).join('')}
+      </div>
+
+      <div class="pot-form">
+        ${isPinMode ? `
+          <label>Recorded by</label>
+          <select id="pot-go-purchaser">
+            <option value="">— pick —</option>
+            ${purchaserOptions}
+          </select>
+        ` : ''}
+
+        <label>Order reference</label>
+        <input type="text" id="pot-go-order-ref" placeholder="Order #, Amazon order ID, eBay confirmation, etc">
+
+        <label>Payment method</label>
+        <div class="pot-segmented" id="pot-go-payment-group">
+          <button type="button" class="pot-seg-opt" data-value="church">Church</button>
+          <button type="button" class="pot-seg-opt" data-value="pocket">Out of pocket</button>
+        </div>
+
+        <label>Notes (optional)</label>
+        <textarea id="pot-go-notes" placeholder="Substitutions, comments, anything finance team should know..."></textarea>
+
+        <label style="margin-top:24px;">Extras (postage, warranty, tax, fees)</label>
+        <div id="pot-extras-list" class="pot-extras-list"></div>
+        <button type="button" class="pot-btn pot-btn-ghost pot-add-extra-btn" data-action="add-extra" style="margin-top:8px;">+ Add extra item</button>
+      </div>
+
+      <div class="pot-group-summary">
+        <div class="pot-group-summary-row">
+          <span>Lines selected</span>
+          <span id="pot-go-lines-count">${candidates.length}</span>
+        </div>
+        <div class="pot-group-summary-row">
+          <span>Lines total</span>
+          <span id="pot-go-lines-total">£0.00</span>
+        </div>
+        <div class="pot-group-summary-row">
+          <span>Extras total</span>
+          <span id="pot-go-extras-total">£0.00</span>
+        </div>
+        <div class="pot-group-summary-row pot-group-summary-grand">
+          <span>Grand total</span>
+          <span id="pot-go-grand-total">£0.00</span>
+        </div>
+      </div>
+
+      <button class="pot-btn pot-btn-primary" data-action="create-order">Record this order</button>
+      <button class="pot-btn pot-btn-ghost" data-action="cancel">Cancel</button>
+    `;
+
+    // Wire up: payment segmented control
+    body.querySelectorAll('#pot-go-payment-group .pot-seg-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.parentNode;
+        const currentValue = group.getAttribute('data-current');
+        const newValue = btn.getAttribute('data-value');
+        if (currentValue === newValue) {
+          group.setAttribute('data-current', '');
+          group.querySelectorAll('.pot-seg-opt').forEach(b => b.classList.remove('pot-seg-opt-active'));
+        } else {
+          group.setAttribute('data-current', newValue);
+          group.querySelectorAll('.pot-seg-opt').forEach(b => b.classList.toggle('pot-seg-opt-active', b === btn));
+        }
+      });
+    });
+
+    // Wire up: line checkboxes + per-line final amount edits => recalc totals
+    body.querySelectorAll('.pot-group-line-check, .pot-group-line-final').forEach(el => {
+      el.addEventListener('input', recalcGroupOrderTotals);
+      el.addEventListener('change', recalcGroupOrderTotals);
+    });
+
+    // Wire up: add-extra and create-order buttons
+    body.querySelectorAll('button[data-action]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const action = e.target.getAttribute('data-action');
+        if (action === 'add-extra') {
+          addExtraRow();
+        } else if (action === 'create-order') {
+          submitGroupOrder(supplierName);
+        } else if (action === 'cancel') {
+          closeActionSheet();
+        }
+      });
+    });
+
+    sheetEl.classList.remove('pot-sheet-hidden');
+    recalcGroupOrderTotals();
+  }
+
+  function addExtraRow(presetLabel = '', presetAmount = '') {
+    const list = document.getElementById('pot-extras-list');
+    if (!list) return;
+    const row = document.createElement('div');
+    row.className = 'pot-extra-row';
+    row.innerHTML = `
+      <input type="text" class="pot-extra-label" placeholder="Postage, warranty, VAT, etc" value="${escapeAttr(presetLabel)}">
+      <span class="pot-extra-currency">£</span>
+      <input type="number" step="0.01" class="pot-extra-amount" placeholder="0.00" value="${presetAmount}">
+      <button type="button" class="pot-extra-remove" aria-label="Remove">×</button>
+    `;
+    row.querySelector('.pot-extra-amount').addEventListener('input', recalcGroupOrderTotals);
+    row.querySelector('.pot-extra-remove').addEventListener('click', () => {
+      row.remove();
+      recalcGroupOrderTotals();
+    });
+    list.appendChild(row);
+    recalcGroupOrderTotals();
+  }
+
+  function recalcGroupOrderTotals() {
+    const body = sheetEl.querySelector('.pot-sheet-body');
+    if (!body) return;
+    let linesTotal = 0;
+    let checkedCount = 0;
+    body.querySelectorAll('.pot-group-line').forEach(label => {
+      const check = label.querySelector('.pot-group-line-check');
+      const final = label.querySelector('.pot-group-line-final');
+      if (check && check.checked) {
+        checkedCount++;
+        const v = parseFloat(final.value) || 0;
+        linesTotal += v;
+        label.classList.remove('pot-group-line-unchecked');
+      } else {
+        label.classList.add('pot-group-line-unchecked');
+      }
+    });
+    let extrasTotal = 0;
+    body.querySelectorAll('.pot-extra-row').forEach(r => {
+      const amt = parseFloat(r.querySelector('.pot-extra-amount').value) || 0;
+      extrasTotal += amt;
+    });
+    const grand = linesTotal + extrasTotal;
+    const countEl = document.getElementById('pot-go-lines-count');
+    const linesEl = document.getElementById('pot-go-lines-total');
+    const extrasEl = document.getElementById('pot-go-extras-total');
+    const grandEl = document.getElementById('pot-go-grand-total');
+    if (countEl) countEl.textContent = checkedCount;
+    if (linesEl) linesEl.textContent = '£' + linesTotal.toFixed(2);
+    if (extrasEl) extrasEl.textContent = '£' + extrasTotal.toFixed(2);
+    if (grandEl) grandEl.textContent = '£' + grand.toFixed(2);
+  }
+
+  async function submitGroupOrder(supplierName) {
+    const isPinMode = config.authMode === 'pin';
+    const body = sheetEl.querySelector('.pot-sheet-body');
+
+    // Gather purchaser
+    let purchaser;
+    if (isPinMode) {
+      const sel = document.getElementById('pot-go-purchaser');
+      purchaser = sel ? sel.value : null;
+      if (!purchaser) {
+        alert('Please pick who is recording this order.');
+        return;
+      }
+    } else {
+      purchaser = currentUser && currentUser.name;
+    }
+
+    // Gather lines
+    const lineEntries = [];
+    let linesTotal = 0;
+    body.querySelectorAll('.pot-group-line').forEach(label => {
+      const check = label.querySelector('.pot-group-line-check');
+      if (!check.checked) return;
+      const ref = check.getAttribute('data-ref');
+      const final = parseFloat(label.querySelector('.pot-group-line-final').value);
+      if (isNaN(final) || final < 0) return;
+      lineEntries.push({ lineRef: ref, final_amount: final });
+      linesTotal += final;
+    });
+    if (lineEntries.length === 0) {
+      alert('Tick at least one line to include in the order.');
+      return;
+    }
+
+    // Gather extras
+    const extras = [];
+    let extrasTotal = 0;
+    body.querySelectorAll('.pot-extra-row').forEach(r => {
+      const label = r.querySelector('.pot-extra-label').value.trim();
+      const amt = parseFloat(r.querySelector('.pot-extra-amount').value);
+      if (isNaN(amt) || amt === 0) return;
+      extras.push({ label: label || 'Extra', amount: amt });
+      extrasTotal += amt;
+    });
+
+    const orderRef = (document.getElementById('pot-go-order-ref').value || '').trim() || null;
+    const notes = (document.getElementById('pot-go-notes').value || '').trim() || null;
+    const pmGroup = document.getElementById('pot-go-payment-group');
+    const paymentMethod = pmGroup ? (pmGroup.getAttribute('data-current') || null) : null;
+
+    const grandTotal = linesTotal + extrasTotal;
+
+    const orderData = {
+      supplier: supplierName,
+      order_ref: orderRef,
+      purchaser,
+      payment_method: paymentMethod,
+      lines_total: linesTotal,
+      extras_total: extrasTotal,
+      grand_total: grandTotal,
+      extras,
+      notes,
+    };
+
+    // Disable the button so a double-tap can't create two orders
+    const submitBtn = body.querySelector('[data-action="create-order"]');
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Recording…'; }
+
+    try {
+      await createOrder(orderData, lineEntries);
+      await hydrate();
+      closeActionSheet();
+    } catch(err) {
+      console.error('[POTracker] Group order failed:', err);
+      alert('Could not save the order: ' + (err.message || 'unknown error') + '\n\nIf this mentions a missing column, the po_orders table migration may not have run yet.');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Record this order'; }
+    }
+  }
+
+  // ── ORDER DETAIL VIEW ──────────────────────────────────────────────────────
+  function openOrderDetailSheet(orderId) {
+    const order = orders[orderId];
+    if (!order) {
+      alert('Order not found. Refresh and try again.');
+      return;
+    }
+    const body = sheetEl.querySelector('.pot-sheet-body');
+    const isPinMode = config.authMode === 'pin';
+    const isAdmin = isPinMode || (currentUser && currentUser.level === 'admin');
+
+    // Find all lines linked to this order
+    const linkedLines = Object.values(state).filter(r => r.order_id === order.id);
+    const extrasArr = Array.isArray(order.extras) ? order.extras : [];
+
+    body.innerHTML = `
+      <div class="pot-sheet-header">
+        <div class="pot-sheet-lineref">Order</div>
+        <div class="pot-sheet-linename">${escapeHtml(order.supplier || 'Supplier')}</div>
+        ${order.order_ref ? `<div class="pot-sheet-est"><strong>Ref:</strong> ${escapeHtml(order.order_ref)}</div>` : ''}
+        <div class="pot-sheet-est"><strong>Placed by:</strong> ${escapeHtml(order.purchaser || '—')} · ${timeAgo(order.placed_at)}${paymentMethodLabel(order.payment_method)}</div>
+        ${order.notes ? `<div class="pot-sheet-est"><strong>Notes:</strong> ${escapeHtml(order.notes)}</div>` : ''}
+      </div>
+
+      <div class="pot-order-section-title">Lines (${linkedLines.length})</div>
+      <ul class="pot-order-line-list">
+        ${linkedLines.map(r => `
+          <li>
+            <span class="pot-order-line-ref">${escapeHtml(r.line_ref)}</span>
+            <span class="pot-order-line-amount">£${Number(r.final_amount || 0).toFixed(2)}</span>
+          </li>
+        `).join('')}
+      </ul>
+
+      ${extrasArr.length ? `
+        <div class="pot-order-section-title">Extras</div>
+        <ul class="pot-order-line-list">
+          ${extrasArr.map(e => `
+            <li>
+              <span class="pot-order-line-ref">${escapeHtml(e.label || 'Extra')}</span>
+              <span class="pot-order-line-amount">£${Number(e.amount || 0).toFixed(2)}</span>
+            </li>
+          `).join('')}
+        </ul>
+      ` : ''}
+
+      <div class="pot-group-summary" style="margin-top:16px;">
+        <div class="pot-group-summary-row"><span>Lines total</span><span>£${Number(order.lines_total || 0).toFixed(2)}</span></div>
+        <div class="pot-group-summary-row"><span>Extras total</span><span>£${Number(order.extras_total || 0).toFixed(2)}</span></div>
+        <div class="pot-group-summary-row pot-group-summary-grand"><span>Grand total</span><span>£${Number(order.grand_total || 0).toFixed(2)}</span></div>
+      </div>
+
+      ${order.status !== 'received' ? `<button class="pot-btn pot-btn-primary" data-action="order-received">Mark whole order received</button>` : ''}
+      ${isAdmin ? `<button class="pot-btn pot-btn-danger" data-action="order-delete">Delete order (un-link lines)</button>` : ''}
+      <button class="pot-btn pot-btn-ghost" data-action="cancel">Close</button>
+    `;
+
+    body.querySelectorAll('button[data-action]').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const action = e.target.getAttribute('data-action');
+        if (action === 'cancel') { closeActionSheet(); return; }
+        if (action === 'order-received') {
+          try { await markOrderReceived(order.id); await hydrate(); closeActionSheet(); }
+          catch(err) { alert('Could not mark received: ' + err.message); }
+        } else if (action === 'order-delete') {
+          if (!confirm('Delete this order? All its lines will be reset to pending.')) return;
+          try { await deleteOrder(order.id); await hydrate(); closeActionSheet(); }
+          catch(err) { alert('Could not delete: ' + err.message); }
+        }
+      });
+    });
+
+    sheetEl.classList.remove('pot-sheet-hidden');
   }
 
   // ── ACTIONS ────────────────────────────────────────────────────────────────
@@ -977,6 +1522,123 @@
         padding-right: 36px;
       }
       .pot-form select:focus { outline: none; border-color: #0071E3; background-color: #fff; }
+
+      /* ── Group order button on supplier blocks ── */
+      .pot-group-order-btn {
+        display: block; width: calc(100% - 36px);
+        margin: 0 18px 14px;
+        padding: 11px 16px;
+        font-family: inherit; font-size: 13px; font-weight: 600;
+        color: #0071E3; background: #F4F8FE;
+        border: 1px dashed #B8DAFB; border-radius: 10px;
+        cursor: pointer; text-align: left;
+        transition: background 0.12s, border-color 0.12s;
+      }
+      .pot-group-order-btn:hover { background: #E8F2FE; border-style: solid; }
+
+      /* ── Group order sheet ── */
+      .pot-group-lines {
+        margin: 16px 0; max-height: 320px; overflow-y: auto;
+        border: 1px solid rgba(0,0,0,0.07); border-radius: 10px;
+        background: #FAFAFA;
+      }
+      .pot-group-line {
+        display: flex; align-items: center; gap: 12px;
+        padding: 12px 14px; cursor: pointer;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+      }
+      .pot-group-line:last-child { border-bottom: none; }
+      .pot-group-line:hover { background: rgba(0,113,227,0.04); }
+      .pot-group-line-unchecked { opacity: 0.42; }
+      .pot-group-line input[type="checkbox"] {
+        width: 18px; height: 18px; flex-shrink: 0;
+        accent-color: #0071E3;
+      }
+      .pot-group-line-info { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+      .pot-group-line-ref { font-size: 10px; font-weight: 700; color: #86868B; letter-spacing: 0.5px; }
+      .pot-group-line-name { font-size: 13px; color: #1D1D1F; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .pot-group-line-amt { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+      .pot-group-line-est { font-size: 10px; color: #AEAEB2; }
+      .pot-group-line-final {
+        width: 80px; padding: 6px 8px;
+        border: 1px solid rgba(0,0,0,0.12); border-radius: 6px;
+        font-family: inherit; font-size: 13px; text-align: right;
+        background: #fff; box-sizing: border-box;
+      }
+      .pot-group-line-final:focus { outline: none; border-color: #0071E3; }
+
+      /* ── Extras list ── */
+      .pot-extras-list { display: flex; flex-direction: column; gap: 8px; }
+      .pot-extra-row {
+        display: flex; gap: 8px; align-items: center;
+      }
+      .pot-extra-label {
+        flex: 1; padding: 9px 11px;
+        border: 1px solid rgba(0,0,0,0.12); border-radius: 8px;
+        font-family: inherit; font-size: 13px;
+        background: #FAFAFA; box-sizing: border-box;
+      }
+      .pot-extra-currency { color: #86868B; font-size: 13px; }
+      .pot-extra-amount {
+        width: 80px; padding: 9px 11px;
+        border: 1px solid rgba(0,0,0,0.12); border-radius: 8px;
+        font-family: inherit; font-size: 13px; text-align: right;
+        background: #FAFAFA; box-sizing: border-box;
+      }
+      .pot-extra-label:focus, .pot-extra-amount:focus { outline: none; border-color: #0071E3; background: #fff; }
+      .pot-extra-remove {
+        width: 30px; height: 30px;
+        border: none; background: rgba(0,0,0,0.04); color: #86868B;
+        border-radius: 6px; cursor: pointer; font-size: 18px; line-height: 1;
+        flex-shrink: 0;
+      }
+      .pot-extra-remove:hover { background: #FBE5E7; color: #C41E2A; }
+
+      /* ── Group summary panel ── */
+      .pot-group-summary {
+        background: #F5F5F7; border-radius: 12px;
+        padding: 14px 18px; margin: 20px 0 12px;
+      }
+      .pot-group-summary-row {
+        display: flex; justify-content: space-between;
+        font-size: 13px; color: #555; padding: 4px 0;
+      }
+      .pot-group-summary-grand {
+        margin-top: 8px; padding-top: 12px;
+        border-top: 1px solid rgba(0,0,0,0.08);
+        font-size: 16px; font-weight: 700; color: #1D1D1F;
+      }
+
+      /* ── Order detail link on status pill ── */
+      .pot-order-link {
+        display: inline-block; margin-top: 4px;
+        font-size: 10px; font-weight: 700;
+        color: #0071E3; background: #E8F2FE;
+        padding: 2px 7px; border-radius: 5px;
+      }
+
+      /* ── Order detail sheet sections ── */
+      .pot-order-section-title {
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 1px; color: #86868B; margin: 22px 0 10px;
+      }
+      .pot-order-line-list {
+        list-style: none; margin: 0; padding: 0;
+        background: #FAFAFA; border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.06);
+      }
+      .pot-order-line-list li {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 10px 14px; font-size: 13px;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+      }
+      .pot-order-line-list li:last-child { border-bottom: none; }
+      .pot-order-line-ref { font-weight: 600; color: #1D1D1F; }
+      .pot-order-line-amount { font-variant-numeric: tabular-nums; color: #555; }
+
+      /* ── Extras chip in tally ── */
+      .pot-tally-chip.pot-tally-extras { background: #FFF8E1; color: #8B6914; }
+      .pot-tally-stat-extras strong { color: #8B6914; }
     `;
     document.head.appendChild(style);
   }
