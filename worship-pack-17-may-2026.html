@@ -742,7 +742,7 @@
           <div class="set-block-label">Opener</div>
         </div>
 
-        <div class="song" data-title="Thanks Thanks I Give You Thanks" data-arrangement-id="55532b66-c673-4f54-a6f7-ea9a3700fb46">
+        <div class="song" data-title="Thanks Thanks I Give You Thanks" data-arrangement-id="55532b66-c673-4f54-a6f7-ea9a3700fb46" data-direction="The big opener. Almost entirely a cappella — loud, confident, full-voiced singing. Minimal musical backing throughout; keys only if anything, sat right under the vocals. Sing the chorus once or twice then drop out completely. The click track loop runs straight in to launch the praise set — no gap, no count-in, Trading My Sorrows starts immediately.">
           <div class="song-num">01</div>
           <div class="song-title">Thanks Thanks I Give You Thanks</div>
           <div class="song-tag loading">Checking…</div>
@@ -827,7 +827,7 @@
     <!-- FOOTER -->
     <section class="pack-footer">
       <p class="signoff">
-        <strong>Worship Pack v10</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
+        <strong>Worship Pack v11</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
       </p>
     </section>
 
@@ -1324,9 +1324,11 @@
 
           // Whole-song direction (worship_leader_notes) — sits at the top
           // of the expanded player so it's the first thing a team member reads.
-          const songDirection = this.arrangement && this.arrangement.worship_leader_notes
-            ? this.arrangement.worship_leader_notes.trim()
-            : '';
+          // Priority: data-direction attribute on the row (authored on the pack)
+          // > worship_leader_notes on the arrangement (authored in the studio).
+          const inlineDirection = this.row.getAttribute('data-direction');
+          const songDirection = (inlineDirection && inlineDirection.trim())
+            || (this.arrangement && this.arrangement.worship_leader_notes ? this.arrangement.worship_leader_notes.trim() : '');
 
           this.panel.innerHTML = `
             <div class="iplayer-body">
