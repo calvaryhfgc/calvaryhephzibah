@@ -571,6 +571,31 @@
       border-left: 2px solid var(--red);
       min-height: 48px;
     }
+
+    /* Whole-song direction card — sits at the top of the expanded player.
+       Visually heavier than the now-playing strip because it applies to
+       the entire song, not just one section. */
+    .iplayer-direction {
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(208, 68, 28, 0.14), rgba(208, 68, 28, 0.04));
+      border-left: 3px solid var(--red);
+      border-radius: 0;
+    }
+    .iplayer-direction-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .iplayer-direction-body {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--fg-1);
+      white-space: pre-wrap;
+    }
     .iplayer-np-label {
       font-size: 10px;
       letter-spacing: 0.16em;
@@ -802,7 +827,7 @@
     <!-- FOOTER -->
     <section class="pack-footer">
       <p class="signoff">
-        <strong>Worship Pack v9</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
+        <strong>Worship Pack v10</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
       </p>
     </section>
 
@@ -1297,8 +1322,20 @@
           const initialNote = initialSlot && initialSlot.notes && initialSlot.notes.trim();
           const initialLabel = initialSlot && initialSlot.chop ? initialSlot.chop.label : 'Section';
 
+          // Whole-song direction (worship_leader_notes) — sits at the top
+          // of the expanded player so it's the first thing a team member reads.
+          const songDirection = this.arrangement && this.arrangement.worship_leader_notes
+            ? this.arrangement.worship_leader_notes.trim()
+            : '';
+
           this.panel.innerHTML = `
             <div class="iplayer-body">
+              ${songDirection ? `
+                <div class="iplayer-direction">
+                  <div class="iplayer-direction-label">Direction</div>
+                  <div class="iplayer-direction-body">${escapeHtml(songDirection)}</div>
+                </div>
+              ` : ''}
               <div class="iplayer-partsrow">
                 <div class="iplayer-parts" role="group" aria-label="Part picker">
                   ${partsHtml}
