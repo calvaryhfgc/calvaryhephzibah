@@ -117,10 +117,10 @@ body::before{
   z-index: 1;
 }
 .hdr-grid{
-  flex: 1.5;
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   gap: 2px;
 }
 .hdr-grid img{
@@ -128,10 +128,10 @@ body::before{
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(0.85) brightness(0.85);
+  filter: saturate(0.7) brightness(0.75);
 }
 .hdr-family{
-  flex: 1;
+  flex: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
@@ -141,7 +141,7 @@ body::before{
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(0.95) brightness(0.78) contrast(1.05);
+  filter: saturate(1) brightness(0.92) contrast(1.05);
 }
 
 /* Gradient mask blends the media into the obsidian header on the left side
@@ -153,10 +153,10 @@ body::before{
   background: linear-gradient(
     90deg,
     var(--obsidian) 0%,
-    rgba(11, 11, 14, 0.85) 12%,
-    rgba(11, 11, 14, 0.55) 30%,
-    rgba(11, 11, 14, 0.25) 65%,
-    rgba(11, 11, 14, 0.15) 100%
+    rgba(11, 11, 14, 0.82) 10%,
+    rgba(11, 11, 14, 0.45) 26%,
+    rgba(11, 11, 14, 0.15) 55%,
+    rgba(11, 11, 14, 0.08) 100%
   );
   pointer-events: none;
   z-index: 2;
@@ -481,6 +481,10 @@ body::before{
     </div>
 
     <div class="hdr-media" aria-hidden="true">
+      <div class="hdr-family">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-women.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-men.jpg" alt="">
+      </div>
       <div class="hdr-grid">
         <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-1.jpg" alt="">
         <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-20.jpg" alt="">
@@ -492,15 +496,6 @@ body::before{
         <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-3.jpg" alt="">
         <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-12.jpg" alt="">
         <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-2.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-6.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-8.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-9.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-10.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-11.jpg" alt="">
-      </div>
-      <div class="hdr-family">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-women.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-men.jpg" alt="">
       </div>
     </div>
     <img class="hdr-logo" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah">
