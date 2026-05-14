@@ -103,19 +103,25 @@ body::before{
 }
 .hdr-inner{ position: relative; z-index: 3; flex: 1; min-width: 0; }
 
-/* Right-side photo grid — fills the right half of the header as a background mosaic */
-.hdr-grid{
+/* Right-side media block — portrait mosaic on top, family photos as a wider strip below */
+.hdr-media{
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   width: 48%;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 2px;
   padding: 2px;
   z-index: 1;
+}
+.hdr-grid{
+  flex: 1.5;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
 }
 .hdr-grid img{
   width: 100%;
@@ -124,9 +130,23 @@ body::before{
   display: block;
   filter: saturate(0.85) brightness(0.85);
 }
-/* Gradient mask blends the grid into the obsidian header on the left side
+.hdr-family{
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.hdr-family img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.95) brightness(0.78) contrast(1.05);
+}
+
+/* Gradient mask blends the media into the obsidian header on the left side
    so the title and meta remain readable */
-.hdr-grid::after{
+.hdr-media::after{
   content: "";
   position: absolute;
   inset: 0;
@@ -286,15 +306,18 @@ body::before{
   .hdr{ padding: 28px 24px 0; min-height: 0; }
   .hdr h1{ font-size: 34px; }
   .hdr-inner{ padding-bottom: 22px; }
-  .hdr-grid{
+  .hdr-media{
     position: relative;
     width: calc(100% + 48px);
     margin: 0 -24px 0 -24px;
-    height: 120px;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    height: 160px;
+    flex-direction: column;
   }
-  .hdr-grid::after{
+  .hdr-grid{
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .hdr-media::after{
     background: linear-gradient(
       180deg,
       var(--obsidian) 0%,
@@ -344,16 +367,18 @@ body::before{
     page-break-after: avoid;
     min-height: 0 !important;
   }
-  .hdr-grid{
+  .hdr-media{
     width: 40% !important;
-    gap: 2px !important;
-    padding: 2px !important;
+    gap: 1px !important;
+    padding: 1px !important;
   }
-  .hdr-grid img{
+  .hdr-grid{ gap: 1px !important; }
+  .hdr-family{ gap: 1px !important; }
+  .hdr-grid img, .hdr-family img{
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .hdr-grid::after{
+  .hdr-media::after{
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -455,27 +480,28 @@ body::before{
       </div>
     </div>
 
-    <div class="hdr-grid" aria-hidden="true">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-1.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-20.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-15.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-5.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-7.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-4.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-14.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-3.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-12.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-2.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-6.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-8.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-9.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-10.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-11.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-13.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-16.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-17.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-18.jpg" alt="">
-      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-19.jpg" alt="">
+    <div class="hdr-media" aria-hidden="true">
+      <div class="hdr-grid">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-1.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-20.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-15.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-5.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-7.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-4.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-14.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-3.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-12.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-2.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-6.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-8.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-9.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-10.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-11.jpg" alt="">
+      </div>
+      <div class="hdr-family">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-women.jpg" alt="">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-men.jpg" alt="">
+      </div>
     </div>
     <img class="hdr-logo" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah">
   </div>
