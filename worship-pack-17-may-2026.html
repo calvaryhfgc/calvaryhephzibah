@@ -550,6 +550,63 @@
       font-size: 11px;
     }
     .iplayer-section.looping .iplayer-section-dur { color: rgba(0,0,0,0.5); }
+    .iplayer-section.has-note .iplayer-section-note-dot {
+      position: absolute;
+      top: 3px;
+      left: 4px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    /* Now-playing strip — shows the current section's label + direction note */
+    .iplayer-nowplaying {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(245, 240, 232, 0.04);
+      border-left: 2px solid var(--red);
+      min-height: 48px;
+    }
+    .iplayer-np-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .iplayer-np-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .iplayer-np-section {
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      line-height: 1.2;
+    }
+    .iplayer-np-note {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--fg-1);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+    .iplayer-np-note:empty { display: none; }
+    .iplayer-np-empty {
+      font-size: 12px;
+      color: var(--fg-3);
+      font-style: italic;
+      margin-top: 4px;
+    }
 
     /* Footer hint inside player */
     .iplayer-hint {
@@ -745,7 +802,7 @@
     <!-- FOOTER -->
     <section class="pack-footer">
       <p class="signoff">
-        <strong>Worship Pack v8</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
+        <strong>Worship Pack v9</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
       </p>
     </section>
 
@@ -1206,8 +1263,10 @@
           const sectionHtml = this.slots
             .map((s, i) => {
               const dur = s.chop.end_seconds - s.chop.start_seconds;
+              const hasNote = !!(s.notes && s.notes.trim());
               return `
-                <button class="iplayer-section${i === 0 ? ' current' : ''}" data-slot="${i}">
+                <button class="iplayer-section${i === 0 ? ' current' : ''}${hasNote ? ' has-note' : ''}" data-slot="${i}" title="${hasNote ? escapeHtml(s.notes) : ''}">
+                  ${hasNote ? '<span class="iplayer-section-note-dot"></span>' : ''}
                   ${escapeHtml(s.chop.label || 'Section')}
                   <span class="iplayer-section-dur">${fmtTime(dur)}</span>
                 </button>
@@ -1232,6 +1291,12 @@
             `)
             .join('');
 
+          // Determine which section to show in the now-playing strip
+          // (defaults to slot 0; updates dynamically as playback progresses)
+          const initialSlot = this.slots[0];
+          const initialNote = initialSlot && initialSlot.notes && initialSlot.notes.trim();
+          const initialLabel = initialSlot && initialSlot.chop ? initialSlot.chop.label : 'Section';
+
           this.panel.innerHTML = `
             <div class="iplayer-body">
               <div class="iplayer-partsrow">
@@ -1244,6 +1309,15 @@
               </div>
               <div class="iplayer-ribbon" role="group" aria-label="Sections">
                 ${sectionHtml}
+              </div>
+              <div class="iplayer-nowplaying" aria-live="polite">
+                <div class="iplayer-np-label">Now</div>
+                <div class="iplayer-np-body">
+                  <div class="iplayer-np-section">${escapeHtml(initialLabel)}</div>
+                  ${initialNote
+                    ? `<div class="iplayer-np-note">${escapeHtml(initialNote)}</div>`
+                    : `<div class="iplayer-np-empty">No direction note for this section</div>`}
+                </div>
               </div>
               <div class="iplayer-transport">
                 <button class="iplayer-play" aria-label="Play">▶</button>
@@ -1366,6 +1440,39 @@
           const active = this.panel.querySelector('.iplayer-section.current, .iplayer-section.looping');
           if (active && active.scrollIntoView) {
             active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+          // Update the now-playing strip
+          this.updateNowPlaying();
+        }
+
+        updateNowPlaying() {
+          if (!this.panel) return;
+          const np = this.panel.querySelector('.iplayer-nowplaying');
+          if (!np) return;
+          // Show whichever section is most relevant — looping wins over current
+          const idx = this.loopSlotIdx >= 0 ? this.loopSlotIdx : this.currentSlotIdx;
+          const slot = this.slots[idx];
+          if (!slot) return;
+          const label = slot.chop && slot.chop.label ? slot.chop.label : 'Section';
+          const note = slot.notes && slot.notes.trim();
+          const labelEl = np.querySelector('.iplayer-np-section');
+          const body = np.querySelector('.iplayer-np-body');
+          if (labelEl) labelEl.textContent = label;
+          // Rebuild the note/empty line (we don't keep both in the DOM simultaneously)
+          const existingNote = np.querySelector('.iplayer-np-note');
+          const existingEmpty = np.querySelector('.iplayer-np-empty');
+          if (existingNote) existingNote.remove();
+          if (existingEmpty) existingEmpty.remove();
+          if (note) {
+            const noteEl = document.createElement('div');
+            noteEl.className = 'iplayer-np-note';
+            noteEl.textContent = note;
+            body.appendChild(noteEl);
+          } else {
+            const empty = document.createElement('div');
+            empty.className = 'iplayer-np-empty';
+            empty.textContent = 'No direction note for this section';
+            body.appendChild(empty);
           }
         }
 
