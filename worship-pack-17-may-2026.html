@@ -629,10 +629,12 @@
       color: var(--red);
       font-size: 11px;
     }
-    .iplayer-simple-audio {
+    .iplayer-simple-frame {
       width: 100%;
-      height: 40px;
-      filter: invert(0.85) hue-rotate(180deg);
+      height: 60px;
+      border: none;
+      background: #1d1d1f;
+      border-radius: 4px;
     }
     .iplayer-simple-hint {
       font-size: 11px;
@@ -951,6 +953,19 @@
 
       function publicUrl(path) {
         return `${SUPA_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+      }
+
+      // Extract a Drive file ID from any of the URL shapes we accept on
+      // data-reference-mp3 attributes. Returns null if none recognised.
+      function extractDriveFileId(url) {
+        if (!url) return null;
+        // Pattern 1: /file/d/{ID}/...
+        let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]{20,})/);
+        if (m) return m[1];
+        // Pattern 2: ?id={ID} or &id={ID}
+        m = url.match(/[?&]id=([a-zA-Z0-9_-]{20,})/);
+        if (m) return m[1];
+        return null;
       }
 
       async function sbFetch(path) {
@@ -1315,23 +1330,11 @@
           requestAnimationFrame(() => this.row.classList.add('iplayer-open'));
 
           // Collapse any other active player so we're the sole audio source.
-          // Note: the simple player uses native <audio> so it doesn't share
-          // our AudioContext — but pausing the advanced widget is still right.
+          // (Drive iframes can't be paused from outside the iframe — the
+          // best we can do is collapse the previous panel, which destroys
+          // its iframe entirely and stops its audio.)
           if (activePlayer && activePlayer !== this) activePlayer.collapse();
           activePlayer = this;
-
-          // Pause this song's simple player if another simple player starts.
-          // Done by listening to the audio element's play event.
-          const audio = this.panel.querySelector('.iplayer-simple-audio');
-          if (audio) {
-            audio.addEventListener('play', () => {
-              document.querySelectorAll('.iplayer-simple-audio').forEach(a => {
-                if (a !== audio && !a.paused) a.pause();
-              });
-              // Also pause the advanced widget if it's playing
-              if (this.playing) this.pause();
-            });
-          }
 
           // Now kick off advanced widget load in the background.
           // Skip entirely if no arrangement is pinned (some rows might have
@@ -1392,13 +1395,27 @@
         buildSimplePlayerHtml() {
           const url = this.row.getAttribute('data-reference-mp3');
           if (!url) return '';
+          // Extract the Drive file ID from any of the URL patterns we might
+          // have on the row, then build the official embed URL Drive
+          // designs for streaming. Drive's iframe player handles all the
+          // browser quirks for us.
+          const fileId = extractDriveFileId(url);
+          if (!fileId) {
+            // Unknown URL format — fall back to a plain link
+            return `
+              <div class="iplayer-simple">
+                <div class="iplayer-simple-label">Reference track</div>
+                <a href="${escapeHtml(url)}" target="_blank" style="color:var(--bone);text-decoration:underline;">Open in a new tab</a>
+              </div>
+            `;
+          }
+          const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+          const openUrl = `https://drive.google.com/file/d/${fileId}/view`;
           return `
             <div class="iplayer-simple">
               <div class="iplayer-simple-label">Reference track</div>
-              <audio class="iplayer-simple-audio" controls preload="none" src="${escapeHtml(url)}">
-                Your browser doesn't support inline audio. <a href="${escapeHtml(url)}" target="_blank">Open the track</a>.
-              </audio>
-              <div class="iplayer-simple-hint">If this doesn't play, open <a href="${escapeHtml(url)}" target="_blank" style="color:var(--bone);">the file in Drive</a> directly.</div>
+              <iframe class="iplayer-simple-frame" src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>
+              <div class="iplayer-simple-hint">If it doesn't load, <a href="${openUrl}" target="_blank" style="color:var(--bone);">open it in Drive</a>.</div>
             </div>
           `;
         }
