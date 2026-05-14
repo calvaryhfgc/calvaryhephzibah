@@ -439,10 +439,18 @@
     }
 
     /* Part picker */
+    .iplayer-partsrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
     .iplayer-parts {
       display: flex;
       gap: 6px;
       flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
     }
     .iplayer-part {
       background: transparent;
@@ -465,6 +473,28 @@
     .iplayer-part:hover:not(.active) {
       border-color: var(--red);
       color: var(--bone);
+    }
+    .iplayer-solo {
+      background: transparent;
+      border: 1px solid var(--bone);
+      color: var(--bone);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .iplayer-solo:hover:not(.active) {
+      background: rgba(245, 240, 232, 0.1);
+    }
+    .iplayer-solo.active {
+      background: var(--bone);
+      color: var(--obsidian);
+      box-shadow: 0 0 0 2px rgba(245, 240, 232, 0.25);
     }
 
     /* Section ribbon */
@@ -715,7 +745,7 @@
     <!-- FOOTER -->
     <section class="pack-footer">
       <p class="signoff">
-        <strong>Worship Pack v7</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
+        <strong>Worship Pack v8</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
       </p>
     </section>
 
@@ -741,15 +771,17 @@
       const STEMS = ['vocals', 'drums', 'bass', 'keys', 'guitar', 'other'];
 
       // Auto-mix: when user picks a part, this is how stems default. The
-      // selected part is at full; supporting stems are pulled down so the
-      // chosen part sits on top.
+      // selected part sits at full volume; supporting stems drop low enough
+      // to clearly be background. Values are deliberately punchier than the
+      // full studio's defaults — this view is for "show me my part" rather
+      // than balanced reference listening.
       const AUTO_MIX = {
-        vocals: { vocals: 1.0, drums: 0.5, bass: 0.5, keys: 0.5, guitar: 0.5, other: 0.4 },
-        drums:  { drums: 1.0, bass: 0.7, vocals: 0.5, keys: 0.5, guitar: 0.5, other: 0.4 },
-        bass:   { bass: 1.0, drums: 0.8, vocals: 0.5, keys: 0.5, guitar: 0.5, other: 0.4 },
-        keys:   { keys: 1.0, drums: 0.7, bass: 0.7, vocals: 0.5, guitar: 0.4, other: 0.4 },
-        guitar: { guitar: 1.0, drums: 0.7, bass: 0.7, vocals: 0.5, keys: 0.4, other: 0.4 },
-        other:  { other: 1.0, drums: 0.7, bass: 0.7, vocals: 0.5, keys: 0.5, guitar: 0.5 },
+        vocals: { vocals: 1.0, drums: 0.30, bass: 0.25, keys: 0.20, guitar: 0.20, other: 0.15 },
+        drums:  { drums: 1.0, bass: 0.40, vocals: 0.20, keys: 0.20, guitar: 0.20, other: 0.15 },
+        bass:   { bass: 1.0, drums: 0.45, vocals: 0.20, keys: 0.20, guitar: 0.20, other: 0.15 },
+        keys:   { keys: 1.0, drums: 0.35, bass: 0.30, vocals: 0.25, guitar: 0.20, other: 0.15 },
+        guitar: { guitar: 1.0, drums: 0.35, bass: 0.30, vocals: 0.25, keys: 0.20, other: 0.15 },
+        other:  { other: 1.0, drums: 0.35, bass: 0.30, vocals: 0.25, keys: 0.25, guitar: 0.25 },
       };
 
       // One AudioContext shared across the page (browsers cap per-tab contexts;
@@ -811,6 +843,7 @@
           this.startOffset = 0;
           this.playbackRate = 1.0;
           this.currentPart = 'vocals';
+          this.soloMode = false;     // true = play ONLY the selected part stem
           this.currentSlotIdx = 0;
           this.loopSlotIdx = -1;
           this.rafId = null;
@@ -914,11 +947,25 @@
         }
 
         applyAutoMix() {
+          if (this.soloMode) {
+            // Solo: only the selected part plays. Everything else fully silent.
+            STEMS.forEach(name => {
+              const g = this.stemGains[name];
+              if (g) g.gain.value = (name === this.currentPart) ? 1.0 : 0;
+            });
+            return;
+          }
           const mix = AUTO_MIX[this.currentPart] || AUTO_MIX.vocals;
           STEMS.forEach(name => {
             const g = this.stemGains[name];
             if (g) g.gain.value = mix[name] || 0;
           });
+        }
+
+        setSolo(on) {
+          this.soloMode = on;
+          this.applyAutoMix();
+          this.updatePartsUI();
         }
 
         // ── PLAYBACK ────────────────────────────────────────────────────
@@ -1187,8 +1234,13 @@
 
           this.panel.innerHTML = `
             <div class="iplayer-body">
-              <div class="iplayer-parts" role="group" aria-label="Part picker">
-                ${partsHtml}
+              <div class="iplayer-partsrow">
+                <div class="iplayer-parts" role="group" aria-label="Part picker">
+                  ${partsHtml}
+                </div>
+                <button class="iplayer-solo${this.soloMode ? ' active' : ''}" aria-pressed="${this.soloMode}" title="Solo: play only the selected part">
+                  Solo
+                </button>
               </div>
               <div class="iplayer-ribbon" role="group" aria-label="Sections">
                 ${sectionHtml}
@@ -1207,7 +1259,7 @@
                 </div>
               </div>
               <div class="iplayer-hint">
-                <strong>Tap a section</strong> to jump · <strong>tap again</strong> to loop it (red = playing, white = looping) · pick your <strong>part</strong> to bring it forward in the mix.
+                <strong>Pick your part</strong> to bring it forward · tap <strong>Solo</strong> to hear it on its own · <strong>tap a section</strong> to jump, tap again to loop.
               </div>
             </div>
           `;
@@ -1273,6 +1325,15 @@
             });
           });
 
+          // Solo toggle
+          const soloBtn = $('.iplayer-solo');
+          if (soloBtn) {
+            soloBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.setSolo(!this.soloMode);
+            });
+          }
+
           // Speed
           $$('.iplayer-speed-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -1313,6 +1374,11 @@
           this.panel.querySelectorAll('.iplayer-part').forEach(el => {
             el.classList.toggle('active', el.getAttribute('data-part') === this.currentPart);
           });
+          const soloBtn = this.panel.querySelector('.iplayer-solo');
+          if (soloBtn) {
+            soloBtn.classList.toggle('active', this.soloMode);
+            soloBtn.setAttribute('aria-pressed', this.soloMode ? 'true' : 'false');
+          }
         }
 
         updateSpeedUI() {
