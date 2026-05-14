@@ -602,6 +602,65 @@
       color: var(--fg-1);
       white-space: pre-wrap;
     }
+
+    /* Simple fallback player — uses native <audio> element so it works on
+       every device. Sits at the top of the expanded panel, above the
+       multi-stem widget. */
+    .iplayer-simple {
+      padding: 16px 18px;
+      background: var(--slate);
+      border: 1px solid var(--line-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .iplayer-simple-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .iplayer-simple-label::before {
+      content: '▶';
+      color: var(--red);
+      font-size: 11px;
+    }
+    .iplayer-simple-audio {
+      width: 100%;
+      height: 40px;
+      filter: invert(0.85) hue-rotate(180deg);
+    }
+    .iplayer-simple-hint {
+      font-size: 11px;
+      color: var(--fg-3);
+      line-height: 1.4;
+    }
+
+    /* Divider + label for the advanced widget below */
+    .iplayer-advanced-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .iplayer-advanced-divider::before,
+    .iplayer-advanced-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line-soft);
+    }
+    .iplayer-advanced-divider-text {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
     .iplayer-np-label {
       font-size: 10px;
       letter-spacing: 0.16em;
@@ -748,7 +807,7 @@
           <div class="set-block-label">Opener</div>
         </div>
 
-        <div class="song" data-title="Thanks Thanks I Give You Thanks" data-arrangement-id="55532b66-c673-4f54-a6f7-ea9a3700fb46" data-direction="The big opener. Almost entirely a cappella — loud, confident, full-voiced singing. Minimal musical backing throughout; keys only if anything, sat right under the vocals. Sing the chorus once or twice then drop out completely. The click track loop runs straight in to launch the praise set — no gap, no count-in, Trading My Sorrows starts immediately.">
+        <div class="song" data-title="Thanks Thanks I Give You Thanks" data-arrangement-id="55532b66-c673-4f54-a6f7-ea9a3700fb46" data-reference-mp3="https://docs.google.com/uc?export=open&id=1K2qWbjnPtJSbhfzhhrABY3mtgBE0rVH6" data-direction="The big opener. Almost entirely a cappella — loud, confident, full-voiced singing. Minimal musical backing throughout; keys only if anything, sat right under the vocals. Sing the chorus once or twice then drop out completely. The click track loop runs straight in to launch the praise set — no gap, no count-in, Trading My Sorrows starts immediately.">
           <div class="song-num">01</div>
           <div class="song-title">Thanks Thanks I Give You Thanks</div>
           <div class="song-tag loading">Checking…</div>
@@ -761,7 +820,7 @@
           <div class="set-block-label">Praise</div>
         </div>
 
-        <div class="song" data-title="Trading My Sorrows" data-arrangement-id="82d81f44-122b-4821-b137-e1a62db7a9e9" data-direction="Start of the praise set. High energy, definitive, confident. Opens with the click track loop carried over from Thanks Thanks, band intro on top, then our usual structure with dynamics — bring it low for the verse, lift hard into the chorus. No bridge, no vamp. Leads straight into Lord You Are Good (We Worship You) on the 'yes yes Lord' tag.">
+        <div class="song" data-title="Trading My Sorrows" data-arrangement-id="82d81f44-122b-4821-b137-e1a62db7a9e9" data-reference-mp3="https://docs.google.com/uc?export=open&id=11yFzEqrLSHzIgEU0MAGreJfnuHNAz5fI" data-direction="Start of the praise set. High energy, definitive, confident. Opens with the click track loop carried over from Thanks Thanks, band intro on top, then our usual structure with dynamics — bring it low for the verse, lift hard into the chorus. No bridge, no vamp. Leads straight into Lord You Are Good (We Worship You) on the 'yes yes Lord' tag.">
           <div class="song-num">02</div>
           <div class="song-title">Trading My Sorrows</div>
           <div class="song-tag loading">Checking…</div>
@@ -773,13 +832,13 @@
           <div class="song-tag loading">Checking…</div>
         </div>
 
-        <div class="song" data-title="Friend of God" data-arrangement-id="b91810c1-ed72-4691-88b3-08b3bb1ae8d7" data-direction="While we're singing the chorus, the band is already playing the accompaniment for Every Praise underneath — listen for it. Then we move seamlessly into Every Praise off the back of the chorus, no break.">
+        <div class="song" data-title="Friend of God" data-arrangement-id="b91810c1-ed72-4691-88b3-08b3bb1ae8d7" data-reference-mp3="https://docs.google.com/uc?export=open&id=1XA4BLxYB7tLDprQ9vldyNSk4UHzDgF3I" data-direction="While we're singing the chorus, the band is already playing the accompaniment for Every Praise underneath — listen for it. Then we move seamlessly into Every Praise off the back of the chorus, no break.">
           <div class="song-num">04</div>
           <div class="song-title">Friend of God</div>
           <div class="song-tag loading">Checking…</div>
         </div>
 
-        <div class="song" data-title="Every Praise" data-arrangement-id="2d9af899-a593-4d3b-97ed-12e27358dbb1" data-direction="Closes the praise set. Just a few rounds — don't overstretch it. End definitively, big finish, clean stop. This is the wall the praise set lands against before we move into worship.">
+        <div class="song" data-title="Every Praise" data-arrangement-id="2d9af899-a593-4d3b-97ed-12e27358dbb1" data-reference-mp3="https://docs.google.com/uc?export=open&id=13X86D0ftZ4OLVoGi-Einpy_FRnjg_PXI" data-direction="Closes the praise set. Just a few rounds — don't overstretch it. End definitively, big finish, clean stop. This is the wall the praise set lands against before we move into worship.">
           <div class="song-num">05</div>
           <div class="song-title">Every Praise</div>
           <div class="song-tag loading">Checking…</div>
@@ -792,19 +851,19 @@
           <div class="set-block-label">Worship</div>
         </div>
 
-        <div class="song" data-title="Open the Eyes of My Heart" data-arrangement-id="926ef6e5-3571-4fe2-9c06-8c44128bc3c3" data-direction="New arrangement — a blend of Soulful House, Rare Groove and Latin feel.">
+        <div class="song" data-title="Open the Eyes of My Heart" data-arrangement-id="926ef6e5-3571-4fe2-9c06-8c44128bc3c3" data-reference-mp3="https://docs.google.com/uc?export=open&id=12BURYoD3oEYWw26r3yp9lkmyJ4P1Wg8w" data-direction="New arrangement — a blend of Soulful House, Rare Groove and Latin feel.">
           <div class="song-num">06</div>
           <div class="song-title">Open the Eyes of My Heart</div>
           <div class="song-tag loading">Checking…</div>
         </div>
 
-        <div class="song" data-title="My Jesus My Saviour" data-arrangement-id="9cc537ce-8beb-4607-9b09-e1d243ead82d">
+        <div class="song" data-title="My Jesus My Saviour" data-arrangement-id="9cc537ce-8beb-4607-9b09-e1d243ead82d" data-reference-mp3="https://docs.google.com/uc?export=open&id=1u4A3ll6IDoAGYCxyi1SRFHruJLsNi2pP">
           <div class="song-num">07</div>
           <div class="song-title">My Jesus My Saviour</div>
           <div class="song-tag loading">Checking…</div>
         </div>
 
-        <div class="song" data-title="Here I Am to Worship" data-arrangement-id="c175e052-84a9-4459-94ec-46e4a0d0dca0">
+        <div class="song" data-title="Here I Am to Worship" data-arrangement-id="c175e052-84a9-4459-94ec-46e4a0d0dca0" data-reference-mp3="https://docs.google.com/uc?export=open&id=1OH4Q4Aes2zm-Asc4_zwjuNbFbGBxSzog">
           <div class="song-num">08</div>
           <div class="song-title">Here I Am to Worship</div>
           <div class="song-tag loading">Checking…</div>
@@ -833,7 +892,7 @@
     <!-- FOOTER -->
     <section class="pack-footer">
       <p class="signoff">
-        <strong>Worship Pack v11</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
+        <strong>Worship Pack v12</strong> · Prepared by Bolaji Olatoye · Internal · Calvary Hephzibah · 34th Anniversary
       </p>
     </section>
 
@@ -1240,57 +1299,117 @@
         async expand() {
           if (this.panel) return; // already expanded
 
-          // Build skeleton with a loading panel
+          // Build the panel with the simple player ALREADY rendered — no
+          // waiting for stems. If the advanced widget never loads (or the
+          // device can't handle Web Audio), the simple player still works.
           this.panel = document.createElement('div');
           this.panel.className = 'iplayer';
           this.panel.innerHTML = `
-            <div class="iplayer-loading">
-              <div class="iplayer-loading-label">Preparing rehearsal audio…</div>
-              <div class="iplayer-progress"><div class="iplayer-progress-bar"></div></div>
+            <div class="iplayer-body">
+              ${this.buildDirectionHtml()}
+              ${this.buildSimplePlayerHtml()}
+              <div class="iplayer-advanced-mount"></div>
             </div>
           `;
           this.row.appendChild(this.panel);
           requestAnimationFrame(() => this.row.classList.add('iplayer-open'));
 
-          // Collapse any other active player so we're the sole audio source
+          // Collapse any other active player so we're the sole audio source.
+          // Note: the simple player uses native <audio> so it doesn't share
+          // our AudioContext — but pausing the advanced widget is still right.
           if (activePlayer && activePlayer !== this) activePlayer.collapse();
           activePlayer = this;
 
-          if (this.loaded) {
-            this.renderPlayer();
-            return;
+          // Pause this song's simple player if another simple player starts.
+          // Done by listening to the audio element's play event.
+          const audio = this.panel.querySelector('.iplayer-simple-audio');
+          if (audio) {
+            audio.addEventListener('play', () => {
+              document.querySelectorAll('.iplayer-simple-audio').forEach(a => {
+                if (a !== audio && !a.paused) a.pause();
+              });
+              // Also pause the advanced widget if it's playing
+              if (this.playing) this.pause();
+            });
           }
 
+          // Now kick off advanced widget load in the background.
+          // Skip entirely if no arrangement is pinned (some rows might have
+          // only a reference MP3 with no Supabase arrangement).
+          if (!this.arrangementId) return;
+
+          const mount = this.panel.querySelector('.iplayer-advanced-mount');
+          if (this.loaded) {
+            this.renderAdvancedWidget(mount);
+            return;
+          }
           if (this.loading) return;
           this.loading = true;
 
-          const bar = this.panel.querySelector('.iplayer-progress-bar');
-          const label = this.panel.querySelector('.iplayer-loading-label');
-          const onProgress = (p, msg) => {
-            if (bar) bar.style.width = `${Math.round(p * 100)}%`;
-            if (label && msg) label.textContent = msg;
-          };
+          // Render an unobtrusive loading note in the advanced mount
+          mount.innerHTML = `
+            <div class="iplayer-advanced-divider">
+              <span class="iplayer-advanced-divider-text">Loading parts widget…</span>
+            </div>
+            <div class="iplayer-loading" style="margin-top:8px;">
+              <div class="iplayer-progress"><div class="iplayer-progress-bar"></div></div>
+            </div>
+          `;
+          const bar = mount.querySelector('.iplayer-progress-bar');
+          const onProgress = (p) => { if (bar) bar.style.width = `${Math.round(p * 100)}%`; };
 
           try {
             await this.loadData(onProgress);
             await this.loadStems(onProgress);
             this.loaded = true;
             this.loading = false;
-            this.renderPlayer();
+            this.renderAdvancedWidget(mount);
           } catch (err) {
-            console.error(err);
+            console.warn('Advanced widget failed (simple player still works):', err);
             this.loading = false;
-            this.panel.innerHTML = `
-              <div class="iplayer-error">
-                Couldn't load rehearsal audio: ${err.message || 'unknown error'}.
-                <br><br>
-                You can still <a href="${STUDIO_BASE}practice.html?arrangement_id=${this.arrangementId}" target="_blank" style="color:var(--bone);text-decoration:underline;">open it in the Rehearsal Studio</a>.
+            mount.innerHTML = `
+              <div class="iplayer-advanced-divider">
+                <span class="iplayer-advanced-divider-text">Parts widget unavailable on this device</span>
               </div>
             `;
           }
         }
 
-        renderPlayer() {
+        // Direction card HTML — rendered immediately, no data load needed
+        buildDirectionHtml() {
+          const inlineDirection = this.row.getAttribute('data-direction');
+          const songDirection = (inlineDirection && inlineDirection.trim()) || '';
+          if (!songDirection) return '';
+          return `
+            <div class="iplayer-direction">
+              <div class="iplayer-direction-label">Direction</div>
+              <div class="iplayer-direction-body">${escapeHtml(songDirection)}</div>
+            </div>
+          `;
+        }
+
+        // Simple <audio> player — uses the Drive URL. Works on any device.
+        buildSimplePlayerHtml() {
+          const url = this.row.getAttribute('data-reference-mp3');
+          if (!url) return '';
+          return `
+            <div class="iplayer-simple">
+              <div class="iplayer-simple-label">Reference track</div>
+              <audio class="iplayer-simple-audio" controls preload="none" src="${escapeHtml(url)}">
+                Your browser doesn't support inline audio. <a href="${escapeHtml(url)}" target="_blank">Open the track</a>.
+              </audio>
+              <div class="iplayer-simple-hint">If this doesn't play, open <a href="${escapeHtml(url)}" target="_blank" style="color:var(--bone);">the file in Drive</a> directly.</div>
+            </div>
+          `;
+        }
+
+        renderAdvancedWidget(mount) {
+          // Pull the supplemental Direction note from inline; the advanced
+          // widget itself adds the parts + ribbon + section notes.
+          this.renderPlayerIntoMount(mount);
+        }
+
+        renderPlayerIntoMount(mount) {
           const sectionHtml = this.slots
             .map((s, i) => {
               const dur = s.chop.end_seconds - s.chop.start_seconds;
@@ -1328,58 +1447,45 @@
           const initialNote = initialSlot && initialSlot.notes && initialSlot.notes.trim();
           const initialLabel = initialSlot && initialSlot.chop ? initialSlot.chop.label : 'Section';
 
-          // Whole-song direction (worship_leader_notes) — sits at the top
-          // of the expanded player so it's the first thing a team member reads.
-          // Priority: data-direction attribute on the row (authored on the pack)
-          // > worship_leader_notes on the arrangement (authored in the studio).
-          const inlineDirection = this.row.getAttribute('data-direction');
-          const songDirection = (inlineDirection && inlineDirection.trim())
-            || (this.arrangement && this.arrangement.worship_leader_notes ? this.arrangement.worship_leader_notes.trim() : '');
-
-          this.panel.innerHTML = `
-            <div class="iplayer-body">
-              ${songDirection ? `
-                <div class="iplayer-direction">
-                  <div class="iplayer-direction-label">Direction</div>
-                  <div class="iplayer-direction-body">${escapeHtml(songDirection)}</div>
-                </div>
-              ` : ''}
-              <div class="iplayer-partsrow">
-                <div class="iplayer-parts" role="group" aria-label="Part picker">
-                  ${partsHtml}
-                </div>
-                <button class="iplayer-solo${this.soloMode ? ' active' : ''}" aria-pressed="${this.soloMode}" title="Solo: play only the selected part">
-                  Solo
-                </button>
+          mount.innerHTML = `
+            <div class="iplayer-advanced-divider">
+              <span class="iplayer-advanced-divider-text">Parts widget · isolate your part</span>
+            </div>
+            <div class="iplayer-partsrow">
+              <div class="iplayer-parts" role="group" aria-label="Part picker">
+                ${partsHtml}
               </div>
-              <div class="iplayer-ribbon" role="group" aria-label="Sections">
-                ${sectionHtml}
+              <button class="iplayer-solo${this.soloMode ? ' active' : ''}" aria-pressed="${this.soloMode}" title="Solo: play only the selected part">
+                Solo
+              </button>
+            </div>
+            <div class="iplayer-ribbon" role="group" aria-label="Sections">
+              ${sectionHtml}
+            </div>
+            <div class="iplayer-nowplaying" aria-live="polite">
+              <div class="iplayer-np-label">Now</div>
+              <div class="iplayer-np-body">
+                <div class="iplayer-np-section">${escapeHtml(initialLabel)}</div>
+                ${initialNote
+                  ? `<div class="iplayer-np-note">${escapeHtml(initialNote)}</div>`
+                  : `<div class="iplayer-np-empty">No direction note for this section</div>`}
               </div>
-              <div class="iplayer-nowplaying" aria-live="polite">
-                <div class="iplayer-np-label">Now</div>
-                <div class="iplayer-np-body">
-                  <div class="iplayer-np-section">${escapeHtml(initialLabel)}</div>
-                  ${initialNote
-                    ? `<div class="iplayer-np-note">${escapeHtml(initialNote)}</div>`
-                    : `<div class="iplayer-np-empty">No direction note for this section</div>`}
+            </div>
+            <div class="iplayer-transport">
+              <button class="iplayer-play" aria-label="Play">▶</button>
+              <div class="iplayer-scrubwrap">
+                <input type="range" class="iplayer-scrub" min="0" max="${this.totalDuration}" step="0.01" value="0">
+                <div class="iplayer-times">
+                  <span class="iplayer-cur">0:00</span>
+                  <span class="iplayer-dur">${fmtTime(this.totalDuration)}</span>
                 </div>
               </div>
-              <div class="iplayer-transport">
-                <button class="iplayer-play" aria-label="Play">▶</button>
-                <div class="iplayer-scrubwrap">
-                  <input type="range" class="iplayer-scrub" min="0" max="${this.totalDuration}" step="0.01" value="0">
-                  <div class="iplayer-times">
-                    <span class="iplayer-cur">0:00</span>
-                    <span class="iplayer-dur">${fmtTime(this.totalDuration)}</span>
-                  </div>
-                </div>
-                <div class="iplayer-speed" role="group" aria-label="Speed">
-                  ${speedsHtml}
-                </div>
+              <div class="iplayer-speed" role="group" aria-label="Speed">
+                ${speedsHtml}
               </div>
-              <div class="iplayer-hint">
-                <strong>Pick your part</strong> to bring it forward · tap <strong>Solo</strong> to hear it on its own · <strong>tap a section</strong> to jump, tap again to loop.
-              </div>
+            </div>
+            <div class="iplayer-hint">
+              <strong>Pick your part</strong> to bring it forward · tap <strong>Solo</strong> to hear it on its own · <strong>tap a section</strong> to jump, tap again to loop.
             </div>
           `;
 
