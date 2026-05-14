@@ -257,6 +257,31 @@
     }
     .cta-link:hover { background: #e55a2e; }
 
+    /* Embedded video — 16:9 responsive */
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      margin: 28px 0 12px;
+      background: #000;
+      border: 1px solid var(--line-soft);
+    }
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-caption {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
     .pack-footer {
       padding: 40px 0;
       border-top: 1px solid var(--line-soft);
@@ -477,6 +502,14 @@
         <p>
           34 years ago, Calvary started with a small group of people who believed God was going to do something. They didn't know how, and they didn't have much. They just trusted Him.
         </p>
+      </div>
+
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/KNO_7zfW3nw" title="34 Years of Calvary Hephzibah" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <div class="video-caption">34 years of God's faithfulness — watch this together</div>
+
+      <div class="prose">
         <p>
           He came through. He has come through every Sunday since. He's going to come through on the 17th too.
         </p>
