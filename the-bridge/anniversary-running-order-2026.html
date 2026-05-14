@@ -75,9 +75,7 @@ body::before{
   position: relative;
   overflow: hidden;
   box-shadow: 0 24px 64px rgba(0,0,0,0.18);
-  display: flex;
-  align-items: center;
-  gap: 32px;
+  min-height: 220px;
 }
 .hdr::before{
   content:'';
@@ -87,6 +85,8 @@ body::before{
     radial-gradient(ellipse 70% 50% at 50% 0%, rgba(208, 68, 28, 0.20), transparent 60%),
     radial-gradient(ellipse 80% 40% at 50% 100%, rgba(110, 26, 15, 0.28), transparent 60%);
   pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: screen;
 }
 .hdr::after{
   content:'';
@@ -96,64 +96,62 @@ body::before{
   width: 240px;
   height: 240px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(208, 68, 28, 0.12), transparent 70%);
+  background: radial-gradient(circle at 30% 30%, rgba(208, 68, 28, 0.18), transparent 70%);
   pointer-events: none;
+  z-index: 3;
+  mix-blend-mode: screen;
 }
-.hdr-inner{ position: relative; z-index: 1; flex: 1; min-width: 0; }
+.hdr-inner{ position: relative; z-index: 3; flex: 1; min-width: 0; }
 
-/* Branding cluster — right side */
-.hdr-brand{
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 14px;
-  flex-shrink: 0;
-}
-
-.hdr-collage{
-  position: relative;
-  width: 180px;
-  height: 90px;
-}
-.hdr-portrait{
+/* Right-side photo grid — fills the right half of the header as a background mosaic */
+.hdr-grid{
   position: absolute;
-  width: 78px;
-  height: 78px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(244, 239, 230, 0.92);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.4);
-  background: var(--obsidian-2, #1a1a1a);
-}
-.hdr-portrait.p-back-left{
-  left: 0;
-  top: 6px;
-  z-index: 1;
-  transform: rotate(-4deg);
-}
-.hdr-portrait.p-back-right{
-  right: 0;
-  top: 6px;
-  z-index: 1;
-  transform: rotate(4deg);
-}
-.hdr-portrait.p-front{
-  left: 50%;
   top: 0;
-  transform: translateX(-50%);
+  right: 0;
+  bottom: 0;
+  width: 48%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  z-index: 1;
+}
+.hdr-grid img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.85) brightness(0.85);
+}
+/* Gradient mask blends the grid into the obsidian header on the left side
+   so the title and meta remain readable */
+.hdr-grid::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    var(--obsidian) 0%,
+    rgba(11, 11, 14, 0.85) 12%,
+    rgba(11, 11, 14, 0.55) 30%,
+    rgba(11, 11, 14, 0.25) 65%,
+    rgba(11, 11, 14, 0.15) 100%
+  );
+  pointer-events: none;
   z-index: 2;
-  width: 86px;
-  height: 86px;
-  border-color: var(--bone);
 }
 
+/* Eagle logo — sits as a quiet mark in the top-right corner over the grid */
 .hdr-logo{
-  width: 64px;
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  width: 56px;
   height: auto;
   opacity: 0.92;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+  z-index: 4;
 }
 .hdr-eyebrow{
   font-family: var(--font-body);
@@ -285,13 +283,31 @@ body::before{
 
 @media (max-width:640px){
   .wrap{ padding: 20px 16px 60px; }
-  .hdr{ padding: 32px 24px 28px; flex-direction: column; align-items: flex-start; gap: 18px; }
+  .hdr{ padding: 28px 24px 0; min-height: 0; }
   .hdr h1{ font-size: 34px; }
-  .hdr-brand{ align-items: flex-start; flex-direction: row; align-self: stretch; justify-content: space-between; }
-  .hdr-collage{ width: 140px; height: 70px; }
-  .hdr-portrait{ width: 60px; height: 60px; }
-  .hdr-portrait.p-front{ width: 66px; height: 66px; }
-  .hdr-logo{ width: 50px; }
+  .hdr-inner{ padding-bottom: 22px; }
+  .hdr-grid{
+    position: relative;
+    width: calc(100% + 48px);
+    margin: 0 -24px 0 -24px;
+    height: 110px;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+  .hdr-grid::after{
+    background: linear-gradient(
+      180deg,
+      var(--obsidian) 0%,
+      rgba(11, 11, 14, 0.7) 18%,
+      rgba(11, 11, 14, 0.3) 60%,
+      rgba(11, 11, 14, 0.15) 100%
+    );
+  }
+  .hdr-logo{
+    top: 18px;
+    right: 18px;
+    width: 44px;
+  }
   .row{ grid-template-columns: 48px 1fr; padding: 20px 20px; gap: 14px; }
   .row-time{ grid-column: 2; text-align: left; padding-top: 8px; font-size: 18px; }
   .row-time-sub{ display: inline-block; margin-left: 10px; margin-top: 0; }
@@ -326,21 +342,27 @@ body::before{
     border-radius: 4px !important;
     page-break-inside: avoid;
     page-break-after: avoid;
-    gap: 16px !important;
+    min-height: 0 !important;
   }
-  .hdr-brand{ gap: 8px !important; }
-  .hdr-collage{ width: 120px !important; height: 56px !important; }
-  .hdr-portrait{
-    width: 48px !important;
-    height: 48px !important;
-    border-width: 1.5px !important;
-    box-shadow: none !important;
+  .hdr-grid{
+    width: 40% !important;
+    gap: 2px !important;
+    padding: 2px !important;
+  }
+  .hdr-grid img{
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .hdr-portrait.p-front{ width: 54px !important; height: 54px !important; }
-  .hdr-portrait.p-back-left, .hdr-portrait.p-back-right{ top: 2px !important; }
-  .hdr-logo{ width: 40px !important; filter: none !important; }
+  .hdr-grid::after{
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .hdr-logo{
+    top: 8px !important;
+    right: 10px !important;
+    width: 32px !important;
+    filter: none !important;
+  }
   .hdr::before{
     background:
       radial-gradient(ellipse 70% 50% at 50% 0%, rgba(208, 68, 28, 0.18), transparent 60%) !important;
@@ -433,14 +455,18 @@ body::before{
       </div>
     </div>
 
-    <div class="hdr-brand">
-      <div class="hdr-collage">
-        <img class="hdr-portrait p-back-left" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-20.jpg" alt="">
-        <img class="hdr-portrait p-back-right" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-15.jpg" alt="">
-        <img class="hdr-portrait p-front" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-1.jpg" alt="">
-      </div>
-      <img class="hdr-logo" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah">
+    <div class="hdr-grid" aria-hidden="true">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-1.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-20.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-15.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-5.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-7.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-4.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-14.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-3.jpg" alt="">
+      <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-12.jpg" alt="">
     </div>
+    <img class="hdr-logo" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah">
   </div>
 
   <div class="order">
