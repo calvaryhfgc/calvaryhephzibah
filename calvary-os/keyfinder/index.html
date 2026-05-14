@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0A0A0A">
+<title>Keyfinder · Calvary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0A0A0A;
+    --bg-elev: #141414;
+    --bg-card: #1A1A1A;
+    --line: rgba(255,255,255,0.08);
+    --line-strong: rgba(255,255,255,0.15);
+    --ink: #FAFAFA;
+    --ink-dim: rgba(250,250,250,0.55);
+    --ink-faint: rgba(250,250,250,0.32);
+    --accent: #E6B450;        /* warm brass — feels musical, not techy */
+    --accent-soft: rgba(230,180,80,0.12);
+    --danger: #FF6B5C;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Fraunces', Georgia, serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: max(env(safe-area-inset-top), 16px) 20px max(env(safe-area-inset-bottom), 20px);
+  }
+
+  /* HEADER */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-bottom: 8px;
+  }
+  .topbar .brand { color: var(--ink-dim); }
+  .topbar .brand b { color: var(--ink); font-weight: 500; }
+  .topbar button {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .topbar button:hover, .topbar button:active { color: var(--ink); border-color: var(--line-strong); }
+
+  /* MAIN — THE ANSWER */
+  .stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 0;
+    position: relative;
+  }
+
+  .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 18px;
+  }
+
+  .keybox {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 22px;
+  }
+
+  .key-letter {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(180px, 42vw, 280px);
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    font-feature-settings: "ss01";
+  }
+
+  .key-accidental {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(80px, 18vw, 120px);
+    line-height: 1;
+    color: var(--accent);
+    transform: translateY(-0.15em);
+  }
+
+  .key-mode {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(20px, 5vw, 28px);
+    color: var(--ink-dim);
+    letter-spacing: 0.01em;
+    margin-bottom: 28px;
+  }
+
+  .delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .delta b { color: var(--ink-dim); font-weight: 500; }
+  .delta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ink-faint); }
+
+  /* TRANSPOSE CONTROLS */
+  .transpose {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 30px;
+    margin-bottom: 24px;
+  }
+
+  .tbtn {
+    flex: 1;
+    max-width: 160px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 18px;
+    padding: 22px 18px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    touch-action: manipulation;
+  }
+  .tbtn:hover { border-color: var(--line-strong); background: var(--bg-elev); }
+  .tbtn:active { transform: scale(0.97); background: var(--accent-soft); border-color: var(--accent); }
+
+  .tbtn .glyph {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .tbtn .word {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  .mode-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 4px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .mode-toggle button {
+    background: none;
+    border: none;
+    color: var(--ink-dim);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .mode-toggle button.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  /* NASHVILLE NUMBERS */
+  .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px 18px;
+    margin-bottom: 14px;
+  }
+
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .panel-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+  .num-cell {
+    text-align: center;
+    padding: 10px 4px;
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+  }
+  .num-cell .roman {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-faint);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .num-cell .chord {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: var(--ink);
+    display: block;
+    line-height: 1;
+  }
+  .num-cell .chord .sharp { color: var(--accent); font-size: 0.8em; }
+  .num-cell .quality {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* RELATIVE */
+  .relative-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--ink-dim);
+  }
+  .relative-row + .relative-row { margin-top: 10px; }
+  .relative-row .v {
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .relative-row .v .sharp { color: var(--accent); }
+  .relative-row .k {
+    font-style: italic;
+  }
+
+  /* SETTINGS DRAWER */
+  .drawer {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 100;
+  }
+  .drawer.open { display: flex; }
+  .drawer-card {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-width: 520px;
+    padding: 24px 20px max(env(safe-area-inset-bottom), 24px);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  .drawer h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 24px;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .drawer .sub {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--ink-dim);
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+  .drawer .field-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+  .key-picker {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .key-pick {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    padding: 12px 4px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .key-pick:hover { border-color: var(--line-strong); }
+  .key-pick.selected {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .key-pick .sharp { color: var(--accent); }
+  .key-pick.selected .sharp { color: var(--accent); }
+
+  .drawer-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .drawer-actions button {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-secondary {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+  }
+  .btn-secondary:hover { border-color: var(--line-strong); color: var(--ink); }
+  .btn-primary {
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: #1A1A1A;
+    font-weight: 500;
+  }
+  .btn-primary:hover { background: #F2C566; }
+
+  /* RESET BUTTON */
+  .reset-btn {
+    background: none;
+    border: 1px dashed var(--line-strong);
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin: 0 auto 16px;
+    display: block;
+  }
+  .reset-btn:hover { color: var(--ink); border-color: var(--ink-dim); }
+  .reset-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg-elev);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    padding: 12px 20px;
+    border-radius: 100px;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 14px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 200;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 12px;
+    margin-top: auto;
+  }
+  .footer span { color: var(--accent); }
+
+  /* KEY CHANGE ANIMATION */
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+  }
+  .key-letter.changed, .key-accidental.changed {
+    animation: pulse 0.25s ease;
+  }
+
+  /* Larger screens — stay centered, don't sprawl */
+  @media (min-width: 640px) {
+    body { max-width: 560px; margin: 0 auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">Keyfinder <b>·</b> v1</div>
+  <button id="settingsBtn" aria-label="Settings">Home · <span id="homeKeyLabel">E♭</span></button>
+</header>
+
+<main class="stage">
+  <div class="label">You're in</div>
+
+  <div class="keybox" id="keybox">
+    <span class="key-letter" id="keyLetter">E</span><span class="key-accidental" id="keyAcc">♭</span>
+  </div>
+
+  <div class="key-mode" id="keyMode">major</div>
+
+  <div class="delta">
+    <span><b id="deltaSemi">0</b> semitones from home</span>
+    <span class="dot"></span>
+    <span id="deltaInterval">unison</span>
+  </div>
+
+  <div class="transpose">
+    <button class="tbtn" id="downBtn" aria-label="Transpose down">
+      <span class="glyph">−</span>
+      <span class="word">Down</span>
+    </button>
+    <button class="tbtn" id="upBtn" aria-label="Transpose up">
+      <span class="glyph">+</span>
+      <span class="word">Up</span>
+    </button>
+  </div>
+
+  <div class="mode-toggle">
+    <button id="majBtn" class="active">major</button>
+    <button id="minBtn">minor</button>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">↻ Reset to home</button>
+</main>
+
+<section class="panel">
+  <div class="panel-head">
+    <div class="panel-title">Nashville Numbers</div>
+  </div>
+  <div class="numbers-grid" id="numbersGrid"></div>
+</section>
+
+<section class="panel">
+  <div class="panel-head">
+    <div class="panel-title">Also Known As</div>
+  </div>
+  <div class="relative-row">
+    <span class="k">Relative <span id="relName">minor</span></span>
+    <span class="v" id="relativeKey">C minor</span>
+  </div>
+  <div class="relative-row">
+    <span class="k">Enharmonic</span>
+    <span class="v" id="enharmKey">—</span>
+  </div>
+</section>
+
+<footer class="footer">Built for <span>Calvary Hephzibah</span> · One job, well done</footer>
+
+<!-- Settings Drawer -->
+<div class="drawer" id="drawer">
+  <div class="drawer-card">
+    <h2>Set your home key</h2>
+    <p class="sub">The key you naturally play in. Everything's calculated from here.</p>
+    <div class="field-label">Choose home</div>
+    <div class="key-picker" id="keyPicker"></div>
+    <div class="drawer-actions">
+      <button class="btn-secondary" id="cancelBtn">Cancel</button>
+      <button class="btn-primary" id="saveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  // ====== MUSIC THEORY ======
+  // Using sharps as default spelling for the chromatic ladder.
+  // We pick sharps-vs-flats per-display based on the home key's nature.
+  const SHARP_NAMES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  const FLAT_NAMES  = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+
+  // Canonical spelling per pitch class for major keys.
+  // The circle of fifths tells us which keys spell with sharps vs flats.
+  const PC_FLAT_PREF = {
+    0: false,  // C
+    1: true,   // D♭ (more common in worship than C#)
+    2: false,  // D
+    3: true,   // E♭
+    4: false,  // E
+    5: true,   // F (its 4th is B♭)
+    6: true,   // G♭ (more common than F# as a key in worship)
+    7: false,  // G
+    8: true,   // A♭
+    9: false,  // A
+   10: true,   // B♭
+   11: false   // B
+  };
+  function pcPrefersFlats(pc) { return PC_FLAT_PREF[pc] === true; }
+
+  // KEY-SIGNATURE-AWARE chord spelling.
+  // Each major key has its own diatonic chord spelling — A major spells iii as C#, not D♭.
+  // The 7 chord scale-degrees, spelled with the correct accidentals for each key.
+  const KEY_SPELLINGS = {
+    // Major keys
+    'C':   ['C',  'D',  'E',  'F',  'G',  'A',  'B'],
+    'G':   ['G',  'A',  'B',  'C',  'D',  'E',  'F#'],
+    'D':   ['D',  'E',  'F#', 'G',  'A',  'B',  'C#'],
+    'A':   ['A',  'B',  'C#', 'D',  'E',  'F#', 'G#'],
+    'E':   ['E',  'F#', 'G#', 'A',  'B',  'C#', 'D#'],
+    'B':   ['B',  'C#', 'D#', 'E',  'F#', 'G#', 'A#'],
+    'F#':  ['F#', 'G#', 'A#', 'B',  'C#', 'D#', 'E#'],
+    'F':   ['F',  'G',  'A',  'B♭', 'C',  'D',  'E'],
+    'B♭':  ['B♭', 'C',  'D',  'E♭', 'F',  'G',  'A'],
+    'E♭':  ['E♭', 'F',  'G',  'A♭', 'B♭', 'C',  'D'],
+    'A♭':  ['A♭', 'B♭', 'C',  'D♭', 'E♭', 'F',  'G'],
+    'D♭':  ['D♭', 'E♭', 'F',  'G♭', 'A♭', 'B♭', 'C'],
+    'G♭':  ['G♭', 'A♭', 'B♭', 'C♭', 'D♭', 'E♭', 'F']
+  };
+
+  // For pitch classes that prefer sharps in worship, choose the simpler enharmonic.
+  // Map a pc to the canonical major-key NAME used in our spelling table.
+  function canonicalKeyNameForPc(pc) {
+    // pick the spelling preferred for that pc per PC_FLAT_PREF, then check we have a table
+    const useFlats = pcPrefersFlats(pc);
+    let name = useFlats ? FLAT_NAMES[pc] : SHARP_NAMES[pc];
+    // F# table exists; C#/G♭ — prefer G♭. Make sure name is one of our table keys.
+    if (!KEY_SPELLINGS[name]) {
+      // Try the other spelling
+      const alt = useFlats ? SHARP_NAMES[pc] : FLAT_NAMES[pc];
+      if (KEY_SPELLINGS[alt]) name = alt;
+    }
+    return name;
+  }
+
+  // Intervals (semitones from root) — names for the delta display
+  const INTERVAL_NAMES = [
+    'unison',
+    'minor 2nd', 'major 2nd',
+    'minor 3rd', 'major 3rd',
+    'perfect 4th',
+    'tritone',
+    'perfect 5th',
+    'minor 6th', 'major 6th',
+    'minor 7th', 'major 7th'
+  ];
+
+  // Nashville numbers — major key
+  const MAJOR_DEGREES = [
+    { roman: 'I',   semi: 0,  quality: '' },
+    { roman: 'ii',  semi: 2,  quality: 'm' },
+    { roman: 'iii', semi: 4,  quality: 'm' },
+    { roman: 'IV',  semi: 5,  quality: '' },
+    { roman: 'V',   semi: 7,  quality: '' },
+    { roman: 'vi',  semi: 9,  quality: 'm' },
+    { roman: 'vii°',semi: 11, quality: '°' }
+  ];
+
+  // Nashville numbers — minor key (natural minor)
+  const MINOR_DEGREES = [
+    { roman: 'i',    semi: 0,  quality: 'm' },
+    { roman: 'ii°',  semi: 2,  quality: '°' },
+    { roman: 'III',  semi: 3,  quality: '' },
+    { roman: 'iv',   semi: 5,  quality: 'm' },
+    { roman: 'v',    semi: 7,  quality: 'm' },
+    { roman: 'VI',   semi: 8,  quality: '' },
+    { roman: 'VII',  semi: 10, quality: '' }
+  ];
+
+  // All 12 home-key options (musician-friendly spelling)
+  const HOME_OPTIONS = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+
+  // Map every name back to a pitch class 0–11
+  const NAME_TO_PC = {
+    'C':0,'B#':0,
+    'C#':1,'D♭':1,'Db':1,
+    'D':2,
+    'D#':3,'E♭':3,'Eb':3,
+    'E':4,'F♭':4,
+    'F':5,'E#':5,
+    'F#':6,'G♭':6,'Gb':6,
+    'G':7,
+    'G#':8,'A♭':8,'Ab':8,
+    'A':9,
+    'A#':10,'B♭':10,'Bb':10,
+    'B':11,'C♭':11
+  };
+
+  // ====== STATE ======
+  const STATE_KEY = 'keyfinder_state_v1';
+  const state = loadState() || {
+    homeKey: 'E♭',
+    transpose: 0,        // semitones above home
+    mode: 'major'        // 'major' | 'minor'
+  };
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STATE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch(e) { return null; }
+  }
+  function saveState() {
+    try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  // ====== HELPERS ======
+  function pcOf(name) {
+    return NAME_TO_PC[name] ?? 0;
+  }
+
+  function currentPc() {
+    return (pcOf(state.homeKey) + state.transpose + 144) % 12;
+  }
+
+  // Pick spelling (sharps or flats) based on the CURRENT key, not the home key.
+  // Each key in the circle of fifths has its own canonical spelling.
+  function preferFlats() {
+    return pcPrefersFlats(currentPc());
+  }
+
+  function nameOfPc(pc, preferFlatsOverride) {
+    const useFlats = (preferFlatsOverride !== undefined) ? preferFlatsOverride : preferFlats();
+    return useFlats ? FLAT_NAMES[pc] : SHARP_NAMES[pc];
+  }
+
+  // Split "E♭" or "F#" into letter + accidental
+  function splitKey(name) {
+    if (name.length === 1) return { letter: name, acc: '' };
+    return { letter: name[0], acc: name.slice(1) };
+  }
+
+  // Render an accidental as proper unicode glyph
+  function prettyAcc(acc) {
+    if (acc === '#') return '♯';
+    if (acc === 'b') return '♭';
+    return acc; // already pretty
+  }
+
+  // Enharmonic equivalent — the "other spelling"
+  function enharmonicOf(name) {
+    const pc = pcOf(name);
+    const sharp = SHARP_NAMES[pc];
+    const flat = FLAT_NAMES[pc];
+    if (sharp === flat) return null; // natural — no alt spelling
+    return (name === sharp) ? flat : sharp;
+  }
+
+  // Relative minor / major
+  function relativeOf(rootPc, mode) {
+    if (mode === 'major') {
+      // relative minor is 9 semitones up (or 3 down)
+      return (rootPc + 9) % 12;
+    } else {
+      // relative major is 3 semitones up
+      return (rootPc + 3) % 12;
+    }
+  }
+
+  // Delta display
+  function deltaDisplay(t) {
+    const abs = Math.abs(t);
+    const dir = t === 0 ? '' : (t > 0 ? '↑' : '↓');
+    const interval = INTERVAL_NAMES[abs % 12];
+    const octaves = Math.floor(abs / 12);
+    let label = interval;
+    if (octaves > 0) label = octaves + ' oct + ' + interval;
+    if (abs === 0) label = 'unison';
+    return { semi: (t > 0 ? '+' : '') + t, dir, interval: label };
+  }
+
+  // ====== RENDER ======
+  function render(animate) {
+    const pc = currentPc();
+    const keyName = canonicalKeyNameForPc(pc);
+    const { letter, acc } = splitKey(keyName);
+
+    // Key letter + accidental
+    const elL = document.getElementById('keyLetter');
+    const elA = document.getElementById('keyAcc');
+    const prevText = elL.textContent + elA.textContent;
+    elL.textContent = letter;
+    elA.textContent = prettyAcc(acc);
+
+    if (animate && (elL.textContent + elA.textContent) !== prevText) {
+      elL.classList.remove('changed');
+      elA.classList.remove('changed');
+      void elL.offsetWidth;
+      elL.classList.add('changed');
+      elA.classList.add('changed');
+    }
+
+    // Mode
+    document.getElementById('keyMode').textContent = state.mode;
+
+    // Home key label in topbar
+    document.getElementById('homeKeyLabel').textContent = state.homeKey;
+
+    // Delta
+    const d = deltaDisplay(state.transpose);
+    document.getElementById('deltaSemi').textContent = d.semi;
+    document.getElementById('deltaInterval').textContent = d.interval;
+
+    // Mode toggle
+    document.getElementById('majBtn').classList.toggle('active', state.mode === 'major');
+    document.getElementById('minBtn').classList.toggle('active', state.mode === 'minor');
+
+    // Reset button enabled state
+    document.getElementById('resetBtn').disabled = (state.transpose === 0);
+
+    // Nashville numbers — use the key's canonical spelling
+    renderNumbers(keyName);
+
+    // Relative
+    const relPc = relativeOf(pc, state.mode);
+    const relMode = state.mode === 'major' ? 'minor' : 'major';
+    const relKeyName = canonicalKeyNameForPc(relPc);
+    document.getElementById('relName').textContent = relMode;
+    document.getElementById('relativeKey').innerHTML = formatChord(relKeyName) + ' ' + relMode;
+
+    // Enharmonic
+    const enh = enharmonicOf(keyName);
+    document.getElementById('enharmKey').innerHTML = enh ? formatChord(enh) + ' ' + state.mode : '<span style="color:var(--ink-faint)">none</span>';
+  }
+
+  // Format a chord name with the accidental highlighted
+  function formatChord(name) {
+    const { letter, acc } = splitKey(name);
+    if (!acc) return letter;
+    return letter + '<span class="sharp">' + prettyAcc(acc) + '</span>';
+  }
+
+  function renderNumbers(keyName) {
+    const grid = document.getElementById('numbersGrid');
+    grid.innerHTML = '';
+
+    // Get the canonical 7-tone scale for this key (in major)
+    // For minor keys, we use the relative major's scale and start from its 6th
+    let scaleNames; // length-7 array, in order from the current root
+    let degrees;
+
+    if (state.mode === 'major') {
+      scaleNames = KEY_SPELLINGS[keyName];
+      degrees = MAJOR_DEGREES;
+      if (!scaleNames) {
+        // Fallback — shouldn't happen with our canonical names
+        scaleNames = computeFallbackScale(keyName, 'major');
+      }
+    } else {
+      // Minor: the natural minor scale shares notes with its relative major.
+      // Our keyName here represents the minor tonic. Find its relative major (3 semitones up)
+      // and rotate that major scale so the tonic comes first.
+      const pc = pcOf(keyName);
+      const relMajPc = (pc + 3) % 12;
+      const relMajName = canonicalKeyNameForPc(relMajPc);
+      const majorScale = KEY_SPELLINGS[relMajName] || computeFallbackScale(relMajName, 'major');
+      // Major scale = I ii iii IV V vi vii. The minor tonic is the vi of the relative major.
+      // So minor scale starting from the minor tonic = [majorScale[5], majorScale[6], majorScale[0], majorScale[1], majorScale[2], majorScale[3], majorScale[4]]
+      scaleNames = [majorScale[5], majorScale[6], majorScale[0], majorScale[1], majorScale[2], majorScale[3], majorScale[4]];
+      degrees = MINOR_DEGREES;
+    }
+
+    degrees.forEach((d, i) => {
+      const chordName = scaleNames[i];
+      const cell = document.createElement('div');
+      cell.className = 'num-cell';
+      cell.innerHTML =
+        '<span class="roman">' + d.roman + '</span>' +
+        '<span class="chord">' + formatChord(chordName) + d.quality + '</span>' +
+        '<span class="quality">' + (d.quality === 'm' ? 'min' : d.quality === '°' ? 'dim' : 'maj') + '</span>';
+      grid.appendChild(cell);
+    });
+  }
+
+  // Fallback if a key isn't in our table (shouldn't happen for the 12 home options)
+  function computeFallbackScale(rootName, mode) {
+    const rootPc = pcOf(rootName);
+    const useFlats = pcPrefersFlats(rootPc);
+    const intervals = mode === 'major' ? [0,2,4,5,7,9,11] : [0,2,3,5,7,8,10];
+    return intervals.map(s => nameOfPc((rootPc + s) % 12, useFlats));
+  }
+
+  // ====== ACTIONS ======
+  function transposeBy(n) {
+    state.transpose += n;
+    // Keep within a reasonable range (-12..+12)
+    if (state.transpose > 12) state.transpose = 12;
+    if (state.transpose < -12) state.transpose = -12;
+    saveState();
+    render(true);
+  }
+
+  function reset() {
+    state.transpose = 0;
+    saveState();
+    render(true);
+    toast('Reset to ' + state.homeKey);
+  }
+
+  function setMode(m) {
+    state.mode = m;
+    saveState();
+    render(false);
+  }
+
+  function setHome(k) {
+    state.homeKey = k;
+    state.transpose = 0;
+    saveState();
+    render(true);
+    toast('Home set to ' + k);
+  }
+
+  // ====== SETTINGS DRAWER ======
+  function openDrawer() {
+    renderPicker();
+    document.getElementById('drawer').classList.add('open');
+  }
+  function closeDrawer() {
+    document.getElementById('drawer').classList.remove('open');
+  }
+  function renderPicker() {
+    const picker = document.getElementById('keyPicker');
+    picker.innerHTML = '';
+    HOME_OPTIONS.forEach(k => {
+      const b = document.createElement('button');
+      b.className = 'key-pick' + (k === state.homeKey ? ' selected' : '');
+      b.innerHTML = formatChord(k);
+      b.addEventListener('click', () => {
+        // Visually select
+        document.querySelectorAll('.key-pick').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected');
+        b.dataset.choice = k;
+        picker._choice = k;
+      });
+      b.dataset.choice = k;
+      picker.appendChild(b);
+    });
+    picker._choice = state.homeKey;
+  }
+
+  // ====== TOAST ======
+  let toastTimer = null;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 1500);
+  }
+
+  // ====== EVENTS ======
+  document.getElementById('upBtn').addEventListener('click', () => transposeBy(1));
+  document.getElementById('downBtn').addEventListener('click', () => transposeBy(-1));
+  document.getElementById('resetBtn').addEventListener('click', reset);
+  document.getElementById('majBtn').addEventListener('click', () => setMode('major'));
+  document.getElementById('minBtn').addEventListener('click', () => setMode('minor'));
+  document.getElementById('settingsBtn').addEventListener('click', openDrawer);
+  document.getElementById('cancelBtn').addEventListener('click', closeDrawer);
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const picker = document.getElementById('keyPicker');
+    if (picker._choice) setHome(picker._choice);
+    closeDrawer();
+  });
+
+  // Tap outside drawer to close
+  document.getElementById('drawer').addEventListener('click', (e) => {
+    if (e.target.id === 'drawer') closeDrawer();
+  });
+
+  // Keyboard shortcuts (handy on desktop)
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('drawer').classList.contains('open')) {
+      if (e.key === 'Escape') closeDrawer();
+      return;
+    }
+    if (e.key === 'ArrowUp' || e.key === '+' || e.key === '=') { e.preventDefault(); transposeBy(1); }
+    else if (e.key === 'ArrowDown' || e.key === '-') { e.preventDefault(); transposeBy(-1); }
+    else if (e.key === '0') { e.preventDefault(); reset(); }
+    else if (e.key.toLowerCase() === 'm') setMode(state.mode === 'major' ? 'minor' : 'major');
+  });
+
+  // First render
+  render(false);
+})();
+</script>
+
+</body>
+</html>
