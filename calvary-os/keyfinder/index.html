@@ -516,13 +516,6 @@
 
 <section class="panel">
   <div class="panel-head">
-    <div class="panel-title">Nashville Numbers</div>
-  </div>
-  <div class="numbers-grid" id="numbersGrid"></div>
-</section>
-
-<section class="panel">
-  <div class="panel-head">
     <div class="panel-title">Also Known As</div>
   </div>
   <div class="relative-row">
@@ -540,8 +533,8 @@
 <!-- Settings Drawer -->
 <div class="drawer" id="drawer">
   <div class="drawer-card">
-    <h2>Set your home key</h2>
-    <p class="sub">The key you naturally play in. Everything's calculated from here.</p>
+    <h2 id="drawerTitle">Set your home key</h2>
+    <p class="sub" id="drawerSub">The key you naturally play in. Everything's calculated from here.</p>
     <div class="field-label">Choose home</div>
     <div class="key-picker" id="keyPicker"></div>
     <div class="drawer-actions">
@@ -628,28 +621,6 @@
     'minor 7th', 'major 7th'
   ];
 
-  // Nashville numbers — major key
-  const MAJOR_DEGREES = [
-    { roman: 'I',   semi: 0,  quality: '' },
-    { roman: 'ii',  semi: 2,  quality: 'm' },
-    { roman: 'iii', semi: 4,  quality: 'm' },
-    { roman: 'IV',  semi: 5,  quality: '' },
-    { roman: 'V',   semi: 7,  quality: '' },
-    { roman: 'vi',  semi: 9,  quality: 'm' },
-    { roman: 'vii°',semi: 11, quality: '°' }
-  ];
-
-  // Nashville numbers — minor key (natural minor)
-  const MINOR_DEGREES = [
-    { roman: 'i',    semi: 0,  quality: 'm' },
-    { roman: 'ii°',  semi: 2,  quality: '°' },
-    { roman: 'III',  semi: 3,  quality: '' },
-    { roman: 'iv',   semi: 5,  quality: 'm' },
-    { roman: 'v',    semi: 7,  quality: 'm' },
-    { roman: 'VI',   semi: 8,  quality: '' },
-    { roman: 'VII',  semi: 10, quality: '' }
-  ];
-
   // All 12 home-key options (musician-friendly spelling)
   const HOME_OPTIONS = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
 
@@ -671,10 +642,12 @@
 
   // ====== STATE ======
   const STATE_KEY = 'keyfinder_state_v1';
-  const state = loadState() || {
-    homeKey: 'E♭',
-    transpose: 0,        // semitones above home
-    mode: 'major'        // 'major' | 'minor'
+  const savedState = loadState();
+  const isFirstRun = !savedState;
+  const state = savedState || {
+    homeKey: 'C',        // placeholder — first-run drawer will overwrite this
+    transpose: 0,
+    mode: 'major'
   };
 
   function loadState() {
@@ -791,9 +764,6 @@
     // Reset button enabled state
     document.getElementById('resetBtn').disabled = (state.transpose === 0);
 
-    // Nashville numbers — use the key's canonical spelling
-    renderNumbers(keyName);
-
     // Relative
     const relPc = relativeOf(pc, state.mode);
     const relMode = state.mode === 'major' ? 'minor' : 'major';
@@ -811,56 +781,6 @@
     const { letter, acc } = splitKey(name);
     if (!acc) return letter;
     return letter + '<span class="sharp">' + prettyAcc(acc) + '</span>';
-  }
-
-  function renderNumbers(keyName) {
-    const grid = document.getElementById('numbersGrid');
-    grid.innerHTML = '';
-
-    // Get the canonical 7-tone scale for this key (in major)
-    // For minor keys, we use the relative major's scale and start from its 6th
-    let scaleNames; // length-7 array, in order from the current root
-    let degrees;
-
-    if (state.mode === 'major') {
-      scaleNames = KEY_SPELLINGS[keyName];
-      degrees = MAJOR_DEGREES;
-      if (!scaleNames) {
-        // Fallback — shouldn't happen with our canonical names
-        scaleNames = computeFallbackScale(keyName, 'major');
-      }
-    } else {
-      // Minor: the natural minor scale shares notes with its relative major.
-      // Our keyName here represents the minor tonic. Find its relative major (3 semitones up)
-      // and rotate that major scale so the tonic comes first.
-      const pc = pcOf(keyName);
-      const relMajPc = (pc + 3) % 12;
-      const relMajName = canonicalKeyNameForPc(relMajPc);
-      const majorScale = KEY_SPELLINGS[relMajName] || computeFallbackScale(relMajName, 'major');
-      // Major scale = I ii iii IV V vi vii. The minor tonic is the vi of the relative major.
-      // So minor scale starting from the minor tonic = [majorScale[5], majorScale[6], majorScale[0], majorScale[1], majorScale[2], majorScale[3], majorScale[4]]
-      scaleNames = [majorScale[5], majorScale[6], majorScale[0], majorScale[1], majorScale[2], majorScale[3], majorScale[4]];
-      degrees = MINOR_DEGREES;
-    }
-
-    degrees.forEach((d, i) => {
-      const chordName = scaleNames[i];
-      const cell = document.createElement('div');
-      cell.className = 'num-cell';
-      cell.innerHTML =
-        '<span class="roman">' + d.roman + '</span>' +
-        '<span class="chord">' + formatChord(chordName) + d.quality + '</span>' +
-        '<span class="quality">' + (d.quality === 'm' ? 'min' : d.quality === '°' ? 'dim' : 'maj') + '</span>';
-      grid.appendChild(cell);
-    });
-  }
-
-  // Fallback if a key isn't in our table (shouldn't happen for the 12 home options)
-  function computeFallbackScale(rootName, mode) {
-    const rootPc = pcOf(rootName);
-    const useFlats = pcPrefersFlats(rootPc);
-    const intervals = mode === 'major' ? [0,2,4,5,7,9,11] : [0,2,3,5,7,8,10];
-    return intervals.map(s => nameOfPc((rootPc + s) % 12, useFlats));
   }
 
   // ====== ACTIONS ======
@@ -895,9 +815,25 @@
   }
 
   // ====== SETTINGS DRAWER ======
-  function openDrawer() {
+  function openDrawer(firstRun) {
     renderPicker();
+    const title = document.getElementById('drawerTitle');
+    const sub = document.getElementById('drawerSub');
+    const cancel = document.getElementById('cancelBtn');
+    const save = document.getElementById('saveBtn');
+    if (firstRun) {
+      title.textContent = 'Welcome';
+      sub.textContent = "Pick the key you play in most. It's your reference point — every transposition is calculated from here. You can change it later.";
+      cancel.style.display = 'none';
+      save.textContent = 'Get started';
+    } else {
+      title.textContent = 'Set your home key';
+      sub.textContent = "The key you naturally play in. Everything's calculated from here.";
+      cancel.style.display = '';
+      save.textContent = 'Save';
+    }
     document.getElementById('drawer').classList.add('open');
+    document.getElementById('drawer').dataset.firstRun = firstRun ? '1' : '';
   }
   function closeDrawer() {
     document.getElementById('drawer').classList.remove('open');
@@ -946,15 +882,18 @@
     closeDrawer();
   });
 
-  // Tap outside drawer to close
+  // Tap outside drawer to close (but not on first run — they have to pick)
   document.getElementById('drawer').addEventListener('click', (e) => {
-    if (e.target.id === 'drawer') closeDrawer();
+    if (e.target.id === 'drawer') {
+      if (document.getElementById('drawer').dataset.firstRun) return;
+      closeDrawer();
+    }
   });
 
   // Keyboard shortcuts (handy on desktop)
   document.addEventListener('keydown', (e) => {
     if (document.getElementById('drawer').classList.contains('open')) {
-      if (e.key === 'Escape') closeDrawer();
+      if (e.key === 'Escape' && !document.getElementById('drawer').dataset.firstRun) closeDrawer();
       return;
     }
     if (e.key === 'ArrowUp' || e.key === '+' || e.key === '=') { e.preventDefault(); transposeBy(1); }
@@ -965,6 +904,11 @@
 
   // First render
   render(false);
+
+  // If this is the user's first time, prompt them to set their home key
+  if (isFirstRun) {
+    openDrawer(true);
+  }
 })();
 </script>
 
