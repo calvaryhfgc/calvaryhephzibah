@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Anniversary 2026 — Control Room Briefing | The Bridge</title>
-<meta name="description" content="Capability briefing — what Calvary OS Control Room can handle on Sunday 17 May, what it can't, and what extensions would close the gap.">
+<title>Control Room v2 — from Sunday loop to service engine | The Bridge</title>
+<meta name="description" content="A product brief: why Calvary OS Control Room needs to evolve from a Sunday-shaped tool into a versatile service engine, with the 34th anniversary as the proof case.">
 
 <link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
 <link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png">
@@ -17,20 +17,12 @@
   --card-bg: #FFFFFF;
   --card-bg-soft: #FAF7F0;
   --card-border: rgba(20, 20, 26, 0.08);
-  --card-border-strong: rgba(20, 20, 26, 0.14);
 
   --ink-1: var(--fg-1-on-light);
   --ink-2: var(--fg-2-on-light);
   --ink-3: var(--fg-3-on-light);
   --ink-4: #9A9AA5;
   --ink-5: #CBCBD3;
-
-  --status-handled: #2F6E3D;
-  --status-handled-bg: rgba(79, 138, 91, 0.10);
-  --status-partial: #B07020;
-  --status-partial-bg: rgba(224, 167, 66, 0.12);
-  --status-gap: #B22C13;
-  --status-gap-bg: rgba(208, 68, 28, 0.10);
 
   --r-card: 8px;
   --shadow-card: 0 1px 3px rgba(20, 20, 26, 0.04), 0 4px 16px rgba(20, 20, 26, 0.05);
@@ -46,7 +38,6 @@ html, body{
 }
 
 body{ position: relative; }
-
 body::before{
   content: "";
   position: fixed;
@@ -59,7 +50,7 @@ body::before{
 }
 
 .wrap{
-  max-width: 1080px;
+  max-width: 940px;
   margin: 0 auto;
   padding: 40px 24px 96px;
   position: relative;
@@ -73,8 +64,8 @@ body::before{
   background: var(--obsidian);
   color: var(--bone);
   border-radius: var(--r-card);
-  padding: 44px 44px 38px;
-  margin-bottom: 28px;
+  padding: 50px 48px 44px;
+  margin-bottom: 32px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 24px 64px rgba(0,0,0,0.18);
@@ -84,22 +75,11 @@ body::before{
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(208, 68, 28, 0.20), transparent 60%),
-    radial-gradient(ellipse 80% 40% at 50% 100%, rgba(110, 26, 15, 0.28), transparent 60%);
+    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(208, 68, 28, 0.22), transparent 60%),
+    radial-gradient(ellipse 80% 40% at 50% 100%, rgba(110, 26, 15, 0.30), transparent 60%);
   pointer-events: none;
 }
-.hdr::after{
-  content:'';
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(208, 68, 28, 0.12), transparent 70%);
-  pointer-events: none;
-}
-.hdr-inner{ position: relative; z-index: 1; }
+.hdr-inner{ position: relative; z-index: 1; max-width: 720px; }
 .hdr-eyebrow{
   font-family: var(--font-body);
   font-size: var(--fs-eyebrow);
@@ -107,7 +87,7 @@ body::before{
   letter-spacing: var(--track-eyebrow);
   text-transform: uppercase;
   color: var(--red-bright);
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -121,26 +101,25 @@ body::before{
 }
 .hdr h1{
   font-family: var(--font-display);
-  font-size: clamp(34px, 5.2vw, 58px);
-  line-height: 0.95;
+  font-size: clamp(36px, 5.4vw, 56px);
+  line-height: 0.96;
   letter-spacing: -0.01em;
   text-transform: uppercase;
   color: var(--bone);
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 .hdr h1 .accent{ color: var(--red-bright); }
 .hdr-tagline{
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: clamp(17px, 2vw, 21px);
+  font-size: clamp(18px, 2.1vw, 23px);
   color: var(--fg-2);
-  line-height: 1.4;
-  margin-bottom: 22px;
-  max-width: 760px;
+  line-height: 1.45;
+  margin-bottom: 24px;
 }
 .hdr-meta{
   display: flex;
-  gap: 24px;
+  gap: 28px;
   flex-wrap: wrap;
   font-family: var(--font-body);
   font-size: 12.5px;
@@ -154,284 +133,13 @@ body::before{
 .hdr-meta a{ color: var(--red-bright); text-decoration: none; border-bottom: 1px solid rgba(208,68,28,0.4); }
 
 /* ============================================================
-   SECTION BLOCKS
-   ============================================================ */
-.section{
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--r-card);
-  margin-bottom: 24px;
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-}
-.section-head{
-  padding: 22px 28px 18px;
-  border-bottom: 1px solid var(--card-border);
-  background: var(--card-bg-soft);
-}
-.section-eyebrow{
-  font-family: var(--font-body);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--red);
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.section-title{
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 26px;
-  font-weight: 400;
-  color: var(--ink-1);
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-  margin-bottom: 6px;
-}
-.section-blurb{
-  font-family: var(--font-body);
-  font-size: 13.5px;
-  color: var(--ink-2);
-  line-height: 1.6;
-  max-width: 800px;
-}
-
-.section-body{
-  padding: 22px 28px;
-}
-.section-body p{
-  font-family: var(--font-body);
-  font-size: 13.5px;
-  color: var(--ink-2);
-  line-height: 1.65;
-  margin-bottom: 12px;
-}
-.section-body p:last-child{ margin-bottom: 0; }
-.section-body strong{ color: var(--ink-1); font-weight: 600; }
-
-/* ============================================================
-   ITEM-BY-ITEM WALKTHROUGH
-   ============================================================ */
-.walkthrough{
-  border-top: 1px solid var(--card-border);
-}
-.walk-row{
-  display: grid;
-  grid-template-columns: 44px 1fr 130px;
-  gap: 0;
-  border-bottom: 1px solid var(--card-border);
-  padding: 18px 28px;
-  align-items: start;
-}
-.walk-row:last-child{ border-bottom: none; }
-
-.walk-num{
-  font-family: var(--font-display);
-  font-size: 22px;
-  color: var(--ink-4);
-  line-height: 1;
-  padding-top: 1px;
-}
-
-.walk-body{ padding-right: 18px; }
-.walk-name{
-  font-family: var(--font-body);
-  font-weight: 600;
-  color: var(--ink-1);
-  font-size: 14.5px;
-  margin-bottom: 4px;
-}
-.walk-need{
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  color: var(--ink-2);
-  line-height: 1.55;
-  margin-bottom: 6px;
-}
-.walk-cr{
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 12.5px;
-  line-height: 1.55;
-  padding: 8px 12px;
-  border-left: 2px solid var(--ink-5);
-  background: var(--card-bg-soft);
-  border-radius: 3px;
-  color: var(--ink-2);
-}
-.walk-cr.handled{
-  border-left-color: var(--status-handled);
-  background: var(--status-handled-bg);
-  color: #1f4a28;
-}
-.walk-cr.partial{
-  border-left-color: var(--status-partial);
-  background: var(--status-partial-bg);
-  color: #7a4e15;
-}
-.walk-cr.gap{
-  border-left-color: var(--status-gap);
-  background: var(--status-gap-bg);
-  color: #6f1b08;
-}
-
-.walk-status{
-  text-align: right;
-  font-family: var(--font-body);
-  font-size: 9.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 700;
-  padding-top: 4px;
-}
-.walk-status.handled{ color: var(--status-handled); }
-.walk-status.partial{ color: var(--status-partial); }
-.walk-status.gap{ color: var(--status-gap); }
-
-/* ============================================================
-   EXTENSION PROPOSALS
-   ============================================================ */
-.ext{
-  border-top: 1px solid var(--card-border);
-  padding: 22px 28px;
-  display: grid;
-  grid-template-columns: 90px 1fr 120px;
-  gap: 18px;
-  align-items: start;
-}
-.ext:nth-child(even){ background: var(--card-bg-soft); }
-
-.ext-tier{
-  font-family: var(--font-display);
-  font-size: 28px;
-  line-height: 1;
-  color: var(--red);
-  letter-spacing: -0.01em;
-}
-.ext-body h3{
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--ink-1);
-  margin-bottom: 6px;
-  letter-spacing: -0.005em;
-}
-.ext-body p{
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  color: var(--ink-2);
-  line-height: 1.6;
-  margin-bottom: 8px;
-}
-.ext-body p:last-child{ margin-bottom: 0; }
-.ext-body ul{
-  list-style: none;
-  padding: 0;
-  margin-top: 8px;
-}
-.ext-body li{
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  color: var(--ink-2);
-  padding: 3px 0 3px 18px;
-  position: relative;
-  line-height: 1.55;
-}
-.ext-body li::before{
-  content: "·";
-  position: absolute;
-  left: 4px;
-  color: var(--red);
-  font-weight: 700;
-  top: 0;
-}
-.ext-meta{
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-end;
-}
-.ext-pill{
-  display: inline-block;
-  font-family: var(--font-body);
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-.ext-pill.scope-s{ background: var(--status-handled-bg); color: var(--status-handled); }
-.ext-pill.scope-m{ background: var(--status-partial-bg); color: var(--status-partial); }
-.ext-pill.scope-l{ background: var(--status-gap-bg); color: var(--status-gap); }
-.ext-pill.day-now{ background: rgba(20,20,26,0.08); color: var(--ink-2); }
-.ext-pill.day-soon{ background: rgba(20,20,26,0.04); color: var(--ink-3); border: 1px solid var(--ink-5); }
-.ext-pill.day-later{ background: transparent; color: var(--ink-3); border: 1px solid var(--ink-5); }
-
-/* ============================================================
-   TOC / SUMMARY
-   ============================================================ */
-.toc{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 28px;
-}
-@media (max-width:780px){.toc{grid-template-columns:1fr;}}
-.toc-card{
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--r-card);
-  padding: 18px 20px;
-  box-shadow: var(--shadow-card);
-  position: relative;
-  overflow: hidden;
-}
-.toc-card::before{
-  content: "";
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-}
-.toc-card.handled::before{ background: var(--status-handled); }
-.toc-card.partial::before{ background: var(--status-partial); }
-.toc-card.gap::before{ background: var(--status-gap); }
-.toc-num{
-  font-family: var(--font-display);
-  font-size: 30px;
-  color: var(--ink-1);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.toc-label{
-  font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-.toc-card.handled .toc-label{ color: var(--status-handled); }
-.toc-card.partial .toc-label{ color: var(--status-partial); }
-.toc-card.gap .toc-label{ color: var(--status-gap); }
-.toc-detail{
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: var(--ink-3);
-  line-height: 1.55;
-}
-
-/* ============================================================
-   TOOLBAR / PRINT BUTTON
+   TOOLBAR (print button)
    ============================================================ */
 .toolbar{
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin: -10px 0 14px;
-  position: relative;
-  z-index: 1;
+  margin: -12px 0 18px;
 }
 .btn-print{
   display: inline-flex;
@@ -448,7 +156,7 @@ body::before{
   padding: 9px 16px 9px 13px;
   border-radius: 999px;
   cursor: pointer;
-  transition: background 0.16s var(--ease-out-quint), transform 0.16s var(--ease-out-quint), box-shadow 0.16s var(--ease-out-quint);
+  transition: background 0.16s var(--ease-out-quint), transform 0.16s var(--ease-out-quint);
   box-shadow: 0 2px 8px rgba(208, 68, 28, 0.18);
 }
 .btn-print:hover{
@@ -457,10 +165,277 @@ body::before{
   transform: translateY(-1px);
 }
 
-/* Footer companions */
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section{
+  margin-bottom: 38px;
+}
+.section-num{
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+.section-title{
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(26px, 3.2vw, 34px);
+  font-weight: 400;
+  color: var(--ink-1);
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+  margin-bottom: 22px;
+  max-width: 740px;
+}
+.section p{
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  margin-bottom: 16px;
+  max-width: 720px;
+}
+.section p:last-child{ margin-bottom: 0; }
+.section p strong{ color: var(--ink-1); font-weight: 600; }
+.section p em{ font-style: italic; color: var(--ink-1); }
+
+/* Callouts inside sections */
+.callout{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-left: 3px solid var(--red);
+  border-radius: var(--r-card);
+  padding: 20px 26px;
+  margin: 20px 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--ink-1);
+  line-height: 1.55;
+  max-width: 720px;
+}
+
+/* Diagnosis block — the three primitives */
+.primitives{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 28px 0;
+}
+@media (max-width:780px){.primitives{grid-template-columns:1fr;}}
+.prim-card{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-card);
+  padding: 24px 24px 22px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+.prim-card::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red);
+}
+.prim-eyebrow{
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--red);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.prim-name{
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--ink-1);
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.prim-desc{
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+/* Comparison table — today vs v2 */
+.compare{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  margin: 24px 0;
+  box-shadow: var(--shadow-card);
+  max-width: 100%;
+}
+.compare-row{
+  display: grid;
+  grid-template-columns: 200px 1fr 1fr;
+  border-bottom: 1px solid var(--card-border);
+}
+.compare-row:last-child{ border-bottom: none; }
+.compare-row.head{
+  background: var(--obsidian);
+  color: var(--bone);
+}
+.compare-row.head .compare-cell{
+  color: var(--bone);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 14px 20px;
+}
+.compare-cell{
+  padding: 16px 20px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  border-right: 1px solid var(--card-border);
+}
+.compare-cell:last-child{ border-right: none; }
+.compare-cell.label{
+  font-weight: 600;
+  color: var(--ink-1);
+  background: var(--card-bg-soft);
+  font-size: 12.5px;
+}
+.compare-cell.today{ color: var(--ink-3); }
+.compare-cell.v2{ color: var(--ink-1); }
+@media (max-width:780px){
+  .compare-row{ grid-template-columns: 1fr; }
+  .compare-cell{ border-right: none; border-bottom: 1px solid var(--card-border); }
+  .compare-cell.label{ background: var(--obsidian); color: var(--bone); }
+}
+
+/* Proof case — anniversary walkthrough as v2 */
+.proof{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-card);
+  overflow: hidden;
+  margin: 24px 0;
+  box-shadow: var(--shadow-card);
+}
+.proof-row{
+  display: grid;
+  grid-template-columns: 50px 1fr 200px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--card-border);
+  align-items: center;
+}
+.proof-row:last-child{ border-bottom: none; }
+.proof-num{
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--ink-4);
+}
+.proof-item{
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  color: var(--ink-1);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.proof-uses{
+  font-family: var(--font-body);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  text-align: right;
+  font-weight: 600;
+}
+.proof-uses .tag{
+  display: inline-block;
+  background: var(--card-bg-soft);
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-left: 4px;
+  color: var(--red);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  border: 1px solid rgba(208, 68, 28, 0.2);
+}
+@media (max-width:640px){
+  .proof-row{ grid-template-columns: 36px 1fr; padding: 12px 18px; }
+  .proof-uses{ grid-column: 2; text-align: left; padding-top: 4px; }
+}
+
+/* Sequencing — what ships when */
+.timeline{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+}
+@media (max-width:780px){.timeline{grid-template-columns:1fr;}}
+.tl-card{
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--r-card);
+  padding: 22px 22px 20px;
+  box-shadow: var(--shadow-card);
+}
+.tl-eyebrow{
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.tl-card.now{ border-top: 3px solid var(--red); }
+.tl-card.now .tl-eyebrow{ color: var(--red); }
+.tl-card.next{ border-top: 3px solid var(--gold-deep, #C8A24B); }
+.tl-card.next .tl-eyebrow{ color: var(--gold-deep, #C8A24B); }
+.tl-card.later{ border-top: 3px solid var(--ink-4); }
+.tl-card.later .tl-eyebrow{ color: var(--ink-3); }
+.tl-title{
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-1);
+  letter-spacing: -0.005em;
+  margin-bottom: 10px;
+}
+.tl-list{
+  list-style: none;
+  padding: 0;
+}
+.tl-list li{
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--ink-2);
+  padding: 5px 0 5px 14px;
+  position: relative;
+  line-height: 1.5;
+}
+.tl-list li::before{
+  content: "·";
+  position: absolute;
+  left: 4px;
+  color: var(--red);
+  font-weight: 700;
+  top: 0;
+}
+
+/* Footer */
 .footer{
-  margin-top: 32px;
-  padding: 22px 0 0;
+  margin-top: 48px;
+  padding: 24px 0 0;
   text-align: center;
   font-family: var(--font-body);
   font-size: 12px;
@@ -472,22 +447,15 @@ body::before{
 /* Mobile */
 @media (max-width:640px){
   .wrap{ padding: 20px 16px 60px; }
-  .hdr{ padding: 30px 22px 26px; }
-  .hdr h1{ font-size: 30px; }
-  .section-head, .section-body{ padding-left: 18px; padding-right: 18px; }
-  .walk-row{ grid-template-columns: 32px 1fr; padding: 16px 18px; gap: 10px; }
-  .walk-status{ grid-column: 2; text-align: left; padding-top: 8px; }
-  .walk-body{ padding-right: 0; }
-  .ext{ grid-template-columns: 1fr; padding: 18px; gap: 10px; }
-  .ext-meta{ flex-direction: row; align-items: center; }
-  .hdr-meta{ gap: 14px; }
+  .hdr{ padding: 32px 24px 28px; }
+  .hdr h1{ font-size: 32px; }
 }
 
 /* Print */
 @media print{
   .toolbar{ display: none !important; }
-  @page{ size: A4 portrait; margin: 12mm 14mm; }
-  html, body{ background: white !important; font-size: 10px; }
+  @page{ size: A4 portrait; margin: 14mm 16mm; }
+  html, body{ background: white !important; font-size: 10.5px; }
   body::before{ display: none; }
   .wrap{ padding: 0 !important; max-width: 100% !important; }
   .hdr{
@@ -495,23 +463,30 @@ body::before{
     color: var(--bone) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    padding: 18px 22px 16px !important;
-    margin-bottom: 12px !important;
+    padding: 22px 26px 20px !important;
+    margin-bottom: 16px !important;
     box-shadow: none !important;
     border-radius: 4px !important;
     page-break-after: avoid;
   }
-  .hdr h1{ font-size: 26px !important; margin-bottom: 6px !important; }
-  .hdr-tagline{ font-size: 12px !important; margin-bottom: 10px !important; }
-  .hdr-meta{ font-size: 9px !important; gap: 14px !important; }
-  .section{ box-shadow: none !important; page-break-inside: avoid; margin-bottom: 12px !important; }
-  .walk-row{ padding: 8px 18px !important; }
-  .walk-name{ font-size: 11px !important; }
-  .walk-need, .walk-cr{ font-size: 10px !important; }
-  .ext{ padding: 12px 18px !important; }
-  .ext-body h3{ font-size: 12px !important; }
-  .ext-body p, .ext-body li{ font-size: 10px !important; }
-  .walk-cr, .toc-card{
+  .hdr h1{ font-size: 28px !important; }
+  .hdr-tagline{ font-size: 13px !important; }
+  .section{ margin-bottom: 22px !important; page-break-inside: avoid; }
+  .section p{ font-size: 11px !important; line-height: 1.55 !important; }
+  .section-title{ font-size: 22px !important; margin-bottom: 14px !important; }
+  .callout{ font-size: 12px !important; padding: 14px 18px !important; }
+  .primitives, .timeline{ gap: 8px !important; }
+  .prim-card, .tl-card{ box-shadow: none !important; padding: 14px 16px !important; }
+  .prim-name{ font-size: 18px !important; }
+  .prim-desc, .tl-list li{ font-size: 10px !important; }
+  .compare, .proof{ box-shadow: none !important; }
+  .compare-cell, .proof-row{ padding: 10px 14px !important; font-size: 10.5px !important; }
+  .proof-item{ font-size: 11px !important; }
+  .compare-row.head{
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .prim-card::before, .tl-card{
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -524,13 +499,13 @@ body::before{
   <!-- Header -->
   <div class="hdr">
     <div class="hdr-inner">
-      <div class="hdr-eyebrow">Calvary OS · Control Room · 34th Anniversary</div>
-      <h1>Control Room Briefing <span class="accent">·</span> Sun 17 May</h1>
-      <div class="hdr-tagline">What Control Room can handle on the day, where it falls short, and the extensions worth building before Sunday morning.</div>
+      <div class="hdr-eyebrow">Calvary OS · Control Room · Product Brief</div>
+      <h1>From Sunday loop to <span class="accent">service engine</span></h1>
+      <div class="hdr-tagline">Why Control Room needs to grow up — and what the 34th Anniversary on 17 May is teaching us about its current shape.</div>
       <div class="hdr-meta">
-        <span><strong>Service:</strong> Sunday 17 May 2026 · 10:30 AM</span>
-        <span><strong>Operator:</strong> Scott Shokoya (Media Lead)</span>
-        <span><strong>Companion:</strong> <a href="anniversary-running-order-2026.html">Running Order</a></span>
+        <span><strong>Author:</strong> Bolaji Olatoye · Chief of Staff</span>
+        <span><strong>Date:</strong> 13 May 2026</span>
+        <span><strong>Companion:</strong> <a href="anniversary-running-order-2026.html">17 May Running Order</a></span>
       </div>
     </div>
   </div>
@@ -546,315 +521,240 @@ body::before{
     </button>
   </div>
 
-  <!-- Top-line summary -->
-  <div class="toc">
-    <div class="toc-card handled">
-      <div class="toc-label">Handled today</div>
-      <div class="toc-num">7</div>
-      <div class="toc-detail">Items Control Room already supports cleanly with what's live in the operator app.</div>
-    </div>
-    <div class="toc-card partial">
-      <div class="toc-label">Partial / awkward</div>
-      <div class="toc-num">4</div>
-      <div class="toc-detail">Items Control Room can sort-of cover, but the operator has to improvise — fine for a normal Sunday, exposed on a 4-hour anniversary.</div>
-    </div>
-    <div class="toc-card gap">
-      <div class="toc-label">Real gap</div>
-      <div class="toc-num">4</div>
-      <div class="toc-detail">Items Control Room doesn't support at all — Scott would have to fall back to OBS direct or fly blind.</div>
+  <!-- §1 — What Control Room is today -->
+  <div class="section">
+    <div class="section-num">01 — Where we are</div>
+    <h2 class="section-title">Control Room is a Sunday-shaped tool</h2>
+    <p>Control Room was built quickly and well, against a specific brief: take the chaos out of a normal Sunday service. It does that. Today it can hold a setlist, push lyrics in time, search and display scripture, switch backdrops, dim a logo, and run a small library of announcements. Scott can do most of what the in-room screens need from a phone, and the OBS overlay receives those changes in real time.</p>
+    <p>But the brief that shaped it — <em>a normal Sunday</em> — is now also its ceiling. Every feature in the operator app assumes a single, fixed rhythm: welcome, worship, scripture, announcements, sermon, offering, close. Lyrics live next to scripture next to graphics next to backdrops. There is no concept of "this service is different to last week." There is no concept of slides as content. There is no concept of a presentation moving forward at its own pace.</p>
+    <p>That was the right thing to ship first. It is no longer enough.</p>
+  </div>
+
+  <!-- §2 — Why that's now a problem -->
+  <div class="section">
+    <div class="section-num">02 — Where it falls short</div>
+    <h2 class="section-title">The anniversary makes the shape of the gap visible</h2>
+    <p>Sunday 17 May is the 34th Anniversary. The order of service is 15 items long, runs four hours, and breaks the normal rhythm at several points. Communion happens at the tables in the first half. A guest evangelist ministers in song while the offering is taken. Pastor Shade calls long-serving members by name in a Show of Appreciation. Departments bring short presentations dotted through the running order. The service ends with a sit-down meal.</p>
+    <p>None of these are exotic. They are the same kinds of moments that show up in <em>any</em> special service: weddings, baby dedications, memorials, Easter, Christmas, leadership inductions, conferences, women's services, men's services, harvest, watch-night. The anniversary just makes them all visible at once.</p>
+    <p>If we walk Scott through the day with what Control Room can do today, the picture is uncomfortable. He can run the worship block cleanly. He can push scripture for the bible reading. After that, every distinctive moment forces him out of the operator app and into improvisation: pre-baked JPGs flying through Graphics → Images, scrambling to find the right one in real time, with no preview, no order, no recovery if Pastor Shade calls a name out of sequence.</p>
+    <div class="callout">
+      The problem isn't that any one feature is missing. It's that <strong>Control Room has no language for "this service is different to a normal Sunday."</strong>
     </div>
   </div>
 
-  <!-- The context section -->
+  <!-- §3 — The three missing primitives -->
   <div class="section">
-    <div class="section-head">
-      <div class="section-eyebrow">Context</div>
-      <div class="section-title">Why this briefing exists</div>
-      <div class="section-blurb">Control Room was built for a normal Sunday: worship → announcements → scripture → sermon → offering → close. The anniversary on 17 May breaks that mould. Communion happens early at the tables; a visiting praise leader ministers in song during the offering; Pastor Shade calls members by name in a Show of Appreciation; a full sit-down meal sits inside the service. Each of those moments wants a different kind of overlay support than Control Room currently offers. This document walks the running order item-by-item, names where the operator app holds up and where it doesn't, and proposes a focused set of extensions ranked by how much they'd matter on the day.</div>
+    <div class="section-num">03 — The diagnosis</div>
+    <h2 class="section-title">Three primitives Control Room doesn't have</h2>
+    <p>Strip away the long list of individual gaps and three things sit underneath all of them. These are the architectural pieces missing from v1.</p>
+
+    <div class="primitives">
+      <div class="prim-card">
+        <div class="prim-eyebrow">Primitive 01</div>
+        <div class="prim-name">Special&nbsp;Services</div>
+        <div class="prim-desc">A first-class concept of a service that isn't a normal Sunday. Each one has its own order of service, its own visual language, its own categories of overlay. Anniversaries, weddings, dedications, memorials, Easter, Christmas, conferences. Today everything assumes "Sunday." Tomorrow the operator app should ask: <em>which kind of service is this</em>, and load the right shape accordingly.</div>
+      </div>
+      <div class="prim-card">
+        <div class="prim-eyebrow">Primitive 02</div>
+        <div class="prim-name">Slides</div>
+        <div class="prim-desc">A general slide concept. Today Control Room has lyric slides and scripture slides, but no notion of <em>"slide"</em> as a generic primitive. A sermon deck, a department's photo carousel, a Show of Appreciation sequence of named cards, a wedding photo retrospective — these are all <em>slides</em>. Once slides exist as a primitive, all of them become the same kind of object with different content.</div>
+      </div>
+      <div class="prim-card">
+        <div class="prim-eyebrow">Primitive 03</div>
+        <div class="prim-name">Presentations</div>
+        <div class="prim-desc">A presenter walking through prepared content at their own pace. A department contribution, a testimony, a guest's introduction, a ministry update, a deck handed in on Friday. Today there is no "presentation mode" — no place to upload a deck, no slide-by-slide advance, no countdown for the 3-minute cap. Presentations are where Control Room has the largest blind spot.</div>
+      </div>
+    </div>
+
+    <p>Almost every individual gap in the anniversary briefing — name cards, lower-thirds, slide uploads, countdown timers, communion sequences, meal-time galleries — collapses into one of these three. Build the primitives properly and the symptoms resolve.</p>
+  </div>
+
+  <!-- §4 — What v2 looks like -->
+  <div class="section">
+    <div class="section-num">04 — Where we're going</div>
+    <h2 class="section-title">Control Room v2 — same app, bigger brain</h2>
+    <p>Control Room v2 is not a rewrite. It's the same operator app and the same overlay, with three new ideas baked in.</p>
+
+    <div class="compare">
+      <div class="compare-row head">
+        <div class="compare-cell">Concept</div>
+        <div class="compare-cell">Today</div>
+        <div class="compare-cell">v2</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Service shape</div>
+        <div class="compare-cell today">Hardcoded Sunday order of service. Same panels regardless of what's happening on stage.</div>
+        <div class="compare-cell v2">Operator picks a Service Type at the top of the session. Anniversary, Wedding, Memorial, Easter, etc. The order of service, the available overlay categories, and the default visual style all shift to match.</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Visual content</div>
+        <div class="compare-cell today">Lyrics, scripture, fixed graphic categories (announcements, backdrops). Everything else is fullscreen JPG.</div>
+        <div class="compare-cell v2">A unified Slides primitive. Lyric slides, scripture slides, photo slides, named-person slides, sermon slides, announcement slides — all the same kind of object, each with its own template. Operator queues a deck, advances slide-by-slide.</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Presentations</div>
+        <div class="compare-cell today">No concept at all. Coordinators send slides as JPGs; Scott loads them into Graphics → Images and improvises on the day.</div>
+        <div class="compare-cell v2">Presentation mode: a coordinator uploads a deck ahead of the service (PPT, PDF, or images), it's parsed into slides automatically, queued against its slot in the order of service. On the day Scott picks it from the running order and advances slides as the presenter speaks. Built-in countdown timer enforces the slot length.</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Order of service</div>
+        <div class="compare-cell today">Display-only. Shows the operator what's next; doesn't drive anything else.</div>
+        <div class="compare-cell v2">Operational spine. Each item has a type (worship, scripture, presentation, named-honour, offering, meal, etc.). Tapping an item loads the right operator panel for that type. The order of service stops being a reference and becomes the cockpit.</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Person library</div>
+        <div class="compare-cell today">No concept. Names appear by typing them into ad-hoc graphics.</div>
+        <div class="compare-cell v2">A stored library of people — name, role, photo, default honour line. Used for lower-thirds when someone speaks, named-honour slides when someone is appreciated, sermon attribution. One source of truth, used everywhere.</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Visual style</div>
+        <div class="compare-cell today">One fixed look across all services.</div>
+        <div class="compare-cell v2">Service-type-aware. The Sunday look stays. Anniversary opens up the brand red. Memorial uses a more subdued treatment. Wedding gets a warm cream variant. Each service type pulls from the existing Calvary design system tokens but applies a different mood.</div>
+      </div>
     </div>
   </div>
 
-  <!-- Walkthrough -->
+  <!-- §5 — Proof case — anniversary in v2 -->
   <div class="section">
-    <div class="section-head">
-      <div class="section-eyebrow">Walkthrough</div>
-      <div class="section-title">Item by item — the operator's view</div>
-      <div class="section-blurb">For each of the 15 programme items, what the operator needs to push on screen, and how Control Room handles it today.</div>
+    <div class="section-num">05 — Proof case</div>
+    <h2 class="section-title">The 17 May anniversary, run from Control Room v2</h2>
+    <p>If v2 existed, here's how the day works. Each item in the running order maps to one of the three primitives, plus the lyric / scripture engines that already exist.</p>
+
+    <div class="proof">
+      <div class="proof-row">
+        <div class="proof-num">1</div>
+        <div class="proof-item">Welcome · Bible Reading · Opening Prayer</div>
+        <div class="proof-uses"><span class="tag">scripture</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">2</div>
+        <div class="proof-item">Praise &amp; Worship</div>
+        <div class="proof-uses"><span class="tag">lyrics</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">3</div>
+        <div class="proof-item">Communion</div>
+        <div class="proof-uses"><span class="tag">slides</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">4</div>
+        <div class="proof-item">Welcome Address (Pastor Shade)</div>
+        <div class="proof-uses"><span class="tag">lower-third</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">5</div>
+        <div class="proof-item">Presentation</div>
+        <div class="proof-uses"><span class="tag">presentation</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">6</div>
+        <div class="proof-item">Sermon — Pastor Gbenga</div>
+        <div class="proof-uses"><span class="tag">presentation</span> <span class="tag">scripture</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">7</div>
+        <div class="proof-item">Welcome &amp; Announcements (Pastor Kayode)</div>
+        <div class="proof-uses"><span class="tag">slides</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">8</div>
+        <div class="proof-item">Offering — Evangelist Bola Paul</div>
+        <div class="proof-uses"><span class="tag">slides</span> <span class="tag">lower-third</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">9</div>
+        <div class="proof-item">Presentation</div>
+        <div class="proof-uses"><span class="tag">presentation</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">10</div>
+        <div class="proof-item">Show of Appreciation</div>
+        <div class="proof-uses"><span class="tag">slides</span> <span class="tag">person library</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">11</div>
+        <div class="proof-item">Presentation</div>
+        <div class="proof-uses"><span class="tag">presentation</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">12</div>
+        <div class="proof-item">Prayer Ministry</div>
+        <div class="proof-uses"><span class="tag">lower-third</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">13</div>
+        <div class="proof-item">Grace &amp; Blessing of Meal</div>
+        <div class="proof-uses"><span class="tag">slides</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">14</div>
+        <div class="proof-item">The Meal</div>
+        <div class="proof-uses"><span class="tag">slides (gallery loop)</span></div>
+      </div>
+      <div class="proof-row">
+        <div class="proof-num">15</div>
+        <div class="proof-item">Closing Prayer</div>
+        <div class="proof-uses"><span class="tag">slides</span></div>
+      </div>
     </div>
 
-    <div class="walkthrough">
-
-      <div class="walk-row">
-        <div class="walk-num">1</div>
-        <div class="walk-body">
-          <div class="walk-name">Welcome · Bible Reading · Opening Prayer (Pastor Shade)</div>
-          <div class="walk-need">Needs: holding graphic at the open ("34th Anniversary · 17 May" or a still), an on-screen scripture verse for the bible reading Pastor Shade does, then quiet through the prayer.</div>
-          <div class="walk-cr handled">Control Room handles this cleanly. The scripture search panel pushes any verse to the overlay in one tap and a fullscreen anniversary graphic can be queued under Graphics → Images.</div>
-        </div>
-        <div class="walk-status handled">Handled</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">2</div>
-        <div class="walk-body">
-          <div class="walk-name">Praise &amp; Worship (Worship Team)</div>
-          <div class="walk-need">Needs: lyrics for 4–5 songs across 20 minutes, with smooth verse-by-verse paging, the worship leader steering tempo, and a Lyrics-Off moment between songs.</div>
-          <div class="walk-cr handled">Setlist + lyrics is exactly what Control Room was built for. Provided the anniversary set list is pre-loaded into Supabase earlier in the week (`03_setlist_19apr2026.sql` pattern), Scott runs it like any other Sunday.</div>
-        </div>
-        <div class="walk-status handled">Handled</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">3</div>
-        <div class="walk-body">
-          <div class="walk-name">Communion (at the tables)</div>
-          <div class="walk-need">Needs: communion instruction graphic (when to take the bread / wine), 1 Corinthians 11:23–26 on screen, calm backdrop. People are at tables, not seats — the overlay matters more than usual because it replaces the elder's normal walk-through.</div>
-          <div class="walk-cr partial">Scripture push works. There is a "communion" graphic concept inferred but no dedicated communion flow — operator has to manually build a fullscreen graphic + scripture sequence on the fly. <strong>Pre-loaded communion sequence would close this.</strong></div>
-        </div>
-        <div class="walk-status partial">Partial</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">4</div>
-        <div class="walk-body">
-          <div class="walk-name">Welcome Address (Pastor Shade)</div>
-          <div class="walk-need">Needs: lower-third with Pastor Shade's name &amp; title for the first 15 seconds, then logo bug only. This is her "anniversary moment" — the visual should reinforce it.</div>
-          <div class="walk-cr partial">Lower-thirds are not a feature. Operator can fake it with a Graphics → Images push of a pre-made PNG lower-third, but that's a fullscreen image, not a real lower-third over the live shot. <strong>Native lower-third support would solve this for all speakers.</strong></div>
-        </div>
-        <div class="walk-status partial">Partial</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">5</div>
-        <div class="walk-body">
-          <div class="walk-name">Presentation #1 (department)</div>
-          <div class="walk-need">Needs: hard 3-minute countdown timer visible to the presenter and the MC, full-bleed display of any slides/photos the department brings, lyrics if it's a song-based piece.</div>
-          <div class="walk-cr gap">No countdown timer exists. No mechanism to receive a department's slides on the day and display them — would mean Scott opening a separate window outside OBS or dragging files into OBS direct. <strong>Big exposure: 3 presentation slots in the day all suffer the same gap.</strong></div>
-        </div>
-        <div class="walk-status gap">Gap</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">6</div>
-        <div class="walk-body">
-          <div class="walk-name">Sermon — <em>Reasons to be Thankful</em> (Pastor Gbenga)</div>
-          <div class="walk-need">Needs: speaker name lower-third on entry, scripture verses pushed as Pastor Gbenga calls them, holding graphic between scriptures, slides if he provides any.</div>
-          <div class="walk-cr partial">Scripture push and holding graphics are fine. Lower-third for Pastor Gbenga has the same gap as item 4. Sermon slide upload has no place to live — typically attached to the briefing as a ZIP; on the day Scott has to flip to OBS or a media player. <strong>Sermon slide host + lower-third would tighten this.</strong></div>
-        </div>
-        <div class="walk-status partial">Partial</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">7</div>
-        <div class="walk-body">
-          <div class="walk-name">Welcome to All · Brief Announcements (Pastor Kayode)</div>
-          <div class="walk-need">Needs: announcement graphics — mid-week service, upcoming events, anything Pastor Kayode flags. Today the announcement kinds in the app are: midweek, birthday, anniversary, special.</div>
-          <div class="walk-cr handled">This is precisely what the Graphics → Announcements panel is for. Pastor Kayode pre-briefs Scott on which announcement cards to load, Scott pushes them in order.</div>
-        </div>
-        <div class="walk-status handled">Handled</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">8</div>
-        <div class="walk-body">
-          <div class="walk-name">Offering · Evangelist Bola Paul ministering in song</div>
-          <div class="walk-need">Needs: offering graphic with bank details (account name, sort code, account number, reference field), guest minister name lower-third, transition to lyric/scripture if Bola Paul calls one mid-song, dimmed backdrop so she's visible.</div>
-          <div class="walk-cr partial">Offering bank-details graphic is a well-known need from past services but has no dedicated panel — usually crammed into Images. Guest minister lower-third has the same gap as items 4 + 6. On-the-fly scripture from a guest is hard because the operator has to type the reference into the scripture search panel under pressure. <strong>Offering graphic preset + Bible quick-search shortcuts would help.</strong></div>
-        </div>
-        <div class="walk-status partial">Partial</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">9</div>
-        <div class="walk-body">
-          <div class="walk-name">Presentation #2 (department)</div>
-          <div class="walk-need">Same as item 5 — countdown timer, department slides display.</div>
-          <div class="walk-cr gap">Same gap as item 5. The longer the anniversary runs, the more critical timing discipline becomes — and the operator has no way to support the MC in enforcing it.</div>
-        </div>
-        <div class="walk-status gap">Gap</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">10</div>
-        <div class="walk-body">
-          <div class="walk-name">Show of Appreciation &amp; Honour (Pastor Shade)</div>
-          <div class="walk-need">Needs: a name-by-name graphic system. Pastor Shade calls a name → operator pushes that person's name + role + a brief honour line + their photo. Repeated 8–12 times in sequence. The visual sells the moment.</div>
-          <div class="walk-cr gap">This doesn't exist at all. There is no named-person card concept in the data model. Scott would have to pre-build a dozen fullscreen JPGs and push them as Images, but the operator app has no concept of "person being honoured next" so there's no queue, no preview, no reordering on the fly. <strong>This is the single biggest gap — it's also the emotional centre of the day.</strong></div>
-        </div>
-        <div class="walk-status gap">Gap</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">11</div>
-        <div class="walk-body">
-          <div class="walk-name">Presentation #3 (department)</div>
-          <div class="walk-need">Same as items 5 and 9.</div>
-          <div class="walk-cr gap">Same gap.</div>
-        </div>
-        <div class="walk-status gap">Gap</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">12</div>
-        <div class="walk-body">
-          <div class="walk-name">Prayer Ministry (Visiting Ministers)</div>
-          <div class="walk-need">Needs: lower-third with each visiting minister's name as they pray, brief scripture push if they reference one, quiet background otherwise.</div>
-          <div class="walk-cr partial">Same lower-third gap. Scripture push works. The visiting minister names need to be added ahead of the day — there's no fast in-service way to type a new name into a lower-third that doesn't exist.</div>
-        </div>
-        <div class="walk-status partial">Partial</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">13</div>
-        <div class="walk-body">
-          <div class="walk-name">Grace &amp; Blessing of the Meal</div>
-          <div class="walk-need">Needs: a "Let us pray" or "Grace" graphic, then dimmed backdrop. Short item, low complexity.</div>
-          <div class="walk-cr handled">Holding-graphic push is fine. No real complexity here.</div>
-        </div>
-        <div class="walk-status handled">Handled</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">14</div>
-        <div class="walk-body">
-          <div class="walk-name">The Meal (60–75 min, Hospitality)</div>
-          <div class="walk-need">Needs: a rotating photo gallery of the church's life (Pastor Shade's 60th, past anniversaries, ministry moments) playing on a loop on the big screen while people eat. Optionally a subtle "thanksgiving offering still open" overlay.</div>
-          <div class="walk-cr gap">There is no slideshow / playlist concept in Control Room. Backdrop video support exists (schema file `09_video_support.sql`) but it's single-video, not a curated rotating gallery. Scott would have to leave OBS on a static backdrop or run a separate slideshow app outside the system. <strong>Photo-gallery loop mode would transform this hour from dead screen to a celebration of the church's history.</strong></div>
-        </div>
-        <div class="walk-status gap">Gap</div>
-      </div>
-
-      <div class="walk-row">
-        <div class="walk-num">15</div>
-        <div class="walk-body">
-          <div class="walk-name">Closing Prayer (Pastor Shade)</div>
-          <div class="walk-need">Needs: dimmed backdrop, optional closing graphic ("Thank you for celebrating with us — 34 years"), gentle ramp to logo only.</div>
-          <div class="walk-cr handled">Holding-graphic push + Lyrics-Off + Logo-bug control all fine. Standard.</div>
-        </div>
-        <div class="walk-status handled">Handled</div>
-      </div>
-
-    </div>
+    <p>Every single item is covered by the three primitives plus the existing lyric and scripture engines. There is no improvisation. There is no fullscreen JPG hack. Scott taps an item in the order of service, the right panel opens, the right slides advance. The whole day flows through one interface.</p>
   </div>
 
-  <!-- Extension proposals -->
+  <!-- §6 — Sequencing -->
   <div class="section">
-    <div class="section-head">
-      <div class="section-eyebrow">Extensions</div>
-      <div class="section-title">What to build, ranked by impact on the day</div>
-      <div class="section-blurb">Five focused additions that would take Control Room from "fine for a normal Sunday" to "ready for the anniversary." Ranked by what they'd unlock on 17 May. Pills show approximate scope and how soon they'd realistically land.</div>
-    </div>
+    <div class="section-num">06 — Sequencing</div>
+    <h2 class="section-title">What ships when</h2>
+    <p>v2 is real work. The question is what's in by 17 May, and what's after. Honest sequencing:</p>
 
-    <div class="ext">
-      <div class="ext-tier">01</div>
-      <div class="ext-body">
-        <h3>Show of Appreciation — named-person cards</h3>
-        <p>The single biggest gap. Pastor Shade is calling 8–12 members by name in sequence. The visual needs to keep up: photo + name + role + a one-line honour, pushed by Scott as Pastor Shade speaks. This is the emotional heartbeat of the anniversary; the screen should match her tone, not lag behind it.</p>
-        <ul>
-          <li>New data model: an "honour queue" — ordered list of person cards with name, role, honour line, photo URL</li>
-          <li>Operator panel: scrollable list, tap to push, auto-advance toggle for quick succession</li>
-          <li>Overlay template: full-bleed warm anniversary treatment, photo dominant, name in Anton, honour line in Instrument Serif italic, brand red eyebrow</li>
-          <li>Preview pane so Scott sees what's next before he pushes</li>
+    <div class="timeline">
+      <div class="tl-card now">
+        <div class="tl-eyebrow">Before 17 May · 4 days</div>
+        <div class="tl-title">Minimum to make Sunday work</div>
+        <ul class="tl-list">
+          <li>Manually load anniversary slides into the existing Images panel — name cards, communion graphics, offering bank details, meal-time backdrop</li>
+          <li>Scott rehearses the sequence Saturday evening</li>
+          <li>MC holds a physical stopwatch for presentation timing</li>
+          <li>Coordinators send slides as JPGs by Friday</li>
         </ul>
       </div>
-      <div class="ext-meta">
-        <span class="ext-pill scope-m">Scope: medium</span>
-        <span class="ext-pill day-now">Build this week</span>
-      </div>
-    </div>
-
-    <div class="ext">
-      <div class="ext-tier">02</div>
-      <div class="ext-body">
-        <h3>Lower-thirds (everyone, everywhere)</h3>
-        <p>Anniversary has more named individuals on stage than any normal Sunday — Pastor Shade for Welcome and Show of Appreciation and Closing, Pastor Gbenga preaching, Pastor Kayode MC-ing, Evangelist Bola Paul ministering, visiting ministers praying. Every one of them wants a name on screen when they first appear. Today there is no lower-third mechanism — it has to be faked with fullscreen images.</p>
-        <ul>
-          <li>New overlay region: bottom-left band, ~140px tall, brand styled</li>
-          <li>Person library in Supabase (name, role/title, optional photo)</li>
-          <li>Operator panel: search-as-you-type, tap to push, auto-hide after 8 seconds</li>
-          <li>Works alongside lyrics and scripture without conflicting (z-index resolved)</li>
+      <div class="tl-card next">
+        <div class="tl-eyebrow">June–July · post-anniversary</div>
+        <div class="tl-title">v2 phase 1 — Slides + Person library</div>
+        <ul class="tl-list">
+          <li>Slides primitive in the data model — supersedes the current ad-hoc Images model</li>
+          <li>Person library in Supabase with photos and roles</li>
+          <li>Named-honour slide template (the Show of Appreciation pattern, generalised)</li>
+          <li>Lower-third overlay region</li>
         </ul>
       </div>
-      <div class="ext-meta">
-        <span class="ext-pill scope-m">Scope: medium</span>
-        <span class="ext-pill day-now">Build this week</span>
-      </div>
-    </div>
-
-    <div class="ext">
-      <div class="ext-tier">03</div>
-      <div class="ext-body">
-        <h3>Presentation timer + slide upload</h3>
-        <p>Three 3-minute presentation slots, each one allocated to a department, each one at risk of overrunning. The MC needs visible support. And every department brings slides/photos that today have no clean way to display. Both gaps share infrastructure.</p>
-        <ul>
-          <li>Countdown overlay (top-right corner, brand-styled, configurable duration — 3 min default)</li>
-          <li>Visual escalation: green → amber → red at thresholds</li>
-          <li>Drag-and-drop slide upload in the operator app — drops directly into Supabase Storage</li>
-          <li>Slide-by-slide push with thumbnail preview</li>
+      <div class="tl-card later">
+        <div class="tl-eyebrow">Q3 2026 · groundwork for next anniversary</div>
+        <div class="tl-title">v2 phase 2 — Service types + Presentations</div>
+        <ul class="tl-list">
+          <li>Service Type selector at the top of the session</li>
+          <li>Visual style variants per service type</li>
+          <li>Presentation mode: deck upload, parsing, slot binding, countdown timer</li>
+          <li>Order of Service as operational spine — tap an item, open the right panel</li>
         </ul>
       </div>
-      <div class="ext-meta">
-        <span class="ext-pill scope-m">Scope: medium</span>
-        <span class="ext-pill day-now">Build this week</span>
-      </div>
     </div>
 
-    <div class="ext">
-      <div class="ext-tier">04</div>
-      <div class="ext-body">
-        <h3>Photo gallery loop (for The Meal)</h3>
-        <p>60–75 minutes of meal time is the longest single block of the day. Right now the screen either holds a static graphic or runs a single backdrop video. A rotating gallery of church-life photos — Pastor Shade's 60th, past anniversaries, the worship team, ministry moments — would turn this hour into a celebration of the church's history rather than dead screen time. People look up, see themselves, see each other, see the journey.</p>
-        <ul>
-          <li>New entity: gallery (named, ordered list of image URLs, transition timing, music track optional)</li>
-          <li>Operator: pick a gallery, play / pause / next / skip</li>
-          <li>Overlay: smooth crossfade between images, brand-coloured frame, subtle "34 years" watermark</li>
-          <li>Reuses existing Supabase Storage from the backdrops feature</li>
-        </ul>
-      </div>
-      <div class="ext-meta">
-        <span class="ext-pill scope-m">Scope: medium</span>
-        <span class="ext-pill day-soon">Build this week or next</span>
-      </div>
-    </div>
-
-    <div class="ext">
-      <div class="ext-tier">05</div>
-      <div class="ext-body">
-        <h3>Communion sequence + offering bank-details preset</h3>
-        <p>Two preset overlay sequences that get used at every service and especially under pressure on the day. Communion (1 Cor 11:23–26 + bread instruction + wine instruction + closing) is a 4-step sequence Scott has to build manually every time. Offering bank details is the most-pushed graphic in Calvary's history and still lives as an ad-hoc image.</p>
-        <ul>
-          <li>Communion preset: 4-step sequence, one-tap advance, customisable text</li>
-          <li>Offering preset: live-editable account name / sort / account / reference, brand styled</li>
-          <li>Both available as one-tap buttons in the Order of Service panel</li>
-        </ul>
-      </div>
-      <div class="ext-meta">
-        <span class="ext-pill scope-s">Scope: small</span>
-        <span class="ext-pill day-now">Build this week</span>
-      </div>
-    </div>
-
+    <p>This sequence keeps Sunday 17 May safe — Scott runs it with what he has, with extra rehearsal. Then the proper architectural work happens in the months after, with the anniversary as the requirements document for v2. By the time the next major service lands — a wedding, an Easter, the 35th — Control Room is a different tool.</p>
   </div>
 
-  <!-- Day-of fallback -->
+  <!-- §7 — Closing -->
   <div class="section">
-    <div class="section-head">
-      <div class="section-eyebrow">If nothing changes by Sunday</div>
-      <div class="section-title">Fallback plan</div>
-      <div class="section-blurb">In the realistic case that not all extensions land before 17 May, this is how Scott runs the day with the tools he has today.</div>
-    </div>
-    <div class="section-body">
-      <p><strong>For the Show of Appreciation</strong> — pre-build a dozen fullscreen anniversary-styled name cards as JPGs ahead of the day (Pastor Shade gives the list Wednesday). Load them all into Graphics → Images, in the order Pastor Shade will call them. Scott pushes them sequentially as names are called. If the order changes live, Scott finds the right card from the list and pushes.</p>
-      <p><strong>For lower-thirds</strong> — pre-build name PNGs for the five named individuals on the day (Pastor Shade, Pastor Gbenga, Pastor Kayode, Evangelist Bola Paul, and one generic "Visiting Minister" card). Push as fullscreen images for ~8 seconds when each first speaks, then return to live shot.</p>
-      <p><strong>For presentation timing</strong> — Pastor Kayode (MC) holds a physical stopwatch and signals each presenter at the 2-minute mark. Scott has no role here.</p>
-      <p><strong>For department slides</strong> — coordinators send slides as JPGs by Friday. Scott pre-loads them into Graphics → Images in groups labelled "Pres 1", "Pres 2", "Pres 3". On the day, opens the right group and pushes manually.</p>
-      <p><strong>For the meal hour</strong> — set a single beautiful Calvary backdrop (Pastor Shade's 60th, or the 34th anniversary hero) and leave it for the duration. Loop a worship-instrumentals playlist for audio. Live the limitation.</p>
-    </div>
+    <div class="section-num">07 — Why this matters</div>
+    <h2 class="section-title">The investment compounds</h2>
+    <p>Calvary runs special services <em>regularly</em>. The anniversary every May. Easter and Christmas every year. Weddings and dedications when they come. Conferences, women's services, men's services, the leadership-induction services that are coming. Each of them currently demands the same hand-built improvisation that 17 May is about to demand. Each time we pay the cost from scratch.</p>
+    <p>Control Room v2 doesn't just solve the anniversary. It solves the <em>shape</em> of every special service we'll ever run. The work happens once; the value compounds across every Sunday and every special service for years.</p>
+    <p>The brief in front of us is: <strong>get through 17 May with what we have, then build the right thing.</strong></p>
   </div>
 
   <div class="footer">
-    Control Room Briefing · Anniversary 2026 · Draft v1 · Last updated 13 May 2026<br>
-    Companion: <a href="anniversary-running-order-2026.html">Running Order</a>
+    Control Room v2 · Product Brief · Draft v1 · Last updated 13 May 2026<br>
+    Companion: <a href="anniversary-running-order-2026.html">17 May Running Order</a>
   </div>
 
 </div>
