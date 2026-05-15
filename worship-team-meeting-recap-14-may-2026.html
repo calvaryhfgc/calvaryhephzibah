@@ -50,15 +50,32 @@
 
     .container { max-width: 880px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
 
-    /* TICKER — sticky section nav that updates with scroll */
+    /* TICKER — sticky section nav, tappable to open jump-drawer */
     .ticker {
       position: sticky; top: 0; z-index: 50;
       background: rgba(10, 10, 10, 0.92);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line-soft);
-      padding: 12px 20px;
-      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    }
+    .ticker-toggle {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      color: inherit;
+      font-family: inherit;
+      text-align: left;
+      min-height: 48px;
+    }
+    .ticker-toggle:focus-visible {
+      outline: 2px solid var(--red);
+      outline-offset: -2px;
     }
     .ticker-label {
       font-size: 11px;
@@ -81,8 +98,11 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .ticker-progress {
+    .ticker-right {
+      display: flex; align-items: center; gap: 12px;
       flex-shrink: 0;
+    }
+    .ticker-progress {
       font-size: 11px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
@@ -92,6 +112,92 @@
     }
     .ticker-progress .ticker-num {
       color: var(--red);
+    }
+    .ticker-chevron {
+      width: 14px;
+      height: 14px;
+      color: var(--fg-2);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .ticker[data-open="true"] .ticker-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* JUMP DRAWER — slides down from ticker */
+    .jump-drawer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+      border-top: 1px solid var(--line-soft);
+    }
+    .ticker[data-open="true"] .jump-drawer {
+      max-height: 480px;
+    }
+    .jump-drawer-inner {
+      padding: 12px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .jump-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      min-height: 48px;
+      background: rgba(245, 240, 232, 0.04);
+      border: 1px solid var(--line-soft);
+      color: var(--fg-1);
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .jump-link:hover, .jump-link:focus-visible {
+      background: rgba(208, 68, 28, 0.12);
+      border-color: var(--red);
+      outline: none;
+    }
+    .jump-link.active {
+      background: rgba(208, 68, 28, 0.16);
+      border-color: var(--red);
+    }
+    .jump-link .jump-num {
+      font-family: var(--font-display);
+      color: var(--red);
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+      min-width: 28px;
+    }
+    .jump-link .jump-title {
+      font-weight: 500;
+      color: var(--bone);
+    }
+    .jump-link .jump-subtitle {
+      display: block;
+      font-size: 12px;
+      color: var(--fg-3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    /* Backdrop for the drawer — closes on outside tap */
+    .jump-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 49;
+    }
+    .jump-backdrop.visible {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     /* HERO */
@@ -466,15 +572,62 @@
 </head>
 <body>
 
-  <div class="ticker">
-    <div class="ticker-label">
-      <span class="ticker-dot"></span>
-      <span class="ticker-label-current" id="ticker-current">Worship Team · Meeting Recap</span>
-    </div>
-    <div class="ticker-progress" id="ticker-progress" aria-live="polite">
-      <span class="ticker-num">0</span> / 5
-    </div>
+  <div class="ticker" id="ticker" data-open="false">
+    <button class="ticker-toggle" id="ticker-toggle" aria-expanded="false" aria-controls="jump-drawer">
+      <span class="ticker-label">
+        <span class="ticker-dot"></span>
+        <span class="ticker-label-current" id="ticker-current">Worship Team · Meeting Recap</span>
+      </span>
+      <span class="ticker-right">
+        <span class="ticker-progress" id="ticker-progress" aria-live="polite">
+          <span class="ticker-num">0</span> / 5
+        </span>
+        <svg class="ticker-chevron" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3 5 7 9 11 5"></polyline>
+        </svg>
+      </span>
+    </button>
+    <nav class="jump-drawer" id="jump-drawer" aria-label="Jump to section">
+      <div class="jump-drawer-inner">
+        <a href="#part-1" class="jump-link" data-target="part-1">
+          <span class="jump-num">01</span>
+          <span>
+            <span class="jump-title">The Battle Belongs To The Lord</span>
+            <span class="jump-subtitle">Bible Study</span>
+          </span>
+        </a>
+        <a href="#part-2" class="jump-link" data-target="part-2">
+          <span class="jump-num">02</span>
+          <span>
+            <span class="jump-title">A New Standard</span>
+            <span class="jump-subtitle">Upgrades</span>
+          </span>
+        </a>
+        <a href="#part-3" class="jump-link" data-target="part-3">
+          <span class="jump-num">03</span>
+          <span>
+            <span class="jump-title">Boundaries Make You Free</span>
+            <span class="jump-subtitle">Set Structure</span>
+          </span>
+        </a>
+        <a href="#part-4" class="jump-link" data-target="part-4">
+          <span class="jump-num">04</span>
+          <span>
+            <span class="jump-title">Every Voice Leads</span>
+            <span class="jump-subtitle">The Line-Up</span>
+          </span>
+        </a>
+        <a href="#part-5" class="jump-link" data-target="part-5">
+          <span class="jump-num">05</span>
+          <span>
+            <span class="jump-title">Walking The Set</span>
+            <span class="jump-subtitle">Set Walkthrough</span>
+          </span>
+        </a>
+      </div>
+    </nav>
   </div>
+  <div class="jump-backdrop" id="jump-backdrop"></div>
 
   <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
@@ -770,14 +923,17 @@
 
   <script>
     (function() {
-      // Live ticker — updates current section label + 1/5, 2/5 progress
-      // as the user scrolls past each clip section.
+      // Live ticker + jump drawer
       const clipSections = Array.from(document.querySelectorAll('section.clip'));
       const tickerCurrent = document.getElementById('ticker-current');
       const tickerProgress = document.getElementById('ticker-progress');
       const backToTop = document.getElementById('back-to-top');
+      const ticker = document.getElementById('ticker');
+      const tickerToggle = document.getElementById('ticker-toggle');
+      const drawer = document.getElementById('jump-drawer');
+      const backdrop = document.getElementById('jump-backdrop');
+      const jumpLinks = Array.from(document.querySelectorAll('.jump-link'));
 
-      // Map each section to its display title for the ticker
       const sectionLabels = {
         'part-1': 'Part 1 · Bible Study',
         'part-2': 'Part 2 · Upgrades',
@@ -786,29 +942,35 @@
         'part-5': 'Part 5 · Set Walkthrough',
       };
 
+      let activeIndex = -1;
+
       function updateTicker() {
-        // Find which clip section is most prominently in view.
-        // A section is "active" if its top is in the upper 40% of the viewport.
         const triggerY = window.innerHeight * 0.4;
-        let activeIndex = -1;
+        let newActive = -1;
         clipSections.forEach((section, i) => {
           const rect = section.getBoundingClientRect();
           if (rect.top <= triggerY && rect.bottom > triggerY) {
-            activeIndex = i;
+            newActive = i;
           } else if (rect.top <= triggerY && rect.bottom <= triggerY) {
-            // section is above the trigger but might be the last one
-            if (i > activeIndex) activeIndex = i;
+            if (i > newActive) newActive = i;
           }
         });
 
-        if (activeIndex >= 0) {
-          const id = clipSections[activeIndex].id;
-          tickerCurrent.textContent = sectionLabels[id] || 'Meeting Recap';
-          tickerProgress.innerHTML =
-            '<span class="ticker-num">' + (activeIndex + 1) + '</span> / 5';
-        } else {
-          tickerCurrent.textContent = 'Worship Team · Meeting Recap';
-          tickerProgress.innerHTML = '<span class="ticker-num">0</span> / 5';
+        if (newActive !== activeIndex) {
+          activeIndex = newActive;
+          if (activeIndex >= 0) {
+            const id = clipSections[activeIndex].id;
+            tickerCurrent.textContent = sectionLabels[id] || 'Meeting Recap';
+            tickerProgress.innerHTML =
+              '<span class="ticker-num">' + (activeIndex + 1) + '</span> / 5';
+            jumpLinks.forEach(link => {
+              link.classList.toggle('active', link.dataset.target === id);
+            });
+          } else {
+            tickerCurrent.textContent = 'Worship Team · Meeting Recap';
+            tickerProgress.innerHTML = '<span class="ticker-num">0</span> / 5';
+            jumpLinks.forEach(link => link.classList.remove('active'));
+          }
         }
 
         // Back-to-top visible once scrolled past ~500px
@@ -819,7 +981,46 @@
         }
       }
 
-      // Throttle with requestAnimationFrame
+      function openDrawer() {
+        ticker.setAttribute('data-open', 'true');
+        tickerToggle.setAttribute('aria-expanded', 'true');
+        backdrop.classList.add('visible');
+      }
+
+      function closeDrawer() {
+        ticker.setAttribute('data-open', 'false');
+        tickerToggle.setAttribute('aria-expanded', 'false');
+        backdrop.classList.remove('visible');
+      }
+
+      function toggleDrawer() {
+        if (ticker.getAttribute('data-open') === 'true') {
+          closeDrawer();
+        } else {
+          openDrawer();
+        }
+      }
+
+      tickerToggle.addEventListener('click', toggleDrawer);
+      backdrop.addEventListener('click', closeDrawer);
+
+      // Close drawer when a jump link is tapped (after a small delay so
+      // the smooth scroll has time to start before the drawer collapses,
+      // otherwise the anchor jump can miscalculate)
+      jumpLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          setTimeout(closeDrawer, 50);
+        });
+      });
+
+      // Close drawer on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && ticker.getAttribute('data-open') === 'true') {
+          closeDrawer();
+        }
+      });
+
+      // Throttle scroll updates with rAF
       let ticking = false;
       window.addEventListener('scroll', () => {
         if (!ticking) {
@@ -829,7 +1030,7 @@
           });
           ticking = true;
         }
-      });
+      }, { passive: true });
 
       backToTop.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
