@@ -270,6 +270,166 @@
       transform: scale(0.95);
     }
 
+    /* DECISIONS — Section 0: the answer up front */
+    section.decisions {
+      padding: 56px 0 64px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .decisions-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .decisions-marker {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--bone);
+      color: var(--obsidian);
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      line-height: 1.2;
+    }
+    .decisions-topic {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+    .decisions h2 {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .decisions h2 .accent { color: var(--red); }
+    .decisions-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 16px;
+      color: var(--fg-2);
+      margin-bottom: 32px;
+    }
+
+    .decisions-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-bottom: 28px;
+    }
+    @media (min-width: 720px) {
+      .decisions-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+    }
+
+    .decisions-block {
+      background: rgba(245, 240, 232, 0.03);
+      border: 1px solid var(--line-soft);
+      padding: 24px;
+    }
+    .decisions-block-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 4px;
+    }
+    .decisions-block-sub {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    .decisions-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .decisions-list li {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--line-soft);
+      align-items: baseline;
+      font-size: 15px;
+      color: var(--fg-1);
+      line-height: 1.45;
+    }
+    .decisions-list li:last-child { border-bottom: none; }
+    .decisions-list .role,
+    .decisions-list .pos {
+      font-family: var(--font-display);
+      color: var(--red);
+      font-size: 16px;
+      letter-spacing: 0.04em;
+    }
+    .decisions-list .person,
+    .decisions-list .song-title {
+      color: var(--bone);
+      font-weight: 500;
+    }
+    .decisions-list .song-note {
+      display: block;
+      font-size: 12px;
+      color: var(--fg-3);
+      margin-top: 2px;
+      font-style: italic;
+    }
+    .decisions-list .change-tag {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 2px 7px;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      text-transform: uppercase;
+      vertical-align: 2px;
+    }
+    .change-tag.new   { background: var(--red); color: white; }
+    .change-tag.out   { background: transparent; color: var(--fg-3); border: 1px solid var(--fg-3); }
+    .change-tag.moved { background: rgba(208, 68, 28, 0.18); color: var(--red); border: 1px solid var(--red); }
+
+    .decisions-bottom {
+      margin-top: 8px;
+      padding: 20px 24px;
+      background: rgba(208, 68, 28, 0.06);
+      border-left: 2px solid var(--red);
+    }
+    .decisions-bottom-title {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .decisions-bottom-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+    .decisions-bottom-list li {
+      font-size: 15px;
+      color: var(--fg-1);
+      line-height: 1.5;
+    }
+    .decisions-bottom-list li strong {
+      color: var(--bone);
+    }
+
     /* CLIP SECTIONS */
     section.clip {
       padding: 64px 0;
@@ -531,6 +691,7 @@
       </span>
     </div>
     <nav class="ticker-nav" aria-label="Jump to section">
+      <a href="#decisions" class="ticker-pill" data-target="decisions"><span class="pill-num">00</span> What We Decided</a>
       <a href="#part-1" class="ticker-pill" data-target="part-1"><span class="pill-num">01</span> Bible Study</a>
       <a href="#part-2" class="ticker-pill" data-target="part-2"><span class="pill-num">02</span> Upgrades</a>
       <a href="#part-3" class="ticker-pill" data-target="part-3"><span class="pill-num">03</span> Set Structure</a>
@@ -571,11 +732,134 @@
 
       <!-- Contents nav -->
       <div class="contents">
+        <a href="#decisions"><span class="num">00</span> What We Decided</a>
         <a href="#part-1"><span class="num">01</span> Bible Study</a>
         <a href="#part-2"><span class="num">02</span> Upgrades</a>
         <a href="#part-3"><span class="num">03</span> Set Structure</a>
         <a href="#part-4"><span class="num">04</span> The Line-Up</a>
         <a href="#part-5"><span class="num">05</span> Set Walkthrough</a>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- ====================================================== -->
+    <!-- SECTION 0 — What We Decided                              -->
+    <!-- ====================================================== -->
+    <section class="decisions" id="decisions">
+      <div class="decisions-eyebrow">
+        <span class="decisions-marker">00</span>
+        <span class="decisions-topic">What We Decided</span>
+      </div>
+      <h2>Sunday, in <span class="accent">one place.</span></h2>
+      <p class="decisions-sub">
+        If you only have a minute — here's the line-up, the set in order, and the other calls we made. The clips below explain the why.
+      </p>
+
+      <div class="decisions-grid">
+
+        <!-- LINE-UP -->
+        <div class="decisions-block">
+          <h3 class="decisions-block-title">The Line-Up</h3>
+          <p class="decisions-block-sub">Who's playing what</p>
+          <ul class="decisions-list">
+            <li><span class="role">Drums</span><span class="person">Bolaji A.</span></li>
+            <li><span class="role">Keys 1</span><span class="person">Eddie</span></li>
+            <li><span class="role">Keys 2</span><span class="person">Uncle B</span></li>
+            <li><span class="role">Bass</span><span class="person">Uncle Michael</span></li>
+            <li><span class="role">Guitar</span><span class="person">Morayo</span></li>
+            <li><span class="role">Vocals</span><span class="person">Uncle Caster · Esther · Uncle Shola · Auntie Jess</span></li>
+          </ul>
+        </div>
+
+        <!-- SET -->
+        <div class="decisions-block">
+          <h3 class="decisions-block-title">The Set</h3>
+          <p class="decisions-block-sub">In playing order</p>
+          <ul class="decisions-list">
+            <li>
+              <span class="pos">01</span>
+              <span>
+                <span class="song-title">Thanks Thanks I Give You Thanks</span>
+                <span class="change-tag new">New</span>
+                <span class="song-note">A cappella opener — sets the thankful tone</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">02</span>
+              <span>
+                <span class="song-title">Trading My Sorrows</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">03</span>
+              <span>
+                <span class="song-title">Lord You Are Good</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">04</span>
+              <span>
+                <span class="song-title">Friend of God</span>
+                <span class="song-note">Hard stop — clean break before the next song</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">05</span>
+              <span>
+                <span class="song-title">Open the Eyes of My Heart</span>
+                <span class="change-tag new">New arrangement</span>
+                <span class="song-note">Different feel — groove-driven, possibly Afro with Esther leading</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">06</span>
+              <span>
+                <span class="song-title">My Jesus My Saviour</span>
+                <span class="song-note">Esther leading</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">07</span>
+              <span>
+                <span class="song-title">Come Now Is the Time to Worship</span>
+                <span class="change-tag new">New</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">08</span>
+              <span>
+                <span class="song-title">Because of Who You Are</span>
+                <span class="change-tag new">New</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">—</span>
+              <span>
+                <span class="song-title" style="color: var(--fg-3); text-decoration: line-through;">Every Praise</span>
+                <span class="change-tag out">Out</span>
+                <span class="song-note">Dropped to make room for Open the Eyes</span>
+              </span>
+            </li>
+            <li>
+              <span class="pos">—</span>
+              <span>
+                <span class="song-title" style="color: var(--fg-3); text-decoration: line-through;">Here I Am to Worship</span>
+                <span class="change-tag out">Out</span>
+                <span class="song-note">Replaced — wanted to keep worship upbeat for celebration Sunday</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- OTHER DECISIONS -->
+      <div class="decisions-bottom">
+        <div class="decisions-bottom-title">Other calls</div>
+        <ul class="decisions-bottom-list">
+          <li><strong>Offering</strong> — no band-led song. Evangelist Bola Paul leads an Afro praise set with a talking drum; band accompanies.</li>
+          <li><strong>Saturday rehearsal</strong> — 5pm at church. Where the new arrangements get tested and the final calls get made.</li>
+          <li><strong>Vocals</strong> — four singers, no lead-and-backing hierarchy. Each one leads a song; the rest fill out the sound.</li>
+        </ul>
       </div>
     </section>
 
@@ -830,12 +1114,14 @@
   <script>
     (function() {
       const clipSections = Array.from(document.querySelectorAll('section.clip'));
+      const decisionsSection = document.getElementById('decisions');
       const tickerCurrent = document.getElementById('ticker-current');
       const tickerProgress = document.getElementById('ticker-progress');
       const backToTop = document.getElementById('back-to-top');
       const navPills = Array.from(document.querySelectorAll('.ticker-pill'));
 
       const sectionLabels = {
+        'decisions': 'What We Decided',
         'part-1': 'Part 1 · Bible Study',
         'part-2': 'Part 2 · Upgrades',
         'part-3': 'Part 3 · Set Structure',
@@ -843,29 +1129,52 @@
         'part-5': 'Part 5 · Set Walkthrough',
       };
 
+      // -1 = above all sections (hero)
+      //  0 = in the decisions section
+      //  1-5 = in clip 1-5
       let activeIndex = -1;
 
       function updateTicker() {
         const triggerY = window.innerHeight * 0.4;
         let newActive = -1;
+
+        // Check decisions section first (it sits between hero and clips)
+        if (decisionsSection) {
+          const rect = decisionsSection.getBoundingClientRect();
+          if (rect.top <= triggerY && rect.bottom > triggerY) {
+            newActive = 0;
+          }
+        }
+
+        // Check clip sections — these override decisions if any is in view
         clipSections.forEach((section, i) => {
           const rect = section.getBoundingClientRect();
           if (rect.top <= triggerY && rect.bottom > triggerY) {
-            newActive = i;
+            newActive = i + 1;
           } else if (rect.top <= triggerY && rect.bottom <= triggerY) {
-            if (i > newActive) newActive = i;
+            // section is above the trigger, mark it as the last-seen
+            if (i + 1 > newActive) newActive = i + 1;
           }
         });
 
         if (newActive !== activeIndex) {
           activeIndex = newActive;
-          if (activeIndex >= 0) {
-            const id = clipSections[activeIndex].id;
-            tickerCurrent.textContent = sectionLabels[id] || 'Meeting Recap';
-            tickerProgress.innerHTML =
-              '<span class="ticker-num">' + (activeIndex + 1) + '</span> / 5';
+
+          let currentId = null;
+          if (activeIndex === 0) currentId = 'decisions';
+          else if (activeIndex >= 1) currentId = clipSections[activeIndex - 1].id;
+
+          if (currentId) {
+            tickerCurrent.textContent = sectionLabels[currentId] || 'Meeting Recap';
+            // Counter shows clip position; decisions section reads as 'Summary'
+            if (currentId === 'decisions') {
+              tickerProgress.innerHTML = '<span class="ticker-num">·</span> Summary';
+            } else {
+              tickerProgress.innerHTML =
+                '<span class="ticker-num">' + activeIndex + '</span> / 5';
+            }
             navPills.forEach(pill => {
-              pill.classList.toggle('active', pill.dataset.target === id);
+              pill.classList.toggle('active', pill.dataset.target === currentId);
             });
           } else {
             tickerCurrent.textContent = 'Worship Team · Meeting Recap';
