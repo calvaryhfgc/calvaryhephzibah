@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anniversary Overlays · Contact Sheet</title>
+<meta property="og:title" content="Calvary Anniversary · Lower & Upper Third Overlays">
+<meta property="og:description" content="The full set of broadcast overlays for the 34th Anniversary service. Drop into OBS as image sources over the camera scene.">
+<style>
+  :root {
+    --obsidian: #0A0A0A;
+    --calvary-red: #D0441C;
+    --bone: #F5F0E8;
+    --dim: #A0A0A0;
+    --muted: #5A5A5A;
+    --card: #141414;
+    --border: rgba(245, 240, 232, 0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body {
+    background: var(--obsidian);
+    color: var(--bone);
+    font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Sticky header */
+  .topbar {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+  }
+  .topbar-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .topbar-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px; letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .topbar-title .red { color: var(--calvary-red); }
+  .topbar-meta {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* Pill nav */
+  .nav {
+    display: flex; gap: 6px; padding: 4px 0 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav a {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .nav a:hover, .nav a:active {
+    color: var(--bone);
+    border-color: var(--calvary-red);
+  }
+
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 80px;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 24px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .hero h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(36px, 7vw, 64px);
+    line-height: 1.0;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .hero h1 .red { color: var(--calvary-red); }
+  .hero p {
+    color: var(--dim);
+    max-width: 640px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* How to use */
+  .how {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 40px;
+  }
+  .how-title {
+    font-size: 11px;
+    color: var(--calvary-red);
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .how h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+  .how ol {
+    margin-left: 18px;
+    color: var(--bone);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .how li { margin-bottom: 4px; }
+  .how li code {
+    background: rgba(245,240,232,0.06);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--bone);
+  }
+
+  /* Section */
+  section { margin-bottom: 48px; scroll-margin-top: 80px; }
+  .section-head {
+    display: flex; align-items: baseline; gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    color: var(--calvary-red);
+  }
+  .section-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .section-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .section-intro {
+    color: var(--dim);
+    font-size: 14px;
+    margin-bottom: 24px;
+    max-width: 700px;
+    line-height: 1.6;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    display: block;
+    background: #000;
+  }
+  .card-body {
+    padding: 14px 16px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .card-label {
+    flex: 1;
+    min-width: 0;
+  }
+  .card-label .name {
+    font-size: 15px;
+    color: var(--bone);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .card-label .filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    color: var(--dim);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .card-link {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    background: var(--calvary-red);
+    color: var(--bone);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .card-link:hover { opacity: 0.9; }
+  .card-link.ghost {
+    background: transparent;
+    color: var(--dim);
+    border: 1px solid var(--border);
+  }
+  .card-link.ghost:hover {
+    color: var(--bone);
+    border-color: var(--calvary-red);
+  }
+
+  footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    color: var(--dim);
+    font-size: 12px;
+    text-align: center;
+  }
+  footer .red { color: var(--calvary-red); }
+
+  /* Fonts */
+  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700&display=swap');
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div>
+      <div class="topbar-title">Anniversary <span class="red">Overlays</span></div>
+      <div class="topbar-meta">16 PNGs · 1920×1080 · Transparent</div>
+    </div>
+    <nav class="nav">
+      <a href="#names">Names</a>
+      <a href="#sections">Sections</a>
+      <a href="#scripture">Scripture</a>
+      <a href="#songs">Songs</a>
+      <a href="#banner">Banner</a>
+      <a href="#testimony">Testimony</a>
+    </nav>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="hero">
+    <h1>Lower &amp; upper third <span class="red">overlays.</span></h1>
+    <p>Sixteen broadcast graphics for the 34th anniversary service. Each is a 1920×1080 PNG with a transparent zone — drop it into OBS as a full-screen image source above the camera scene and only the obsidian strip renders. Previewed here over a real worship-team frame so you can judge how each one sits.</p>
+  </div>
+
+  <div class="how">
+    <div class="how-title">How to use these in OBS</div>
+    <h2>One-time setup, fast switching</h2>
+    <ol>
+      <li>Download the PNG files from this page using the <code>PNG</code> button on each card.</li>
+      <li>In OBS, create a new scene <code>Service · Overlays</code> with the camera feed as the base source.</li>
+      <li>Add one <code>Image</code> source per overlay PNG, set each to 1920×1080, locked. Keep them all hidden by default.</li>
+      <li>During service, toggle visibility on the overlay you need. Show for 5–8 seconds (name supers, song titles) or 10–15 seconds (anniversary banner) and hide.</li>
+      <li>Never run two overlays at once — they share the same screen zone.</li>
+    </ol>
+  </div>
+
+  <!-- NAMES -->
+  <section id="names">
+    <div class="section-head">
+      <div class="section-num">01</div>
+      <div class="section-name">Name supers</div>
+      <div class="section-count">4 graphics · lower third</div>
+    </div>
+    <p class="section-intro">For introducing whoever is at the lectern. Show 5–8 seconds when they first start speaking, then hide. Reuse the same graphic if they speak again later.</p>
+    <div class="grid">
+      
+      <div class="card">
+        <img class="card-img" src="previews/preview-01-name-pastor-shade.jpg" alt="Pastor Shade Olatoye overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Pastor Shade Olatoye</div>
+            <div class="filename">01-name-pastor-shade.png</div>
+          </div>
+          <a class="card-link" href="../overlays/01-name-pastor-shade.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-02-name-michael-kabalu.jpg" alt="Brother Michael Kabalu overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Brother Michael Kabalu</div>
+            <div class="filename">02-name-michael-kabalu.png</div>
+          </div>
+          <a class="card-link" href="../overlays/02-name-michael-kabalu.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-03-name-pastor-kayode.jpg" alt="Pastor Kayode Ogungbenro overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Pastor Kayode Ogungbenro</div>
+            <div class="filename">03-name-pastor-kayode.png</div>
+          </div>
+          <a class="card-link" href="../overlays/03-name-pastor-kayode.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-04-name-pastor-gbenga.jpg" alt="Pastor Gbenga Adebanjo overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Pastor Gbenga Adebanjo</div>
+            <div class="filename">04-name-pastor-gbenga.png</div>
+          </div>
+          <a class="card-link" href="../overlays/04-name-pastor-gbenga.png" download>PNG</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTIONS -->
+  <section id="sections">
+    <div class="section-head">
+      <div class="section-num">02</div>
+      <div class="section-name">Section markers</div>
+      <div class="section-count">6 graphics · upper third</div>
+    </div>
+    <p class="section-intro">Signpost what's happening in the service. Flash for 5–8 seconds at the start of each segment. Sits at the top of the frame so it doesn't compete with anything happening on stage.</p>
+    <div class="grid">
+      
+      <div class="card">
+        <img class="card-img" src="previews/preview-05-section-welcome.jpg" alt="Welcome overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Welcome</div>
+            <div class="filename">05-section-welcome.png</div>
+          </div>
+          <a class="card-link" href="../overlays/05-section-welcome.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-06-section-worship.jpg" alt="Worship overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Worship</div>
+            <div class="filename">06-section-worship.png</div>
+          </div>
+          <a class="card-link" href="../overlays/06-section-worship.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-07-section-communion.jpg" alt="Communion overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Communion</div>
+            <div class="filename">07-section-communion.png</div>
+          </div>
+          <a class="card-link" href="../overlays/07-section-communion.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-08-section-testimony.jpg" alt="Testimony overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Testimony</div>
+            <div class="filename">08-section-testimony.png</div>
+          </div>
+          <a class="card-link" href="../overlays/08-section-testimony.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-09-section-offering.jpg" alt="Offering overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Offering</div>
+            <div class="filename">09-section-offering.png</div>
+          </div>
+          <a class="card-link" href="../overlays/09-section-offering.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-10-section-word.jpg" alt="The Word overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">The Word</div>
+            <div class="filename">10-section-word.png</div>
+          </div>
+          <a class="card-link" href="../overlays/10-section-word.png" download>PNG</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCRIPTURE -->
+  <section id="scripture">
+    <div class="section-head">
+      <div class="section-num">03</div>
+      <div class="section-name">Scripture refs</div>
+      <div class="section-count">2 graphics · lower third</div>
+    </div>
+    <p class="section-intro">Compact reference supers for when scripture is being read. Show only the reference and version — the actual verse goes on the main screen, not here.</p>
+    <div class="grid">
+      
+      <div class="card">
+        <img class="card-img" src="previews/preview-11-scripture-jehoshaphat.jpg" alt="2 Chronicles 20:15 overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">2 Chronicles 20:15</div>
+            <div class="filename">11-scripture-jehoshaphat.png</div>
+          </div>
+          <a class="card-link" href="../overlays/11-scripture-jehoshaphat.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-12-scripture-psalm-33.jpg" alt="Psalm 33:3 overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Psalm 33:3</div>
+            <div class="filename">12-scripture-psalm-33.png</div>
+          </div>
+          <a class="card-link" href="../overlays/12-scripture-psalm-33.png" download>PNG</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SONGS -->
+  <section id="songs">
+    <div class="section-head">
+      <div class="section-num">04</div>
+      <div class="section-name">Song titles</div>
+      <div class="section-count">2 graphics · lower third</div>
+    </div>
+    <p class="section-intro">Show at the start of each song for 5–8 seconds. The "Led by" line attributes whoever's taking the lead on that song. Reuse from the previous Sunday's overlays where the same song repeats.</p>
+    <div class="grid">
+      
+      <div class="card">
+        <img class="card-img" src="previews/preview-13-song-trading-my-sorrows.jpg" alt="Trading My Sorrows overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Trading My Sorrows</div>
+            <div class="filename">13-song-trading-my-sorrows.png</div>
+          </div>
+          <a class="card-link" href="../overlays/13-song-trading-my-sorrows.png" download>PNG</a>
+        </div>
+      </div>
+      <div class="card">
+        <img class="card-img" src="previews/preview-14-song-friend-of-god.jpg" alt="Friend of God overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Friend of God</div>
+            <div class="filename">14-song-friend-of-god.png</div>
+          </div>
+          <a class="card-link" href="../overlays/14-song-friend-of-god.png" download>PNG</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANNER -->
+  <section id="banner">
+    <div class="section-head">
+      <div class="section-num">05</div>
+      <div class="section-name">Anniversary banner</div>
+      <div class="section-count">1 graphic · hero moment</div>
+    </div>
+    <p class="section-intro">The big one. Larger strip, eagle visible, two-line lockup. Flash this for 10–15 seconds at the opening, before the sermon, and at the benediction. The signature visual of the day.</p>
+    <div class="grid">
+      
+      <div class="card">
+        <img class="card-img" src="previews/preview-15-anniversary-banner.jpg" alt="Calvary Hephzibah · 34th Anniversary overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Calvary Hephzibah · 34th Anniversary</div>
+            <div class="filename">15-anniversary-banner.png</div>
+          </div>
+          <a class="card-link" href="../overlays/15-anniversary-banner.png" download>PNG</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONY -->
+  <section id="testimony">
+    <div class="section-head">
+      <div class="section-num">06</div>
+      <div class="section-name">Testimony</div>
+      <div class="section-count">1 graphic · lower third</div>
+    </div>
+    <p class="section-intro">For anyone giving a testimony — name plus a descriptor (years of membership, role, anything that adds dignity to the moment). Keep on screen for the full testimony if it's short, or flash at the start if it's long.</p>
+    <div class="grid">
+      
+      <div class="card">
+        <img class="card-img" src="previews/preview-16-testimony-pauline.jpg" alt="Auntie Pauline Tulloch overlay preview" loading="lazy">
+        <div class="card-body">
+          <div class="card-label">
+            <div class="name">Auntie Pauline Tulloch</div>
+            <div class="filename">16-testimony-pauline.png</div>
+          </div>
+          <a class="card-link" href="../overlays/16-testimony-pauline.png" download>PNG</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Calvary Hephzibah · 34th Anniversary · Est. 1992 <span class="red">·</span> Overlays v2
+  </footer>
+
+</div>
+
+</body>
+</html>
