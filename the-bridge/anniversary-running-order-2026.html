@@ -1,692 +1,748 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Anniversary 2026 — Running Order | The Bridge</title>
-<meta name="description" content="Running order for the 34th Anniversary service, Sunday 17 May 2026.">
-
-<link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
-<link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Anniversary 2026 · Running Order — Calvary Hephzibah</title>
+<meta name="description" content="Running order for the 34th Anniversary service, Sunday 17 May 2026." />
+<link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css" />
+<link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" />
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
-
-:root{
-  --page-bg: #F4EFE6;
-  --card-bg: #FFFFFF;
-  --card-bg-soft: #FAF7F0;
-  --card-border: rgba(20, 20, 26, 0.08);
-
-  --row-tint-pastor: rgba(208, 68, 28, 0.05);
-  --row-tint-pastor-hover: rgba(208, 68, 28, 0.09);
-  --row-tint-worship: rgba(154, 47, 17, 0.05);
-  --row-tint-worship-hover: rgba(154, 47, 17, 0.09);
-  --row-tint-meal: rgba(200, 162, 75, 0.06);
-  --row-tint-meal-hover: rgba(200, 162, 75, 0.12);
-  --row-hover: #FAF7F0;
-
-  --ink-1: var(--fg-1-on-light);
-  --ink-2: var(--fg-2-on-light);
-  --ink-3: var(--fg-3-on-light);
-  --ink-4: #9A9AA5;
-  --ink-5: #CBCBD3;
-
-  --r-card: 8px;
-  --shadow-card: 0 1px 3px rgba(20, 20, 26, 0.04), 0 4px 16px rgba(20, 20, 26, 0.05);
-}
-
-html, body{
-  background: var(--page-bg);
-  color: var(--ink-1);
-  font-family: var(--font-body);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
-  min-height: 100%;
-}
-
-body{ position: relative; }
-
-body::before{
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.55  0 0 0 0 0.27  0 0 0 0 0.11  0 0 0 0.03 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  opacity: 0.5;
-  mix-blend-mode: multiply;
-  z-index: 0;
-}
-
-.wrap{
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 40px 24px 96px;
-  position: relative;
-  z-index: 1;
-}
-
-.hdr{
-  background: var(--obsidian);
-  color: var(--bone);
-  border-radius: var(--r-card);
-  padding: 44px 44px 38px;
-  margin-bottom: 28px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.18);
-  min-height: 220px;
-}
-.hdr::before{
-  content:'';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 70% 50% at 50% 0%, rgba(208, 68, 28, 0.20), transparent 60%),
-    radial-gradient(ellipse 80% 40% at 50% 100%, rgba(110, 26, 15, 0.28), transparent 60%);
-  pointer-events: none;
-  z-index: 3;
-  mix-blend-mode: screen;
-}
-.hdr::after{
-  content:'';
-  position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 240px;
-  height: 240px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(208, 68, 28, 0.18), transparent 70%);
-  pointer-events: none;
-  z-index: 3;
-  mix-blend-mode: screen;
-}
-.hdr-inner{ position: relative; z-index: 3; flex: 1; min-width: 0; }
-
-/* Right-side media block — portrait mosaic on top, family photos as a wider strip below */
-.hdr-media{
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 48%;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 2px;
-  z-index: 1;
-}
-.hdr-grid{
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 2px;
-}
-.hdr-grid img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: saturate(0.7) brightness(0.75);
-}
-.hdr-family{
-  flex: 2;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-.hdr-family img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: saturate(1) brightness(0.92) contrast(1.05);
-}
-
-/* Gradient mask blends the media into the obsidian header on the left side
-   so the title and meta remain readable */
-.hdr-media::after{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    var(--obsidian) 0%,
-    rgba(11, 11, 14, 0.82) 10%,
-    rgba(11, 11, 14, 0.45) 26%,
-    rgba(11, 11, 14, 0.15) 55%,
-    rgba(11, 11, 14, 0.08) 100%
-  );
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Eagle logo — sits as a quiet mark in the top-right corner over the grid */
-.hdr-logo{
-  position: absolute;
-  top: 22px;
-  right: 24px;
-  width: 56px;
-  height: auto;
-  opacity: 0.92;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.6));
-  z-index: 4;
-}
-.hdr-eyebrow{
-  font-family: var(--font-body);
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: var(--track-eyebrow);
-  text-transform: uppercase;
-  color: var(--red-bright);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.hdr-eyebrow::after{
-  content: "";
-  height: 1px;
-  width: 60px;
-  background: var(--red);
-  opacity: 0.6;
-}
-.hdr h1{
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5.6vw, 64px);
-  line-height: 0.95;
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-  color: var(--bone);
-  margin-bottom: 12px;
-}
-.hdr h1 .accent{ color: var(--red-bright); }
-.hdr-tagline{
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(18px, 2vw, 22px);
-  color: var(--fg-2);
-  line-height: 1.35;
-  margin-bottom: 22px;
-  max-width: 680px;
-}
-.hdr-meta{
-  display: flex;
-  gap: 28px;
-  flex-wrap: wrap;
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  color: var(--fg-2);
-}
-.hdr-meta span strong{
-  color: var(--bone);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-
-.order{
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: var(--r-card);
-  overflow: hidden;
-  box-shadow: var(--shadow-card);
-}
-
-/* Toolbar — sits between the header and the order */
-.toolbar{
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin: -10px 0 14px;
-  position: relative;
-  z-index: 1;
-}
-.btn-print{
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--bone);
-  background: var(--red);
-  border: 1px solid var(--red);
-  padding: 9px 16px 9px 13px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background 0.16s var(--ease-out-quint), transform 0.16s var(--ease-out-quint), box-shadow 0.16s var(--ease-out-quint);
-  box-shadow: 0 2px 8px rgba(208, 68, 28, 0.18);
-}
-.btn-print:hover{
-  background: var(--red-deep, #9A2F11);
-  border-color: var(--red-deep, #9A2F11);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(208, 68, 28, 0.28);
-}
-.btn-print:active{
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(208, 68, 28, 0.2);
-}
-.btn-print svg{
-  flex-shrink: 0;
-}
-
-.row{
-  display: grid;
-  grid-template-columns: 70px 1fr 110px;
-  gap: 0;
-  border-bottom: 1px solid var(--card-border);
-  padding: 22px 32px;
-  align-items: start;
-  transition: background 0.18s var(--ease-out-quint);
-}
-.row:last-child{ border-bottom: none; }
-.row:hover{ background: var(--row-hover); }
-
-.row-num{
-  font-family: var(--font-display);
-  font-size: 32px;
-  color: var(--ink-4);
-  line-height: 1;
-  padding-top: 2px;
-  letter-spacing: -0.01em;
-}
-.row-num.pastor{ color: var(--red); }
-.row-num.worship{ color: var(--ember); }
-.row-num.meal{ color: var(--gold-deep); }
-
-.row-body{ padding-right: 20px; }
-.row-name{
-  font-family: var(--font-body);
-  font-weight: 600;
-  color: var(--ink-1);
-  font-size: 16px;
-  line-height: 1.3;
-  margin-bottom: 4px;
-  letter-spacing: -0.005em;
-}
-.row-lead{
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--ink-3);
-}
-.row-lead strong{ color: var(--ink-2); font-weight: 600; }
-
-.row-time{
-  font-family: var(--font-display);
-  font-size: 24px;
-  color: var(--ink-2);
-  text-align: right;
-  white-space: nowrap;
-  padding-top: 2px;
-  letter-spacing: -0.01em;
-  line-height: 1;
-}
-.row-time-sub{
-  font-family: var(--font-body);
-  font-size: 10px;
-  color: var(--ink-4);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 6px;
-  font-weight: 600;
-}
-
-.row.tint-pastor{ background: var(--row-tint-pastor); }
-.row.tint-pastor:hover{ background: var(--row-tint-pastor-hover); }
-.row.tint-worship{ background: var(--row-tint-worship); }
-.row.tint-worship:hover{ background: var(--row-tint-worship-hover); }
-.row.tint-meal{ background: var(--row-tint-meal); }
-.row.tint-meal:hover{ background: var(--row-tint-meal-hover); }
-
-@media (max-width:640px){
-  .wrap{ padding: 20px 16px 60px; }
-  .hdr{ padding: 28px 24px 0; min-height: 0; }
-  .hdr h1{ font-size: 34px; }
-  .hdr-inner{ padding-bottom: 22px; }
-  .hdr-media{
-    position: relative;
-    width: calc(100% + 48px);
-    margin: 0 -24px 0 -24px;
-    height: 160px;
-    flex-direction: column;
-  }
-  .hdr-grid{
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-  }
-  .hdr-media::after{
-    background: linear-gradient(
-      180deg,
-      var(--obsidian) 0%,
-      rgba(11, 11, 14, 0.7) 18%,
-      rgba(11, 11, 14, 0.3) 60%,
-      rgba(11, 11, 14, 0.15) 100%
-    );
-  }
-  .hdr-logo{
-    top: 18px;
-    right: 18px;
-    width: 44px;
-  }
-  .row{ grid-template-columns: 48px 1fr; padding: 20px 20px; gap: 14px; }
-  .row-time{ grid-column: 2; text-align: left; padding-top: 8px; font-size: 18px; }
-  .row-time-sub{ display: inline-block; margin-left: 10px; margin-top: 0; }
-  .row-body{ padding-right: 0; }
-  .hdr-meta{ gap: 14px; }
-}
-
-@media print{
-  .toolbar{ display: none !important; }
-  @page{
-    size: A4 portrait;
-    margin: 10mm 12mm;
-  }
-  html, body{
-    background: white !important;
-    font-size: 10px;
-  }
-  body::before{ display: none; }
-  .wrap{
-    padding: 0 !important;
-    max-width: 100% !important;
-  }
-
-  /* Header — keep the brand but make it compact */
-  .hdr{
-    background: var(--obsidian) !important;
-    color: var(--bone) !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    padding: 12px 16px 10px !important;
-    margin-bottom: 8px !important;
-    box-shadow: none !important;
-    border-radius: 4px !important;
-    page-break-inside: avoid;
-    page-break-after: avoid;
-    min-height: 0 !important;
-  }
-  .hdr-media{
-    width: 40% !important;
-    gap: 1px !important;
-    padding: 1px !important;
-  }
-  .hdr-grid{ gap: 1px !important; }
-  .hdr-family{ gap: 1px !important; }
-  .hdr-grid img, .hdr-family img{
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  .hdr-media::after{
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-  .hdr-logo{
-    top: 8px !important;
-    right: 10px !important;
-    width: 32px !important;
-    filter: none !important;
-  }
-  .hdr::before{
+  /* ============================================================
+     Page chrome
+     ============================================================ */
+  html, body { margin: 0; padding: 0; }
+  body {
     background:
-      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(208, 68, 28, 0.18), transparent 60%) !important;
+      radial-gradient(ellipse 110% 60% at 50% -10%, rgba(208,68,28,0.14), transparent 60%),
+      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(200,162,75,0.05), transparent 60%),
+      var(--obsidian);
+    min-height: 100vh;
+    position: relative;
   }
-  .hdr::after{ display: none !important; }
-  .hdr-eyebrow{
-    font-size: 8px !important;
-    margin-bottom: 4px !important;
-    color: var(--red-bright) !important;
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.96  0 0 0 0 0.94  0 0 0 0 0.90  0 0 0 0.05 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    z-index: 0;
   }
-  .hdr-eyebrow::after{ width: 36px !important; }
-  .hdr h1{
-    font-size: 24px !important;
-    line-height: 1 !important;
-    margin-bottom: 4px !important;
-    color: var(--bone) !important;
-  }
-  .hdr h1 .accent{ color: var(--red-bright) !important; }
-  .hdr-tagline{
-    font-size: 11px !important;
-    margin-bottom: 6px !important;
-    color: var(--fg-2) !important;
-  }
-  .hdr-meta{
-    gap: 14px !important;
-    font-size: 9px !important;
-    color: var(--fg-2) !important;
-  }
-  .hdr-meta span strong{ color: var(--bone) !important; }
 
-  /* The order — compact rows, no shadows, no hover */
-  .order{
-    box-shadow: none !important;
-    border-radius: 4px !important;
-    page-break-inside: avoid;
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 80px 80px 160px;
+    position: relative;
+    z-index: 1;
   }
-  .row{
-    padding: 5px 14px !important;
-    grid-template-columns: 32px 1fr 80px !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-  .row:hover{ background: transparent !important; }
-  .row.tint-pastor{ background: rgba(208, 68, 28, 0.04) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .row.tint-worship{ background: rgba(154, 47, 17, 0.04) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .row.tint-meal{ background: rgba(200, 162, 75, 0.05) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
-  .row-num{
-    font-size: 16px !important;
-    padding-top: 1px !important;
+  /* ============================================================
+     Top bar — masthead + utility
+     ============================================================ */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 128px;
   }
-  .row-num.pastor{ color: var(--red) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .row-num.worship{ color: var(--ember) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .row-num.meal{ color: var(--gold-deep) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .masthead {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .masthead .mark {
+    width: 42px; height: 42px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .masthead .mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+  .masthead .ms-text {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--track-eyebrow);
+    color: var(--fg-2);
+    line-height: 1.3;
+  }
+  .masthead .ms-text strong { color: var(--fg-1); display: block; }
 
-  .row-body{ padding-right: 8px !important; }
-  .row-name{
-    font-size: 10.5px !important;
-    margin-bottom: 1px !important;
-    line-height: 1.2 !important;
+  .topbar .util {
+    display: flex; gap: 10px; align-items: center;
   }
-  .row-lead{
-    font-size: 9px !important;
-    line-height: 1.25 !important;
+  .util .btn-icon {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--line-mid);
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--fg-2);
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: var(--track-eyebrow);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all var(--t-micro) var(--ease-out-quint);
   }
-  .row-time{
-    font-size: 12px !important;
-    padding-top: 1px !important;
+  .util .btn-icon:hover { border-color: var(--red); color: var(--red); }
+  .util .btn-icon svg { width: 12px; height: 12px; }
+
+  /* ============================================================
+     Hero
+     ============================================================ */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-bottom: 128px;
   }
-  .row-time-sub{
-    font-size: 7.5px !important;
-    margin-top: 2px !important;
-    letter-spacing: 0.05em !important;
+  .hero .eyebrow {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--track-eyebrow);
+    color: var(--red);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
-}
+  .hero .eyebrow::before {
+    content: "";
+    width: 32px; height: 1px;
+    background: var(--red);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(72px, 11vw, 168px);
+    line-height: 0.86;
+    letter-spacing: -0.025em;
+    color: var(--bone);
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .hero h1 .word { display: block; }
+  .hero .tag {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(28px, 3.4vw, 48px);
+    color: var(--red);
+    line-height: 1;
+    margin-top: 40px;
+    letter-spacing: 0.005em;
+  }
+
+  /* Hero meta strip */
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 88px;
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .hero-meta .cell {
+    padding: 36px 32px 36px 0;
+    border-right: 1px solid var(--line-soft);
+  }
+  .hero-meta .cell:last-child { border-right: 0; padding-right: 0; }
+  .hero-meta .cell:not(:first-child) { padding-left: 28px; }
+  .hero-meta .lbl {
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--track-eyebrow);
+    color: var(--fg-3);
+    margin-bottom: 16px;
+  }
+  .hero-meta .val {
+    font-family: var(--font-display);
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--bone);
+    line-height: 1.05;
+  }
+  .hero-meta .val .sm {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--fg-2);
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* ============================================================
+     Section header
+     ============================================================ */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 64px;
+    padding-bottom: 0;
+  }
+  .section-head .lhs {
+    display: flex; align-items: baseline; gap: 18px;
+  }
+  .section-head .kicker {
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: var(--track-eyebrow);
+    color: var(--red);
+  }
+  .section-head h2 {
+    font-family: var(--font-display);
+    font-size: clamp(36px, 4.2vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--bone);
+    text-transform: uppercase;
+  }
+  .section-head .total {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--fg-3);
+  }
+
+  /* ============================================================
+     Running order list
+     ============================================================ */
+  .order {
+    border-top: 1px solid var(--line-soft);
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 72px 1fr 140px 170px;
+    align-items: center;
+    gap: 40px;
+    padding: 56px 0;
+    border-bottom: 1px solid var(--line-soft);
+    position: relative;
+    transition: background var(--t-micro) var(--ease-out-quint);
+  }
+  .item:hover { background: rgba(244,239,230,0.015); }
+  .item .num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    color: var(--fg-3);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    text-align: left;
+  }
+  .item.major .num { color: var(--red); }
+
+  .item .title-cell {
+    min-width: 0;
+  }
+  .item .title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    color: var(--bone);
+    margin-bottom: 16px;
+  }
+  .item .title em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--bone);
+    font-size: 1em;
+  }
+  .item .meta {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--fg-2);
+    line-height: 1.4;
+  }
+  .item .meta .role {
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 10px;
+    margin-right: 8px;
+  }
+  .item .duration {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: right;
+    line-height: 1.2;
+  }
+  .item .duration .num-d {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--fg-1);
+    letter-spacing: -0.01em;
+    margin-bottom: 2px;
+  }
+  .item .duration .num-d .unit {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-left: 4px;
+    font-weight: 600;
+    vertical-align: 4px;
+  }
+  .item .time {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--bone);
+    letter-spacing: -0.01em;
+    text-align: right;
+    line-height: 1.05;
+  }
+  .item .time .arrow {
+    color: var(--fg-3);
+    margin: 0 4px;
+    font-family: var(--font-body);
+    font-weight: 300;
+  }
+
+  .item.major::before {
+    content: "";
+    position: absolute;
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px; height: 36px;
+    background: var(--red);
+  }
+
+  /* ============================================================
+     Photo composition — between hero & schedule
+     Family photos prominent on top, portrait strip below as texture
+     ============================================================ */
+  .gallery {
+    margin-bottom: 128px;
+  }
+  .gallery .family {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    height: 320px;
+    margin-bottom: 6px;
+  }
+  .gallery .family .ph {
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    filter: saturate(1.02) contrast(1.05);
+  }
+  .gallery .family .ph::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(11,11,14,0) 50%, rgba(11,11,14,0.4) 100%);
+  }
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+    height: 100px;
+  }
+  .strip .ph {
+    background-size: cover;
+    background-position: center;
+    filter: grayscale(0.4) contrast(1.05) brightness(0.85);
+    position: relative;
+  }
+  .strip .ph::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(11,11,14,0) 40%, rgba(11,11,14,0.5) 100%);
+  }
+
+  /* ============================================================
+     Footer notes
+     ============================================================ */
+  .closing {
+    margin-top: 112px;
+    padding-top: 72px;
+    border-top: 1px solid var(--line-soft);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+  .closing .blurb {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--fg-1);
+    letter-spacing: 0.005em;
+  }
+  .closing .blurb::before {
+    content: "“";
+    display: block;
+    font-family: var(--font-serif);
+    color: var(--red);
+    font-size: 64px;
+    line-height: 0.5;
+    margin-bottom: 24px;
+  }
+  .closing .colophon {
+    align-self: end;
+    text-align: right;
+    font-family: var(--font-body);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--track-eyebrow);
+    color: var(--fg-3);
+    line-height: 1.8;
+  }
+  .closing .colophon strong { color: var(--fg-1); display: block; }
+  .closing .colophon .dot { display: inline-block; margin: 0 6px; color: var(--red); }
+
+  /* ============================================================
+     Responsive
+     ============================================================ */
+  @media (max-width: 880px) {
+    .page { padding: 32px 24px 64px; }
+    .topbar { margin-bottom: 48px; }
+    .hero { margin-bottom: 48px; }
+    .hero-meta { grid-template-columns: 1fr; }
+    .hero-meta .cell { border-right: 0; border-bottom: 1px solid var(--line-soft); padding: 20px 0 !important; }
+    .hero-meta .cell:last-child { border-bottom: 0; }
+    .gallery { display: none; }
+    .item {
+      grid-template-columns: 44px 1fr;
+      grid-template-rows: auto auto;
+      row-gap: 12px;
+      column-gap: 16px;
+      padding: 22px 0;
+    }
+    .item .num { font-size: 28px; align-self: start; padding-top: 4px; }
+    .item .duration { grid-column: 2; text-align: left; display: flex; align-items: baseline; gap: 12px; }
+    .item .duration .num-d { font-size: 16px; }
+    .item .time { grid-column: 2; text-align: left; font-size: 16px; }
+    .item .title { font-size: 19px; }
+    .section-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .closing { grid-template-columns: 1fr; gap: 32px; }
+    .closing .colophon { text-align: left; }
+  }
+
+  /* ============================================================
+     Print
+     ============================================================ */
+  @media print {
+    @page { size: A4; margin: 18mm 16mm 18mm 16mm; }
+    body { background: #fff !important; color: #14141A !important; }
+    body::before { display: none; }
+    .page { padding: 0; max-width: 100%; }
+    .topbar .util { display: none; }
+    .topbar { border-color: rgba(0,0,0,0.1); margin-bottom: 24px; padding-bottom: 14px; }
+    .masthead .ms-text { color: #4A4A55; }
+    .masthead .ms-text strong { color: #14141A; }
+    .hero { margin-bottom: 32px; }
+    .hero h1 { color: #14141A; font-size: 64px; }
+    .hero .eyebrow { color: var(--red); }
+    .hero .eyebrow::before { background: var(--red); }
+    .hero .tag { color: var(--red); font-size: 26px; margin-top: 12px; }
+    .hero-meta { border-color: rgba(0,0,0,0.12); margin-top: 28px; }
+    .hero-meta .cell { border-color: rgba(0,0,0,0.12); padding: 14px 18px 14px 0 !important; }
+    .hero-meta .cell:not(:first-child) { padding-left: 18px !important; }
+    .hero-meta .lbl { color: #7A7A85; }
+    .hero-meta .val { color: #14141A; font-size: 18px; }
+    .hero-meta .val .sm { color: #4A4A55; }
+    .gallery { margin-bottom: 16px !important; }
+    .gallery .family { height: 80px !important; gap: 3px !important; margin-bottom: 0 !important; }
+    .gallery .family .ph {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .strip { display: none; }
+    .section-head { margin: 32px 0 16px; }
+    .section-head h2 { color: #14141A; font-size: 28px; }
+    .order { border-color: rgba(0,0,0,0.12); }
+    .item { border-color: rgba(0,0,0,0.08); padding: 12px 0; gap: 18px; grid-template-columns: 36px 1fr 100px 130px; page-break-inside: avoid; }
+    .item .num { color: #7A7A85; font-size: 22px; }
+    .item.major .num { color: var(--red); }
+    .item .title { color: #14141A; font-size: 15px; }
+    .item .title em { color: #14141A; }
+    .item .meta { color: #4A4A55; font-size: 11px; }
+    .item .meta .role { color: #7A7A85; }
+    .item .duration { color: #4A4A55; font-size: 10px; }
+    .item .duration .num-d { color: #14141A; font-size: 14px; }
+    .item .duration .num-d .unit { color: #7A7A85; }
+    .item .time { color: #14141A; font-size: 14px; }
+    .item.major::before { display: none; }
+    .closing { border-color: rgba(0,0,0,0.12); margin-top: 32px; padding-top: 24px; }
+    .closing .blurb { color: #14141A; font-size: 16px; }
+    .closing .blurb::before { font-size: 32px; }
+    .closing .colophon { color: #7A7A85; }
+    .closing .colophon strong { color: #14141A; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="page">
 
-  <div class="hdr">
-    <div class="hdr-inner">
-      <div class="hdr-eyebrow">Calvary Hephzibah · 34th Anniversary</div>
-      <h1>Running Order <span class="accent">·</span> Sun 17 May</h1>
-      <div class="hdr-tagline">Reasons to be Thankful.</div>
-      <div class="hdr-meta">
-        <span><strong>Date:</strong> Sunday 17 May 2026</span>
-        <span><strong>Start:</strong> 10:30 AM</span>
-        <span><strong>Venue:</strong> 74 Carmoor Road, Manchester M13 0FB</span>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="masthead">
+      <div class="mark"><img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah"></div>
+      <div class="ms-text">
+        <strong>Calvary Hephzibah</strong>
+        Full Gospel Church · The Bridge
       </div>
     </div>
+    <div class="util">
+      <button class="btn-icon" onclick="window.print()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        Print · PDF
+      </button>
+    </div>
+  </header>
 
-    <div class="hdr-media" aria-hidden="true">
-      <div class="hdr-family">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-women.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-men.jpg" alt="">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="eyebrow">Calvary Hephzibah · 34<sup style="text-transform:none;letter-spacing:0;font-size:0.7em;">th</sup> Anniversary</div>
+    <h1>
+      <span class="word">Running</span>
+      <span class="word">Order</span>
+    </h1>
+    <div class="tag">Reasons to be Thankful.</div>
+
+    <div class="hero-meta">
+      <div class="cell">
+        <div class="lbl">Date</div>
+        <div class="val">Sun 17 May<span class="sm">2026 · 34th Anniversary Service</span></div>
       </div>
-      <div class="hdr-grid">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-1.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-20.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-15.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-5.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-7.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-4.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-14.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-3.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-12.jpg" alt="">
-        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-2.jpg" alt="">
+      <div class="cell">
+        <div class="lbl">Start</div>
+        <div class="val">10:30 AM<span class="sm">Service begins · Meal to follow</span></div>
+      </div>
+      <div class="cell">
+        <div class="lbl">Venue</div>
+        <div class="val">Carmoor Rd<span class="sm">74 Carmoor Road, Manchester M13 0FB</span></div>
       </div>
     </div>
-    <img class="hdr-logo" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah">
+  </section>
+
+  <!-- Photo composition: family on top, portrait strip below -->
+  <div class="gallery" aria-hidden="true">
+    <div class="family">
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-women.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/family-60th-men.jpg')"></div>
+    </div>
+    <div class="strip">
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-1.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-20.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-15.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-7.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-5.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-14.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-12.jpg')"></div>
+      <div class="ph" style="background-image:url('https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/photos/hero-portrait-4.jpg')"></div>
+    </div>
   </div>
 
-  <div class="toolbar">
-    <button class="btn-print" onclick="window.print()" aria-label="Print or save as PDF">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="6 9 6 2 18 2 18 9"></polyline>
-        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-        <rect x="6" y="14" width="12" height="8"></rect>
-      </svg>
-      <span>Print / Save as PDF</span>
-    </button>
+  <!-- Section head -->
+  <div class="section-head">
+    <div class="lhs">
+      <span class="kicker">§ 01</span>
+      <h2>The Order of Service</h2>
+    </div>
+    <div class="total">15 items · 10:30 → 14:01</div>
   </div>
 
-  <div class="order">
+  <!-- Running order -->
+  <ol class="order" reversed="false">
 
-    <div class="row tint-pastor">
-      <div class="row-num pastor">1</div>
-      <div class="row-body">
-        <div class="row-name">Welcome · Bible Reading · Opening Prayer</div>
-        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+    <li class="item">
+      <div class="num">01</div>
+      <div class="title-cell">
+        <div class="title">Welcome · Bible Reading · Opening Prayer</div>
+        <div class="meta"><span class="role">Lead</span>Pastor Shade Olatoye</div>
       </div>
-      <div class="row-time">10 min<div class="row-time-sub">10:30–10:40</div></div>
-    </div>
+      <div class="duration"><span class="num-d">10<span class="unit">min</span></span></div>
+      <div class="time">10:30<span class="arrow">→</span>10:40</div>
+    </li>
 
-    <div class="row tint-worship">
-      <div class="row-num worship">2</div>
-      <div class="row-body">
-        <div class="row-name">Praise &amp; Worship</div>
-        <div class="row-lead"><strong>Lead:</strong> Calvary Worship Team</div>
+    <li class="item">
+      <div class="num">02</div>
+      <div class="title-cell">
+        <div class="title">Praise &amp; Worship</div>
+        <div class="meta"><span class="role">Lead</span>Calvary Worship Team</div>
       </div>
-      <div class="row-time">20 min<div class="row-time-sub">10:40–11:00</div></div>
-    </div>
+      <div class="duration"><span class="num-d">20<span class="unit">min</span></span></div>
+      <div class="time">10:40<span class="arrow">→</span>11:00</div>
+    </li>
 
-    <div class="row">
-      <div class="row-num">3</div>
-      <div class="row-body">
-        <div class="row-name">Communion</div>
+    <li class="item major">
+      <div class="num">03</div>
+      <div class="title-cell">
+        <div class="title">Communion</div>
+        <div class="meta"><span class="role">Element</span>Bread &amp; Cup</div>
       </div>
-      <div class="row-time">10 min<div class="row-time-sub">11:00–11:10</div></div>
-    </div>
+      <div class="duration"><span class="num-d">10<span class="unit">min</span></span></div>
+      <div class="time">11:00<span class="arrow">→</span>11:10</div>
+    </li>
 
-    <div class="row tint-pastor">
-      <div class="row-num pastor">4</div>
-      <div class="row-body">
-        <div class="row-name">Welcome Address</div>
-        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+    <li class="item">
+      <div class="num">04</div>
+      <div class="title-cell">
+        <div class="title">Welcome Address</div>
+        <div class="meta"><span class="role">Lead</span>Pastor Shade Olatoye</div>
       </div>
-      <div class="row-time">10 min<div class="row-time-sub">11:10–11:20</div></div>
-    </div>
+      <div class="duration"><span class="num-d">10<span class="unit">min</span></span></div>
+      <div class="time">11:10<span class="arrow">→</span>11:20</div>
+    </li>
 
-    <div class="row">
-      <div class="row-num">5</div>
-      <div class="row-body">
-        <div class="row-name">Presentation</div>
+    <li class="item">
+      <div class="num">05</div>
+      <div class="title-cell">
+        <div class="title">Presentation</div>
+        <div class="meta"><span class="role">Segment</span>Visual presentation</div>
       </div>
-      <div class="row-time">3 min<div class="row-time-sub">11:20–11:23</div></div>
-    </div>
+      <div class="duration"><span class="num-d">3<span class="unit">min</span></span></div>
+      <div class="time">11:20<span class="arrow">→</span>11:23</div>
+    </li>
 
-    <div class="row">
-      <div class="row-num">6</div>
-      <div class="row-body">
-        <div class="row-name">Sermon — <em>Reasons to be Thankful</em></div>
-        <div class="row-lead"><strong>Preacher:</strong> Pastor Gbenga Adebanjo</div>
+    <li class="item major">
+      <div class="num">06</div>
+      <div class="title-cell">
+        <div class="title">Sermon — <em>Reasons to be Thankful</em></div>
+        <div class="meta"><span class="role">Preacher</span>Pastor Gbenga Adebanjo</div>
       </div>
-      <div class="row-time">25–30 min<div class="row-time-sub">11:23–11:53</div></div>
-    </div>
+      <div class="duration"><span class="num-d">25–30<span class="unit">min</span></span></div>
+      <div class="time">11:23<span class="arrow">→</span>11:53</div>
+    </li>
 
-    <div class="row tint-pastor">
-      <div class="row-num pastor">7</div>
-      <div class="row-body">
-        <div class="row-name">Welcome to All · Brief Announcements</div>
-        <div class="row-lead"><strong>Lead:</strong> Pastor Kayode Ogungbenro</div>
+    <li class="item">
+      <div class="num">07</div>
+      <div class="title-cell">
+        <div class="title">Welcome to All · Brief Announcements</div>
+        <div class="meta"><span class="role">Lead</span>Pastor Kayode Ogungbenro</div>
       </div>
-      <div class="row-time">5 min<div class="row-time-sub">11:53–11:58</div></div>
-    </div>
+      <div class="duration"><span class="num-d">5<span class="unit">min</span></span></div>
+      <div class="time">11:53<span class="arrow">→</span>11:58</div>
+    </li>
 
-    <div class="row tint-worship">
-      <div class="row-num worship">8</div>
-      <div class="row-body">
-        <div class="row-name">Offering</div>
-        <div class="row-lead"><strong>Ministering in song:</strong> Evangelist Bola Paul · D'Voice Ministries</div>
+    <li class="item">
+      <div class="num">08</div>
+      <div class="title-cell">
+        <div class="title">Offering</div>
+        <div class="meta"><span class="role">Ministering in song</span>Evangelist Bola Paul · D'Voice Ministries</div>
       </div>
-      <div class="row-time">15 min<div class="row-time-sub">11:58–12:13</div></div>
-    </div>
+      <div class="duration"><span class="num-d">15<span class="unit">min</span></span></div>
+      <div class="time">11:58<span class="arrow">→</span>12:13</div>
+    </li>
 
-    <div class="row">
-      <div class="row-num">9</div>
-      <div class="row-body">
-        <div class="row-name">Presentation</div>
+    <li class="item">
+      <div class="num">09</div>
+      <div class="title-cell">
+        <div class="title">Presentation</div>
+        <div class="meta"><span class="role">Segment</span>Visual presentation</div>
       </div>
-      <div class="row-time">3 min<div class="row-time-sub">12:13–12:16</div></div>
-    </div>
+      <div class="duration"><span class="num-d">3<span class="unit">min</span></span></div>
+      <div class="time">12:13<span class="arrow">→</span>12:16</div>
+    </li>
 
-    <div class="row tint-pastor">
-      <div class="row-num pastor">10</div>
-      <div class="row-body">
-        <div class="row-name">Show of Appreciation &amp; Honour</div>
-        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+    <li class="item major">
+      <div class="num">10</div>
+      <div class="title-cell">
+        <div class="title">Show of Appreciation &amp; Honour</div>
+        <div class="meta"><span class="role">Lead</span>Pastor Shade Olatoye</div>
       </div>
-      <div class="row-time">10–12 min<div class="row-time-sub">12:16–12:28</div></div>
-    </div>
+      <div class="duration"><span class="num-d">10–12<span class="unit">min</span></span></div>
+      <div class="time">12:16<span class="arrow">→</span>12:28</div>
+    </li>
 
-    <div class="row">
-      <div class="row-num">11</div>
-      <div class="row-body">
-        <div class="row-name">Presentation</div>
+    <li class="item">
+      <div class="num">11</div>
+      <div class="title-cell">
+        <div class="title">Presentation</div>
+        <div class="meta"><span class="role">Segment</span>Visual presentation</div>
       </div>
-      <div class="row-time">3 min<div class="row-time-sub">12:28–12:31</div></div>
-    </div>
+      <div class="duration"><span class="num-d">3<span class="unit">min</span></span></div>
+      <div class="time">12:28<span class="arrow">→</span>12:31</div>
+    </li>
 
-    <div class="row">
-      <div class="row-num">12</div>
-      <div class="row-body">
-        <div class="row-name">Prayer Ministry</div>
-        <div class="row-lead"><strong>Lead:</strong> Visiting Ministers</div>
+    <li class="item">
+      <div class="num">12</div>
+      <div class="title-cell">
+        <div class="title">Prayer Ministry</div>
+        <div class="meta"><span class="role">Lead</span>Visiting Ministers</div>
       </div>
-      <div class="row-time">5 min<div class="row-time-sub">12:31–12:36</div></div>
-    </div>
+      <div class="duration"><span class="num-d">5<span class="unit">min</span></span></div>
+      <div class="time">12:31<span class="arrow">→</span>12:36</div>
+    </li>
 
-    <div class="row tint-meal">
-      <div class="row-num meal">13</div>
-      <div class="row-body">
-        <div class="row-name">Grace &amp; Blessing of the Meal</div>
+    <li class="item">
+      <div class="num">13</div>
+      <div class="title-cell">
+        <div class="title">Grace &amp; Blessing of the Meal</div>
+        <div class="meta"><span class="role">Element</span>Spoken blessing</div>
       </div>
-      <div class="row-time">5 min<div class="row-time-sub">12:36–12:41</div></div>
-    </div>
+      <div class="duration"><span class="num-d">5<span class="unit">min</span></span></div>
+      <div class="time">12:36<span class="arrow">→</span>12:41</div>
+    </li>
 
-    <div class="row tint-meal">
-      <div class="row-num meal">14</div>
-      <div class="row-body">
-        <div class="row-name">The Meal</div>
-        <div class="row-lead"><strong>Lead:</strong> Hospitality Team (Janet Oviri)</div>
+    <li class="item major">
+      <div class="num">14</div>
+      <div class="title-cell">
+        <div class="title">The Meal</div>
+        <div class="meta"><span class="role">Lead</span>Hospitality Team — Janet Oviri</div>
       </div>
-      <div class="row-time">60–75 min<div class="row-time-sub">12:41–13:56</div></div>
-    </div>
+      <div class="duration"><span class="num-d">60–75<span class="unit">min</span></span></div>
+      <div class="time">12:41<span class="arrow">→</span>13:56</div>
+    </li>
 
-    <div class="row tint-pastor">
-      <div class="row-num pastor">15</div>
-      <div class="row-body">
-        <div class="row-name">Closing Prayer</div>
-        <div class="row-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+    <li class="item">
+      <div class="num">15</div>
+      <div class="title-cell">
+        <div class="title">Closing Prayer</div>
+        <div class="meta"><span class="role">Lead</span>Pastor Shade Olatoye</div>
       </div>
-      <div class="row-time">5 min<div class="row-time-sub">13:56–14:01</div></div>
-    </div>
+      <div class="duration"><span class="num-d">5<span class="unit">min</span></span></div>
+      <div class="time">13:56<span class="arrow">→</span>14:01</div>
+    </li>
 
-  </div>
+  </ol>
+
+  <!-- Closing -->
+  <footer class="closing">
+    <div class="blurb">
+      Thirty-four years of faithfulness — and a thousand reasons to lift our voices in thanks.
+    </div>
+    <div class="colophon">
+      <strong>The Bridge</strong>
+      Anniversary 2026 <span class="dot">·</span> Running Order<br />
+      Issued for the Calvary Hephzibah programming &amp; production teams
+    </div>
+  </footer>
 
 </div>
 </body>
