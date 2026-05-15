@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worship Team Meeting Recap · 14 May 2026 · Calvary Hephzibah</title>
+  <meta name="description" content="A recap of the worship team meeting on Thursday 14 May 2026, with all five video clips. Bible study, gear upgrades, set structure, the line-up, and the set walkthrough.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Worship Team Meeting Recap · 14 May 2026">
+  <meta property="og:description" content="Bible study, gear upgrades, set structure, the line-up, and the set walkthrough — all five clips, in one place.">
+  <meta property="og:url" content="https://calvaryhfgc.github.io/calvaryhephzibah/worship-team-meeting-recap-14-may-2026.html">
+  <meta property="og:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/meeting-thumbnail-14-may.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/assets/meeting-thumbnail-14-may.jpg">
+
+  <link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
+  <link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--obsidian);
+      color: var(--fg-1);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.65;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 0%, rgba(208, 68, 28, 0.18), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(110, 26, 15, 0.14), transparent 60%);
+    }
+    body::after {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      opacity: 0.04; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+
+    .container { max-width: 880px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+
+    /* TICKER */
+    .ticker {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--obsidian);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 14px 28px;
+      font-size: var(--fs-micro);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-2);
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      flex-wrap: wrap;
+    }
+    .ticker-left { display: flex; align-items: center; gap: 12px; }
+    .ticker-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red);
+    }
+    .ticker-right { color: var(--fg-3); font-size: 11px; }
+
+    /* HERO */
+    .hero { padding: 76px 0 56px; border-bottom: 1px solid var(--line-soft); }
+    .hero-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(52px, 9vw, 120px);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero h1 .accent { color: var(--red); }
+    .hero-lede {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      line-height: 1.55;
+      color: var(--fg-1);
+      max-width: 640px;
+      margin-bottom: 20px;
+    }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 24px;
+      padding-top: 32px;
+      margin-top: 24px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .hero-meta-item .label {
+      font-size: 11px;
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-3);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .hero-meta-item .value {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--fg-1);
+      line-height: 1.3;
+    }
+
+    /* CONTENTS — chip nav */
+    .contents {
+      padding: 32px 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .contents a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(245, 240, 232, 0.04);
+      border: 1px solid var(--line-soft);
+      color: var(--fg-1);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .contents a:hover {
+      background: rgba(208, 68, 28, 0.12);
+      border-color: var(--red);
+    }
+    .contents a .num {
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    /* CLIP SECTIONS */
+    section.clip {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    section.clip:last-of-type { border-bottom: none; }
+    .clip-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .clip-part {
+      display: inline-block;
+      padding: 4px 10px;
+      background: var(--red);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      line-height: 1.2;
+    }
+    .clip-topic {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+    .clip-title {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .clip-title .accent { color: var(--red); }
+    .clip-verse {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 16px;
+      color: var(--fg-2);
+      margin-bottom: 28px;
+    }
+    .clip-verse strong {
+      font-style: normal;
+      color: var(--red);
+      letter-spacing: 0.08em;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    /* Embedded YouTube */
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      margin-bottom: 28px;
+      background: #000;
+      border: 1px solid var(--line-soft);
+    }
+    .video-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .video-placeholder {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: var(--slate);
+      color: var(--fg-3);
+      text-align: center;
+      padding: 0 24px;
+    }
+    .video-placeholder .ph-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+    }
+    .video-placeholder .ph-message {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--fg-1);
+      max-width: 380px;
+    }
+
+    /* Recap prose */
+    .recap p {
+      font-size: 16.5px;
+      color: var(--fg-1);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    .recap p:last-child { margin-bottom: 0; }
+    .recap p strong { color: var(--bone); }
+    .recap em { font-style: italic; }
+
+    .quote {
+      margin: 24px 0;
+      padding: 16px 20px;
+      background: rgba(208, 68, 28, 0.06);
+      border-left: 2px solid var(--red);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--fg-1);
+    }
+    .quote .who {
+      display: block;
+      margin-top: 8px;
+      font-style: normal;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+
+    /* Pillars mini-grid for Part 1 */
+    .pillars-mini {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+    .pillar-mini {
+      padding: 16px 18px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+    }
+    .pillar-mini .pm-num {
+      font-family: var(--font-display);
+      font-size: 26px;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .pillar-mini .pm-name {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 6px;
+    }
+    .pillar-mini .pm-verse {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--fg-3);
+      text-transform: uppercase;
+    }
+
+    /* Setlist mini for Part 4 */
+    .setlist {
+      display: grid;
+      gap: 8px;
+      margin: 24px 0;
+    }
+    .setlist-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      padding: 12px 16px;
+      background: rgba(245, 240, 232, 0.03);
+      border-left: 2px solid var(--red);
+      align-items: baseline;
+    }
+    .setlist-item .num {
+      font-family: var(--font-display);
+      color: var(--red);
+      font-size: 18px;
+    }
+    .setlist-item .song {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--fg-1);
+    }
+
+    /* CTA */
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .cta {
+      display: inline-block;
+      padding: 12px 22px;
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .cta-primary {
+      background: var(--red);
+      color: white;
+    }
+    .cta-primary:hover { background: var(--red-bright); }
+    .cta-ghost {
+      background: transparent;
+      color: var(--bone);
+      border: 1px solid var(--line-soft);
+    }
+    .cta-ghost:hover { border-color: var(--red); }
+
+    /* FOOTER */
+    .pack-footer {
+      padding: 48px 0;
+      border-top: 1px solid var(--line-soft);
+    }
+    .pack-footer .closing {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 19px;
+      color: var(--fg-1);
+      line-height: 1.5;
+      margin-bottom: 18px;
+      max-width: 560px;
+    }
+    .pack-footer .signoff {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+    .pack-footer .signoff strong { color: var(--red); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <div class="ticker">
+    <div class="ticker-left">
+      <span class="ticker-dot"></span>
+      <span>Worship Team · Meeting Recap</span>
+    </div>
+    <div class="ticker-right">Thurs 14 May 2026</div>
+  </div>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">Meeting Recap · Five Clips</div>
+      <h1>Everything we<br>covered in <span class="accent">one place.</span></h1>
+      <p class="hero-lede">
+        On Thursday 14 May we met virtually as a worship team to encourage each other and walk through the anniversary set. Below is the meeting in five short clips, plus a written recap of what we covered.
+      </p>
+      <p class="hero-lede">
+        Watch what's useful, skim what's not. Everything stays here.
+      </p>
+
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="label">Date</div>
+          <div class="value">Thurs 14 May 2026</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Format</div>
+          <div class="value">5 video clips</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Total runtime</div>
+          <div class="value">~45 minutes</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Anniversary</div>
+          <div class="value">Sunday 17 May</div>
+        </div>
+      </div>
+
+      <!-- Contents nav -->
+      <div class="contents">
+        <a href="#part-1"><span class="num">01</span> Bible Study</a>
+        <a href="#part-2"><span class="num">02</span> Upgrades</a>
+        <a href="#part-3"><span class="num">03</span> Set Structure</a>
+        <a href="#part-4"><span class="num">04</span> The Line-Up</a>
+        <a href="#part-5"><span class="num">05</span> Set Walkthrough</a>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- PART 1 — Bible Study                                    -->
+    <!-- ====================================================== -->
+    <section class="clip" id="part-1">
+      <div class="clip-eyebrow">
+        <span class="clip-part">PART 1</span>
+        <span class="clip-topic">Bible Study</span>
+      </div>
+      <h2 class="clip-title">The Battle Belongs To <span class="accent">The Lord.</span></h2>
+      <p class="clip-verse"><strong>2 Chronicles 20:15</strong> "The battle is not yours, but God's."</p>
+
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/wXyAymTOiQ0" title="Part 1 — Bible Study" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <div class="recap">
+        <p>The first part of the meeting was the heart of it. After a short round-table where each of us shared a reason to be thankful, we opened the Bible.</p>
+
+        <p>The story was Jehoshaphat in <strong>2 Chronicles 20</strong>. Three armies marching toward Judah. One king, outnumbered. He prayed honestly — <em>"We don't know what to do, but our eyes are on you."</em> God's answer, through a man called Jahaziel: <strong>"The battle is not yours, but God's."</strong></p>
+
+        <p>Then God did something strange. He told Jehoshaphat to put singers at the front of the army. <strong>Singers, not soldiers.</strong> The moment they began to sing, God set ambushes. The three armies turned on each other. By the time Judah's soldiers arrived, the battle was already won.</p>
+
+        <p>The point landed: that's what we do on Sunday. We go first. We sing. God does the fighting.</p>
+
+        <p>We also touched on <strong>Gideon</strong> — 32,000 men reduced to 300, so God's people couldn't claim the victory as their own — and <strong>Jericho</strong>, where walking around the city in silence for six days and a shout on the seventh brought the walls down. Same God in all three. Same pattern. He uses what looks impossible so the credit goes where it belongs.</p>
+
+        <p>Then we talked about four things we want to keep growing in as a team:</p>
+
+        <div class="pillars-mini">
+          <div class="pillar-mini">
+            <div class="pm-num">1</div>
+            <div class="pm-name">Know where you're going</div>
+            <div class="pm-verse">Proverbs 29:18</div>
+          </div>
+          <div class="pillar-mini">
+            <div class="pm-num">2</div>
+            <div class="pm-name">Don't half-do it</div>
+            <div class="pm-verse">Colossians 3:23</div>
+          </div>
+          <div class="pillar-mini">
+            <div class="pm-num">3</div>
+            <div class="pm-name">Keep learning</div>
+            <div class="pm-verse">Proverbs 22:29</div>
+          </div>
+          <div class="pillar-mini">
+            <div class="pm-num">4</div>
+            <div class="pm-name">Do it again, and again</div>
+            <div class="pm-verse">Joshua 1:8</div>
+          </div>
+        </div>
+
+        <p>On the third one, we talked about Malcolm Gladwell's <em>10,000 hours</em> idea — that anyone can become a master at anything if they put the time in. That's not just for music. It's the principle behind Proverbs 22:29 — when skill builds, doors open.</p>
+
+        <div class="quote">
+          "It's like having a second family."
+          <span class="who">Esther, on what she's thankful for at Calvary</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- PART 2 — Upgrades                                       -->
+    <!-- ====================================================== -->
+    <section class="clip" id="part-2">
+      <div class="clip-eyebrow">
+        <span class="clip-part">PART 2</span>
+        <span class="clip-topic">Upgrades</span>
+      </div>
+      <h2 class="clip-title">A New <span class="accent">Standard.</span></h2>
+      <p class="clip-verse"><strong>Colossians 3:23</strong> "Whatever you do, work at it with all your heart."</p>
+
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/WiUkivifam4" title="Part 2 — Upgrades" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <div class="recap">
+        <p>Sunday is going to look and sound different. We've invested in real upgrades across the board:</p>
+
+        <p><strong>Visuals.</strong> New backdrops and banners at the back of the stage — a proper facelift for the room. A new camera so the broadcast looks closer to broadcast quality than phone quality.</p>
+
+        <p><strong>Audio.</strong> A new multicore cable with more channels so we have room to plug in everything we need. A pile of new XLRs. And — new for the singers — an in-ear system similar to what the instrumentalists have been using. It'll feel different. We'll test it on Saturday.</p>
+
+        <p>The framing Bolaji put on all this: <em>Calvary is investing in Calvary.</em> The technical lift comes with a quiet expectation — if the broadcast is going to look this good, we put our best foot forward too. Spirit of excellence in everything, not just the sound.</p>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- PART 3 — Set Structure                                  -->
+    <!-- ====================================================== -->
+    <section class="clip" id="part-3">
+      <div class="clip-eyebrow">
+        <span class="clip-part">PART 3</span>
+        <span class="clip-topic">Set Structure</span>
+      </div>
+      <h2 class="clip-title">Boundaries Make You <span class="accent">Free.</span></h2>
+      <p class="clip-verse"><strong>Joshua 1:8</strong> "Meditate on it day and night."</p>
+
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/lnbahec5aRQ" title="Part 3 — Set Structure" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <div class="recap">
+        <p>The praise-and-worship set is short. 20 to 30 minutes, by most measures. That means we can — and should — keep it tight and repeatable rather than chopping and changing each week. The same set, refined again and again, gets stronger every Sunday.</p>
+
+        <p>There's a practical reason too. Our band is smaller than it has been. A repeatable structure lets us add programmed elements — drum tracks, bass tracks, keyboard pads — so the sound fills out even when not every chair is filled. The compromise: once you're locked into a structured arrangement, you can't deviate without it falling apart.</p>
+
+        <p>So for now: lock in praise tightly, leave worship more open for the Spirit. Both improve over time, but in different ways.</p>
+
+        <div class="quote">
+          "When you add boundaries, it makes you become more free. If I know the structure, I can sing around it. I can do my ad-libs. But I just know what's happening in the background."
+          <span class="who">Bolaji, on structure as a gift</span>
+        </div>
+
+        <p>This is the <strong>Repetition</strong> pillar from Part 1, applied. Sunday should feel like the hundredth time. Not the first.</p>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- PART 4 — The Line-Up                                    -->
+    <!-- ====================================================== -->
+    <section class="clip" id="part-4">
+      <div class="clip-eyebrow">
+        <span class="clip-part">PART 4</span>
+        <span class="clip-topic">The Line-Up</span>
+      </div>
+      <h2 class="clip-title">Every Voice <span class="accent">Leads.</span></h2>
+      <p class="clip-verse"><strong>Psalm 150:6</strong> "Let everything that has breath praise the Lord."</p>
+
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/9zt0toQEirc" title="Part 4 — The Line-Up" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+
+      <div class="recap">
+        <p>The Sunday line-up:</p>
+
+        <div class="setlist">
+          <div class="setlist-item"><div class="num">·</div><div class="song"><strong>Drums</strong> — Bolaji A.</div></div>
+          <div class="setlist-item"><div class="num">·</div><div class="song"><strong>Keys 1</strong> — Eddie</div></div>
+          <div class="setlist-item"><div class="num">·</div><div class="song"><strong>Keys 2</strong> — Uncle B</div></div>
+          <div class="setlist-item"><div class="num">·</div><div class="song"><strong>Bass</strong> — Uncle Michael</div></div>
+          <div class="setlist-item"><div class="num">·</div><div class="song"><strong>Guitar</strong> — Morayo</div></div>
+          <div class="setlist-item"><div class="num">·</div><div class="song"><strong>Vocals</strong> — Uncle Caster, Esther, Uncle Shola, Auntie Jess</div></div>
+        </div>
+
+        <p>The thing worth dwelling on is the vocals. Four strong singers — not the usual one lead and a wall of backing. Bolaji pitched it as <strong>vocals-as-instrument</strong>: think of the four of you as a single, strong vocal section, evenly arranged on stage, each capable of leading. Leading then becomes a question of direction — who's telling the church where to go next — rather than hierarchy.</p>
+
+        <p>Uncle Shola is a professional singer. Auntie Jess sings very well. With Uncle Caster's experience and Esther's voice, this is a strong group. We test the arrangement Saturday.</p>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- PART 5 — Set Walkthrough  (placeholder)                 -->
+    <!-- ====================================================== -->
+    <section class="clip" id="part-5">
+      <div class="clip-eyebrow">
+        <span class="clip-part">PART 5</span>
+        <span class="clip-topic">Set Walkthrough</span>
+      </div>
+      <h2 class="clip-title">The <span class="accent">Set.</span></h2>
+      <p class="clip-verse"><strong>Worship Pack · 17 May 2026</strong> The full set with direction and reference audio.</p>
+
+      <div class="video-wrap">
+        <div class="video-placeholder">
+          <div class="ph-eyebrow">Coming soon</div>
+          <div class="ph-message">This clip is still processing. It'll slot in here as soon as it's live.</div>
+        </div>
+      </div>
+
+      <div class="recap">
+        <p>The last part of the meeting was the song-by-song walkthrough of the anniversary set. Direction per song, transitions, who's leading what.</p>
+
+        <p>Rather than recap every song here, the worship pack is the canonical reference — it has the set list, the direction notes per song, the reference audio you can practise with, and the inline part-isolation widget for those who can run it.</p>
+
+        <div class="cta-row">
+          <a href="https://calvaryhfgc.github.io/calvaryhephzibah/worship-pack-17-may-2026.html" class="cta cta-primary">Open the worship pack →</a>
+        </div>
+
+        <p style="margin-top: 24px;">A few decisions made in the meeting that aren't on the pack yet, for anyone who missed them:</p>
+
+        <ul style="list-style: none; padding-left: 0; margin: 16px 0;">
+          <li style="padding: 10px 0; border-bottom: 1px solid var(--line-soft); color: var(--fg-1);">→ <strong>Every Praise is out.</strong> Dropped to make room for Open the Eyes of My Heart in the praise set.</li>
+          <li style="padding: 10px 0; border-bottom: 1px solid var(--line-soft); color: var(--fg-1);">→ <strong>Open the Eyes of My Heart</strong> ends the praise set with a hard stop before worship. Possibly Afro-feel, Esther leading — TBC Saturday.</li>
+          <li style="padding: 10px 0; border-bottom: 1px solid var(--line-soft); color: var(--fg-1);">→ <strong>Here I Am to Worship is out.</strong> Replaced with Come Now Is The Time To Worship or Because of Who You Are.</li>
+          <li style="padding: 10px 0;">→ <strong>Offering</strong> — band accompanies Evangelist Bola Paul (talking drum). No separate song from us.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ====================================================== -->
+    <!-- CLOSING                                                  -->
+    <!-- ====================================================== -->
+    <section style="padding: 64px 0; border-top: 1px solid var(--line-soft);">
+      <div class="clip-eyebrow">
+        <span class="clip-topic">Last Thing</span>
+      </div>
+      <h2 class="clip-title">Sunday.</h2>
+
+      <div class="recap">
+        <p>34 years ago, Calvary started with a small group of people who believed God was going to do something. He came through. He's been coming through every Sunday since.</p>
+
+        <p>He's going to come through on the 17th too.</p>
+
+        <p>Our job is simple: show up prepared, sing with everything we have, and let God do what He does.</p>
+
+        <p>Thank you for being part of this. Honestly.</p>
+
+        <div class="cta-row">
+          <a href="https://calvaryhfgc.github.io/calvaryhephzibah/worship-team-meeting-14-may-2026.html" class="cta cta-ghost">Original meeting brief →</a>
+          <a href="https://calvaryhfgc.github.io/calvaryhephzibah/worship-pack-17-may-2026.html" class="cta cta-primary">Open the worship pack →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="pack-footer">
+      <p class="closing">"Praise the Lord, for His mercy endures forever." — the song the singers of Judah carried into impossible battle. The song we still carry today.</p>
+      <p class="signoff">
+        <strong>Meeting Recap</strong> · Worship Team · Calvary Hephzibah · 34th Anniversary 2026
+      </p>
+    </section>
+
+  </main>
+
+</body>
+</html>
