@@ -21,7 +21,7 @@
 
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 
     body {
       background: var(--obsidian);
@@ -50,25 +50,49 @@
 
     .container { max-width: 880px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
 
-    /* TICKER */
+    /* TICKER — sticky section nav that updates with scroll */
     .ticker {
       position: sticky; top: 0; z-index: 50;
-      background: var(--obsidian);
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line-soft);
-      padding: 14px 28px;
-      font-size: var(--fs-micro);
+      padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center; gap: 14px;
+    }
+    .ticker-label {
+      font-size: 11px;
       letter-spacing: var(--track-eyebrow);
       text-transform: uppercase;
       color: var(--fg-2);
-      display: flex; justify-content: space-between; align-items: center; gap: 16px;
-      flex-wrap: wrap;
+      display: flex; align-items: center; gap: 10px;
+      flex-shrink: 1;
+      min-width: 0;
     }
-    .ticker-left { display: flex; align-items: center; gap: 12px; }
-    .ticker-dot {
+    .ticker-label .ticker-dot {
       width: 8px; height: 8px; border-radius: 50%;
       background: var(--red);
+      flex-shrink: 0;
     }
-    .ticker-right { color: var(--fg-3); font-size: 11px; }
+    .ticker-label-current {
+      color: var(--bone);
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ticker-progress {
+      flex-shrink: 0;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .ticker-progress .ticker-num {
+      color: var(--red);
+    }
 
     /* HERO */
     .hero { padding: 76px 0 56px; border-bottom: 1px solid var(--line-soft); }
@@ -121,34 +145,75 @@
       line-height: 1.3;
     }
 
-    /* CONTENTS — chip nav */
+    /* CONTENTS — chip nav (top of hero) */
     .contents {
       padding: 32px 0 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
     }
     .contents a {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 14px;
+      gap: 10px;
+      padding: 14px 16px;
+      min-height: 48px;
       background: rgba(245, 240, 232, 0.04);
       border: 1px solid var(--line-soft);
       color: var(--fg-1);
       text-decoration: none;
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       transition: background 0.15s, border-color 0.15s;
     }
-    .contents a:hover {
+    .contents a:hover, .contents a:focus-visible {
       background: rgba(208, 68, 28, 0.12);
       border-color: var(--red);
+      outline: none;
     }
     .contents a .num {
       color: var(--red);
       font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    /* Back-to-top button — appears after scrolling past the hero */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      background: var(--red);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 700;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 40;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .back-to-top:hover, .back-to-top:focus-visible {
+      background: var(--red-bright);
+      outline: none;
+    }
+    .back-to-top:active {
+      transform: scale(0.95);
     }
 
     /* CLIP SECTIONS */
@@ -313,7 +378,7 @@
       margin-bottom: 6px;
     }
     .pillar-mini .pm-verse {
-      font-size: 11px;
+      font-size: 13px;
       letter-spacing: 0.1em;
       color: var(--fg-3);
       text-transform: uppercase;
@@ -353,13 +418,16 @@
       margin-top: 20px;
     }
     .cta {
-      display: inline-block;
-      padding: 12px 22px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 14px 24px;
       text-decoration: none;
-      font-size: 12px;
-      letter-spacing: 0.16em;
+      font-size: 13px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       font-weight: 700;
+      transition: background 0.15s, border-color 0.15s;
     }
     .cta-primary {
       background: var(--red);
@@ -399,12 +467,16 @@
 <body>
 
   <div class="ticker">
-    <div class="ticker-left">
+    <div class="ticker-label">
       <span class="ticker-dot"></span>
-      <span>Worship Team · Meeting Recap</span>
+      <span class="ticker-label-current" id="ticker-current">Worship Team · Meeting Recap</span>
     </div>
-    <div class="ticker-right">Thurs 14 May 2026</div>
+    <div class="ticker-progress" id="ticker-progress" aria-live="polite">
+      <span class="ticker-num">0</span> / 5
+    </div>
   </div>
+
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top">↑</button>
 
   <main class="container">
 
@@ -413,10 +485,10 @@
       <div class="hero-eyebrow">Meeting Recap · Five Clips</div>
       <h1>Everything we<br>covered in <span class="accent">one place.</span></h1>
       <p class="hero-lede">
-        On Thursday 14 May we met virtually as a worship team to encourage each other and walk through the anniversary set. Below is the meeting in five short clips, plus a written recap of what we covered.
+        On Thursday 14 May we met as a worship team to encourage each other and walk through the anniversary set. This page is the meeting in five short clips — Uncle Caster, Esther, Uncle Shola, Auntie Jess, Bolaji, Eddie, Uncle Michael, Morayo — everything we said, everything we decided, in one place.
       </p>
       <p class="hero-lede">
-        Watch what's useful, skim what's not. Everything stays here.
+        Watch what helps you. Skim what doesn't. Come back to it whenever you need.
       </p>
 
       <div class="hero-meta">
@@ -464,15 +536,15 @@
       </div>
 
       <div class="recap">
-        <p>The first part of the meeting was the heart of it. After a short round-table where each of us shared a reason to be thankful, we opened the Bible.</p>
+        <p>The first part of the meeting was the heart of it. We went around the call and each said one thing we're thankful for at Calvary, then opened the Bible.</p>
 
         <p>The story was Jehoshaphat in <strong>2 Chronicles 20</strong>. Three armies marching toward Judah. One king, outnumbered. He prayed honestly — <em>"We don't know what to do, but our eyes are on you."</em> God's answer, through a man called Jahaziel: <strong>"The battle is not yours, but God's."</strong></p>
 
         <p>Then God did something strange. He told Jehoshaphat to put singers at the front of the army. <strong>Singers, not soldiers.</strong> The moment they began to sing, God set ambushes. The three armies turned on each other. By the time Judah's soldiers arrived, the battle was already won.</p>
 
-        <p>The point landed: that's what we do on Sunday. We go first. We sing. God does the fighting.</p>
+        <p>That's what we do on Sunday. We go first. We sing. God does the fighting.</p>
 
-        <p>We also touched on <strong>Gideon</strong> — 32,000 men reduced to 300, so God's people couldn't claim the victory as their own — and <strong>Jericho</strong>, where walking around the city in silence for six days and a shout on the seventh brought the walls down. Same God in all three. Same pattern. He uses what looks impossible so the credit goes where it belongs.</p>
+        <p>We also touched on <strong>Gideon</strong> — God shrank his army from 32,000 men down to 300, so nobody could say they'd won the battle themselves — and <strong>Jericho</strong>, where God's people walked around the city in silence for six days and shouted on the seventh, and the walls just fell. Same God in all three. Same pattern. He uses what looks impossible so it's obvious He's the one who did it.</p>
 
         <p>Then we talked about four things we want to keep growing in as a team:</p>
 
@@ -499,7 +571,7 @@
           </div>
         </div>
 
-        <p>On the third one, we talked about Malcolm Gladwell's <em>10,000 hours</em> idea — that anyone can become a master at anything if they put the time in. That's not just for music. It's the principle behind Proverbs 22:29 — when skill builds, doors open.</p>
+        <p>On the third one, Bolaji talked about Malcolm Gladwell's <em>10,000 hours</em> idea — that anyone can get really good at anything if they practise enough. That's not just for music. When you get skilled at something, doors open. That's what Proverbs 22:29 is talking about.</p>
 
         <div class="quote">
           "It's like having a second family."
@@ -524,13 +596,13 @@
       </div>
 
       <div class="recap">
-        <p>Sunday is going to look and sound different. We've invested in real upgrades across the board:</p>
+        <p>Sunday is going to look and sound different. The church has invested in some real upgrades:</p>
 
-        <p><strong>Visuals.</strong> New backdrops and banners at the back of the stage — a proper facelift for the room. A new camera so the broadcast looks closer to broadcast quality than phone quality.</p>
+        <p><strong>Visuals.</strong> New backdrops and banners at the back of the stage — a proper facelift for the room. A new camera so the livestream looks like real broadcast quality instead of phone quality.</p>
 
-        <p><strong>Audio.</strong> A new multicore cable with more channels so we have room to plug in everything we need. A pile of new XLRs. And — new for the singers — an in-ear system similar to what the instrumentalists have been using. It'll feel different. We'll test it on Saturday.</p>
+        <p><strong>Audio.</strong> A new multicore cable — that's the big cable with lots of plugs that runs from the stage to the sound desk — with more channels so we can plug in everything we need. A pile of new XLR cables for microphones. And — new for the singers — an in-ear monitor system, like what the band members already use. It'll feel different in your ears the first time. We test it Saturday.</p>
 
-        <p>The framing Bolaji put on all this: <em>Calvary is investing in Calvary.</em> The technical lift comes with a quiet expectation — if the broadcast is going to look this good, we put our best foot forward too. Spirit of excellence in everything, not just the sound.</p>
+        <p>Bolaji's framing on all this: <em>Calvary is investing in Calvary.</em> The church is putting real money into making Sunday better — which means we should bring our best too. Show up prepared, look the part, sing like it matters. Because it does.</p>
       </div>
     </section>
 
@@ -550,9 +622,9 @@
       </div>
 
       <div class="recap">
-        <p>The praise-and-worship set is short. 20 to 30 minutes, by most measures. That means we can — and should — keep it tight and repeatable rather than chopping and changing each week. The same set, refined again and again, gets stronger every Sunday.</p>
+        <p>The praise and worship set is short — about 20 to 30 minutes. That means we can keep it tight and repeatable instead of changing songs every week. The same set, refined again and again, gets stronger every Sunday.</p>
 
-        <p>There's a practical reason too. Our band is smaller than it has been. A repeatable structure lets us add programmed elements — drum tracks, bass tracks, keyboard pads — so the sound fills out even when not every chair is filled. The compromise: once you're locked into a structured arrangement, you can't deviate without it falling apart.</p>
+        <p>There's a practical reason too. Our band is smaller right now. If we lock in a tight, repeatable structure, we can add backing tracks underneath — pre-recorded drums or bass or keyboard pads — so the sound is full even when we're missing players. The catch: once we're playing along to a backing track, we can't change the structure on the fly. Everyone has to know exactly where the song is going.</p>
 
         <p>So for now: lock in praise tightly, leave worship more open for the Spirit. Both improve over time, but in different ways.</p>
 
@@ -561,7 +633,7 @@
           <span class="who">Bolaji, on structure as a gift</span>
         </div>
 
-        <p>This is the <strong>Repetition</strong> pillar from Part 1, applied. Sunday should feel like the hundredth time. Not the first.</p>
+        <p>This is the <strong>Repetition</strong> pillar from Part 1, in action. Sunday should feel like the hundredth time. Not the first.</p>
       </div>
     </section>
 
@@ -592,9 +664,11 @@
           <div class="setlist-item"><div class="num">·</div><div class="song"><strong>Vocals</strong> — Uncle Caster, Esther, Uncle Shola, Auntie Jess</div></div>
         </div>
 
-        <p>The thing worth dwelling on is the vocals. Four strong singers — not the usual one lead and a wall of backing. Bolaji pitched it as <strong>vocals-as-instrument</strong>: think of the four of you as a single, strong vocal section, evenly arranged on stage, each capable of leading. Leading then becomes a question of direction — who's telling the church where to go next — rather than hierarchy.</p>
+        <p>The thing worth dwelling on is the vocals. Normally a worship team has one lead singer at the front and backing singers behind. This Sunday is different. <strong>All four singers can lead.</strong> Uncle Caster has done it for years. Esther — at twelve, our youngest — can carry a song. Uncle Shola is a professional singer who's led bands. Auntie Jess sings strongly.</p>
 
-        <p>Uncle Shola is a professional singer. Auntie Jess sings very well. With Uncle Caster's experience and Esther's voice, this is a strong group. We test the arrangement Saturday.</p>
+        <p>Bolaji's framing: think of the four voices as one strong vocal section, not a hierarchy. Whoever's leading any given song is just the one telling the church where to go next. Everyone else fills out the sound. It's a richer, fuller texture than a traditional lead-and-backing setup.</p>
+
+        <p>We test the arrangement Saturday at rehearsal.</p>
       </div>
     </section>
 
@@ -618,9 +692,9 @@
 
         <p><strong>The praise set</strong> stays as we've been doing it: <em>Thanks Thanks I Give You Thanks</em> as the a cappella opener, then <em>Trading My Sorrows → Lord You Are Good → Friend of God</em>. Direction is largely the same as the last few Sundays — just tighter.</p>
 
-        <p><strong>Every Praise is out.</strong> We needed room for something new, and the song that took its place is <em>Open the Eyes of My Heart</em> — but in an arrangement none of us have done before. Bolaji played a reference that leans soulful house, rare groove, with a Latin-flavoured "I'm a piano" loop underneath. Different feel for Calvary. The praise set will end with a hard stop on Friend of God, then we'll start Open the Eyes of My Heart fresh.</p>
+        <p><strong>Every Praise is out.</strong> We needed room for something new, and the song that took its place is <em>Open the Eyes of My Heart</em> — but in an arrangement none of us have done before. Bolaji played a reference that has a different feel: laid-back, groove-driven, almost dance-floor underneath the vocals. Different from how Calvary normally sounds. The praise set will end with a hard stop on Friend of God, then we'll start Open the Eyes of My Heart fresh.</p>
 
-        <p><strong>Open the Eyes into worship</strong> is the trickier transition. The plan: drop the beat entirely and go fresh into <em>My Jesus My Saviour</em>, with Esther leading. There's a chance we try My Jesus on the same Afro-leaning beat if Esther wants to lead it that way — we'll experiment Saturday.</p>
+        <p><strong>Open the Eyes into worship</strong> is the trickier transition. The plan: drop the beat entirely and go fresh into <em>My Jesus My Saviour</em>, with Esther leading. There's a chance we try My Jesus on the same upbeat groove if Esther wants to lead it that way — we'll experiment Saturday.</p>
 
         <div class="quote">
           "I'm pushing the boundary. Give it a try. If it sounds better, go with it. If it doesn't, we just scrub it."
@@ -693,6 +767,78 @@
     </section>
 
   </main>
+
+  <script>
+    (function() {
+      // Live ticker — updates current section label + 1/5, 2/5 progress
+      // as the user scrolls past each clip section.
+      const clipSections = Array.from(document.querySelectorAll('section.clip'));
+      const tickerCurrent = document.getElementById('ticker-current');
+      const tickerProgress = document.getElementById('ticker-progress');
+      const backToTop = document.getElementById('back-to-top');
+
+      // Map each section to its display title for the ticker
+      const sectionLabels = {
+        'part-1': 'Part 1 · Bible Study',
+        'part-2': 'Part 2 · Upgrades',
+        'part-3': 'Part 3 · Set Structure',
+        'part-4': 'Part 4 · The Line-Up',
+        'part-5': 'Part 5 · Set Walkthrough',
+      };
+
+      function updateTicker() {
+        // Find which clip section is most prominently in view.
+        // A section is "active" if its top is in the upper 40% of the viewport.
+        const triggerY = window.innerHeight * 0.4;
+        let activeIndex = -1;
+        clipSections.forEach((section, i) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= triggerY && rect.bottom > triggerY) {
+            activeIndex = i;
+          } else if (rect.top <= triggerY && rect.bottom <= triggerY) {
+            // section is above the trigger but might be the last one
+            if (i > activeIndex) activeIndex = i;
+          }
+        });
+
+        if (activeIndex >= 0) {
+          const id = clipSections[activeIndex].id;
+          tickerCurrent.textContent = sectionLabels[id] || 'Meeting Recap';
+          tickerProgress.innerHTML =
+            '<span class="ticker-num">' + (activeIndex + 1) + '</span> / 5';
+        } else {
+          tickerCurrent.textContent = 'Worship Team · Meeting Recap';
+          tickerProgress.innerHTML = '<span class="ticker-num">0</span> / 5';
+        }
+
+        // Back-to-top visible once scrolled past ~500px
+        if (window.scrollY > 500) {
+          backToTop.classList.add('visible');
+        } else {
+          backToTop.classList.remove('visible');
+        }
+      }
+
+      // Throttle with requestAnimationFrame
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            updateTicker();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // Initial state
+      updateTicker();
+    })();
+  </script>
 
 </body>
 </html>
