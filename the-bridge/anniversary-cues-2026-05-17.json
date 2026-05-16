@@ -1,0 +1,449 @@
+{
+  "service": {
+    "name": "Calvary Hephzibah 34th Anniversary",
+    "subtitle": "Reasons to be Thankful",
+    "date": "2026-05-17",
+    "start_time": "10:30",
+    "venue": "74 Carmoor Road, Manchester M13 0FB",
+    "template": "anniversary",
+    "theme": "celebration-red"
+  },
+  "overlay_inventory": {
+    "name_supers": {
+      "01-name-pastor-shade": { "name": "Pastor Shade Olatoye", "role": "General Overseer" },
+      "03-name-pastor-kayode": { "name": "Pastor Kayode Ogungbenro", "role": "Pastoral Leadership" },
+      "04-name-pastor-gbenga": { "name": "Pastor Gbenga Adebanjo", "role": "Preaching" },
+      "17-name-visiting-minister-communion": { "name": "Visiting Minister", "role": "Communion" },
+      "18-name-bola-paul": { "name": "Evangelist Bola Paul", "role": "D'Voice Ministries" },
+      "19-name-rev-olowodola": { "name": "Reverend Olowodola", "role": "Video Greeting" }
+    },
+    "section_markers": {
+      "05-section-welcome": { "label": "WELCOME" },
+      "06-section-worship": { "label": "WORSHIP" },
+      "07-section-communion": { "label": "COMMUNION" },
+      "10-section-word": { "label": "THE WORD" },
+      "09-section-offering": { "label": "OFFERING" },
+      "20-section-welcome-address": { "label": "WELCOME ADDRESS" },
+      "21-section-presentation": { "label": "PRESENTATION" },
+      "22-section-announcements": { "label": "ANNOUNCEMENTS" },
+      "23-section-appreciation": { "label": "APPRECIATION & HONOUR" },
+      "24-section-prayer-ministry": { "label": "PRAYER MINISTRY" },
+      "25-section-grace": { "label": "GRACE & BLESSING OF THE MEAL" },
+      "26-section-meal": { "label": "THE MEAL" },
+      "27-section-closing-prayer": { "label": "CLOSING PRAYER" }
+    },
+    "specials": {
+      "15-anniversary-banner": { "kind": "hero-banner", "label": "34th Anniversary hero" },
+      "28-birthday-dr-t": { "kind": "celebration", "label": "Dr T · 99 today" },
+      "29-video-greeting-olowodola": { "kind": "playing-now-marker", "label": "Playing now · Rev Olowodola video" }
+    },
+    "scripture_supers": {
+      "11-scripture-jehoshaphat": { "ref": "2 Chronicles 20:15", "status": "archived", "note": "From a different sermon — not used 17 May" },
+      "12-scripture-psalm-33": { "ref": "Psalm 33:3", "status": "archived", "note": "From a different sermon — not used 17 May" },
+      "30-scripture-1-samuel-7-12": { "ref": "1 Samuel 7:12", "version": "KJV", "note": "Foundational text — Ebenezer verse" },
+      "31-scripture-zechariah-4-10": { "ref": "Zechariah 4:10", "version": "NIV", "note": "Small beginnings (Point 1)" },
+      "32-scripture-psalm-124-1": { "ref": "Psalm 124:1", "version": "KJV", "note": "God sustained us (Point 2)" },
+      "33-scripture-luke-15-7": { "ref": "Luke 15:7", "version": "NIV", "note": "Lives changed (Point 3)" },
+      "34-scripture-galatians-6-9": { "ref": "Galatians 6:9", "version": "NIV", "note": "Faithful servants (Point 4)" },
+      "35-scripture-psalm-121-7": { "ref": "Psalm 121:7", "version": "KJV", "note": "God's protection (Point 5)" },
+      "36-scripture-lamentations-3-22": { "ref": "Lamentations 3:22-23", "version": "KJV", "note": "Faithfulness (Point 6)" },
+      "37-scripture-philippians-1-6": { "ref": "Philippians 1:6", "version": "NIV", "note": "Future, first verse (Point 7)" },
+      "38-scripture-haggai-2-9": { "ref": "Haggai 2:9", "version": "KJV", "note": "Latter glory (Point 7)" },
+      "39-scripture-isaiah-6-8": { "ref": "Isaiah 6:8", "version": "KJV", "note": "Charge: send me" }
+    },
+    "song_supers": {
+      "13-song-trading-my-sorrows": { "title": "Trading My Sorrows" },
+      "14-song-friend-of-god": { "title": "Friend of God" }
+    }
+  },
+  "default_durations_sec": {
+    "name-super": 6,
+    "section-marker": 7,
+    "song-super": 8,
+    "scripture-super": 7,
+    "hero-banner": 12,
+    "celebration": 10,
+    "playing-now-marker": 0
+  },
+  "items": [
+    {
+      "position": 1,
+      "scheduled_start": "10:30",
+      "scheduled_end": "10:40",
+      "title": "Welcome · Bible Reading · Opening Prayer",
+      "lead": "Pastor Shade Olatoye",
+      "type": "welcome",
+      "cues": [
+        {
+          "graphic": "15-anniversary-banner",
+          "duration_sec": 12,
+          "trigger_note": "Service open — fire as Pastor Shade reaches the lectern. Hero banner sets the tone."
+        },
+        {
+          "graphic": "05-section-welcome",
+          "duration_sec": 7,
+          "trigger_note": "Fire once banner clears."
+        },
+        {
+          "graphic": "01-name-pastor-shade",
+          "duration_sec": 6,
+          "trigger_note": "Fire as she begins speaking."
+        }
+      ]
+    },
+    {
+      "position": 2,
+      "scheduled_start": "10:40",
+      "scheduled_end": "11:00",
+      "title": "Praise & Worship",
+      "lead": "Calvary Worship Team",
+      "type": "worship",
+      "cues": [
+        {
+          "graphic": "06-section-worship",
+          "duration_sec": 7,
+          "trigger_note": "Fire as worship leader takes the mic."
+        },
+        {
+          "graphic": "13-song-trading-my-sorrows",
+          "duration_sec": 8,
+          "trigger_note": "Conditional — fire only if this song is in the set. Cue as it starts."
+        },
+        {
+          "graphic": "14-song-friend-of-god",
+          "duration_sec": 8,
+          "trigger_note": "Conditional — fire only if this song is in the set. Cue as it starts."
+        }
+      ]
+    },
+    {
+      "position": 3,
+      "scheduled_start": "11:00",
+      "scheduled_end": "11:10",
+      "title": "Communion",
+      "lead": "Visiting Minister",
+      "type": "communion",
+      "cues": [
+        {
+          "graphic": "07-section-communion",
+          "duration_sec": 7,
+          "trigger_note": "Fire as the minister begins."
+        },
+        {
+          "graphic": "17-name-visiting-minister-communion",
+          "duration_sec": 6,
+          "trigger_note": "Fire as the visiting minister is introduced. Confirm actual name on the day — if known, regenerate this super before service."
+        }
+      ]
+    },
+    {
+      "position": 4,
+      "scheduled_start": "11:10",
+      "scheduled_end": "11:20",
+      "title": "Welcome Address",
+      "lead": "Pastor Shade Olatoye",
+      "type": "welcome-address",
+      "cues": [
+        {
+          "graphic": "20-section-welcome-address",
+          "duration_sec": 7,
+          "trigger_note": "Fire as she stands. This is her anniversary moment."
+        },
+        {
+          "graphic": "01-name-pastor-shade",
+          "duration_sec": 6,
+          "trigger_note": "Fire shortly after — name super reinforces who is addressing."
+        }
+      ]
+    },
+    {
+      "position": 5,
+      "scheduled_start": "11:20",
+      "scheduled_end": "11:23",
+      "title": "Presentation",
+      "lead": "—",
+      "type": "presentation",
+      "cues": [
+        {
+          "graphic": "21-section-presentation",
+          "duration_sec": 7,
+          "trigger_note": "Fire as the presentation begins on the in-room screen."
+        }
+      ]
+    },
+    {
+      "position": 6,
+      "scheduled_start": "11:23",
+      "scheduled_end": "11:53",
+      "title": "Sermon — Ebenezer: Reasons to be Thankful",
+      "lead": "Pastor Gbenga Adebanjo",
+      "type": "sermon",
+      "sermon_text": "1 Samuel 7:12",
+      "operator_note": "Long sermon with 10 scripture references. Listen for each verse and fire its super as Pastor Gbenga reads or references it. Each auto-clears in 7 seconds. If you miss one, don't catch up — let it pass and stay with the next.",
+      "cues": [
+        {
+          "graphic": "15-anniversary-banner",
+          "duration_sec": 12,
+          "trigger_note": "Pre-sermon — fire as he is being introduced."
+        },
+        {
+          "graphic": "10-section-word",
+          "duration_sec": 7,
+          "trigger_note": "Fire as he takes the lectern."
+        },
+        {
+          "graphic": "04-name-pastor-gbenga",
+          "duration_sec": 6,
+          "trigger_note": "Fire as he begins. (Regenerated 'Preaching' version.)"
+        },
+        {
+          "graphic": "30-scripture-1-samuel-7-12",
+          "duration_sec": 7,
+          "trigger_note": "Foundational text — fire when he opens with 'Then Samuel took a stone...' This is the Ebenezer verse, the thesis of the whole sermon."
+        },
+        {
+          "graphic": "31-scripture-zechariah-4-10",
+          "duration_sec": 7,
+          "trigger_note": "Point 1: Be Thankful Because God Started With Us. Fire on 'Do not despise these small beginnings.'"
+        },
+        {
+          "graphic": "32-scripture-psalm-124-1",
+          "duration_sec": 7,
+          "trigger_note": "Point 2: Be Thankful Because God Sustained Us. Fire on 'If it had not been the Lord who was on our side.'"
+        },
+        {
+          "graphic": "33-scripture-luke-15-7",
+          "duration_sec": 7,
+          "trigger_note": "Point 3: Lives That Have Been Changed. Fire on 'There is joy in heaven over one sinner who repents.'"
+        },
+        {
+          "graphic": "34-scripture-galatians-6-9",
+          "duration_sec": 7,
+          "trigger_note": "Point 4: Faithful Servants. Fire on 'Let us not grow weary in doing good.'"
+        },
+        {
+          "graphic": "35-scripture-psalm-121-7",
+          "duration_sec": 7,
+          "trigger_note": "Point 5: God's Protection. Fire on 'The Lord shall preserve you from all evil.'"
+        },
+        {
+          "graphic": "36-scripture-lamentations-3-22",
+          "duration_sec": 7,
+          "trigger_note": "Point 6: His Faithfulness. Fire on 'Great is Thy faithfulness.' Emotional peak of the sermon."
+        },
+        {
+          "graphic": "37-scripture-philippians-1-6",
+          "duration_sec": 7,
+          "trigger_note": "Point 7: The Future, first verse. Fire on 'He who began a good work in you.'"
+        },
+        {
+          "graphic": "38-scripture-haggai-2-9",
+          "duration_sec": 7,
+          "trigger_note": "Point 7: The Future, second verse. Fire on 'The glory of the latter house shall be greater.' The forward-looking peak."
+        },
+        {
+          "graphic": "39-scripture-isaiah-6-8",
+          "duration_sec": 7,
+          "trigger_note": "Charge: closing call. Fire on 'Here am I, send me.'"
+        }
+      ]
+    },
+    {
+      "position": 7,
+      "scheduled_start": "11:53",
+      "scheduled_end": "11:58",
+      "title": "Welcome to All · Brief Announcements",
+      "lead": "Pastor Kayode Ogungbenro",
+      "type": "announcements",
+      "lead_note": "Includes birthdays — Dr T's 99th",
+      "cues": [
+        {
+          "graphic": "22-section-announcements",
+          "duration_sec": 7,
+          "trigger_note": "Fire as Pastor Kayode starts."
+        },
+        {
+          "graphic": "03-name-pastor-kayode",
+          "duration_sec": 6,
+          "trigger_note": "Fire shortly after section marker clears."
+        },
+        {
+          "graphic": "28-birthday-dr-t",
+          "duration_sec": 10,
+          "trigger_note": "Fire when Pastor Kayode mentions Dr T's 99th. Full-frame celebration — will dominate the screen, that is intentional. Clear after ~10s or once he moves on."
+        }
+      ]
+    },
+    {
+      "position": 8,
+      "scheduled_start": "11:58",
+      "scheduled_end": "12:13",
+      "title": "Offering — ministering in song",
+      "lead": "Evangelist Bola Paul · D'Voice Ministries",
+      "type": "offering",
+      "cues": [
+        {
+          "graphic": "09-section-offering",
+          "duration_sec": 7,
+          "trigger_note": "Fire as the offering segment opens."
+        },
+        {
+          "graphic": "18-name-bola-paul",
+          "duration_sec": 6,
+          "trigger_note": "Fire as she begins to minister. Important: this is one of the moments the livestream audience needs to know who is singing."
+        }
+      ]
+    },
+    {
+      "position": 9,
+      "scheduled_start": "12:13",
+      "scheduled_end": "12:16",
+      "title": "Presentation",
+      "lead": "—",
+      "type": "presentation",
+      "cues": [
+        {
+          "graphic": "21-section-presentation",
+          "duration_sec": 7,
+          "trigger_note": "Fire as the presentation begins."
+        }
+      ]
+    },
+    {
+      "position": 10,
+      "scheduled_start": "12:16",
+      "scheduled_end": "12:28",
+      "title": "Show of Appreciation & Honour",
+      "lead": "Pastor Shade Olatoye",
+      "type": "named-honour",
+      "cues": [
+        {
+          "graphic": "23-section-appreciation",
+          "duration_sec": 7,
+          "trigger_note": "Fire at the start of the segment."
+        },
+        {
+          "graphic": "01-name-pastor-shade",
+          "duration_sec": 6,
+          "trigger_note": "Fire as Pastor Shade begins calling honourees."
+        }
+      ],
+      "operator_note": "Individual honour cards for named people are on the stage screen via the slide system, not the broadcast overlay. Don't try to fire person-cards from here."
+    },
+    {
+      "position": 11,
+      "scheduled_start": "12:28",
+      "scheduled_end": "12:31",
+      "title": "Presentation",
+      "lead": "—",
+      "type": "presentation",
+      "cues": [
+        {
+          "graphic": "21-section-presentation",
+          "duration_sec": 7,
+          "trigger_note": "Fire as the presentation begins."
+        }
+      ]
+    },
+    {
+      "position": 12,
+      "scheduled_start": "12:31",
+      "scheduled_end": "12:36",
+      "title": "Video Greeting — from Reverend Olowodola",
+      "lead": "Reverend Olowodola",
+      "type": "video-greeting",
+      "cues": [
+        {
+          "graphic": "19-name-rev-olowodola",
+          "duration_sec": 6,
+          "trigger_note": "Fire just before video starts — introduces who is about to speak."
+        },
+        {
+          "graphic": "29-video-greeting-olowodola",
+          "duration_sec": 0,
+          "manual_clear": true,
+          "trigger_note": "Upper-third 'PLAYING NOW' marker. Fire once name super clears and the video is playing. STAYS UP for the full video — clear MANUALLY near the end (no auto-clear)."
+        }
+      ],
+      "operator_note": "Two-step sequence. Name super first (auto-clears in 6s), then playing-now marker (manual clear). Do not fire both at once — strip overlap will be unreadable."
+    },
+    {
+      "position": 13,
+      "scheduled_start": "12:36",
+      "scheduled_end": "12:41",
+      "title": "Prayer Ministry",
+      "lead": "Visiting Ministers",
+      "type": "prayer",
+      "cues": [
+        {
+          "graphic": "24-section-prayer-ministry",
+          "duration_sec": 7,
+          "trigger_note": "Fire as ministers come forward."
+        }
+      ],
+      "operator_note": "No name super for visiting ministers — names not pre-confirmed. If specific names become known on the day, regenerate via the script."
+    },
+    {
+      "position": 14,
+      "scheduled_start": "12:41",
+      "scheduled_end": "12:46",
+      "title": "Grace & Blessing of the Meal",
+      "lead": "—",
+      "type": "grace",
+      "cues": [
+        {
+          "graphic": "25-section-grace",
+          "duration_sec": 7,
+          "trigger_note": "Fire as the blessing begins."
+        }
+      ]
+    },
+    {
+      "position": 15,
+      "scheduled_start": "12:46",
+      "scheduled_end": "13:56",
+      "title": "The Meal",
+      "lead": "Hospitality Team — Janet Oviri",
+      "type": "meal",
+      "cues": [
+        {
+          "graphic": "26-section-meal",
+          "duration_sec": 7,
+          "trigger_note": "Fire once at start of meal. After that, broadcast overlay stays clear — fellowship time, no overlays."
+        }
+      ]
+    },
+    {
+      "position": 16,
+      "scheduled_start": "13:56",
+      "scheduled_end": "14:01",
+      "title": "Closing Prayer",
+      "lead": "Pastor Shade Olatoye",
+      "type": "close",
+      "cues": [
+        {
+          "graphic": "27-section-closing-prayer",
+          "duration_sec": 7,
+          "trigger_note": "Fire as she stands to close."
+        },
+        {
+          "graphic": "01-name-pastor-shade",
+          "duration_sec": 6,
+          "trigger_note": "Fire shortly after."
+        },
+        {
+          "graphic": "15-anniversary-banner",
+          "duration_sec": 12,
+          "trigger_note": "Service close — fire as she finishes praying. Bookends the service with the same hero that opened it."
+        }
+      ]
+    }
+  ],
+  "operator_principles": {
+    "one_at_a_time": "Only one overlay should be on the strip at any time. Firing a new one auto-clears the current.",
+    "clear_before_fire": "When transitioning between overlays, allow the current to fade out (300ms) before firing the next.",
+    "manual_overrides_auto": "If an overlay is taking too long to clear because content drifted, hit manual clear. Auto-clear timers are sensible defaults, not laws.",
+    "quick_fire_search": "Anything not pre-cued (a surprise guest, an unplanned testimony) can be fired from the search/library. Don't panic — search by person or section name.",
+    "when_drift_happens": "If the programme drifts off schedule, the cue list still works — cues are tied to programme items, not clock times. Just stay with the current item's cue stack."
+  }
+}

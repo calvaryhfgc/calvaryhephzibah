@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17 May Anniversary · Cue Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --obsidian: #0A0A0A;
+    --calvary-red: #D0441C;
+    --bone: #F5F0E8;
+    --dim: #A0A0A0;
+    --muted: #5A5A5A;
+    --paper: #FAFAF8;
+    --line: rgba(0,0,0,0.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+    font-family: 'Inter Tight', sans-serif;
+    background: var(--paper);
+    color: var(--obsidian);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+.shell { max-width: 900px; margin: 0 auto; padding: 56px 32px 96px; }
+
+/* Hero */
+.hero {
+    background: var(--obsidian);
+    color: var(--bone);
+    padding: 48px 32px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 56px;
+}
+.hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--calvary-red);
+}
+.hero-eyebrow {
+    font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--calvary-red); font-weight: 600; margin-bottom: 16px;
+}
+.hero-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(40px, 6vw, 64px);
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+}
+.hero-title .red { color: var(--calvary-red); }
+.hero-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(245,240,232,0.15);
+}
+.meta-block .label {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--dim); font-weight: 500; margin-bottom: 4px;
+}
+.meta-block .value { font-size: 15px; color: var(--bone); font-weight: 500; }
+
+/* Section heading */
+.section-eyebrow {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    letter-spacing: -0.01em;
+    margin: 56px 0 8px;
+    text-transform: uppercase;
+}
+.section-rule {
+    height: 2px;
+    background: var(--obsidian);
+    width: 48px;
+    margin-bottom: 32px;
+}
+.section-dek {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+    max-width: 600px;
+}
+
+/* Item */
+.item {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    page-break-inside: avoid;
+}
+.item-head {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 20px;
+    padding: 20px 24px;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+}
+.item-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    color: var(--calvary-red);
+    line-height: 1;
+}
+.item-meta { min-width: 0; }
+.item-time {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500; margin-bottom: 4px;
+}
+.item-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    margin-bottom: 4px;
+}
+.item-lead {
+    font-size: 13px;
+    color: var(--muted);
+}
+.lead-note { color: var(--calvary-red); }
+.item-cuecount {
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500;
+}
+
+.op-note {
+    background: #FFF9E6;
+    border-left: 3px solid #C9A227;
+    padding: 12px 24px;
+    font-size: 13px;
+    color: #5C4400;
+}
+
+.cues { padding: 8px 0; }
+.cue {
+    display: grid;
+    grid-template-columns: 32px 200px 1fr;
+    gap: 16px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--line);
+    align-items: start;
+}
+.cue:last-child { border-bottom: none; }
+.cue.manual { background: #FCF4F0; }
+
+.cue-step {
+    font-family: 'Anton', sans-serif;
+    font-size: 24px;
+    color: var(--muted);
+    line-height: 1;
+}
+
+.cue-thumb {
+    display: block;
+    width: 200px;
+    aspect-ratio: 16 / 9;
+    background: #0A0A0A;
+    border-radius: 3px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: opacity 0.15s;
+}
+.cue-thumb:hover { opacity: 0.85; }
+.cue-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+@media (max-width: 720px) {
+    .cue {
+        grid-template-columns: 28px 1fr;
+        grid-template-rows: auto auto;
+    }
+    .cue-thumb {
+        grid-column: 2;
+        grid-row: 1;
+        width: 100%;
+        max-width: 320px;
+    }
+    .cue-body {
+        grid-column: 2;
+        grid-row: 2;
+    }
+    .cue-step {
+        grid-row: 1 / span 2;
+    }
+}
+.cue-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+.cue-kind {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--calvary-red); font-weight: 600;
+}
+.cue-dur {
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); font-weight: 500;
+    padding: 2px 8px; background: var(--paper); border-radius: 100px;
+}
+.cue.manual .cue-dur {
+    background: var(--calvary-red); color: white;
+}
+.cue-slug {
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+.cue-desc {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--obsidian);
+    margin-bottom: 4px;
+}
+.cue-note {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+}
+
+/* Principles */
+.principles {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    margin-top: 24px;
+}
+.principle {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--line);
+}
+.principle:last-child { border-bottom: none; }
+.principle h3 {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+}
+.principle p {
+    font-size: 14px;
+    color: var(--muted);
+}
+
+/* Print */
+@media print {
+    body { background: white; }
+    .shell { max-width: none; padding: 24px; }
+    .hero { margin-bottom: 24px; padding: 24px; }
+    .item { break-inside: avoid; box-shadow: none; }
+    .section-eyebrow { margin-top: 32px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+    <div class="hero">
+        <div class="hero-eyebrow">Calvary Hephzibah · 34th Anniversary · Cue Sheet</div>
+        <h1 class="hero-title">Reasons<br><span class="red">to be Thankful.</span></h1>
+        <div class="hero-meta">
+            <div class="meta-block">
+                <div class="label">Date</div>
+                <div class="value">Sun 17 May 2026</div>
+            </div>
+            <div class="meta-block">
+                <div class="label">Start</div>
+                <div class="value">10:30 AM</div>
+            </div>
+            <div class="meta-block">
+                <div class="label">Venue</div>
+                <div class="value">Carmoor Rd, M13 0FB</div>
+            </div>
+            <div class="meta-block">
+                <div class="label">Operator</div>
+                <div class="value">Scott Shokoya</div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="section-eyebrow">Running order &amp; cues</h2>
+    <div class="section-rule"></div>
+    <p class="section-dek">16 items, 33 cues. One overlay on the strip at any time. Yellow-highlighted notes are operator hints. Pink-tinted cues require manual clear (no auto-timer) — usually because the underlying content runs longer than a fixed window.</p>
+
+    
+    <article class="item" id="item-1">
+        <header class="item-head">
+            <div class="item-num">01</div>
+            <div class="item-meta">
+                <div class="item-time">10:30 — 10:40</div>
+                <h2 class="item-title">◆ &nbsp; Welcome · Bible Reading · Opening Prayer</h2>
+                <div class="item-lead">Pastor Shade Olatoye</div>
+            </div>
+            <div class="item-cuecount">3 cues</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/15-anniversary-banner.png" target="_blank" rel="noopener" title="Open 15-anniversary-banner.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/15-anniversary-banner.png" alt="15-anniversary-banner" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Special</span>
+                    <span class="cue-dur">12s</span>
+                </div>
+                <div class="cue-slug">15-anniversary-banner</div>
+                <div class="cue-desc">34th Anniversary hero</div>
+                <div class="cue-note">Service open — fire as Pastor Shade reaches the lectern. Hero banner sets the tone.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/05-section-welcome.png" target="_blank" rel="noopener" title="Open 05-section-welcome.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/05-section-welcome.png" alt="05-section-welcome" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">05-section-welcome</div>
+                <div class="cue-desc">WELCOME</div>
+                <div class="cue-note">Fire once banner clears.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">3</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" target="_blank" rel="noopener" title="Open 01-name-pastor-shade.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" alt="01-name-pastor-shade" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">01-name-pastor-shade</div>
+                <div class="cue-desc">Pastor Shade Olatoye · General Overseer</div>
+                <div class="cue-note">Fire as she begins speaking.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-2">
+        <header class="item-head">
+            <div class="item-num">02</div>
+            <div class="item-meta">
+                <div class="item-time">10:40 — 11:00</div>
+                <h2 class="item-title">♪ &nbsp; Praise & Worship</h2>
+                <div class="item-lead">Calvary Worship Team</div>
+            </div>
+            <div class="item-cuecount">3 cues</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/06-section-worship.png" target="_blank" rel="noopener" title="Open 06-section-worship.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/06-section-worship.png" alt="06-section-worship" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">06-section-worship</div>
+                <div class="cue-desc">WORSHIP</div>
+                <div class="cue-note">Fire as worship leader takes the mic.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/13-song-trading-my-sorrows.png" target="_blank" rel="noopener" title="Open 13-song-trading-my-sorrows.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/13-song-trading-my-sorrows.png" alt="13-song-trading-my-sorrows" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Song</span>
+                    <span class="cue-dur">8s</span>
+                </div>
+                <div class="cue-slug">13-song-trading-my-sorrows</div>
+                <div class="cue-desc">Trading My Sorrows</div>
+                <div class="cue-note">Conditional — fire only if this song is in the set. Cue as it starts.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">3</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/14-song-friend-of-god.png" target="_blank" rel="noopener" title="Open 14-song-friend-of-god.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/14-song-friend-of-god.png" alt="14-song-friend-of-god" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Song</span>
+                    <span class="cue-dur">8s</span>
+                </div>
+                <div class="cue-slug">14-song-friend-of-god</div>
+                <div class="cue-desc">Friend of God</div>
+                <div class="cue-note">Conditional — fire only if this song is in the set. Cue as it starts.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-3">
+        <header class="item-head">
+            <div class="item-num">03</div>
+            <div class="item-meta">
+                <div class="item-time">11:00 — 11:10</div>
+                <h2 class="item-title">✝ &nbsp; Communion</h2>
+                <div class="item-lead">Visiting Minister</div>
+            </div>
+            <div class="item-cuecount">2 cues</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/07-section-communion.png" target="_blank" rel="noopener" title="Open 07-section-communion.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/07-section-communion.png" alt="07-section-communion" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">07-section-communion</div>
+                <div class="cue-desc">COMMUNION</div>
+                <div class="cue-note">Fire as the minister begins.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/17-name-visiting-minister-communion.png" target="_blank" rel="noopener" title="Open 17-name-visiting-minister-communion.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/17-name-visiting-minister-communion.png" alt="17-name-visiting-minister-communion" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">17-name-visiting-minister-communion</div>
+                <div class="cue-desc">Visiting Minister · Communion</div>
+                <div class="cue-note">Fire as the visiting minister is introduced. Confirm actual name on the day — if known, regenerate this super before service.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-4">
+        <header class="item-head">
+            <div class="item-num">04</div>
+            <div class="item-meta">
+                <div class="item-time">11:10 — 11:20</div>
+                <h2 class="item-title">◆ &nbsp; Welcome Address</h2>
+                <div class="item-lead">Pastor Shade Olatoye</div>
+            </div>
+            <div class="item-cuecount">2 cues</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/20-section-welcome-address.png" target="_blank" rel="noopener" title="Open 20-section-welcome-address.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/20-section-welcome-address.png" alt="20-section-welcome-address" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">20-section-welcome-address</div>
+                <div class="cue-desc">WELCOME ADDRESS</div>
+                <div class="cue-note">Fire as she stands. This is her anniversary moment.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" target="_blank" rel="noopener" title="Open 01-name-pastor-shade.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" alt="01-name-pastor-shade" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">01-name-pastor-shade</div>
+                <div class="cue-desc">Pastor Shade Olatoye · General Overseer</div>
+                <div class="cue-note">Fire shortly after — name super reinforces who is addressing.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-5">
+        <header class="item-head">
+            <div class="item-num">05</div>
+            <div class="item-meta">
+                <div class="item-time">11:20 — 11:23</div>
+                <h2 class="item-title">▶ &nbsp; Presentation</h2>
+                <div class="item-lead">—</div>
+            </div>
+            <div class="item-cuecount">1 cue</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/21-section-presentation.png" target="_blank" rel="noopener" title="Open 21-section-presentation.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/21-section-presentation.png" alt="21-section-presentation" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">21-section-presentation</div>
+                <div class="cue-desc">PRESENTATION</div>
+                <div class="cue-note">Fire as the presentation begins on the in-room screen.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-6">
+        <header class="item-head">
+            <div class="item-num">06</div>
+            <div class="item-meta">
+                <div class="item-time">11:23 — 11:53</div>
+                <h2 class="item-title">✦ &nbsp; Sermon — Ebenezer: Reasons to be Thankful</h2>
+                <div class="item-lead">Pastor Gbenga Adebanjo</div>
+            </div>
+            <div class="item-cuecount">13 cues</div>
+        </header>
+        <div class="op-note">Long sermon with 10 scripture references. Listen for each verse and fire its super as Pastor Gbenga reads or references it. Each auto-clears in 7 seconds. If you miss one, don't catch up — let it pass and stay with the next.</div>
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/15-anniversary-banner.png" target="_blank" rel="noopener" title="Open 15-anniversary-banner.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/15-anniversary-banner.png" alt="15-anniversary-banner" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Special</span>
+                    <span class="cue-dur">12s</span>
+                </div>
+                <div class="cue-slug">15-anniversary-banner</div>
+                <div class="cue-desc">34th Anniversary hero</div>
+                <div class="cue-note">Pre-sermon — fire as he is being introduced.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/10-section-word.png" target="_blank" rel="noopener" title="Open 10-section-word.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/10-section-word.png" alt="10-section-word" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">10-section-word</div>
+                <div class="cue-desc">THE WORD</div>
+                <div class="cue-note">Fire as he takes the lectern.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">3</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/04-name-pastor-gbenga.png" target="_blank" rel="noopener" title="Open 04-name-pastor-gbenga.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/04-name-pastor-gbenga.png" alt="04-name-pastor-gbenga" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">04-name-pastor-gbenga</div>
+                <div class="cue-desc">Pastor Gbenga Adebanjo · Preaching</div>
+                <div class="cue-note">Fire as he begins. (Regenerated 'Preaching' version.)</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">4</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/30-scripture-1-samuel-7-12.png" target="_blank" rel="noopener" title="Open 30-scripture-1-samuel-7-12.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/30-scripture-1-samuel-7-12.png" alt="30-scripture-1-samuel-7-12" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">30-scripture-1-samuel-7-12</div>
+                <div class="cue-desc">1 Samuel 7:12 · KJV · Foundational text — Ebenezer verse</div>
+                <div class="cue-note">Foundational text — fire when he opens with 'Then Samuel took a stone...' This is the Ebenezer verse, the thesis of the whole sermon.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">5</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/31-scripture-zechariah-4-10.png" target="_blank" rel="noopener" title="Open 31-scripture-zechariah-4-10.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/31-scripture-zechariah-4-10.png" alt="31-scripture-zechariah-4-10" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">31-scripture-zechariah-4-10</div>
+                <div class="cue-desc">Zechariah 4:10 · NIV · Small beginnings (Point 1)</div>
+                <div class="cue-note">Point 1: Be Thankful Because God Started With Us. Fire on 'Do not despise these small beginnings.'</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">6</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/32-scripture-psalm-124-1.png" target="_blank" rel="noopener" title="Open 32-scripture-psalm-124-1.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/32-scripture-psalm-124-1.png" alt="32-scripture-psalm-124-1" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">32-scripture-psalm-124-1</div>
+                <div class="cue-desc">Psalm 124:1 · KJV · God sustained us (Point 2)</div>
+                <div class="cue-note">Point 2: Be Thankful Because God Sustained Us. Fire on 'If it had not been the Lord who was on our side.'</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">7</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/33-scripture-luke-15-7.png" target="_blank" rel="noopener" title="Open 33-scripture-luke-15-7.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/33-scripture-luke-15-7.png" alt="33-scripture-luke-15-7" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">33-scripture-luke-15-7</div>
+                <div class="cue-desc">Luke 15:7 · NIV · Lives changed (Point 3)</div>
+                <div class="cue-note">Point 3: Lives That Have Been Changed. Fire on 'There is joy in heaven over one sinner who repents.'</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">8</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/34-scripture-galatians-6-9.png" target="_blank" rel="noopener" title="Open 34-scripture-galatians-6-9.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/34-scripture-galatians-6-9.png" alt="34-scripture-galatians-6-9" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">34-scripture-galatians-6-9</div>
+                <div class="cue-desc">Galatians 6:9 · NIV · Faithful servants (Point 4)</div>
+                <div class="cue-note">Point 4: Faithful Servants. Fire on 'Let us not grow weary in doing good.'</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">9</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/35-scripture-psalm-121-7.png" target="_blank" rel="noopener" title="Open 35-scripture-psalm-121-7.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/35-scripture-psalm-121-7.png" alt="35-scripture-psalm-121-7" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">35-scripture-psalm-121-7</div>
+                <div class="cue-desc">Psalm 121:7 · KJV · God's protection (Point 5)</div>
+                <div class="cue-note">Point 5: God's Protection. Fire on 'The Lord shall preserve you from all evil.'</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">10</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/36-scripture-lamentations-3-22.png" target="_blank" rel="noopener" title="Open 36-scripture-lamentations-3-22.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/36-scripture-lamentations-3-22.png" alt="36-scripture-lamentations-3-22" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">36-scripture-lamentations-3-22</div>
+                <div class="cue-desc">Lamentations 3:22-23 · KJV · Faithfulness (Point 6)</div>
+                <div class="cue-note">Point 6: His Faithfulness. Fire on 'Great is Thy faithfulness.' Emotional peak of the sermon.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">11</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/37-scripture-philippians-1-6.png" target="_blank" rel="noopener" title="Open 37-scripture-philippians-1-6.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/37-scripture-philippians-1-6.png" alt="37-scripture-philippians-1-6" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">37-scripture-philippians-1-6</div>
+                <div class="cue-desc">Philippians 1:6 · NIV · Future, first verse (Point 7)</div>
+                <div class="cue-note">Point 7: The Future, first verse. Fire on 'He who began a good work in you.'</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">12</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/38-scripture-haggai-2-9.png" target="_blank" rel="noopener" title="Open 38-scripture-haggai-2-9.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/38-scripture-haggai-2-9.png" alt="38-scripture-haggai-2-9" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">38-scripture-haggai-2-9</div>
+                <div class="cue-desc">Haggai 2:9 · KJV · Latter glory (Point 7)</div>
+                <div class="cue-note">Point 7: The Future, second verse. Fire on 'The glory of the latter house shall be greater.' The forward-looking peak.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">13</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/39-scripture-isaiah-6-8.png" target="_blank" rel="noopener" title="Open 39-scripture-isaiah-6-8.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/39-scripture-isaiah-6-8.png" alt="39-scripture-isaiah-6-8" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Scripture</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">39-scripture-isaiah-6-8</div>
+                <div class="cue-desc">Isaiah 6:8 · KJV · Charge: send me</div>
+                <div class="cue-note">Charge: closing call. Fire on 'Here am I, send me.'</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-7">
+        <header class="item-head">
+            <div class="item-num">07</div>
+            <div class="item-meta">
+                <div class="item-time">11:53 — 11:58</div>
+                <h2 class="item-title">☰ &nbsp; Welcome to All · Brief Announcements</h2>
+                <div class="item-lead">Pastor Kayode Ogungbenro <span class="lead-note">· Includes birthdays — Dr T's 99th</span></div>
+            </div>
+            <div class="item-cuecount">3 cues</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/22-section-announcements.png" target="_blank" rel="noopener" title="Open 22-section-announcements.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/22-section-announcements.png" alt="22-section-announcements" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">22-section-announcements</div>
+                <div class="cue-desc">ANNOUNCEMENTS</div>
+                <div class="cue-note">Fire as Pastor Kayode starts.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/03-name-pastor-kayode.png" target="_blank" rel="noopener" title="Open 03-name-pastor-kayode.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/03-name-pastor-kayode.png" alt="03-name-pastor-kayode" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">03-name-pastor-kayode</div>
+                <div class="cue-desc">Pastor Kayode Ogungbenro · Pastoral Leadership</div>
+                <div class="cue-note">Fire shortly after section marker clears.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">3</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/28-birthday-dr-t.png" target="_blank" rel="noopener" title="Open 28-birthday-dr-t.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/28-birthday-dr-t.png" alt="28-birthday-dr-t" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Special</span>
+                    <span class="cue-dur">10s</span>
+                </div>
+                <div class="cue-slug">28-birthday-dr-t</div>
+                <div class="cue-desc">Dr T · 99 today</div>
+                <div class="cue-note">Fire when Pastor Kayode mentions Dr T's 99th. Full-frame celebration — will dominate the screen, that is intentional. Clear after ~10s or once he moves on.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-8">
+        <header class="item-head">
+            <div class="item-num">08</div>
+            <div class="item-meta">
+                <div class="item-time">11:58 — 12:13</div>
+                <h2 class="item-title">◆ &nbsp; Offering — ministering in song</h2>
+                <div class="item-lead">Evangelist Bola Paul · D'Voice Ministries</div>
+            </div>
+            <div class="item-cuecount">2 cues</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/09-section-offering.png" target="_blank" rel="noopener" title="Open 09-section-offering.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/09-section-offering.png" alt="09-section-offering" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">09-section-offering</div>
+                <div class="cue-desc">OFFERING</div>
+                <div class="cue-note">Fire as the offering segment opens.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/18-name-bola-paul.png" target="_blank" rel="noopener" title="Open 18-name-bola-paul.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/18-name-bola-paul.png" alt="18-name-bola-paul" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">18-name-bola-paul</div>
+                <div class="cue-desc">Evangelist Bola Paul · D'Voice Ministries</div>
+                <div class="cue-note">Fire as she begins to minister. Important: this is one of the moments the livestream audience needs to know who is singing.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-9">
+        <header class="item-head">
+            <div class="item-num">09</div>
+            <div class="item-meta">
+                <div class="item-time">12:13 — 12:16</div>
+                <h2 class="item-title">▶ &nbsp; Presentation</h2>
+                <div class="item-lead">—</div>
+            </div>
+            <div class="item-cuecount">1 cue</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/21-section-presentation.png" target="_blank" rel="noopener" title="Open 21-section-presentation.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/21-section-presentation.png" alt="21-section-presentation" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">21-section-presentation</div>
+                <div class="cue-desc">PRESENTATION</div>
+                <div class="cue-note">Fire as the presentation begins.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-10">
+        <header class="item-head">
+            <div class="item-num">10</div>
+            <div class="item-meta">
+                <div class="item-time">12:16 — 12:28</div>
+                <h2 class="item-title">★ &nbsp; Show of Appreciation & Honour</h2>
+                <div class="item-lead">Pastor Shade Olatoye</div>
+            </div>
+            <div class="item-cuecount">2 cues</div>
+        </header>
+        <div class="op-note">Individual honour cards for named people are on the stage screen via the slide system, not the broadcast overlay. Don't try to fire person-cards from here.</div>
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/23-section-appreciation.png" target="_blank" rel="noopener" title="Open 23-section-appreciation.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/23-section-appreciation.png" alt="23-section-appreciation" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">23-section-appreciation</div>
+                <div class="cue-desc">APPRECIATION & HONOUR</div>
+                <div class="cue-note">Fire at the start of the segment.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" target="_blank" rel="noopener" title="Open 01-name-pastor-shade.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" alt="01-name-pastor-shade" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">01-name-pastor-shade</div>
+                <div class="cue-desc">Pastor Shade Olatoye · General Overseer</div>
+                <div class="cue-note">Fire as Pastor Shade begins calling honourees.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-11">
+        <header class="item-head">
+            <div class="item-num">11</div>
+            <div class="item-meta">
+                <div class="item-time">12:28 — 12:31</div>
+                <h2 class="item-title">▶ &nbsp; Presentation</h2>
+                <div class="item-lead">—</div>
+            </div>
+            <div class="item-cuecount">1 cue</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/21-section-presentation.png" target="_blank" rel="noopener" title="Open 21-section-presentation.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/21-section-presentation.png" alt="21-section-presentation" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">21-section-presentation</div>
+                <div class="cue-desc">PRESENTATION</div>
+                <div class="cue-note">Fire as the presentation begins.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-12">
+        <header class="item-head">
+            <div class="item-num">12</div>
+            <div class="item-meta">
+                <div class="item-time">12:31 — 12:36</div>
+                <h2 class="item-title">▶ &nbsp; Video Greeting — from Reverend Olowodola</h2>
+                <div class="item-lead">Reverend Olowodola</div>
+            </div>
+            <div class="item-cuecount">2 cues</div>
+        </header>
+        <div class="op-note">Two-step sequence. Name super first (auto-clears in 6s), then playing-now marker (manual clear). Do not fire both at once — strip overlap will be unreadable.</div>
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/19-name-rev-olowodola.png" target="_blank" rel="noopener" title="Open 19-name-rev-olowodola.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/19-name-rev-olowodola.png" alt="19-name-rev-olowodola" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">19-name-rev-olowodola</div>
+                <div class="cue-desc">Reverend Olowodola · Video Greeting</div>
+                <div class="cue-note">Fire just before video starts — introduces who is about to speak.</div>
+            </div>
+        </div>
+        
+        <div class="cue manual">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/29-video-greeting-olowodola.png" target="_blank" rel="noopener" title="Open 29-video-greeting-olowodola.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/29-video-greeting-olowodola.png" alt="29-video-greeting-olowodola" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Special</span>
+                    <span class="cue-dur">MANUAL</span>
+                </div>
+                <div class="cue-slug">29-video-greeting-olowodola</div>
+                <div class="cue-desc">Playing now · Rev Olowodola video</div>
+                <div class="cue-note">Upper-third 'PLAYING NOW' marker. Fire once name super clears and the video is playing. STAYS UP for the full video — clear MANUALLY near the end (no auto-clear).</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-13">
+        <header class="item-head">
+            <div class="item-num">13</div>
+            <div class="item-meta">
+                <div class="item-time">12:36 — 12:41</div>
+                <h2 class="item-title">✝ &nbsp; Prayer Ministry</h2>
+                <div class="item-lead">Visiting Ministers</div>
+            </div>
+            <div class="item-cuecount">1 cue</div>
+        </header>
+        <div class="op-note">No name super for visiting ministers — names not pre-confirmed. If specific names become known on the day, regenerate via the script.</div>
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/24-section-prayer-ministry.png" target="_blank" rel="noopener" title="Open 24-section-prayer-ministry.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/24-section-prayer-ministry.png" alt="24-section-prayer-ministry" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">24-section-prayer-ministry</div>
+                <div class="cue-desc">PRAYER MINISTRY</div>
+                <div class="cue-note">Fire as ministers come forward.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-14">
+        <header class="item-head">
+            <div class="item-num">14</div>
+            <div class="item-meta">
+                <div class="item-time">12:41 — 12:46</div>
+                <h2 class="item-title">✝ &nbsp; Grace & Blessing of the Meal</h2>
+                <div class="item-lead">—</div>
+            </div>
+            <div class="item-cuecount">1 cue</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/25-section-grace.png" target="_blank" rel="noopener" title="Open 25-section-grace.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/25-section-grace.png" alt="25-section-grace" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">25-section-grace</div>
+                <div class="cue-desc">GRACE & BLESSING OF THE MEAL</div>
+                <div class="cue-note">Fire as the blessing begins.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-15">
+        <header class="item-head">
+            <div class="item-num">15</div>
+            <div class="item-meta">
+                <div class="item-time">12:46 — 13:56</div>
+                <h2 class="item-title">◆ &nbsp; The Meal</h2>
+                <div class="item-lead">Hospitality Team — Janet Oviri</div>
+            </div>
+            <div class="item-cuecount">1 cue</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/26-section-meal.png" target="_blank" rel="noopener" title="Open 26-section-meal.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/26-section-meal.png" alt="26-section-meal" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">26-section-meal</div>
+                <div class="cue-desc">THE MEAL</div>
+                <div class="cue-note">Fire once at start of meal. After that, broadcast overlay stays clear — fellowship time, no overlays.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+    <article class="item" id="item-16">
+        <header class="item-head">
+            <div class="item-num">16</div>
+            <div class="item-meta">
+                <div class="item-time">13:56 — 14:01</div>
+                <h2 class="item-title">◆ &nbsp; Closing Prayer</h2>
+                <div class="item-lead">Pastor Shade Olatoye</div>
+            </div>
+            <div class="item-cuecount">3 cues</div>
+        </header>
+        
+        <div class="cues">
+        <div class="cue">
+            <div class="cue-step">1</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/27-section-closing-prayer.png" target="_blank" rel="noopener" title="Open 27-section-closing-prayer.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/27-section-closing-prayer.png" alt="27-section-closing-prayer" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Section marker</span>
+                    <span class="cue-dur">7s</span>
+                </div>
+                <div class="cue-slug">27-section-closing-prayer</div>
+                <div class="cue-desc">CLOSING PRAYER</div>
+                <div class="cue-note">Fire as she stands to close.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">2</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" target="_blank" rel="noopener" title="Open 01-name-pastor-shade.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/01-name-pastor-shade.png" alt="01-name-pastor-shade" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Name super</span>
+                    <span class="cue-dur">6s</span>
+                </div>
+                <div class="cue-slug">01-name-pastor-shade</div>
+                <div class="cue-desc">Pastor Shade Olatoye · General Overseer</div>
+                <div class="cue-note">Fire shortly after.</div>
+            </div>
+        </div>
+        
+        <div class="cue">
+            <div class="cue-step">3</div>
+            <a class="cue-thumb" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/15-anniversary-banner.png" target="_blank" rel="noopener" title="Open 15-anniversary-banner.png full-size">
+                <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary/overlays/15-anniversary-banner.png" alt="15-anniversary-banner" loading="lazy">
+            </a>
+            <div class="cue-body">
+                <div class="cue-head">
+                    <span class="cue-kind">Special</span>
+                    <span class="cue-dur">12s</span>
+                </div>
+                <div class="cue-slug">15-anniversary-banner</div>
+                <div class="cue-desc">34th Anniversary hero</div>
+                <div class="cue-note">Service close — fire as she finishes praying. Bookends the service with the same hero that opened it.</div>
+            </div>
+        </div>
+        </div>
+    </article>
+    
+
+    <h2 class="section-eyebrow">Operating principles</h2>
+    <div class="section-rule"></div>
+    <p class="section-dek">Five things to hold in mind during live operation.</p>
+
+    <div class="principles">
+        <div class="principle"><h3>One At A Time</h3><p>Only one overlay should be on the strip at any time. Firing a new one auto-clears the current.</p></div><div class="principle"><h3>Clear Before Fire</h3><p>When transitioning between overlays, allow the current to fade out (300ms) before firing the next.</p></div><div class="principle"><h3>Manual Overrides Auto</h3><p>If an overlay is taking too long to clear because content drifted, hit manual clear. Auto-clear timers are sensible defaults, not laws.</p></div><div class="principle"><h3>Quick Fire Search</h3><p>Anything not pre-cued (a surprise guest, an unplanned testimony) can be fired from the search/library. Don't panic — search by person or section name.</p></div><div class="principle"><h3>When Drift Happens</h3><p>If the programme drifts off schedule, the cue list still works — cues are tied to programme items, not clock times. Just stay with the current item's cue stack.</p></div>
+    </div>
+
+</div>
+</body>
+</html>
