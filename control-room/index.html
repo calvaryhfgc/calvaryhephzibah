@@ -1685,6 +1685,10 @@
     <!-- Images tab -->
     <div id="gfx-tab-images" class="gfx-tab-body active">
       <div class="img-section">
+        <div class="img-section-label">Anniversary overlays</div>
+        <div id="img-grid-anniversary" class="img-grid"></div>
+      </div>
+      <div class="img-section">
         <div class="img-section-label">Offering</div>
         <div id="img-grid-offering" class="img-grid"></div>
       </div>
@@ -2782,7 +2786,7 @@ function mediaSrc(img) {
 }
 
 function renderImageLibrary() {
-  const cats = ['offering', 'sermon', 'communion', 'announcement', 'general'];
+  const cats = ['anniversary', 'offering', 'sermon', 'communion', 'announcement', 'general'];
   cats.forEach(cat => {
     const grid = document.getElementById('img-grid-' + cat);
     if (!grid) return;
