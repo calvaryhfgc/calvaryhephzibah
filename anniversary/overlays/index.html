@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Anniversary Overlays · Contact Sheet</title>
-<meta property="og:title" content="Calvary Anniversary · Lower & Upper Third Overlays">
-<meta property="og:description" content="The full set of broadcast overlays for the 34th Anniversary service. Drop into OBS as image sources over the camera scene.">
+<title>Anniversary Run Sheet · Overlays</title>
+<meta property="og:title" content="Calvary Anniversary · Overlay Run Sheet">
+<meta property="og:description" content="Programme-ordered overlay run sheet for the 34th anniversary service. 16 items, cueing notes, full file inventory.">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --obsidian: #0A0A0A;
@@ -17,274 +18,408 @@
     --border: rgba(245, 240, 232, 0.08);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  html { scroll-behavior: smooth; scroll-padding-top: 100px; }
   body {
     background: var(--obsidian);
     color: var(--bone);
     font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
 
   /* Sticky header */
   .topbar {
-    position: sticky; top: 0; z-index: 10;
-    background: rgba(10, 10, 10, 0.92);
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(10, 10, 10, 0.94);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 14px 20px;
+    padding: 12px 18px;
   }
   .topbar-inner {
-    max-width: 1200px; margin: 0 auto;
-    display: flex; align-items: center; gap: 16px;
-    flex-wrap: wrap;
+    max-width: 1100px; margin: 0 auto;
+  }
+  .topbar-title-row {
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    margin-bottom: 8px;
   }
   .topbar-title {
     font-family: 'Anton', sans-serif;
-    font-size: 22px; letter-spacing: 0.5px;
+    font-size: 22px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
   }
   .topbar-title .red { color: var(--calvary-red); }
   .topbar-meta {
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--dim);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     font-weight: 600;
   }
-
-  /* Pill nav */
   .nav {
-    display: flex; gap: 6px; padding: 4px 0 0;
+    display: flex; gap: 5px;
     overflow-x: auto;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
-    width: 100%;
+    padding-bottom: 2px;
   }
   .nav::-webkit-scrollbar { display: none; }
   .nav a {
     flex-shrink: 0;
-    padding: 6px 12px;
+    padding: 5px 10px;
+    background: transparent;
     border: 1px solid var(--border);
     border-radius: 100px;
     color: var(--dim);
     text-decoration: none;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0.06em;
     white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
   }
   .nav a:hover, .nav a:active {
     color: var(--bone);
     border-color: var(--calvary-red);
+    background: rgba(208, 68, 28, 0.08);
   }
 
-  /* Container */
   .container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 32px 20px 80px;
+    padding: 28px 20px 80px;
   }
 
   /* Hero */
   .hero {
-    padding: 24px 0 40px;
+    padding: 16px 0 36px;
     border-bottom: 1px solid var(--border);
-    margin-bottom: 40px;
+    margin-bottom: 36px;
+  }
+  .hero .eyebrow {
+    font-size: 11px;
+    color: var(--calvary-red);
+    letter-spacing: 0.16em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 14px;
   }
   .hero h1 {
     font-family: 'Anton', sans-serif;
     font-size: clamp(36px, 7vw, 64px);
     line-height: 1.0;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .hero h1 .red { color: var(--calvary-red); }
   .hero p {
     color: var(--dim);
-    max-width: 640px;
+    max-width: 720px;
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.65;
   }
 
-  /* How to use */
-  .how {
+  /* How-to + service metadata grid */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  @media (min-width: 720px) {
+    .meta-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .meta {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 20px 22px;
-    margin-bottom: 40px;
+    padding: 18px 20px;
   }
-  .how-title {
-    font-size: 11px;
+  .meta h3 {
+    font-size: 10.5px;
     color: var(--calvary-red);
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     font-weight: 600;
     text-transform: uppercase;
     margin-bottom: 10px;
   }
-  .how h2 {
+  .meta .big {
     font-family: 'Anton', sans-serif;
-    font-size: 28px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    letter-spacing: 0.5px;
-  }
-  .how ol {
-    margin-left: 18px;
-    color: var(--bone);
-    font-size: 14px;
-    line-height: 1.7;
-  }
-  .how li { margin-bottom: 4px; }
-  .how li code {
-    background: rgba(245,240,232,0.06);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 12px;
-    color: var(--bone);
-  }
-
-  /* Section */
-  section { margin-bottom: 48px; scroll-margin-top: 80px; }
-  .section-head {
-    display: flex; align-items: baseline; gap: 16px;
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-num {
-    font-family: 'Anton', sans-serif;
-    font-size: 32px;
-    color: var(--calvary-red);
-  }
-  .section-name {
-    font-family: 'Anton', sans-serif;
-    font-size: 28px;
+    font-size: 22px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: 6px;
   }
-  .section-count {
-    margin-left: auto;
-    font-size: 11px;
+  .meta .sub {
     color: var(--dim);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
+    font-size: 13.5px;
   }
-  .section-intro {
-    color: var(--dim);
-    font-size: 14px;
-    margin-bottom: 24px;
-    max-width: 700px;
-    line-height: 1.6;
+  .meta ol {
+    margin: 6px 0 0 18px;
+    font-size: 13.5px;
+    color: var(--bone);
+    line-height: 1.75;
   }
 
-  /* Grid */
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  @media (min-width: 720px) {
-    .grid { grid-template-columns: 1fr 1fr; gap: 24px; }
-  }
-
-  /* Card */
-  .card {
+  /* Programme item */
+  .item {
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 16px;
+    padding: 22px 22px 18px;
+    margin-bottom: 18px;
+    scroll-margin-top: 110px;
+  }
+  .item-head {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .item-num {
+    flex-shrink: 0;
+    font-family: 'Anton', sans-serif;
+    font-size: 34px;
+    color: var(--calvary-red);
+    line-height: 1;
+    min-width: 50px;
+  }
+  .item-body { flex: 1; min-width: 0; }
+  .item-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    line-height: 1.15;
+    margin-bottom: 4px;
+  }
+  .item-lead {
+    font-size: 13.5px;
+    color: var(--dim);
+  }
+  .item-lead strong { color: var(--bone); font-weight: 600; }
+  .item-time {
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .item-time .duration {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    color: var(--bone);
+  }
+  .item-time .clock {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* Notes */
+  .item-note {
+    background: rgba(208, 68, 28, 0.08);
+    border-left: 3px solid var(--calvary-red);
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 13.5px;
+    color: var(--bone);
+  }
+  .item-note strong {
+    color: var(--calvary-red);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 11px;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* Cue list */
+  .cues {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 720px) {
+    .cues { grid-template-columns: 1fr 1fr; gap: 14px; }
+  }
+  .cue {
+    background: rgba(245, 240, 232, 0.02);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     overflow: hidden;
   }
-  .card-img {
+  .cue-img {
     width: 100%;
     aspect-ratio: 16 / 9;
     display: block;
     background: #000;
   }
-  .card-body {
-    padding: 14px 16px 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    flex-wrap: wrap;
+  .cue-body {
+    padding: 10px 12px 12px;
   }
-  .card-label {
+  .cue-step {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-bottom: 4px;
+  }
+  .cue-step-num {
+    background: var(--calvary-red);
+    color: var(--bone);
+    font-weight: 700;
+    font-size: 10.5px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+  }
+  .cue-label {
+    flex: 1;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--bone);
+  }
+  .cue-meta {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .cue-filename {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px;
+    color: var(--dim);
     flex: 1;
     min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
-  .card-label .name {
-    font-size: 15px;
+  .cue-link {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    background: var(--calvary-red);
     color: var(--bone);
-    font-weight: 600;
-    margin-bottom: 2px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
-  .card-label .filename {
+  .cue-link:hover { opacity: 0.9; }
+
+  .item-no-cue {
+    font-size: 13.5px;
+    color: var(--muted);
+    font-style: italic;
+    padding: 8px 0;
+  }
+
+  /* Catalogue */
+  .catalogue {
+    margin-top: 56px;
+    padding-top: 28px;
+    border-top: 1px solid var(--border);
+  }
+  .catalogue h2 {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .catalogue p {
+    color: var(--dim);
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .catalogue-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 540px) {
+    .catalogue-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (min-width: 860px) {
+    .catalogue-grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .cat-row {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--bone);
+  }
+  .cat-row:hover { border-color: var(--calvary-red); }
+  .cat-thumb {
+    width: 52px;
+    height: 29px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .cat-info {
+    flex: 1; min-width: 0;
+  }
+  .cat-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cat-file {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--dim);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .card-link {
-    flex-shrink: 0;
-    padding: 6px 12px;
-    background: var(--calvary-red);
-    color: var(--bone);
-    text-decoration: none;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .card-link:hover { opacity: 0.9; }
-  .card-link.ghost {
-    background: transparent;
-    color: var(--dim);
-    border: 1px solid var(--border);
-  }
-  .card-link.ghost:hover {
-    color: var(--bone);
-    border-color: var(--calvary-red);
-  }
 
   footer {
-    margin-top: 80px;
-    padding-top: 32px;
+    margin-top: 60px;
+    padding-top: 28px;
     border-top: 1px solid var(--border);
     color: var(--dim);
-    font-size: 12px;
+    font-size: 11.5px;
     text-align: center;
+    letter-spacing: 0.08em;
   }
   footer .red { color: var(--calvary-red); }
-
-  /* Fonts */
-  @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700&display=swap');
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="topbar">
   <div class="topbar-inner">
-    <div>
-      <div class="topbar-title">Anniversary <span class="red">Overlays</span></div>
-      <div class="topbar-meta">16 PNGs · 1920×1080 · Transparent</div>
+    <div class="topbar-title-row">
+      <div class="topbar-title">Run Sheet <span class="red">·</span> Overlays</div>
+      <div class="topbar-meta">17 May 2026 · 16 items · 29 graphics</div>
     </div>
     <nav class="nav">
-      <a href="#names">Names</a>
-      <a href="#sections">Sections</a>
-      <a href="#scripture">Scripture</a>
-      <a href="#songs">Songs</a>
-      <a href="#banner">Banner</a>
-      <a href="#testimony">Testimony</a>
+      <a href="#item-1">01 Welcome</a>
+      <a href="#item-2">02 Worship</a>
+      <a href="#item-3">03 Communion</a>
+      <a href="#item-4">04 Addr</a>
+      <a href="#item-5">05 Pres</a>
+      <a href="#item-6">06 Sermon</a>
+      <a href="#item-7">07 Anncts</a>
+      <a href="#item-8">08 Offering</a>
+      <a href="#item-9">09 Pres</a>
+      <a href="#item-10">10 Honour</a>
+      <a href="#item-11">11 Pres</a>
+      <a href="#item-12">12 Video</a>
+      <a href="#item-13">13 Prayer</a>
+      <a href="#item-14">14 Grace</a>
+      <a href="#item-15">15 Meal</a>
+      <a href="#item-16">16 Close</a>
+      <a href="#catalogue">All files</a>
     </nav>
   </div>
 </div>
@@ -292,262 +427,956 @@
 <div class="container">
 
   <div class="hero">
-    <h1>Lower &amp; upper third <span class="red">overlays.</span></h1>
-    <p>Sixteen broadcast graphics for the 34th anniversary service. Each is a 1920×1080 PNG with a transparent zone — drop it into OBS as a full-screen image source above the camera scene and only the obsidian strip renders. Previewed here over a real worship-team frame so you can judge how each one sits.</p>
+    <div class="eyebrow">Calvary Hephzibah · 34th Anniversary</div>
+    <h1>Overlay <span class="red">run sheet.</span></h1>
+    <p>The graphics, in programme order. Each item lists which overlays to fire and when. Fire one at a time, hold for 5–8 seconds for name supers and section markers, 10–15 seconds for the anniversary banner, then clear before firing the next.</p>
   </div>
 
-  <div class="how">
-    <div class="how-title">How to use these in OBS</div>
-    <h2>One-time setup, fast switching</h2>
-    <ol>
-      <li>Download the PNG files from this page using the <code>PNG</code> button on each card.</li>
-      <li>In OBS, create a new scene <code>Service · Overlays</code> with the camera feed as the base source.</li>
-      <li>Add one <code>Image</code> source per overlay PNG, set each to 1920×1080, locked. Keep them all hidden by default.</li>
-      <li>During service, toggle visibility on the overlay you need. Show for 5–8 seconds (name supers, song titles) or 10–15 seconds (anniversary banner) and hide.</li>
-      <li>Never run two overlays at once — they share the same screen zone.</li>
-    </ol>
+  <div class="meta-grid">
+
+    <div class="meta">
+      <h3>The service</h3>
+      <div class="big">Sun 17 May · 10:30</div>
+      <div class="sub">Carmoor Rd · 16 items · ~3h 30m</div>
+    </div>
+
+    <div class="meta">
+      <h3>OBS setup (one-time)</h3>
+      <ol>
+        <li>Add each overlay PNG as an Image source over the camera scene.</li>
+        <li>Lock all sources at 1920×1080. Keep hidden by default.</li>
+        <li>Toggle visibility on the overlay you need. One at a time, never two.</li>
+        <li>Clear before firing the next — they share the same screen zone.</li>
+      </ol>
+    </div>
+
   </div>
 
-  <!-- NAMES -->
-  <section id="names">
-    <div class="section-head">
-      <div class="section-num">01</div>
-      <div class="section-name">Name supers</div>
-      <div class="section-count">4 graphics · lower third</div>
-    </div>
-    <p class="section-intro">For introducing whoever is at the lectern. Show 5–8 seconds when they first start speaking, then hide. Reuse the same graphic if they speak again later.</p>
-    <div class="grid">
-      
-      <div class="card">
-        <img class="card-img" src="previews/preview-01-name-pastor-shade.jpg" alt="Pastor Shade Olatoye overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Pastor Shade Olatoye</div>
-            <div class="filename">01-name-pastor-shade.png</div>
-          </div>
-          <a class="card-link" href="../overlays/01-name-pastor-shade.png" download>PNG</a>
-        </div>
+  
+  <section class="item" id="item-1">
+    <div class="item-head">
+      <div class="item-num">01</div>
+      <div class="item-body">
+        <div class="item-title">Welcome · Bible Reading · Opening Prayer</div>
+        <div class="item-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
       </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-02-name-michael-kabalu.jpg" alt="Brother Michael Kabalu overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Brother Michael Kabalu</div>
-            <div class="filename">02-name-michael-kabalu.png</div>
-          </div>
-          <a class="card-link" href="../overlays/02-name-michael-kabalu.png" download>PNG</a>
-        </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-03-name-pastor-kayode.jpg" alt="Pastor Kayode Ogungbenro overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Pastor Kayode Ogungbenro</div>
-            <div class="filename">03-name-pastor-kayode.png</div>
-          </div>
-          <a class="card-link" href="../overlays/03-name-pastor-kayode.png" download>PNG</a>
-        </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-04-name-pastor-gbenga.jpg" alt="Pastor Gbenga Adebanjo overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Pastor Gbenga Adebanjo</div>
-            <div class="filename">04-name-pastor-gbenga.png</div>
-          </div>
-          <a class="card-link" href="../overlays/04-name-pastor-gbenga.png" download>PNG</a>
-        </div>
+      <div class="item-time">
+        <div class="duration">10 min</div>
+        <div class="clock">10:30–10:40</div>
       </div>
     </div>
+    
+      <div class="item-note">
+        <strong>Open the service</strong>
+        Fire the anniversary banner first as Pastor Shade walks up — this sets the day. Hold for 10–15 seconds, then clear. Once she begins, fire her name super for 5–8 seconds.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-15-anniversary-banner.jpg" alt="Anniversary banner" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Anniversary banner</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">15-anniversary-banner.png · 10–15s · service open</span>
+              <a class="cue-link" href="15-anniversary-banner.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-05-section-welcome.jpg" alt="Welcome section marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Welcome section marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">05-section-welcome.png · 5–7s · as she begins</span>
+              <a class="cue-link" href="05-section-welcome.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-01-name-pastor-shade.jpg" alt="Pastor Shade name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">3</span>
+              <span class="cue-label">Pastor Shade name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">01-name-pastor-shade.png · 5–8s</span>
+              <a class="cue-link" href="01-name-pastor-shade.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-2">
+    <div class="item-head">
+      <div class="item-num">02</div>
+      <div class="item-body">
+        <div class="item-title">Praise & Worship</div>
+        <div class="item-lead"><strong>Lead:</strong> Calvary Worship Team</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">20 min</div>
+        <div class="clock">10:40–11:00</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>Song-by-song supers</strong>
+        Fire the worship section marker at the very start. Then as each song begins, fire its song super for 5–8 seconds. Only two song supers currently exist (Trading My Sorrows, Friend of God) — the set list may need more.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-06-section-worship.jpg" alt="Worship section marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Worship section marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">06-section-worship.png · 5–7s · at start</span>
+              <a class="cue-link" href="06-section-worship.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-13-song-trading-my-sorrows.jpg" alt="Song · Trading My Sorrows" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Song · Trading My Sorrows</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">13-song-trading-my-sorrows.png · 5–8s · when song starts</span>
+              <a class="cue-link" href="13-song-trading-my-sorrows.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-14-song-friend-of-god.jpg" alt="Song · Friend of God" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">3</span>
+              <span class="cue-label">Song · Friend of God</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">14-song-friend-of-god.png · 5–8s · when song starts</span>
+              <a class="cue-link" href="14-song-friend-of-god.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-3">
+    <div class="item-head">
+      <div class="item-num">03</div>
+      <div class="item-body">
+        <div class="item-title">Communion</div>
+        <div class="item-lead"><strong>Lead:</strong> Visiting Minister</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">10 min</div>
+        <div class="clock">11:00–11:10</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>Visiting minister name TBC</strong>
+        The communion super is generic ("Visiting Minister") since the specific name isn't confirmed. If a name comes through before Sunday, ask Bolaji to regenerate.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-07-section-communion.jpg" alt="Communion section marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Communion section marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">07-section-communion.png · 5–7s · at start</span>
+              <a class="cue-link" href="07-section-communion.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-17-name-visiting-minister-communion.jpg" alt="Visiting Minister name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Visiting Minister name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">17-name-visiting-minister-communion.png · 5–8s · as they begin</span>
+              <a class="cue-link" href="17-name-visiting-minister-communion.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-4">
+    <div class="item-head">
+      <div class="item-num">04</div>
+      <div class="item-body">
+        <div class="item-title">Welcome Address</div>
+        <div class="item-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">10 min</div>
+        <div class="clock">11:10–11:20</div>
+      </div>
+    </div>
+    
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-20-section-welcome-address.jpg" alt="Welcome Address marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Welcome Address marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">20-section-welcome-address.png · 5–7s · at start</span>
+              <a class="cue-link" href="20-section-welcome-address.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-01-name-pastor-shade.jpg" alt="Pastor Shade name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Pastor Shade name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">01-name-pastor-shade.png · 5–8s</span>
+              <a class="cue-link" href="01-name-pastor-shade.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-5">
+    <div class="item-head">
+      <div class="item-num">05</div>
+      <div class="item-body">
+        <div class="item-title">Presentation</div>
+        <div class="item-lead"><strong>Segment:</strong> Visual presentation</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">3 min</div>
+        <div class="clock">11:20–11:23</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>What's in the presentation?</strong>
+        Content of the 3 presentation slots is currently unspecified. If they're video, switch scene to the playback source. If they're slides, switch to the main screen feed. Fire the generic Presentation marker either way.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-21-section-presentation.jpg" alt="Presentation marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Presentation marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">21-section-presentation.png · 5–7s · at start</span>
+              <a class="cue-link" href="21-section-presentation.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-6">
+    <div class="item-head">
+      <div class="item-num">06</div>
+      <div class="item-body">
+        <div class="item-title">Sermon — <em>Reasons to be Thankful</em></div>
+        <div class="item-lead"><strong>Preacher:</strong> Pastor Gbenga Adebanjo</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">25–30 min</div>
+        <div class="clock">11:23–11:53</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>Sermon opening sequence</strong>
+        Fire the anniversary banner as Pastor Gbenga is invited up. Hold 10s, clear. Fire The Word section marker for 5s. Then fire his name super for 5–8s once he settles. If a sermon scripture is read aloud, fire the scripture super (placeholders exist, may need regenerating with the actual passage).
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-15-anniversary-banner.jpg" alt="Anniversary banner" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Anniversary banner</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">15-anniversary-banner.png · 10–12s · as he comes up</span>
+              <a class="cue-link" href="15-anniversary-banner.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-10-section-word.jpg" alt="The Word section marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">The Word section marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">10-section-word.png · 5–7s</span>
+              <a class="cue-link" href="10-section-word.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-04-name-pastor-gbenga.jpg" alt="Pastor Gbenga name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">3</span>
+              <span class="cue-label">Pastor Gbenga name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">04-name-pastor-gbenga.png · 5–8s · as he settles</span>
+              <a class="cue-link" href="04-name-pastor-gbenga.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-7">
+    <div class="item-head">
+      <div class="item-num">07</div>
+      <div class="item-body">
+        <div class="item-title">Welcome to All · Brief Announcements</div>
+        <div class="item-lead"><strong>Lead:</strong> Pastor Kayode Ogungbenro · inc. birthdays · Dr T's 99th</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">5 min</div>
+        <div class="clock">11:53–11:58</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>Dr T's 99th birthday — moment of the day</strong>
+        Fire the Announcements marker at the start of item 7. When Pastor Kayode reaches Dr T's birthday specifically, fire the dedicated 99 TODAY birthday super for 10–12 seconds. This is the standout human moment — give it screen time and don't rush it.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-22-section-announcements.jpg" alt="Announcements marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Announcements marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">22-section-announcements.png · 5–7s · at start</span>
+              <a class="cue-link" href="22-section-announcements.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-03-name-pastor-kayode.jpg" alt="Pastor Kayode name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Pastor Kayode name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">03-name-pastor-kayode.png · 5–8s</span>
+              <a class="cue-link" href="03-name-pastor-kayode.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-28-birthday-dr-t.jpg" alt="Dr T · 99 Today birthday super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">3</span>
+              <span class="cue-label">Dr T · 99 Today birthday super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">28-birthday-dr-t.png · 10–12s · at Dr T mention</span>
+              <a class="cue-link" href="28-birthday-dr-t.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-8">
+    <div class="item-head">
+      <div class="item-num">08</div>
+      <div class="item-body">
+        <div class="item-title">Offering</div>
+        <div class="item-lead"><strong>Ministering in song:</strong> Evangelist Bola Paul · D'Voice Ministries</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">15 min</div>
+        <div class="clock">11:58–12:13</div>
+      </div>
+    </div>
+    
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-09-section-offering.jpg" alt="Offering section marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Offering section marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">09-section-offering.png · 5–7s · at start</span>
+              <a class="cue-link" href="09-section-offering.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-18-name-bola-paul.jpg" alt="Evangelist Bola Paul name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Evangelist Bola Paul name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">18-name-bola-paul.png · 6–8s · as she begins</span>
+              <a class="cue-link" href="18-name-bola-paul.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-9">
+    <div class="item-head">
+      <div class="item-num">09</div>
+      <div class="item-body">
+        <div class="item-title">Presentation</div>
+        <div class="item-lead"><strong>Segment:</strong> Visual presentation</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">3 min</div>
+        <div class="clock">12:13–12:16</div>
+      </div>
+    </div>
+    
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-21-section-presentation.jpg" alt="Presentation marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Presentation marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">21-section-presentation.png · 5–7s · at start</span>
+              <a class="cue-link" href="21-section-presentation.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-10">
+    <div class="item-head">
+      <div class="item-num">10</div>
+      <div class="item-body">
+        <div class="item-title">Show of Appreciation & Honour</div>
+        <div class="item-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">10–12 min</div>
+        <div class="clock">12:16–12:28</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>The signature anniversary moment</strong>
+        Pastor Shade honours members by name. Fire the Appreciation marker at the start. Hold her name super as she begins. Worth flashing the anniversary banner once during this segment as a punctuation moment if it flows naturally.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-23-section-appreciation.jpg" alt="Appreciation & Honour marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Appreciation & Honour marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">23-section-appreciation.png · 5–7s · at start</span>
+              <a class="cue-link" href="23-section-appreciation.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-01-name-pastor-shade.jpg" alt="Pastor Shade name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Pastor Shade name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">01-name-pastor-shade.png · 5–8s</span>
+              <a class="cue-link" href="01-name-pastor-shade.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-11">
+    <div class="item-head">
+      <div class="item-num">11</div>
+      <div class="item-body">
+        <div class="item-title">Presentation</div>
+        <div class="item-lead"><strong>Segment:</strong> Visual presentation</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">3 min</div>
+        <div class="clock">12:28–12:31</div>
+      </div>
+    </div>
+    
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-21-section-presentation.jpg" alt="Presentation marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Presentation marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">21-section-presentation.png · 5–7s · at start</span>
+              <a class="cue-link" href="21-section-presentation.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-12">
+    <div class="item-head">
+      <div class="item-num">12</div>
+      <div class="item-body">
+        <div class="item-title">Video Greeting</div>
+        <div class="item-lead"><strong>From:</strong> Reverend Olowodola</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">~5 min</div>
+        <div class="clock">12:31–12:36</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>Video segment — scene switch required</strong>
+        This is a pre-recorded video. Switch the OBS scene to the video playback source. Fire the Video Greeting marker for the first 5–7s so viewers know what they're watching, then clear. Hold the Rev Olowodola name super for 5–8s during the video. Clear before the video ends so the end of his message is unobstructed.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-29-video-greeting-olowodola.jpg" alt="Video Greeting marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Video Greeting marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">29-video-greeting-olowodola.png · 5–7s · as video starts</span>
+              <a class="cue-link" href="29-video-greeting-olowodola.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-19-name-rev-olowodola.jpg" alt="Rev Olowodola name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Rev Olowodola name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">19-name-rev-olowodola.png · 5–8s · into the video</span>
+              <a class="cue-link" href="19-name-rev-olowodola.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-13">
+    <div class="item-head">
+      <div class="item-num">13</div>
+      <div class="item-body">
+        <div class="item-title">Prayer Ministry</div>
+        <div class="item-lead"><strong>Lead:</strong> Visiting Ministers</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">5 min</div>
+        <div class="clock">12:36–12:41</div>
+      </div>
+    </div>
+    
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-24-section-prayer-ministry.jpg" alt="Prayer Ministry marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Prayer Ministry marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">24-section-prayer-ministry.png · 5–7s · at start</span>
+              <a class="cue-link" href="24-section-prayer-ministry.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-14">
+    <div class="item-head">
+      <div class="item-num">14</div>
+      <div class="item-body">
+        <div class="item-title">Grace & Blessing of the Meal</div>
+        <div class="item-lead"><strong>Element:</strong> Spoken blessing</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">5 min</div>
+        <div class="clock">12:41–12:46</div>
+      </div>
+    </div>
+    
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-25-section-grace.jpg" alt="Grace & Blessing marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Grace & Blessing marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">25-section-grace.png · 5–7s · at start</span>
+              <a class="cue-link" href="25-section-grace.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-15">
+    <div class="item-head">
+      <div class="item-num">15</div>
+      <div class="item-body">
+        <div class="item-title">The Meal</div>
+        <div class="item-lead"><strong>Lead:</strong> Hospitality Team — Janet Oviri</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">60–75 min</div>
+        <div class="clock">12:46–14:01</div>
+      </div>
+    </div>
+    
+      <div class="item-note">
+        <strong>Fellowship time — overlays optional</strong>
+        Fire The Meal marker briefly as fellowship begins, then clear. After that the broadcast can hold on a wide room shot or cut. No further overlays are needed unless something programmed comes up.
+      </div>
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-26-section-meal.jpg" alt="The Meal marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">The Meal marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">26-section-meal.png · 5–7s · as meal starts</span>
+              <a class="cue-link" href="26-section-meal.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <section class="item" id="item-16">
+    <div class="item-head">
+      <div class="item-num">16</div>
+      <div class="item-body">
+        <div class="item-title">Closing Prayer</div>
+        <div class="item-lead"><strong>Lead:</strong> Pastor Shade Olatoye</div>
+      </div>
+      <div class="item-time">
+        <div class="duration">5 min</div>
+        <div class="clock">~14:01</div>
+      </div>
+    </div>
+    
+    <div class="cues">
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-27-section-closing-prayer.jpg" alt="Closing Prayer marker" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">1</span>
+              <span class="cue-label">Closing Prayer marker</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">27-section-closing-prayer.png · 5–7s · at start</span>
+              <a class="cue-link" href="27-section-closing-prayer.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-01-name-pastor-shade.jpg" alt="Pastor Shade name super" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">2</span>
+              <span class="cue-label">Pastor Shade name super</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">01-name-pastor-shade.png · 5–8s</span>
+              <a class="cue-link" href="01-name-pastor-shade.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="cue">
+          <img class="cue-img" src="previews/preview-15-anniversary-banner.jpg" alt="Anniversary banner" loading="lazy">
+          <div class="cue-body">
+            <div class="cue-step">
+              <span class="cue-step-num">3</span>
+              <span class="cue-label">Anniversary banner</span>
+            </div>
+            <div class="cue-meta">
+              <span class="cue-filename">15-anniversary-banner.png · 10–15s · service close</span>
+              <a class="cue-link" href="15-anniversary-banner.png" download>PNG</a>
+            </div>
+          </div>
+        </div>
+      </div>
   </section>
 
-  <!-- SECTIONS -->
-  <section id="sections">
-    <div class="section-head">
-      <div class="section-num">02</div>
-      <div class="section-name">Section markers</div>
-      <div class="section-count">6 graphics · upper third</div>
-    </div>
-    <p class="section-intro">Signpost what's happening in the service. Flash for 5–8 seconds at the start of each segment. Sits at the top of the frame so it doesn't compete with anything happening on stage.</p>
-    <div class="grid">
+  <div class="catalogue" id="catalogue">
+    <h2>All files</h2>
+    <p>Full inventory of overlay PNGs. Tap a row to download. Use these when you need to fire something off-script (e.g. a name super for someone speaking unexpectedly).</p>
+    <div class="catalogue-grid">
       
-      <div class="card">
-        <img class="card-img" src="previews/preview-05-section-welcome.jpg" alt="Welcome overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Welcome</div>
-            <div class="filename">05-section-welcome.png</div>
-          </div>
-          <a class="card-link" href="../overlays/05-section-welcome.png" download>PNG</a>
+      <a class="cat-row" href="01-name-pastor-shade.png" download>
+        <img class="cat-thumb" src="previews/preview-01-name-pastor-shade.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Pastor Shade Olatoye</div>
+          <div class="cat-file">01-name-pastor-shade.png</div>
         </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-06-section-worship.jpg" alt="Worship overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Worship</div>
-            <div class="filename">06-section-worship.png</div>
-          </div>
-          <a class="card-link" href="../overlays/06-section-worship.png" download>PNG</a>
+      </a>
+      <a class="cat-row" href="02-name-michael-kabalu.png" download>
+        <img class="cat-thumb" src="previews/preview-02-name-michael-kabalu.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Brother Michael Kabalu</div>
+          <div class="cat-file">02-name-michael-kabalu.png</div>
         </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-07-section-communion.jpg" alt="Communion overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Communion</div>
-            <div class="filename">07-section-communion.png</div>
-          </div>
-          <a class="card-link" href="../overlays/07-section-communion.png" download>PNG</a>
+      </a>
+      <a class="cat-row" href="03-name-pastor-kayode.png" download>
+        <img class="cat-thumb" src="previews/preview-03-name-pastor-kayode.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Pastor Kayode Ogungbenro</div>
+          <div class="cat-file">03-name-pastor-kayode.png</div>
         </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-08-section-testimony.jpg" alt="Testimony overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Testimony</div>
-            <div class="filename">08-section-testimony.png</div>
-          </div>
-          <a class="card-link" href="../overlays/08-section-testimony.png" download>PNG</a>
+      </a>
+      <a class="cat-row" href="04-name-pastor-gbenga.png" download>
+        <img class="cat-thumb" src="previews/preview-04-name-pastor-gbenga.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Pastor Gbenga Adebanjo · Preaching</div>
+          <div class="cat-file">04-name-pastor-gbenga.png</div>
         </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-09-section-offering.jpg" alt="Offering overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Offering</div>
-            <div class="filename">09-section-offering.png</div>
-          </div>
-          <a class="card-link" href="../overlays/09-section-offering.png" download>PNG</a>
+      </a>
+      <a class="cat-row" href="05-section-welcome.png" download>
+        <img class="cat-thumb" src="previews/preview-05-section-welcome.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Welcome (section)</div>
+          <div class="cat-file">05-section-welcome.png</div>
         </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-10-section-word.jpg" alt="The Word overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">The Word</div>
-            <div class="filename">10-section-word.png</div>
-          </div>
-          <a class="card-link" href="../overlays/10-section-word.png" download>PNG</a>
+      </a>
+      <a class="cat-row" href="06-section-worship.png" download>
+        <img class="cat-thumb" src="previews/preview-06-section-worship.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Worship (section)</div>
+          <div class="cat-file">06-section-worship.png</div>
         </div>
-      </div>
+      </a>
+      <a class="cat-row" href="07-section-communion.png" download>
+        <img class="cat-thumb" src="previews/preview-07-section-communion.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Communion (section)</div>
+          <div class="cat-file">07-section-communion.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="08-section-testimony.png" download>
+        <img class="cat-thumb" src="previews/preview-08-section-testimony.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Testimony (section)</div>
+          <div class="cat-file">08-section-testimony.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="09-section-offering.png" download>
+        <img class="cat-thumb" src="previews/preview-09-section-offering.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Offering (section)</div>
+          <div class="cat-file">09-section-offering.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="10-section-word.png" download>
+        <img class="cat-thumb" src="previews/preview-10-section-word.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">The Word (section)</div>
+          <div class="cat-file">10-section-word.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="11-scripture-jehoshaphat.png" download>
+        <img class="cat-thumb" src="previews/preview-11-scripture-jehoshaphat.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">2 Chronicles 20:15</div>
+          <div class="cat-file">11-scripture-jehoshaphat.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="12-scripture-psalm-33.png" download>
+        <img class="cat-thumb" src="previews/preview-12-scripture-psalm-33.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Psalm 33:3</div>
+          <div class="cat-file">12-scripture-psalm-33.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="13-song-trading-my-sorrows.png" download>
+        <img class="cat-thumb" src="previews/preview-13-song-trading-my-sorrows.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Song · Trading My Sorrows</div>
+          <div class="cat-file">13-song-trading-my-sorrows.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="14-song-friend-of-god.png" download>
+        <img class="cat-thumb" src="previews/preview-14-song-friend-of-god.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Song · Friend of God</div>
+          <div class="cat-file">14-song-friend-of-god.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="15-anniversary-banner.png" download>
+        <img class="cat-thumb" src="previews/preview-15-anniversary-banner.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Anniversary banner</div>
+          <div class="cat-file">15-anniversary-banner.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="16-testimony-pauline.png" download>
+        <img class="cat-thumb" src="previews/preview-16-testimony-pauline.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Auntie Pauline · Testimony</div>
+          <div class="cat-file">16-testimony-pauline.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="17-name-visiting-minister-communion.png" download>
+        <img class="cat-thumb" src="previews/preview-17-name-visiting-minister-communion.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Visiting Minister · Communion</div>
+          <div class="cat-file">17-name-visiting-minister-communion.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="18-name-bola-paul.png" download>
+        <img class="cat-thumb" src="previews/preview-18-name-bola-paul.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Evangelist Bola Paul</div>
+          <div class="cat-file">18-name-bola-paul.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="19-name-rev-olowodola.png" download>
+        <img class="cat-thumb" src="previews/preview-19-name-rev-olowodola.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Reverend Olowodola</div>
+          <div class="cat-file">19-name-rev-olowodola.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="20-section-welcome-address.png" download>
+        <img class="cat-thumb" src="previews/preview-20-section-welcome-address.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Welcome Address (section)</div>
+          <div class="cat-file">20-section-welcome-address.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="21-section-presentation.png" download>
+        <img class="cat-thumb" src="previews/preview-21-section-presentation.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Presentation (section)</div>
+          <div class="cat-file">21-section-presentation.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="22-section-announcements.png" download>
+        <img class="cat-thumb" src="previews/preview-22-section-announcements.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Announcements (section)</div>
+          <div class="cat-file">22-section-announcements.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="23-section-appreciation.png" download>
+        <img class="cat-thumb" src="previews/preview-23-section-appreciation.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Appreciation & Honour (section)</div>
+          <div class="cat-file">23-section-appreciation.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="24-section-prayer-ministry.png" download>
+        <img class="cat-thumb" src="previews/preview-24-section-prayer-ministry.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Prayer Ministry (section)</div>
+          <div class="cat-file">24-section-prayer-ministry.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="25-section-grace.png" download>
+        <img class="cat-thumb" src="previews/preview-25-section-grace.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Grace & Blessing (section)</div>
+          <div class="cat-file">25-section-grace.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="26-section-meal.png" download>
+        <img class="cat-thumb" src="previews/preview-26-section-meal.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">The Meal (section)</div>
+          <div class="cat-file">26-section-meal.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="27-section-closing-prayer.png" download>
+        <img class="cat-thumb" src="previews/preview-27-section-closing-prayer.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Closing Prayer (section)</div>
+          <div class="cat-file">27-section-closing-prayer.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="28-birthday-dr-t.png" download>
+        <img class="cat-thumb" src="previews/preview-28-birthday-dr-t.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Dr T · 99 Today</div>
+          <div class="cat-file">28-birthday-dr-t.png</div>
+        </div>
+      </a>
+      <a class="cat-row" href="29-video-greeting-olowodola.png" download>
+        <img class="cat-thumb" src="previews/preview-29-video-greeting-olowodola.jpg" alt="">
+        <div class="cat-info">
+          <div class="cat-name">Video Greeting (section)</div>
+          <div class="cat-file">29-video-greeting-olowodola.png</div>
+        </div>
+      </a>
     </div>
-  </section>
-
-  <!-- SCRIPTURE -->
-  <section id="scripture">
-    <div class="section-head">
-      <div class="section-num">03</div>
-      <div class="section-name">Scripture refs</div>
-      <div class="section-count">2 graphics · lower third</div>
-    </div>
-    <p class="section-intro">Compact reference supers for when scripture is being read. Show only the reference and version — the actual verse goes on the main screen, not here.</p>
-    <div class="grid">
-      
-      <div class="card">
-        <img class="card-img" src="previews/preview-11-scripture-jehoshaphat.jpg" alt="2 Chronicles 20:15 overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">2 Chronicles 20:15</div>
-            <div class="filename">11-scripture-jehoshaphat.png</div>
-          </div>
-          <a class="card-link" href="../overlays/11-scripture-jehoshaphat.png" download>PNG</a>
-        </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-12-scripture-psalm-33.jpg" alt="Psalm 33:3 overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Psalm 33:3</div>
-            <div class="filename">12-scripture-psalm-33.png</div>
-          </div>
-          <a class="card-link" href="../overlays/12-scripture-psalm-33.png" download>PNG</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SONGS -->
-  <section id="songs">
-    <div class="section-head">
-      <div class="section-num">04</div>
-      <div class="section-name">Song titles</div>
-      <div class="section-count">2 graphics · lower third</div>
-    </div>
-    <p class="section-intro">Show at the start of each song for 5–8 seconds. The "Led by" line attributes whoever's taking the lead on that song. Reuse from the previous Sunday's overlays where the same song repeats.</p>
-    <div class="grid">
-      
-      <div class="card">
-        <img class="card-img" src="previews/preview-13-song-trading-my-sorrows.jpg" alt="Trading My Sorrows overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Trading My Sorrows</div>
-            <div class="filename">13-song-trading-my-sorrows.png</div>
-          </div>
-          <a class="card-link" href="../overlays/13-song-trading-my-sorrows.png" download>PNG</a>
-        </div>
-      </div>
-      <div class="card">
-        <img class="card-img" src="previews/preview-14-song-friend-of-god.jpg" alt="Friend of God overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Friend of God</div>
-            <div class="filename">14-song-friend-of-god.png</div>
-          </div>
-          <a class="card-link" href="../overlays/14-song-friend-of-god.png" download>PNG</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BANNER -->
-  <section id="banner">
-    <div class="section-head">
-      <div class="section-num">05</div>
-      <div class="section-name">Anniversary banner</div>
-      <div class="section-count">1 graphic · hero moment</div>
-    </div>
-    <p class="section-intro">The big one. Larger strip, eagle visible, two-line lockup. Flash this for 10–15 seconds at the opening, before the sermon, and at the benediction. The signature visual of the day.</p>
-    <div class="grid">
-      
-      <div class="card">
-        <img class="card-img" src="previews/preview-15-anniversary-banner.jpg" alt="Calvary Hephzibah · 34th Anniversary overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Calvary Hephzibah · 34th Anniversary</div>
-            <div class="filename">15-anniversary-banner.png</div>
-          </div>
-          <a class="card-link" href="../overlays/15-anniversary-banner.png" download>PNG</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTIMONY -->
-  <section id="testimony">
-    <div class="section-head">
-      <div class="section-num">06</div>
-      <div class="section-name">Testimony</div>
-      <div class="section-count">1 graphic · lower third</div>
-    </div>
-    <p class="section-intro">For anyone giving a testimony — name plus a descriptor (years of membership, role, anything that adds dignity to the moment). Keep on screen for the full testimony if it's short, or flash at the start if it's long.</p>
-    <div class="grid">
-      
-      <div class="card">
-        <img class="card-img" src="previews/preview-16-testimony-pauline.jpg" alt="Auntie Pauline Tulloch overlay preview" loading="lazy">
-        <div class="card-body">
-          <div class="card-label">
-            <div class="name">Auntie Pauline Tulloch</div>
-            <div class="filename">16-testimony-pauline.png</div>
-          </div>
-          <a class="card-link" href="../overlays/16-testimony-pauline.png" download>PNG</a>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <footer>
-    Calvary Hephzibah · 34th Anniversary · Est. 1992 <span class="red">·</span> Overlays v2
+    Calvary Hephzibah · 34th Anniversary · Est. 1992 <span class="red">·</span> Overlay run sheet v2
   </footer>
 
 </div>
