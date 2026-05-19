@@ -1655,6 +1655,111 @@
     }
     .chordpill-roman b { color: var(--red); font-weight: 600; }
 
+
+    /* ── HOW-TO CALLOUT ── */
+    .howto {
+      margin-bottom: 18px;
+      padding: 18px 22px;
+      background: rgba(208, 68, 28, 0.06);
+      border-left: 3px solid var(--red);
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .howto-icon {
+      font-size: 22px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .howto-body {
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--fg-1);
+    }
+    .howto-body strong { color: var(--bone); font-weight: 600; }
+    .howto-body p + p { margin-top: 8px; }
+
+    /* ── GLOSSARY ── */
+    .glossary {
+      margin: 36px 0 0;
+      background: var(--slate);
+      border-top: 2px solid var(--gold);
+    }
+    .glossary.collapsible .glossary-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s var(--ease-out-quint);
+    }
+    .glossary.collapsible.open .glossary-body {
+      max-height: 2000px;
+    }
+    .glossary-head {
+      padding: 16px 22px;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.15s;
+    }
+    .glossary-head:hover { background: rgba(200, 162, 75, 0.05); }
+    .glossary-title {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .glossary-meta {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-3);
+      margin-left: auto;
+    }
+    .glossary-chev {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--fg-3);
+      transition: transform 0.25s var(--ease-out-quint);
+    }
+    .glossary.collapsible.open .glossary-chev { transform: rotate(180deg); color: var(--gold); }
+    .glossary-entries {
+      padding: 8px 22px 22px;
+    }
+    .glossary-entry {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 18px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line-soft);
+      align-items: baseline;
+    }
+    .glossary-entry:last-child { border-bottom: none; }
+    .glossary-term {
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+    .glossary-def {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--fg-1);
+    }
+    .glossary-def em {
+      font-family: var(--font-serif);
+      color: var(--fg-2);
+    }
+    @media (max-width: 640px) {
+      .glossary-entry { grid-template-columns: 1fr; gap: 4px; padding: 14px 0; }
+    }
+
   </style>
 </head>
 <body>
@@ -1687,7 +1792,15 @@
     <section class="glance" id="glance">
       <div class="glance-eyebrow">Pentecost Sunday · 24 May 2026</div>
       <h1>The <span class="accent">Set.</span></h1>
-      <p class="glance-sub">Eight songs. Three praise locked at 105. Three worship that breathe. Two single-pass closers. Caster leads. Companion to the <a href="../worship-pack-24-may-2026.html" style="color: var(--red-bright); text-decoration: none; border-bottom: 1px dotted var(--red);">Worship Pack</a>.</p>
+      <p class="glance-sub">Eight songs. Three praise locked at 105 BPM (a steady, medium pace). Three worship songs that breathe. Two short closers — one for the offering, one at the end of service. Caster leads. Companion to the <a href="../worship-pack-24-may-2026.html" style="color: var(--red-bright); text-decoration: none; border-bottom: 1px dotted var(--red);">Worship Pack</a>.</p>
+
+      <div class="howto">
+        <div class="howto-icon">👋</div>
+        <div class="howto-body">
+          <p><strong>New here? Here's how this page works.</strong> Every musician has their own notes — drummer, bass, keys, guitar, lead, BVs. Use the filter bar at the very top of the page to see <em>just your part</em> across the whole set. Songs are closed by default — tap a song to open it. Tap again to close.</p>
+          <p>If a word looks like jargon, there's a <a href="#glossary" style="color: var(--gold-bright); border-bottom: 1px dotted var(--gold);">small glossary at the foot</a> of the page.</p>
+        </div>
+      </div>
 
       <div class="lineup">
         <div class="lineup-row">
@@ -1713,7 +1826,7 @@
       <div class="principles">
         <div class="principle-row">
           <div class="dot"></div>
-          <p><strong>Praise locks at 105 BPM, seamless.</strong> Days of Elijah → Lord I Lift → Ancient of Days is one ride. No count-ins between songs.</p>
+          <p><strong>Praise locks at 105 BPM (steady mid-tempo), seamless.</strong> Days of Elijah → Lord I Lift → Ancient of Days is one ride. No count-ins between songs.</p>
         </div>
         <div class="principle-row">
           <div class="dot"></div>
@@ -1843,7 +1956,7 @@
                   <div class="part-name">Drums</div>
                   <div class="part-musician">TBC</div>
                 </div>
-                <div class="part-note">Intro: full hits. Drop right out for verse 1 — kick only, hi-hat closed. Build through chorus. <strong>Hold 105 — don't push.</strong> Vamp at the end stays steady; no count-in into the next song.</div>
+                <div class="part-note">Intro: full hits. Drop right out for verse 1 — kick only, hi-hat closed. Build through chorus. <strong>Hold 105 — don't push.</strong> The vamp (the short repeating section at the end) stays steady; no count-in into the next song.</div>
               </div>
               <div class="part-row flag" data-part="bass">
                 <div class="part-role">
@@ -1913,7 +2026,7 @@
                 <span class="reftrack-meta">Listen first · feel the shape</span>
               </div>
               <div class="reftrack-title">Be Lifted High</div>
-              <div class="reftrack-credit">Anthem Nights — the arrangement template we're building from</div>
+              <div class="reftrack-credit">Anthem Nights (the worship collective whose version we're building from)</div>
               <div class="reftrack-embed">
                 <iframe src="https://drive.google.com/file/d/1_jW_OJ9K4P5S6oviIMzn10ApWgOR5aMX/preview" allow="autoplay" loading="lazy" title="Be Lifted High reference track"></iframe>
               </div>
@@ -2040,7 +2153,7 @@ KEY NOTES
                 <div class="chart-section build">
                   <div class="chart-section-head">
                     <span class="chart-section-label">Bridge · Build</span>
-                    <span class="chart-section-note">"Don't know what you came to do" — Anthem Nights jazz</span>
+                    <span class="chart-section-note">"Don't know what you came to do" — Anthem Nights style, with extra colour chords</span>
                   </div>
                   <div class="chord-line">
                     <span class="c vi x">Ebm7</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c vi">Ebm</span><span class="c vi x">Ebm7</span><span class="c x">Ab7</span>
@@ -2210,7 +2323,7 @@ KEY NOTES
             <div class="chart collapsible" id="chord-chart-3">
               <div class="chart-head" role="button" tabindex="0" aria-expanded="false">
                 <div class="chart-title">Chord Chart · Ancient of Days · Blessing and Honour</div>
-                <div class="chart-key">Key <b>D major</b> · modulation to A near the end</div>
+                <div class="chart-key">Key <b>D major</b> · changes key to A near the end</div>
                 <div class="chart-chev">▾</div>
               </div>
               <div class="chart-body">
@@ -2267,7 +2380,7 @@ KEY NOTES
 
                 <div class="chart-section build">
                   <div class="chart-section-head">
-                    <span class="chart-section-label">Modulation to A — THE lift</span>
+                    <span class="chart-section-label">Key change up to A — THE lift</span>
                     <span class="chart-section-note">Key change up a fourth · E7 is the pivot</span>
                   </div>
                   <div class="chord-line">
@@ -2284,7 +2397,7 @@ KEY NOTES
 
                 <div class="chart-section">
                   <div class="chart-section-head">
-                    <span class="chart-section-label">"Oh Ancient of Days" tag · Definitive Ending</span>
+                    <span class="chart-section-label">"Oh Ancient of Days" ending section · Definitive Ending</span>
                     <span class="chart-section-note">Heavy-handed, modal — lands on the 1-6-7-1 crash</span>
                   </div>
                   <div class="chord-line">
@@ -2798,7 +2911,7 @@ KEY NOTES
 
                 <div class="chart-section">
                   <div class="chart-section-head">
-                    <span class="chart-section-label">Final Chorus · Pre-Modulation</span>
+                    <span class="chart-section-label">Final Chorus · Before the Key Change</span>
                     <span class="chart-section-note">Restated chorus, fuller textures, Fmaj7 colour lift</span>
                   </div>
                   <div class="chord-line">
@@ -2818,8 +2931,8 @@ KEY NOTES
 
                 <div class="chart-section build">
                   <div class="chart-section-head">
-                    <span class="chart-section-label">Modulation up to Ab — THE lift</span>
-                    <span class="chart-section-note">Key change up a semitone · the moment the room shifts</span>
+                    <span class="chart-section-label">Key change up to Ab — THE lift</span>
+                    <span class="chart-section-note">Key change up a semitone (half-step) · the moment the room shifts</span>
                   </div>
                   <div class="chord-line">
                     <span class="c x">Em7</span><span class="c v">D</span><span class="c v x">Dsus4</span><span class="c x">Db</span><span class="c x">Dbmaj7</span><span class="c x">F#maj7</span><span class="c x">Bbm7</span><span class="c x">Ab</span>
@@ -3134,8 +3247,8 @@ KEY NOTES
 
                 <div class="chart-section build">
                   <div class="chart-section-head">
-                    <span class="chart-section-label">Modulation up to A — THE lift</span>
-                    <span class="chart-section-note">Key change up a tone · A is the pivot · land in new home</span>
+                    <span class="chart-section-label">Key Change up to A — THE lift</span>
+                    <span class="chart-section-note">Key change up a tone · A is the bridge chord · land in the new key</span>
                   </div>
                   <div class="chord-line">
                     <span class="c iv">C</span><span class="c i">G</span><span class="c v">D</span><span class="c iv">C</span><span class="c v">D</span><span class="c i">G</span><span class="c iv">C</span><span class="c x">A</span>
@@ -3213,6 +3326,78 @@ KEY NOTES
               <p>One stanza, simple, reverent. After the benediction. End clean — let the room sit in it for a beat before the band stops. <strong>Caster calls the cut.</strong></p>
             </div>
 
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ── GLOSSARY ── -->
+    <section id="glossary" style="border-bottom: none; padding-bottom: 0;">
+      <div class="glossary collapsible">
+        <div class="glossary-head" role="button" tabindex="0" aria-expanded="false">
+          <div class="glossary-title">Glossary</div>
+          <div class="glossary-meta">Plain-English notes on the musician-speak on this page</div>
+          <div class="glossary-chev">▾</div>
+        </div>
+        <div class="glossary-body">
+          <div class="glossary-entries">
+            <div class="glossary-entry">
+              <div class="glossary-term">BPM</div>
+              <div class="glossary-def">Beats per minute — how fast a song moves. 105 BPM is a steady mid-tempo walk; 80 is slow; 130 is fast.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Medley</div>
+              <div class="glossary-def">Several songs played back-to-back without stopping. Our praise medley = Days of Elijah, Lord I Lift, and Ancient of Days flowing into each other.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Pocket</div>
+              <div class="glossary-def">The steady groove and feel of a song. "Hold the pocket" means keep the tempo solid, don't rush or drag.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Vamp</div>
+              <div class="glossary-def">A short repeating section the band plays while waiting for the next part. Often used to bridge between songs.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Dynamics</div>
+              <div class="glossary-def">How loud or quiet the band is playing. "Drop the dynamics" = get quieter. "Build dynamics" = get louder.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Key change</div>
+              <div class="glossary-def">When a song lifts into a higher key (or moves to a different one). Often felt as a moment of brightness or surprise.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Tag</div>
+              <div class="glossary-def">An ending section that repeats a key line — like "Oh Ancient of Days" repeated four times before the final crash.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Anthem Nights</div>
+              <div class="glossary-def">A worship music collective whose arrangement style is our reference for Lord I Lift Your Name. <em>Big synth pads, clear builds, dynamic verse→chorus contrast.</em></div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Donnie McClurkin</div>
+              <div class="glossary-def">Gospel singer whose recording of Days of Elijah is our tempo and feel reference — slower, more soulful than the original.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Phil Thompson</div>
+              <div class="glossary-def">Worship leader and the artist behind Atmosphere Shift. We're using his bridge as our reference.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">William McDowell</div>
+              <div class="glossary-def">Worship leader and gospel artist whose long-form Spirit Break Out is our reference.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Chord chart</div>
+              <div class="glossary-def">A map of which chords play when. Only the harmonic players (keys, guitar, bass) really need to read these. Singers can skip them.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">I · IV · V · vi</div>
+              <div class="glossary-def">Roman numerals for chord positions in a key. The four most-used chords in pop and worship. You don't need to read these to do your part — they're shorthand for harmonic players.</div>
+            </div>
+            <div class="glossary-entry">
+              <div class="glossary-term">Pentecost</div>
+              <div class="glossary-def">A Christian festival 50 days after Easter, celebrating the gift of the Holy Spirit. This Sunday's worship songs lean into that theme.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -4186,6 +4371,24 @@ KEY NOTES
         lyrics._open = open;
       });
 
+      // ── COLLAPSE: glossary ──
+      document.querySelectorAll('.glossary.collapsible').forEach(g => {
+        const head = g.querySelector('.glossary-head');
+        if (!head) return;
+        const open = () => { g.classList.add('open'); head.setAttribute('aria-expanded', 'true'); };
+        const close = () => { g.classList.remove('open'); head.setAttribute('aria-expanded', 'false'); };
+        head.addEventListener('click', () => {
+          g.classList.contains('open') ? close() : open();
+        });
+        head.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            g.classList.contains('open') ? close() : open();
+          }
+        });
+        g._open = open;
+      });
+
       // ── PART FILTER ──
       const chips = document.querySelectorAll('.part-chip');
       const partsLists = document.querySelectorAll('.parts');
@@ -4226,19 +4429,26 @@ KEY NOTES
         });
       });
 
-      // ── HASH JUMP: expand the target song when arriving via #song-N ──
+      // ── HASH JUMP: expand target on arrival via #song-N or #glossary ──
       function expandFromHash() {
         const hash = location.hash;
         if (!hash) return;
         const target = document.querySelector(hash);
         if (!target) return;
+        // If target itself is collapsible, open it
         if (target.classList.contains('collapsible') && target._open) {
           target._open();
-        } else {
-          // Maybe a nested element inside a song
-          const song = target.closest('.song.collapsible');
-          if (song && song._open) song._open();
+          return;
         }
+        // If target contains a collapsible (e.g. <section id="glossary">), open the child
+        const child = target.querySelector('.collapsible');
+        if (child && child._open) {
+          child._open();
+          return;
+        }
+        // Maybe inside a song
+        const song = target.closest('.song.collapsible');
+        if (song && song._open) song._open();
       }
       expandFromHash();
       window.addEventListener('hashchange', expandFromHash);
