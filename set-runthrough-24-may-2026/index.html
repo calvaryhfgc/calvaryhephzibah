@@ -1517,6 +1517,78 @@
       opacity: 0.7;
     }
 
+    /* ── REFERENCE TRACK ── */
+    .reftrack {
+      background: var(--slate);
+      border-top: 2px solid var(--gold-bright);
+      margin-bottom: 22px;
+      padding: 18px 22px 22px;
+    }
+    .reftrack-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+    .reftrack-eyebrow {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-bright);
+      font-weight: 700;
+    }
+    .reftrack-meta {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 12px;
+      color: var(--fg-3);
+      margin-left: auto;
+    }
+    .reftrack-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 4px;
+    }
+    .reftrack-credit {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-2);
+      margin-bottom: 14px;
+    }
+    .reftrack-embed {
+      width: 100%;
+      background: var(--obsidian);
+      border-radius: 4px;
+      overflow: hidden;
+      height: 80px;
+      border: 1px solid var(--line-soft);
+    }
+    .reftrack-embed iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+    .reftrack-foot {
+      margin-top: 10px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--fg-3);
+      line-height: 1.5;
+    }
+    .reftrack-foot a {
+      color: var(--gold-bright);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--gold);
+    }
+    .reftrack-foot a:hover { color: var(--bone); border-color: var(--bone); }
+
   </style>
 </head>
 <body>
@@ -1730,6 +1802,21 @@
           <div class="song-body-inner">
             <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Anthem Nights "Be Lifted High" arrangement</div>
             
+            <div class="reftrack">
+              <div class="reftrack-head">
+                <span class="reftrack-eyebrow">🎧 Reference Track</span>
+                <span class="reftrack-meta">Listen first · feel the shape</span>
+              </div>
+              <div class="reftrack-title">Be Lifted High</div>
+              <div class="reftrack-credit">Anthem Nights — the arrangement template we're building from</div>
+              <div class="reftrack-embed">
+                <iframe src="https://drive.google.com/file/d/1_jW_OJ9K4P5S6oviIMzn10ApWgOR5aMX/preview" allow="autoplay" loading="lazy" title="Be Lifted High reference track"></iframe>
+              </div>
+              <div class="reftrack-foot">
+                This is what we're going for — the dynamic drop on the verse, the synth brass on the chorus, the build through "Don't know what you came to do". Listen once before you open the multi-stem player below. <a href="https://drive.google.com/file/d/1_jW_OJ9K4P5S6oviIMzn10ApWgOR5aMX/view?usp=sharing" target="_blank" rel="noopener">Open in Drive ↗</a>
+              </div>
+            </div>
+            
             <div class="player-host"
                  data-title="Lord I Lift Your Name on High"
                  data-arrangement-id="428a055c-501f-4c4c-b554-cf5c860c6bfd"
@@ -1758,6 +1845,47 @@ KEY NOTES
               </div>
             </div>
 
+            <div class="lyrics collapsible" id="lyrics-2">
+              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="lyrics-title">Lyrics</div>
+                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
+                <div class="lyrics-chev">▾</div>
+              </div>
+              <div class="lyrics-body">
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Intro</div><div class="lyrics-section-cue">Coming off the Days of Elijah vamp · vamp continues 2 cycles</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Intro Phrase</div><div class="lyrics-section-cue">"You came from heaven to earth" ×1</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse 1</div><div class="lyrics-section-cue">"Lord I lift your name on high" — dynamics drop, band almost out</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Chorus</div><div class="lyrics-section-cue">"You came from heaven to earth" ×1 — synth brass enters</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse 2</div><div class="lyrics-section-cue">Back to low dynamics. Same words as verse 1</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Adlib</div><div class="lyrics-section-cue">Bar after "I'm so glad you came to save us" → leads back into verse repeat</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Final Chorus ×2</div><div class="lyrics-section-cue">Full band, biggest lift of the medley</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Hand-off</div><div class="lyrics-section-cue">Sustained crash resolves into Ancient of Days — no break</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+              </div>
+            </div>
             <div class="chart collapsible" id="chord-chart-2">
               <div class="chart-head" role="button" tabindex="0" aria-expanded="false">
                 <div class="chart-title">Chord Chart · Be Lifted High</div>
@@ -1851,47 +1979,6 @@ KEY NOTES
               </div>
             </div>
 
-            <div class="lyrics collapsible" id="lyrics-2">
-              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
-                <div class="lyrics-title">Lyrics</div>
-                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
-                <div class="lyrics-chev">▾</div>
-              </div>
-              <div class="lyrics-body">
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Intro</div><div class="lyrics-section-cue">Coming off the Days of Elijah vamp · vamp continues 2 cycles</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Intro Phrase</div><div class="lyrics-section-cue">"You came from heaven to earth" ×1</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Verse 1</div><div class="lyrics-section-cue">"Lord I lift your name on high" — dynamics drop, band almost out</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Chorus</div><div class="lyrics-section-cue">"You came from heaven to earth" ×1 — synth brass enters</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Verse 2</div><div class="lyrics-section-cue">Back to low dynamics. Same words as verse 1</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Adlib</div><div class="lyrics-section-cue">Bar after "I'm so glad you came to save us" → leads back into verse repeat</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Final Chorus ×2</div><div class="lyrics-section-cue">Full band, biggest lift of the medley</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-                <div class="lyrics-section">
-                  <div class="lyrics-section-label">Hand-off</div><div class="lyrics-section-cue">Sustained crash resolves into Ancient of Days — no break</div>
-                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
-                </div>
-              </div>
-            </div>
             <div class="parts" data-filter="all">
               <div class="part-row flag" data-part="keys">
                 <div class="part-role">
