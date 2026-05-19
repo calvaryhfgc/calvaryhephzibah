@@ -1062,6 +1062,377 @@
       color: var(--fg-3);
     }
 
+
+    /* ═══════════════════════════════════════════════════════════════
+       REDESIGN — compact, collapsible, filterable
+       ═══════════════════════════════════════════════════════════════ */
+
+    /* Compact ticker — slim, with At-a-Glance jump anchor on the right */
+    .ticker { padding: 12px 28px; }
+
+    /* ── PART FILTER (sticky under ticker) ── */
+    .partbar {
+      position: sticky;
+      top: 41px; /* sits right under ticker */
+      z-index: 49;
+      background: var(--obsidian);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 10px 0;
+    }
+    .partbar-inner {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 14px;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .partbar-inner::-webkit-scrollbar { display: none; }
+    .part-chip {
+      flex-shrink: 0;
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      background: transparent;
+      color: var(--fg-3);
+      border: 1px solid var(--line-mid);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all var(--t-micro) var(--ease-out-quint);
+      white-space: nowrap;
+    }
+    .part-chip:hover { color: var(--fg-1); border-color: var(--fg-2); }
+    .part-chip[aria-pressed="true"] {
+      background: var(--red);
+      color: var(--bone);
+      border-color: var(--red);
+    }
+
+    /* ── AT-A-GLANCE CARD ── */
+    .glance {
+      padding: 36px 0 0;
+    }
+    .glance-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .glance h1 {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 8vw, 76px);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .glance h1 .accent { color: var(--red); }
+    .glance-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 17px;
+      line-height: 1.45;
+      color: var(--fg-2);
+      margin-bottom: 28px;
+    }
+
+    /* Lineup chips — vocals + band */
+    .lineup {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 20px 22px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      margin-bottom: 18px;
+    }
+    .lineup-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .lineup-row .lbl {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      width: 56px;
+      flex-shrink: 0;
+    }
+    .chip-name {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      padding: 6px 10px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--fg-1);
+      background: var(--graphite);
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .chip-name .role {
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+    .chip-name.tbc { color: var(--fg-3); border: 1px dashed var(--line-mid); background: transparent; }
+
+    /* Three pills — the only band-discipline reminders */
+    .principles {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px 22px;
+      background: var(--slate);
+      border-top: 2px solid var(--gold);
+      margin-bottom: 18px;
+    }
+    .principle-row {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .principle-row .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      margin-top: 8px;
+    }
+    .principle-row p {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--fg-1);
+    }
+    .principle-row strong { color: var(--bone); font-weight: 600; }
+
+    /* Quick order list — 6 rows, scan-only */
+    .quick-order {
+      padding: 18px 0 0;
+    }
+    .qo-divider {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 14px 0 8px;
+      border-bottom: 1px solid var(--red);
+      margin-bottom: 4px;
+    }
+    .qo-divider:first-child { padding-top: 0; }
+    .qo-divider .lbl {
+      font-family: var(--font-display);
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .qo-divider .meta {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      margin-left: auto;
+    }
+    .qo-row {
+      display: grid;
+      grid-template-columns: 26px 1fr auto;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line-soft);
+      align-items: baseline;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+    }
+    .qo-row:hover { background: rgba(208, 68, 28, 0.04); }
+    .qo-row:last-child { border-bottom: none; }
+    .qo-num {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--red);
+    }
+    .qo-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+    .qo-tag {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      white-space: nowrap;
+    }
+    .qo-tag.locked { color: var(--red); }
+
+    /* ── COLLAPSIBLE SONGS ── */
+    .song.collapsible { padding: 0; border-bottom: 1px solid var(--line-soft); }
+    .song.collapsible .song-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s var(--ease-out-quint);
+    }
+    .song.collapsible.open .song-body {
+      max-height: 12000px; /* generous ceiling for chord chart + player */
+    }
+    .song.collapsible .song-body-inner {
+      padding: 0 0 36px;
+    }
+
+    .song-toggle {
+      display: grid;
+      grid-template-columns: 50px 1fr auto 28px;
+      gap: 16px;
+      align-items: baseline;
+      padding: 22px 0;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .song-toggle:hover { background: rgba(208, 68, 28, 0.03); }
+    .song.collapsible.open .song-toggle { padding-bottom: 18px; }
+    .song-toggle .song-num {
+      font-family: var(--font-display);
+      font-size: 38px;
+      line-height: 0.85;
+      color: var(--red);
+    }
+    .song-toggle .song-titles {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .song-toggle .song-title {
+      font-family: var(--font-display);
+      font-size: clamp(18px, 2.6vw, 26px);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 0;
+    }
+    .song-toggle .song-position {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+    .song-toggle .song-tag-mini {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+    .tag-pill {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 9px;
+      border: 1px solid var(--line-mid);
+      color: var(--fg-2);
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .tag-pill.red { color: var(--red); border-color: var(--red); }
+    .tag-pill.gold { color: var(--gold); border-color: var(--gold); }
+    .song-toggle .chev {
+      font-family: var(--font-body);
+      font-size: 18px;
+      color: var(--fg-3);
+      transition: transform 0.25s var(--ease-out-quint);
+      text-align: center;
+    }
+    .song.collapsible.open .song-toggle .chev { transform: rotate(180deg); color: var(--red); }
+
+    @media (max-width: 640px) {
+      .song-toggle { grid-template-columns: 36px 1fr 22px; gap: 12px; padding: 18px 0; }
+      .song-toggle .song-num { font-size: 28px; }
+      .song-toggle .song-tag-mini { grid-column: 2; flex-direction: row; align-items: center; }
+      .lineup-row .lbl { width: 100%; }
+    }
+
+    /* Collapsible chord chart */
+    .chart {
+      margin-bottom: 22px;
+    }
+    .chart.collapsible .chart-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s var(--ease-out-quint);
+    }
+    .chart.collapsible.open .chart-body {
+      max-height: 4000px;
+    }
+    .chart-head {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .chart-head:hover { background: rgba(208, 68, 28, 0.04); }
+    .chart-head .chart-chev {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--fg-3);
+      transition: transform 0.25s var(--ease-out-quint);
+      margin-left: auto;
+    }
+    .chart.collapsible.open .chart-head .chart-chev { transform: rotate(180deg); color: var(--red); }
+
+    /* When a specific part filter is active, dim non-matching part rows */
+    .parts[data-filter]:not([data-filter="all"]) .part-row {
+      opacity: 0.18;
+      transition: opacity 0.2s;
+    }
+    .parts[data-filter] .part-row.active-part {
+      opacity: 1;
+    }
+
+    /* Slim footer block — replaces the For Sunday section */
+    .slim-footer {
+      padding: 36px 0 64px;
+      text-align: left;
+      border-bottom: none;
+    }
+    .slim-footer-grid {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    .slim-footer-grid img {
+      width: 48px;
+      height: auto;
+      opacity: 0.55;
+    }
+    .slim-footer-grid p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-3);
+      line-height: 1.6;
+    }
+    .slim-footer-grid p strong { color: var(--fg-1); font-style: normal; font-family: var(--font-body); font-weight: 600; }
+    .slim-footer-grid p a { color: var(--red-bright); text-decoration: none; border-bottom: 1px dotted var(--red); }
+
   </style>
 </head>
 <body>
@@ -1076,226 +1447,176 @@
     </div>
   </div>
 
+  <div class="partbar">
+    <div class="partbar-inner" id="partbar">
+      <button class="part-chip" data-part="all" aria-pressed="true">All Parts</button>
+      <button class="part-chip" data-part="drums">Drums</button>
+      <button class="part-chip" data-part="bass">Bass</button>
+      <button class="part-chip" data-part="keys">Keys</button>
+      <button class="part-chip" data-part="guitar">Guitar</button>
+      <button class="part-chip" data-part="lead">Lead</button>
+      <button class="part-chip" data-part="bvs">BVs</button>
+    </div>
+  </div>
+
   <main class="container">
 
-    <!-- ── HERO ── -->
-    <section class="hero">
-      <div class="hero-eyebrow">Band-facing · Internal</div>
-      <h1>Pentecost<br><span class="accent">Sunday.</span></h1>
-      <p class="hero-lede">Six songs. Three praise locked tight at 105 BPM. Three worship that breathe. This is the per-musician operational view — companion to the Worship Pack.</p>
+    <!-- ── AT A GLANCE ── -->
+    <section class="glance" id="glance">
+      <div class="glance-eyebrow">Pentecost Sunday · 24 May 2026</div>
+      <h1>The <span class="accent">Set.</span></h1>
+      <p class="glance-sub">Six songs. Three praise locked at 105. Three worship that breathe. Caster leads. Companion to the <a href="../worship-pack-24-may-2026.html" style="color: var(--red-bright); text-decoration: none; border-bottom: 1px dotted var(--red);">Worship Pack</a>.</p>
 
-      <div class="hero-meta">
-        <div class="hero-meta-item">
-          <div class="label">Date</div>
-          <div class="value">Sun 24 May 2026</div>
+      <div class="lineup">
+        <div class="lineup-row">
+          <span class="lbl">Vocals</span>
+          <span class="chip-name">Uncle Caster <span class="role">Lead</span></span>
+          <span class="chip-name">Esther</span>
+          <span class="chip-name tbc">+ 2 TBC</span>
         </div>
-        <div class="hero-meta-item">
-          <div class="label">Service</div>
-          <div class="value">10:30 AM</div>
+        <div class="lineup-row">
+          <span class="lbl">Band</span>
+          <span class="chip-name">Eddie <span class="role">Keys · confirming</span></span>
+          <span class="chip-name">Morayo <span class="role">Guitar</span></span>
+          <span class="chip-name">BJ <span class="role">Bass</span></span>
+          <span class="chip-name tbc">Drums TBC</span>
         </div>
-        <div class="hero-meta-item">
-          <div class="label">Call Time</div>
-          <div class="value">9:00 AM</div>
+        <div class="lineup-row">
+          <span class="lbl">Call</span>
+          <span class="chip-name">9:00 AM</span>
+          <span class="chip-name">Service 10:30 AM</span>
         </div>
-        <div class="hero-meta-item">
-          <div class="label">Worship Leader</div>
-          <div class="value">Uncle Caster</div>
+      </div>
+
+      <div class="principles">
+        <div class="principle-row">
+          <div class="dot"></div>
+          <p><strong>Praise locks at 105 BPM, seamless.</strong> Days of Elijah → Lord I Lift → Ancient of Days is one ride. No count-ins between songs.</p>
         </div>
+        <div class="principle-row">
+          <div class="dot"></div>
+          <p><strong>Heavy intros, then drop out. Build into the chorus.</strong> Verses quiet, choruses full. The dynamic gap is what makes the set feel alive.</p>
+        </div>
+        <div class="principle-row">
+          <div class="dot"></div>
+          <p><strong>Worship breathes.</strong> Praise is locked, worship is not. Caster leads, band follows. If the room sits in something, sit with it.</p>
+        </div>
+      </div>
+
+      <div class="quick-order">
+        <div class="qo-divider">
+          <span class="lbl">Praise Medley</span>
+          <span class="meta">105 BPM · seamless</span>
+        </div>
+        <a class="qo-row" href="#song-1"><span class="qo-num">01</span><span class="qo-title">Days of Elijah</span><span class="qo-tag locked">105</span></a>
+        <a class="qo-row" href="#song-2"><span class="qo-num">02</span><span class="qo-title">Lord I Lift Your Name</span><span class="qo-tag locked">105</span></a>
+        <a class="qo-row" href="#song-3"><span class="qo-num">03</span><span class="qo-title">Ancient of Days · Blessing and Honour</span><span class="qo-tag locked">105</span></a>
+
+        <div class="qo-divider">
+          <span class="lbl">Worship</span>
+          <span class="meta">Caster-led · flexible</span>
+        </div>
+        <a class="qo-row" href="#song-4"><span class="qo-num">04</span><span class="qo-title">Holy Spirit, You Are Welcome Here</span><span class="qo-tag">Flex</span></a>
+        <a class="qo-row" href="#song-5"><span class="qo-num">05</span><span class="qo-title">Atmosphere Shift</span><span class="qo-tag">Flex</span></a>
+        <a class="qo-row" href="#song-6"><span class="qo-num">06</span><span class="qo-title">Spirit Break Out</span><span class="qo-tag">Flex</span></a>
       </div>
     </section>
 
-    <!-- ── TOP NOTES ── -->
-    <section>
-      <div class="section-eyebrow">01 · The Four Things</div>
-      <h2 class="section-title">Read this first</h2>
-      <p class="section-lede">If you do nothing else, lock these in before Sunday. Everything else is detail.</p>
+    <!-- ── SONGS (collapsible) ── -->
+    <section style="padding-top: 36px;">
+      <div class="section-eyebrow">Per-Part Notes</div>
+      <h2 class="section-title" style="margin-bottom: 12px;">Your Part</h2>
+      <p class="section-lede">Tap a song to expand. Use the filter above to see just your part across the whole set.</p>
 
-      <div class="topnotes">
-        <div class="topnote">
-          <div class="num">1</div>
-          <p><strong>Praise medley locks at 105 BPM.</strong> All three songs — Days of Elijah, Lord I Lift Your Name, Ancient of Days / Blessing and Honour — sit at 105. Slower than we'd normally do Days of Elijah, slightly faster than Blessing and Honour. 105 is the middle ground that makes the medley seamless.</p>
-        </div>
-        <div class="topnote">
-          <div class="num">2</div>
-          <p><strong>Seamless transitions in the medley — no count-ins between songs.</strong> Days of Elijah vamps into Lord I Lift Your Name. Lord I Lift Your Name flows straight into Ancient of Days. The whole medley is one ride. Drummer especially: don't count in the next song.</p>
-        </div>
-        <div class="topnote">
-          <div class="num">3</div>
-          <p><strong>Heavy intros, then drop out. Build into the chorus, every time.</strong> This is the band discipline for the whole set. Verses are quiet, choruses are full. Don't pre-build. The dynamic gap between verse and chorus is what makes the set feel alive.</p>
-        </div>
-        <div class="topnote">
-          <div class="num">4</div>
-          <p><strong>Worship breathes.</strong> Praise is locked. Worship is not. Holy Spirit You Are Welcome Here · Atmosphere Shift · Spirit Break Out are Pentecost songs — Caster leads, band follows. If the room sits in something, sit with it. Don't rush to the next thing.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── ORDER OVERVIEW ── -->
-    <section>
-      <div class="section-eyebrow">02 · The Order</div>
-      <h2 class="section-title">Six songs</h2>
-
-      <div class="order-list">
-        <div class="order-divider">
-          <span class="label">Praise Medley</span>
-          <span class="meta">105 BPM · Seamless</span>
-        </div>
-
-        <a class="order-row" href="#song-1">
-          <span class="order-num">01</span>
-          <span>
-            <span class="order-title">Days of Elijah</span>
-            <span class="order-sub">Donnie McClurkin groove · slower than usual</span>
-          </span>
-          <span class="order-tag locked">105 BPM</span>
-        </a>
-
-        <a class="order-row" href="#song-2">
-          <span class="order-num">02</span>
-          <span>
-            <span class="order-title">Lord I Lift Your Name</span>
-            <span class="order-sub">Anthem Nights "Be Lifted High" arrangement</span>
-          </span>
-          <span class="order-tag locked">105 BPM</span>
-        </a>
-
-        <a class="order-row" href="#song-3">
-          <span class="order-num">03</span>
-          <span>
-            <span class="order-title">Ancient of Days · Blessing and Honour</span>
-            <span class="order-sub">Definitive ending · the wall the praise lands against</span>
-          </span>
-          <span class="order-tag locked">105 BPM</span>
-        </a>
-
-        <div class="order-divider">
-          <span class="label">Worship</span>
-          <span class="meta">Flexible · Caster-led</span>
-        </div>
-
-        <a class="order-row" href="#song-4">
-          <span class="order-num">04</span>
-          <span>
-            <span class="order-title">Holy Spirit, You Are Welcome Here</span>
-            <span class="order-sub">Opens worship · simple, vocal-carried</span>
-          </span>
-          <span class="order-tag">Flex</span>
-        </a>
-
-        <a class="order-row" href="#song-5">
-          <span class="order-num">05</span>
-          <span>
-            <span class="order-title">Atmosphere Shift</span>
-            <span class="order-sub">Phil Thompson · bridge is the moment</span>
-          </span>
-          <span class="order-tag">Flex</span>
-        </a>
-
-        <a class="order-row" href="#song-6">
-          <span class="order-num">06</span>
-          <span>
-            <span class="order-title">Spirit Break Out</span>
-            <span class="order-sub">William McDowell · long-form · closer</span>
-          </span>
-          <span class="order-tag">Flex</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- ── SONGS ── -->
-    <section>
-      <div class="section-eyebrow">03 · Per-Part Notes</div>
-      <h2 class="section-title">What each part is carrying</h2>
-      <p class="section-lede">Read your part. Read the part of whoever you're locked with. Then read the whole song.</p>
-
-      <!-- 01 · DAYS OF ELIJAH -->
-      <div class="song" id="song-1">
-        <div class="song-head">
+      <!-- 01 · Days of Elijah -->
+      <div class="song collapsible" id="song-1" data-song-num="01">
+        <div class="song-toggle" role="button" tabindex="0" aria-expanded="false">
           <div class="song-num">01</div>
-          <div class="song-meta-stack">
+          <div class="song-titles">
             <div class="song-position">Praise medley · 1 of 3</div>
-            <div class="song-title">These Are the Days of Elijah</div>
-            <div class="song-credit">Robin Mark · Donnie McClurkin groove</div>
+            <div class="song-title">Days of Elijah</div>
           </div>
+          <div class="song-tag-mini"><span class="tag-pill red">105 BPM</span></div>
+          <div class="chev">▾</div>
         </div>
-        <div class="song-pills">
-          <span class="pill red">105 BPM</span>
-          <span class="pill">Slower than usual</span>
-          <span class="pill">Skip "There's no God like Jehovah"</span>
-        </div>
-
-        <div class="direction">
-          <div class="direction-label">Shape</div>
-          <p>Intro: full chorus heavy-handed, then drop out for instant dynamics. Verse 1 ("Days of Elijah") low. Chorus ("Behold He comes") ×1. Verse 2 ("Days of Ezekiel"). Chorus ×2 on the second pass. Vamp 2 cycles → straight into Lord I Lift Your Name. No count-in.</p>
-          <p>105 BPM is the Donnie McClurkin pocket. Don't drift up. Heavy intro, drop out, dynamic build is the template for the whole medley.</p>
-        </div>
-
-        <div class="parts">
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Drums</div>
-              <div class="part-musician">TBC</div>
+        <div class="song-body">
+          <div class="song-body-inner">
+            <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Robin Mark · Donnie McClurkin groove</div>
+            
+            <div class="parts" data-filter="all">
+              <div class="part-row flag" data-part="drums">
+                <div class="part-role">
+                  <div class="part-name">Drums</div>
+                  <div class="part-musician">TBC</div>
+                </div>
+                <div class="part-note">Intro: full hits. Drop right out for verse 1 — kick only, hi-hat closed. Build through chorus. <strong>Hold 105 — don't push.</strong> Vamp at the end stays steady; no count-in into the next song.</div>
+              </div>
+              <div class="part-row flag" data-part="bass">
+                <div class="part-role">
+                  <div class="part-name">Bass</div>
+                  <div class="part-musician">BJ / TBC</div>
+                </div>
+                <div class="part-note">Drop out with drums on verse 1. Come back in on the chorus. The vamp is yours and the drummer's — keep it locked while keys and guitar fade us into Lord I Lift Your Name.</div>
+              </div>
+              <div class="part-row" data-part="keys">
+                <div class="part-role">
+                  <div class="part-name">Keys</div>
+                  <div class="part-musician">Eddie (confirming)</div>
+                </div>
+                <div class="part-note">Heavy on the intro chorus. Pad through verse — quiet. Lift on choruses. On the vamp, start introducing the Lord I Lift Your Name texture.</div>
+              </div>
+              <div class="part-row" data-part="guitar">
+                <div class="part-role">
+                  <div class="part-name">Guitar</div>
+                  <div class="part-musician">Morayo</div>
+                </div>
+                <div class="part-note">Rhythm chords. Match the dynamic — back on verse, full on chorus. If Eddie isn't there, you carry more of the harmonic weight on the verses.</div>
+              </div>
+              <div class="part-row" data-part="lead">
+                <div class="part-role">
+                  <div class="part-name">Lead</div>
+                  <div class="part-musician">Uncle Caster</div>
+                </div>
+                <div class="part-note">You set the pocket. Skip "There's no God like Jehovah" — time call. Land the second chorus full, then ride the vamp into Lord I Lift Your Name.</div>
+              </div>
+              <div class="part-row" data-part="bvs">
+                <div class="part-role">
+                  <div class="part-name">BVs</div>
+                  <div class="part-musician">Esther + (TBC × 2)</div>
+                </div>
+                <div class="part-note">Out on verses, full on choruses. Match Caster's dynamic — when he pulls back, you pull back.</div>
+              </div>
             </div>
-            <div class="part-note">Intro: full hits. Drop right out for verse 1 — kick only, hi-hat closed. Build through chorus. <strong>Hold 105 — don't push.</strong> Vamp at the end stays steady; no count-in into Lord I Lift Your Name.</div>
-          </div>
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Bass</div>
-              <div class="part-musician">BJ / TBC</div>
+            <div class="direction">
+              <div class="direction-label">Shape</div>
+              <p>Intro: full chorus heavy-handed, then drop out for instant dynamics. Verse 1 ("Days of Elijah") low. Chorus ("Behold He comes") ×1. Verse 2 ("Days of Ezekiel"). Chorus ×2 on the second pass. Vamp 2 cycles → straight into Lord I Lift Your Name. No count-in.</p>
             </div>
-            <div class="part-note">Drop out with drums on verse 1. Come back in on the chorus. The vamp is yours and the drummer's — keep it locked while keys and guitar fade us into Lord I Lift Your Name.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Keys</div>
-              <div class="part-musician">Eddie (confirming)</div>
+            <div class="direction" style="background: linear-gradient(135deg, rgba(200, 162, 75, 0.08), rgba(200, 162, 75, 0.02)); border-left-color: var(--gold);">
+              <div class="direction-label" style="color: var(--gold);">Principle</div>
+              <p>105 BPM is the Donnie McClurkin pocket. Don't drift up. Heavy intro, drop out, dynamic build is the template for the whole medley. <strong>Skip "There's no God like Jehovah"</strong> — we're time-conscious.</p>
             </div>
-            <div class="part-note">Heavy on the intro chorus. Pad through verse — quiet. Lift on choruses. On the vamp, start introducing the Lord I Lift Your Name texture.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Guitar</div>
-              <div class="part-musician">Morayo</div>
-            </div>
-            <div class="part-note">Rhythm chords. Match the dynamic — back on verse, full on chorus. If Eddie isn't there, you carry more of the harmonic weight on the verses.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Lead</div>
-              <div class="part-musician">Uncle Caster</div>
-            </div>
-            <div class="part-note">You set the pocket. Skip "There's no God like Jehovah" — time call. Land the second chorus full, then ride the vamp into Lord I Lift Your Name.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">BVs</div>
-              <div class="part-musician">Esther + (TBC × 2)</div>
-            </div>
-            <div class="part-note">Out on verses, full on choruses. Match Caster's dynamic — when he pulls back, you pull back.</div>
           </div>
         </div>
       </div>
-
-      <!-- 02 · LORD I LIFT YOUR NAME -->
-      <div class="song" id="song-2">
-        <div class="song-head">
+      <!-- 02 · Lord I Lift Your Name on High -->
+      <div class="song collapsible" id="song-2" data-song-num="02">
+        <div class="song-toggle" role="button" tabindex="0" aria-expanded="false">
           <div class="song-num">02</div>
-          <div class="song-meta-stack">
+          <div class="song-titles">
             <div class="song-position">Praise medley · 2 of 3</div>
             <div class="song-title">Lord I Lift Your Name on High</div>
-            <div class="song-credit">Anthem Nights "Be Lifted High" arrangement</div>
           </div>
+          <div class="song-tag-mini"><span class="tag-pill red">105 BPM</span></div>
+          <div class="chev">▾</div>
         </div>
-        <div class="song-pills">
-          <span class="pill red">105 BPM</span>
-          <span class="pill">Same progression throughout</span>
-          <span class="pill">Synth brass signature</span>
-        </div>
-
-        <div class="player-host"
-             data-title="Lord I Lift Your Name on High"
-             data-arrangement-id="428a055c-501f-4c4c-b554-cf5c860c6bfd"
-             data-direction="New Anthem Nights &quot;Be Lifted High&quot;-inspired arrangement. Same chord progression throughout the entire song (verse and chorus) — variation comes from dynamics and baseline, not chords. Synth brass texture defines the feel.
+        <div class="song-body">
+          <div class="song-body-inner">
+            <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Anthem Nights "Be Lifted High" arrangement</div>
+            
+            <div class="player-host"
+                 data-title="Lord I Lift Your Name on High"
+                 data-arrangement-id="428a055c-501f-4c4c-b554-cf5c860c6bfd"
+                 data-direction="New Anthem Nights &quot;Be Lifted High&quot;-inspired arrangement. Same chord progression throughout the entire song (verse and chorus) — variation comes from dynamics and baseline, not chords. Synth brass texture defines the feel.
 
 STRUCTURE (entering from Days of Elijah vamp)
 • Vamp continues (2 cycles)
@@ -1311,471 +1632,452 @@ KEY NOTES
 • Same numbers, same progression — verse just gets the &quot;Don't know what you came to do&quot; treatment
 • Adlib bar after &quot;I'm so glad you came to save us&quot; → &quot;Lord, I lift your name on high&quot; — verse repeats here
 • Seamless transition into Ancient of Days — no count-in">
-          <div class="player-tag">
-            <div class="label-stack">
-              <div class="label">Rehearsal Studio</div>
-              <div class="arrangement">Practise this arrangement</div>
+              <div class="player-tag">
+                <div class="label-stack">
+                  <div class="label">Rehearsal Studio</div>
+                  <div class="arrangement">Practise this arrangement</div>
+                </div>
+                <div class="arrow">Open ↓</div>
+              </div>
             </div>
-            <div class="arrow">Open ↓</div>
-          </div>
-        </div>
 
-        <div class="chart">
-          <div class="chart-head">
-            <div class="chart-title">Chord Chart · Be Lifted High</div>
-            <div class="chart-key">Key <b>Gb major</b> · 6 flats · transcribed from Moises</div>
-          </div>
+            <div class="chart collapsible" id="chord-chart-2">
+              <div class="chart-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="chart-title">Chord Chart · Be Lifted High</div>
+                <div class="chart-key">Key <b>Gb major</b></div>
+                <div class="chart-chev">▾</div>
+              </div>
+              <div class="chart-body">
+                <div class="chart-section">
+                  <div class="chart-section-head">
+                    <span class="chart-section-label">Intro · Vamp</span>
+                    <span class="chart-section-note">Drop in off Days of Elijah — band almost out</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
+                  </div>
+                  <div class="chart-roman">Roman: <b>IV · I · V</b> looping</div>
+                </div>
 
-          <div class="chart-section">
-            <div class="chart-section-head">
-              <span class="chart-section-label">Intro · Vamp</span>
-              <span class="chart-section-note">Drop in off the Days of Elijah vamp — band almost out</span>
-            </div>
-            <div class="chord-line">
-              <span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
-            </div>
-            <div class="chart-roman">Roman: <b>IV · I · V</b> looping</div>
-          </div>
+                <div class="chart-section">
+                  <div class="chart-section-head">
+                    <span class="chart-section-label">Verse</span>
+                    <span class="chart-section-note">Dynamics low — "Lord I lift your name on high"</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c i">Gb</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span>
+                  </div>
+                  <div class="chart-roman">Roman: <b>I · IV · V · I · IV · vi · V · I</b> — second pass ends on IV (lift)</div>
+                </div>
 
-          <div class="chart-section">
-            <div class="chart-section-head">
-              <span class="chart-section-label">Verse</span>
-              <span class="chart-section-note">Dynamics low, band drops out. "Lord I lift your name on high"</span>
-            </div>
-            <div class="chord-line">
-              <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c i">Gb</span>
-            </div>
-            <div class="chord-line">
-              <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span>
-            </div>
-            <div class="chart-roman">Roman: <b>I · IV · V · I · IV · vi · V · I</b> — same shape both passes, second ends on IV (lift)</div>
-          </div>
+                <div class="chart-section">
+                  <div class="chart-section-head">
+                    <span class="chart-section-label">Chorus</span>
+                    <span class="chart-section-note">"You came from heaven to earth" — synth brass enters</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c i">Gb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span>
+                  </div>
+                  <div class="chart-roman">Roman: <b>I · V · I · IV</b> — line 2 closes on <b>vi → V</b> turnaround</div>
+                </div>
 
-          <div class="chart-section">
-            <div class="chart-section-head">
-              <span class="chart-section-label">Chorus</span>
-              <span class="chart-section-note">"You came from heaven to earth" — full band, synth brass enters</span>
-            </div>
-            <div class="chord-line">
-              <span class="c i">Gb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
-            </div>
-            <div class="chord-line">
-              <span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span>
-            </div>
-            <div class="chart-roman">Roman: <b>I · V · I · IV</b> on line 1; line 2 ends on the <b>vi → V</b> turnaround that sets up the verse repeat</div>
-          </div>
+                <div class="chart-section build">
+                  <div class="chart-section-head">
+                    <span class="chart-section-label">Bridge · Build</span>
+                    <span class="chart-section-note">"Don't know what you came to do" — Anthem Nights jazz</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c vi x">Ebm7</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c vi">Ebm</span><span class="c vi x">Ebm7</span><span class="c x">Ab7</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c vi">Ebm</span><span class="c vi x">Ebm7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c v">Db</span><span class="c vi">Ebm</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c v">Db</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c vi x">Ebm7</span><span class="c x">Abm7</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c x">Abm7</span><span class="c v">Db</span><span class="c iv x">Cbmaj7</span><span class="c x">Abm7</span><span class="c x">Bb</span><span class="c x">Abm7</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Ddim</span><span class="c vi x">Ebm7</span><span class="c x">D</span><span class="c vi x">Ebm7</span>
+                  </div>
+                  <div class="chart-roman">7ths thicken the same diatonic chords. <b>Ab7 · Ddim · D · Bb</b> are chromatic passing chords.</div>
+                </div>
 
-          <div class="chart-section build">
-            <div class="chart-section-head">
-              <span class="chart-section-label">Bridge · Build</span>
-              <span class="chart-section-note">"Don't know what you came to do" — Anthem Nights treatment, jazz chords arrive</span>
-            </div>
-            <div class="chord-line">
-              <span class="c vi x">Ebm7</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c vi">Ebm</span><span class="c vi x">Ebm7</span><span class="c x">Ab7</span>
-            </div>
-            <div class="chord-line">
-              <span class="c vi">Ebm</span><span class="c vi x">Ebm7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c v">Db</span><span class="c vi">Ebm</span>
-            </div>
-            <div class="chord-line">
-              <span class="c v">Db</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c vi x">Ebm7</span><span class="c x">Abm7</span>
-            </div>
-            <div class="chord-line">
-              <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c x">Abm7</span><span class="c v">Db</span><span class="c iv x">Cbmaj7</span><span class="c x">Abm7</span><span class="c x">Bb</span><span class="c x">Abm7</span>
-            </div>
-            <div class="chord-line">
-              <span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Ddim</span><span class="c vi x">Ebm7</span><span class="c x">D</span><span class="c vi x">Ebm7</span>
-            </div>
-            <div class="chart-roman">The 7ths (Ebm7, Bbm7, Cbmaj7, Abm7) thicken the same diatonic chords. <b>Ab7</b>, <b>Ddim</b>, <b>D</b> and <b>Bb</b> are chromatic passing chords — single-beat lifts, not new tonal centres.</div>
-          </div>
+                <div class="chart-section">
+                  <div class="chart-section-head">
+                    <span class="chart-section-label">Final Chorus · Outro</span>
+                    <span class="chart-section-note">Triads thicken into 7ths — same shape, richer colour</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c iv">Cb</span><span class="c vi x">Ebm7</span><span class="c x">Abm7</span><span class="c v">Db</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
+                  </div>
+                  <div class="chord-line">
+                    <span class="c iv">Cb</span><span class="c i">Gb</span><span class="c iv x">Cbmaj7</span><span class="c x">Abm7</span><span class="c vi x">Ebm7</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span>
+                  </div>
+                  <div class="chart-roman">Resolves <b>IV · vi · V → I</b>. Hand off to Ancient of Days on a sustained Gb.</div>
+                </div>
 
-          <div class="chart-section">
-            <div class="chart-section-head">
-              <span class="chart-section-label">Final Chorus + Outro</span>
-              <span class="chart-section-note">Triads thicken into 7ths — chorus shape stays, harmonic colour grows</span>
+                <div class="chart-legend">
+                  <span class="swatch"><span class="dot i"></span>I · Gb</span>
+                  <span class="swatch"><span class="dot iv"></span>IV · Cb</span>
+                  <span class="swatch"><span class="dot v"></span>V · Db</span>
+                  <span class="swatch"><span class="dot vi"></span>vi · Ebm</span>
+                  <span class="swatch"><span class="dot x"></span>Extensions</span>
+                </div>
+              </div>
             </div>
-            <div class="chord-line">
-              <span class="c iv">Cb</span><span class="c vi x">Ebm7</span><span class="c x">Abm7</span><span class="c v">Db</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
-            </div>
-            <div class="chord-line">
-              <span class="c iv">Cb</span><span class="c i">Gb</span><span class="c iv x">Cbmaj7</span><span class="c x">Abm7</span><span class="c vi x">Ebm7</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span>
-            </div>
-            <div class="chord-line">
-              <span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span>
-            </div>
-            <div class="chart-roman">Roman shape mostly: <b>IV · vi · V</b> turnarounds resolving back to <b>I</b>. Hand off to Ancient of Days on a sustained Gb.</div>
-          </div>
 
-          <div class="chart-legend">
-            <span class="swatch"><span class="dot i"></span>I · Gb (home)</span>
-            <span class="swatch"><span class="dot iv"></span>IV · Cb (lift)</span>
-            <span class="swatch"><span class="dot v"></span>V · Db (tension)</span>
-            <span class="swatch"><span class="dot vi"></span>vi · Ebm (turn)</span>
-            <span class="swatch"><span class="dot x"></span>Extensions / passing</span>
-          </div>
-        </div>
-
-        <div class="direction">
-          <div class="direction-label">Shape</div>
-          <p>Coming off the Days of Elijah vamp. Vamp continues 2 cycles. "You came from heaven to earth" intro phrase ×1. Drop into verse 1 — dynamics low, band almost out. Chorus ×1. Verse again (low). Chorus ×2. Straight into Ancient of Days — no break.</p>
-          <p>Same chord progression all the way through — verse and chorus. Variation lives in <em>dynamics and baseline</em>, not chords. Synth brass texture defines the feel. Adlib bar after "I'm so glad you came to save us" → back to "Lord, I lift your name on high".</p>
-        </div>
-
-        <div class="parts">
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Keys</div>
-              <div class="part-musician">Eddie (confirming)</div>
+            <div class="parts" data-filter="all">
+              <div class="part-row flag" data-part="keys">
+                <div class="part-role">
+                  <div class="part-name">Keys</div>
+                  <div class="part-musician">Eddie (confirming)</div>
+                </div>
+                <div class="part-note"><strong>You define this arrangement.</strong> Synth brass on the chorus is the signature. Pad under verse, switch texture on chorus. If you're not there, this song loses its identity — Morayo and Caster will need to fill that space.</div>
+              </div>
+              <div class="part-row flag" data-part="bass">
+                <div class="part-role">
+                  <div class="part-name">Bass</div>
+                  <div class="part-musician">BJ / TBC</div>
+                </div>
+                <div class="part-note">The variation is in your baseline. Same progression, different feel between verse and chorus. Pull back on verses (long notes, root only), drive on choruses (eighths, walking).</div>
+              </div>
+              <div class="part-row" data-part="drums">
+                <div class="part-role">
+                  <div class="part-name">Drums</div>
+                  <div class="part-musician">TBC</div>
+                </div>
+                <div class="part-note">Pull right back on verse — kick + hi-hat. Build into chorus. Hold 105 with bass. Final chorus ×2 hands off into Ancient of Days — no fill, just a sustained crash that resolves into the next song.</div>
+              </div>
+              <div class="part-row" data-part="guitar">
+                <div class="part-role">
+                  <div class="part-name">Guitar</div>
+                  <div class="part-musician">Morayo</div>
+                </div>
+                <div class="part-note">Sustained chords. Match keys on the texture shift. If Eddie isn't there, lean into chord voicing to fill the brass space.</div>
+              </div>
+              <div class="part-row" data-part="lead">
+                <div class="part-role">
+                  <div class="part-name">Lead</div>
+                  <div class="part-musician">Uncle Caster</div>
+                </div>
+                <div class="part-note">The verse is intimate — let it breathe, don't push. Anthem Nights treatment on "Don't know what you came to do". Adlib bar after "I'm so glad you came to save us" sets up the verse repeat.</div>
+              </div>
+              <div class="part-row" data-part="bvs">
+                <div class="part-role">
+                  <div class="part-name">BVs</div>
+                  <div class="part-musician">Esther + (TBC × 2)</div>
+                </div>
+                <div class="part-note">Out on verses. Join Caster on chorus. Big on the final chorus ×2 — this is the lift before we land into Ancient of Days.</div>
+              </div>
             </div>
-            <div class="part-note"><strong>You define this arrangement.</strong> Synth brass on the chorus is the signature. Pad under verse, switch texture on chorus. If you're not there, this song loses its identity — Morayo and Caster will need to fill that space.</div>
-          </div>
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Bass</div>
-              <div class="part-musician">BJ / TBC</div>
+            <div class="direction">
+              <div class="direction-label">Shape</div>
+              <p>Coming off the Days of Elijah vamp. Vamp continues 2 cycles. "You came from heaven to earth" intro phrase ×1. Drop into verse 1 — dynamics low, band almost out. Chorus ×1. Verse again (low). Chorus ×2. Straight into Ancient of Days — no break.</p>
             </div>
-            <div class="part-note">The variation is in your baseline. Same progression, different feel between verse and chorus. Pull back on verses (long notes, root only), drive on choruses (eighths, walking).</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Drums</div>
-              <div class="part-musician">TBC</div>
+            <div class="direction" style="background: linear-gradient(135deg, rgba(200, 162, 75, 0.08), rgba(200, 162, 75, 0.02)); border-left-color: var(--gold);">
+              <div class="direction-label" style="color: var(--gold);">Principle</div>
+              <p>Same chord progression all the way through — verse and chorus. Variation lives in <em>dynamics and baseline</em>, not chords. Synth brass texture defines the feel. Adlib bar after "I'm so glad you came to save us" → back to "Lord, I lift your name on high".</p>
             </div>
-            <div class="part-note">Pull right back on verse — kick + hi-hat. Build into chorus. Hold 105 with bass. Final chorus ×2 hands off into Ancient of Days — no fill, just a sustained crash that resolves into the next song.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Guitar</div>
-              <div class="part-musician">Morayo</div>
-            </div>
-            <div class="part-note">Sustained chords. Match keys on the texture shift. If Eddie isn't there, lean into chord voicing to fill the brass space.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Lead</div>
-              <div class="part-musician">Uncle Caster</div>
-            </div>
-            <div class="part-note">The verse is intimate — let it breathe, don't push. Anthem Nights treatment on "Don't know what you came to do". Adlib bar after "I'm so glad you came to save us" sets up the verse repeat.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">BVs</div>
-              <div class="part-musician">Esther + (TBC × 2)</div>
-            </div>
-            <div class="part-note">Out on verses. Join Caster on chorus. Big on the final chorus ×2 — this is the lift before we land into Ancient of Days.</div>
           </div>
         </div>
       </div>
-
-      <!-- 03 · ANCIENT OF DAYS -->
-      <div class="song" id="song-3">
-        <div class="song-head">
+      <!-- 03 · Ancient of Days · Blessing and Honour -->
+      <div class="song collapsible" id="song-3" data-song-num="03">
+        <div class="song-toggle" role="button" tabindex="0" aria-expanded="false">
           <div class="song-num">03</div>
-          <div class="song-meta-stack">
+          <div class="song-titles">
             <div class="song-position">Praise medley · 3 of 3 · Closer</div>
             <div class="song-title">Ancient of Days · Blessing and Honour</div>
-            <div class="song-credit">Standard progression · definitive ending</div>
           </div>
+          <div class="song-tag-mini"><span class="tag-pill red">105 BPM</span></div>
+          <div class="chev">▾</div>
         </div>
-        <div class="song-pills">
-          <span class="pill red">105 BPM</span>
-          <span class="pill">Definitive ending</span>
-          <span class="pill">1-6-7-1 to crash</span>
-        </div>
-
-        <div class="direction">
-          <div class="direction-label">Shape</div>
-          <p>Standard Blessing and Honour progression — <em>not</em> the Anthem Nights arrangement. Blessing and Honour verse ×1. "Every tongue in heaven and earth" ×1. Blessing and Honour ×1. Chorus. "Every tongue" ×2. "Oh Ancient of Days" ×4 → definitive ending: 1-6-7-1 progression, crash on the one.</p>
-          <p>This is the wall the praise medley lands against. <strong>Set the ending up properly</strong> — don't crash without a runway. Heavy-handed, definitive. After the crash, let the room sit before Caster starts Holy Spirit. Don't rush into worship — the gap is sacred.</p>
-        </div>
-
-        <div class="parts">
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Drums</div>
-              <div class="part-musician">TBC</div>
+        <div class="song-body">
+          <div class="song-body-inner">
+            <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Standard progression · definitive ending</div>
+            
+            <div class="parts" data-filter="all">
+              <div class="part-row flag" data-part="drums">
+                <div class="part-role">
+                  <div class="part-name">Drums</div>
+                  <div class="part-musician">TBC</div>
+                </div>
+                <div class="part-note"><strong>The ending is yours.</strong> Set up the 1-6-7-1 with a fill that signals the crash is coming. Don't surprise the band. Land the crash on the one — definitive, not abrupt.</div>
+              </div>
+              <div class="part-row flag" data-part="bass">
+                <div class="part-role">
+                  <div class="part-name">Bass</div>
+                  <div class="part-musician">BJ / TBC</div>
+                </div>
+                <div class="part-note">Walk the 1-6-7-1 with drums on the ending. Heavy notes, full sustain. End the medley on the one alongside the crash.</div>
+              </div>
+              <div class="part-row" data-part="keys">
+                <div class="part-role">
+                  <div class="part-name">Keys</div>
+                  <div class="part-musician">Eddie (confirming)</div>
+                </div>
+                <div class="part-note">Switch off the Anthem Nights texture — this is the Blessing and Honour arrangement. Full chords through. Hold the final 1 — sustain it as the room shifts into worship.</div>
+              </div>
+              <div class="part-row" data-part="guitar">
+                <div class="part-role">
+                  <div class="part-name">Guitar</div>
+                  <div class="part-musician">Morayo</div>
+                </div>
+                <div class="part-note">Big strums, heavy-handed for "Oh Ancient of Days" ×4. Crash on the one with the band.</div>
+              </div>
+              <div class="part-row" data-part="lead">
+                <div class="part-role">
+                  <div class="part-name">Lead</div>
+                  <div class="part-musician">Uncle Caster</div>
+                </div>
+                <div class="part-note">"Oh Ancient of Days" ×4 is yours to drive — make sure the band hears the lift on each repeat. After the crash, let the room sit before starting Holy Spirit. <strong>Don't rush into worship.</strong></div>
+              </div>
+              <div class="part-row" data-part="bvs">
+                <div class="part-role">
+                  <div class="part-name">BVs</div>
+                  <div class="part-musician">Esther + (TBC × 2)</div>
+                </div>
+                <div class="part-note">Full voice through. Big on "Oh Ancient of Days" ×4. Hold the final note with Caster.</div>
+              </div>
             </div>
-            <div class="part-note"><strong>The ending is yours.</strong> Set up the 1-6-7-1 with a fill that signals the crash is coming. Don't surprise the band. Land the crash on the one — definitive, not abrupt.</div>
-          </div>
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Bass</div>
-              <div class="part-musician">BJ / TBC</div>
+            <div class="direction">
+              <div class="direction-label">Shape</div>
+              <p>Standard Blessing and Honour progression — <em>not</em> the Anthem Nights arrangement. Blessing and Honour verse ×1. "Every tongue in heaven and earth" ×1. Blessing and Honour ×1. Chorus. "Every tongue" ×2. "Oh Ancient of Days" ×4 → definitive ending: 1-6-7-1 progression, crash on the one.</p>
             </div>
-            <div class="part-note">Walk the 1-6-7-1 with drums on the ending. Heavy notes, full sustain. End the medley on the one alongside the crash.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Keys</div>
-              <div class="part-musician">Eddie (confirming)</div>
+            <div class="direction" style="background: linear-gradient(135deg, rgba(200, 162, 75, 0.08), rgba(200, 162, 75, 0.02)); border-left-color: var(--gold);">
+              <div class="direction-label" style="color: var(--gold);">Principle</div>
+              <p>This is the wall the praise medley lands against. <strong>Set the ending up properly</strong> — don't crash without a runway. Heavy-handed, definitive. After the crash, let the room sit before Caster starts Holy Spirit. Don't rush into worship — the gap is sacred.</p>
             </div>
-            <div class="part-note">Switch off the Anthem Nights texture — this is the Blessing and Honour arrangement. Full chords through. Hold the final 1 — sustain it as the room shifts into worship.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Guitar</div>
-              <div class="part-musician">Morayo</div>
-            </div>
-            <div class="part-note">Big strums, heavy-handed for "Oh Ancient of Days" ×4. Crash on the one with the band.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Lead</div>
-              <div class="part-musician">Uncle Caster</div>
-            </div>
-            <div class="part-note">"Oh Ancient of Days" ×4 is yours to drive — make sure the band hears the lift on each repeat. After the crash, let the room sit before starting Holy Spirit. <strong>Don't rush into worship.</strong></div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">BVs</div>
-              <div class="part-musician">Esther + (TBC × 2)</div>
-            </div>
-            <div class="part-note">Full voice through. Big on "Oh Ancient of Days" ×4. Hold the final note with Caster.</div>
           </div>
         </div>
       </div>
-
-      <!-- 04 · HOLY SPIRIT -->
-      <div class="song" id="song-4">
-        <div class="song-head">
+      <!-- 04 · Holy Spirit, You Are Welcome Here -->
+      <div class="song collapsible" id="song-4" data-song-num="04">
+        <div class="song-toggle" role="button" tabindex="0" aria-expanded="false">
           <div class="song-num">04</div>
-          <div class="song-meta-stack">
+          <div class="song-titles">
             <div class="song-position">Worship · 1 of 3 · Opens worship</div>
             <div class="song-title">Holy Spirit, You Are Welcome Here</div>
-            <div class="song-credit">Simple · vocal-carried · Caster-led</div>
           </div>
+          <div class="song-tag-mini"><span class="tag-pill gold">Pentecost</span></div>
+          <div class="chev">▾</div>
         </div>
-        <div class="song-pills">
-          <span class="pill">Flexible</span>
-          <span class="pill">No fixed structure</span>
-          <span class="pill gold">Pentecost</span>
-        </div>
-
-        <div class="direction">
-          <div class="direction-label">Approach</div>
-          <p>Simple song, few lines — that's the point. No fixed structure. Caster leads, band supports. Lift the room from praise-energy into worship-posture.</p>
-          <p>It's Pentecost. Leave space for the Holy Spirit to move. Band sits underneath, vocals carry it. If the room sits in a line, sit with the room. Silence is part of the worship.</p>
-        </div>
-
-        <div class="parts">
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Lead</div>
-              <div class="part-musician">Uncle Caster</div>
+        <div class="song-body">
+          <div class="song-body-inner">
+            <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Simple · vocal-carried · Caster-led</div>
+            
+            <div class="parts" data-filter="all">
+              <div class="part-row flag" data-part="lead">
+                <div class="part-role">
+                  <div class="part-name">Lead</div>
+                  <div class="part-musician">Uncle Caster</div>
+                </div>
+                <div class="part-note">You set pace and shape. Stay in a line as long as the room is in it. Repeat a phrase if the moment calls for it. The band reads you.</div>
+              </div>
+              <div class="part-row" data-part="keys">
+                <div class="part-role">
+                  <div class="part-name">Keys</div>
+                  <div class="part-musician">Eddie (confirming)</div>
+                </div>
+                <div class="part-note">Sustained pad underneath. No movement. You're holding atmosphere, not adding texture.</div>
+              </div>
+              <div class="part-row" data-part="guitar">
+                <div class="part-role">
+                  <div class="part-name">Guitar</div>
+                  <div class="part-musician">Morayo</div>
+                </div>
+                <div class="part-note">Long, sustained chords or out entirely. If keys are absent, you take the pad role.</div>
+              </div>
+              <div class="part-row" data-part="drums">
+                <div class="part-role">
+                  <div class="part-name">Drums</div>
+                  <div class="part-musician">TBC</div>
+                </div>
+                <div class="part-note">Out, or hi-hat only on the very softest touch. Don't groove this. Hold the room.</div>
+              </div>
+              <div class="part-row" data-part="bass">
+                <div class="part-role">
+                  <div class="part-name">Bass</div>
+                  <div class="part-musician">BJ / TBC</div>
+                </div>
+                <div class="part-note">Out, or sustained root only. No movement.</div>
+              </div>
+              <div class="part-row" data-part="bvs">
+                <div class="part-role">
+                  <div class="part-name">BVs</div>
+                  <div class="part-musician">Esther + (TBC × 2)</div>
+                </div>
+                <div class="part-note">Soft harmony following Caster. Don't lead — follow. If Caster holds a line, hold with him.</div>
+              </div>
             </div>
-            <div class="part-note">You set pace and shape. Stay in a line as long as the room is in it. Repeat a phrase if the moment calls for it. The band reads you.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Keys</div>
-              <div class="part-musician">Eddie (confirming)</div>
+            <div class="direction">
+              <div class="direction-label">Shape</div>
+              <p>Simple song, few lines — that's the point. No fixed structure. Caster leads, band supports. Lift the room from praise-energy into worship-posture.</p>
             </div>
-            <div class="part-note">Sustained pad underneath. No movement. You're holding atmosphere, not adding texture.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Guitar</div>
-              <div class="part-musician">Morayo</div>
+            <div class="direction" style="background: linear-gradient(135deg, rgba(200, 162, 75, 0.08), rgba(200, 162, 75, 0.02)); border-left-color: var(--gold);">
+              <div class="direction-label" style="color: var(--gold);">Principle</div>
+              <p>It's Pentecost. Leave space for the Holy Spirit to move. Band sits underneath, vocals carry it. If the room sits in a line, sit with the room. Silence is part of the worship.</p>
             </div>
-            <div class="part-note">Long, sustained chords or out entirely. If keys are absent, you take the pad role.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Drums</div>
-              <div class="part-musician">TBC</div>
-            </div>
-            <div class="part-note">Out, or hi-hat only on the very softest touch. Don't groove this. Hold the room.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Bass</div>
-              <div class="part-musician">BJ / TBC</div>
-            </div>
-            <div class="part-note">Out, or sustained root only. No movement.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">BVs</div>
-              <div class="part-musician">Esther + (TBC × 2)</div>
-            </div>
-            <div class="part-note">Soft harmony following Caster. Don't lead — follow. If Caster holds a line, hold with him.</div>
           </div>
         </div>
       </div>
-
-      <!-- 05 · ATMOSPHERE SHIFT -->
-      <div class="song" id="song-5">
-        <div class="song-head">
+      <!-- 05 · Atmosphere Shift -->
+      <div class="song collapsible" id="song-5" data-song-num="05">
+        <div class="song-toggle" role="button" tabindex="0" aria-expanded="false">
           <div class="song-num">05</div>
-          <div class="song-meta-stack">
+          <div class="song-titles">
             <div class="song-position">Worship · 2 of 3</div>
             <div class="song-title">Atmosphere Shift</div>
-            <div class="song-credit">Phil Thompson · the bridge is the song</div>
           </div>
+          <div class="song-tag-mini"><span class="tag-pill red">Bridge moment</span></div>
+          <div class="chev">▾</div>
         </div>
-        <div class="song-pills">
-          <span class="pill">Familiar</span>
-          <span class="pill red">Bridge is the moment</span>
-        </div>
-
-        <div class="direction">
-          <div class="direction-label">Shape</div>
-          <p>Verse: "There is only one name". Chorus: "A God He's champion, He reigns forever more, forever more". Bridge: "Atmosphere shift now, change me, broken break now, Holy Spirit come down, Heaven open over us". Let it build naturally — don't rush.</p>
-          <p>The bridge is the song. Everything before it is set-up. Sit in the bridge — repeat lines if the room is in it. <strong>Morayo knows it well — lean on her on the bridge.</strong></p>
-        </div>
-
-        <div class="parts">
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Guitar</div>
-              <div class="part-musician">Morayo</div>
+        <div class="song-body">
+          <div class="song-body-inner">
+            <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Phil Thompson · the bridge is the song</div>
+            
+            <div class="parts" data-filter="all">
+              <div class="part-row flag" data-part="guitar">
+                <div class="part-role">
+                  <div class="part-name">Guitar</div>
+                  <div class="part-musician">Morayo</div>
+                </div>
+                <div class="part-note">You know this song. Drive the bridge — your part lifts the band when "Atmosphere shift now" comes around. Don't hold back.</div>
+              </div>
+              <div class="part-row flag" data-part="lead">
+                <div class="part-role">
+                  <div class="part-name">Lead</div>
+                  <div class="part-musician">Uncle Caster</div>
+                </div>
+                <div class="part-note">Build through verse and chorus. Open up on the bridge. If the room is in "Heaven open over us", repeat it. Don't rush to land it.</div>
+              </div>
+              <div class="part-row" data-part="keys">
+                <div class="part-role">
+                  <div class="part-name">Keys</div>
+                  <div class="part-musician">Eddie (confirming)</div>
+                </div>
+                <div class="part-note">Pad through verse and chorus. Open up texturally on the bridge — pad swells, big chords. This is where keys shine.</div>
+              </div>
+              <div class="part-row" data-part="drums">
+                <div class="part-role">
+                  <div class="part-name">Drums</div>
+                  <div class="part-musician">TBC</div>
+                </div>
+                <div class="part-note">Quiet groove on verse. Lift on chorus. Open up properly on the bridge — toms, crashes, full kit. Settle back if Caster pulls it down for a repeat.</div>
+              </div>
+              <div class="part-row" data-part="bass">
+                <div class="part-role">
+                  <div class="part-name">Bass</div>
+                  <div class="part-musician">BJ / TBC</div>
+                </div>
+                <div class="part-note">Walk the verse. Lock the chorus. Drive the bridge — eighths or quarters, full sustain.</div>
+              </div>
+              <div class="part-row" data-part="bvs">
+                <div class="part-role">
+                  <div class="part-name">BVs</div>
+                  <div class="part-musician">Esther + (TBC × 2)</div>
+                </div>
+                <div class="part-note">Big on chorus. Full voice on the bridge — "Holy Spirit come down" is everyone's line.</div>
+              </div>
             </div>
-            <div class="part-note">You know this song. Drive the bridge — your part lifts the band when "Atmosphere shift now" comes around. Don't hold back.</div>
-          </div>
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Lead</div>
-              <div class="part-musician">Uncle Caster</div>
+            <div class="direction">
+              <div class="direction-label">Shape</div>
+              <p>Verse: "There is only one name". Chorus: "A God He's champion, He reigns forever more, forever more". Bridge: "Atmosphere shift now, change me, broken break now, Holy Spirit come down, Heaven open over us". Let it build naturally — don't rush.</p>
             </div>
-            <div class="part-note">Build through verse and chorus. Open up on the bridge. If the room is in "Heaven open over us", repeat it. Don't rush to land it.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Keys</div>
-              <div class="part-musician">Eddie (confirming)</div>
+            <div class="direction" style="background: linear-gradient(135deg, rgba(200, 162, 75, 0.08), rgba(200, 162, 75, 0.02)); border-left-color: var(--gold);">
+              <div class="direction-label" style="color: var(--gold);">Principle</div>
+              <p>The bridge is the song. Everything before it is set-up. Sit in the bridge — repeat lines if the room is in it. <strong>Morayo knows it well — lean on her on the bridge.</strong></p>
             </div>
-            <div class="part-note">Pad through verse and chorus. Open up texturally on the bridge — pad swells, big chords. This is where keys shine.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Drums</div>
-              <div class="part-musician">TBC</div>
-            </div>
-            <div class="part-note">Quiet groove on verse. Lift on chorus. Open up properly on the bridge — toms, crashes, full kit. Settle back if Caster pulls it down for a repeat.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Bass</div>
-              <div class="part-musician">BJ / TBC</div>
-            </div>
-            <div class="part-note">Walk the verse. Lock the chorus. Drive the bridge — eighths or quarters, full sustain.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">BVs</div>
-              <div class="part-musician">Esther + (TBC × 2)</div>
-            </div>
-            <div class="part-note">Big on chorus. Full voice on the bridge — "Holy Spirit come down" is everyone's line.</div>
           </div>
         </div>
       </div>
-
-      <!-- 06 · SPIRIT BREAK OUT -->
-      <div class="song" id="song-6">
-        <div class="song-head">
+      <!-- 06 · Spirit Break Out -->
+      <div class="song collapsible" id="song-6" data-song-num="06">
+        <div class="song-toggle" role="button" tabindex="0" aria-expanded="false">
           <div class="song-num">06</div>
-          <div class="song-meta-stack">
+          <div class="song-titles">
             <div class="song-position">Worship · 3 of 3 · Closer</div>
             <div class="song-title">Spirit Break Out</div>
-            <div class="song-credit">William McDowell · let it stretch</div>
           </div>
+          <div class="song-tag-mini"><span class="tag-pill gold">Pentecost</span></div>
+          <div class="chev">▾</div>
         </div>
-        <div class="song-pills">
-          <span class="pill">Long-form</span>
-          <span class="pill gold">Pentecost</span>
-          <span class="pill">Caster decides the length</span>
-        </div>
-
-        <div class="direction">
-          <div class="direction-label">Approach</div>
-          <p>We've been doing this for years — the team knows it cold. No imposed structure. Caster leads, band follows. Build, stretch, hold, repeat. Land it when Caster lands it.</p>
-          <p>It's Pentecost. Let it stretch and breathe. <strong>If the atmosphere is heavy, sit in it.</strong> Don't rush to the next thing. There is no next thing — this is the end of worship.</p>
-        </div>
-
-        <div class="parts">
-          <div class="part-row flag">
-            <div class="part-role">
-              <div class="part-name">Lead</div>
-              <div class="part-musician">Uncle Caster</div>
+        <div class="song-body">
+          <div class="song-body-inner">
+            <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">William McDowell · let it stretch</div>
+            
+            <div class="parts" data-filter="all">
+              <div class="part-row flag" data-part="lead">
+                <div class="part-role">
+                  <div class="part-name">Lead</div>
+                  <div class="part-musician">Uncle Caster</div>
+                </div>
+                <div class="part-note">You decide how long this lives for. If you stretch it, the band is with you. If you repeat "Spirit break out", repeat. Land it when you're ready.</div>
+              </div>
+              <div class="part-row" data-part="keys">
+                <div class="part-role">
+                  <div class="part-name">Keys</div>
+                  <div class="part-musician">Eddie (confirming)</div>
+                </div>
+                <div class="part-note">Pad through. Open up on the chorus. Hold the texture if Caster sits in a line.</div>
+              </div>
+              <div class="part-row" data-part="drums">
+                <div class="part-role">
+                  <div class="part-name">Drums</div>
+                  <div class="part-musician">TBC</div>
+                </div>
+                <div class="part-note">Watch Caster. If he lifts, you lift. If he holds, you hold. Builds and drops can repeat as many times as the room needs.</div>
+              </div>
+              <div class="part-row" data-part="bass">
+                <div class="part-role">
+                  <div class="part-name">Bass</div>
+                  <div class="part-musician">BJ / TBC</div>
+                </div>
+                <div class="part-note">Solid pocket. Build with drums on the lifts. Stay underneath when Caster takes it down.</div>
+              </div>
+              <div class="part-row" data-part="guitar">
+                <div class="part-role">
+                  <div class="part-name">Guitar</div>
+                  <div class="part-musician">Morayo</div>
+                </div>
+                <div class="part-note">Sustained chords through. Open up texturally on the chorus. You and keys together hold the atmosphere when Caster repeats a line.</div>
+              </div>
+              <div class="part-row" data-part="bvs">
+                <div class="part-role">
+                  <div class="part-name">BVs</div>
+                  <div class="part-musician">Esther + (TBC × 2)</div>
+                </div>
+                <div class="part-note">Follow Caster's call. Full voice on chorus. If he sits in "Spirit break out", sit with him.</div>
+              </div>
             </div>
-            <div class="part-note">You decide how long this lives for. If you stretch it, the band is with you. If you repeat "Spirit break out", repeat. Land it when you're ready.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Keys</div>
-              <div class="part-musician">Eddie (confirming)</div>
+            <div class="direction">
+              <div class="direction-label">Shape</div>
+              <p>We've been doing this for years — the team knows it cold. No imposed structure. Caster leads, band follows. Build, stretch, hold, repeat. Land it when Caster lands it.</p>
             </div>
-            <div class="part-note">Pad through. Open up on the chorus. Hold the texture if Caster sits in a line.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Drums</div>
-              <div class="part-musician">TBC</div>
+            <div class="direction" style="background: linear-gradient(135deg, rgba(200, 162, 75, 0.08), rgba(200, 162, 75, 0.02)); border-left-color: var(--gold);">
+              <div class="direction-label" style="color: var(--gold);">Principle</div>
+              <p>It's Pentecost. Let it stretch and breathe. <strong>If the atmosphere is heavy, sit in it.</strong> Don't rush to the next thing. There is no next thing — this is the end of worship.</p>
             </div>
-            <div class="part-note">Watch Caster. If he lifts, you lift. If he holds, you hold. Builds and drops can repeat as many times as the room needs.</div>
           </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Bass</div>
-              <div class="part-musician">BJ / TBC</div>
-            </div>
-            <div class="part-note">Solid pocket. Build with drums on the lifts. Stay underneath when Caster takes it down.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">Guitar</div>
-              <div class="part-musician">Morayo</div>
-            </div>
-            <div class="part-note">Sustained chords through. Open up texturally on the chorus. You and keys together hold the atmosphere when Caster repeats a line.</div>
-          </div>
-          <div class="part-row">
-            <div class="part-role">
-              <div class="part-name">BVs</div>
-              <div class="part-musician">Esther + (TBC × 2)</div>
-            </div>
-            <div class="part-note">Follow Caster's call. Full voice on chorus. If he sits in "Spirit break out", sit with him.</div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ── FOR SUNDAY ── -->
-    <section>
-      <div class="section-eyebrow">04 · Sunday Morning</div>
-      <h2 class="section-title">What to bring</h2>
-      <p class="section-lede">The small things that make Sunday smooth.</p>
-
-      <div class="sunday-list">
-        <div class="sunday-row">
-          <div class="sunday-icon">⏰</div>
-          <p><strong>9am call.</strong> Setup, soundcheck, walk through the medley transitions and the bridge of Atmosphere Shift. Drummer especially needs the walk-through if confirmed late.</p>
-        </div>
-        <div class="sunday-row">
-          <div class="sunday-icon">🎚</div>
-          <p><strong>Mix priorities.</strong> Caster's voice always on top. Bass and drums locked underneath the medley. Keys (if Eddie is there) defines Lord I Lift Your Name — make sure his brass texture lands.</p>
-        </div>
-        <div class="sunday-row">
-          <div class="sunday-icon">🤝</div>
-          <p><strong>Praise is locked, worship breathes.</strong> In the medley everyone is on the same map. In worship everyone is reading Caster. If you're not sure what's next — look at him.</p>
-        </div>
-        <div class="sunday-row">
-          <div class="sunday-icon">🕊</div>
-          <p><strong>It's Pentecost.</strong> The worship section is built to leave space for the Holy Spirit to move. We're not running a programme — we're stewarding a room. If the room sits in something, sit with it.</p>
-        </div>
-        <div class="sunday-row">
-          <div class="sunday-icon">🙏</div>
-          <p><strong>Pray before the set.</strong> Five minutes as a band before doors open. We come off a big anniversary. The Spirit doesn't need our hype — He needs our availability.</p>
         </div>
       </div>
     </section>
 
-    <!-- ── FOOTER ── -->
-    <section class="pack-footer">
-      <img class="eagle" src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah">
-      <p class="signoff">
-        <strong>Set Runthrough v1</strong> · Companion to the <a href="../worship-pack-24-may-2026.html">Worship Pack v13</a><br>
-        Calvary Hephzibah · Pentecost Sunday · 24 May 2026
-      </p>
+    <!-- ── SLIM FOOTER ── -->
+    <section class="slim-footer">
+      <div class="slim-footer-grid">
+        <img src="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png" alt="Calvary Hephzibah">
+        <p><strong>9am call. Pray before the set.</strong><br>
+        We come off a big anniversary. The Spirit doesn't need our hype — He needs our availability. Companion to the <a href="../worship-pack-24-may-2026.html">Worship Pack v13</a>.</p>
+      </div>
     </section>
 
   </main>
@@ -2652,6 +2954,120 @@ KEY NOTES
       // iOS needs a user gesture to unlock the AudioContext. The first row
       // click will unlock it via getCtx().resume() inside play().
       init();
+    })();
+  </script>
+
+
+  <script>
+    // ════════════════════════════════════════════════════════════════════
+    //  SET RUNTHROUGH — COLLAPSE + FILTER
+    //  Every .song.collapsible toggles open/closed on toggle click.
+    //  Every .chart.collapsible toggles open/closed on head click.
+    //  The .partbar filters part-rows across all songs by their data-part.
+    // ════════════════════════════════════════════════════════════════════
+    (function () {
+      // ── COLLAPSE: songs ──
+      document.querySelectorAll('.song.collapsible').forEach(song => {
+        const toggle = song.querySelector('.song-toggle');
+        if (!toggle) return;
+        const open = () => {
+          song.classList.add('open');
+          toggle.setAttribute('aria-expanded', 'true');
+        };
+        const close = () => {
+          song.classList.remove('open');
+          toggle.setAttribute('aria-expanded', 'false');
+        };
+        toggle.addEventListener('click', () => {
+          song.classList.contains('open') ? close() : open();
+        });
+        toggle.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            song.classList.contains('open') ? close() : open();
+          }
+        });
+        song._open = open;
+        song._close = close;
+      });
+
+      // ── COLLAPSE: chord chart ──
+      document.querySelectorAll('.chart.collapsible').forEach(chart => {
+        const head = chart.querySelector('.chart-head');
+        if (!head) return;
+        const open = () => {
+          chart.classList.add('open');
+          head.setAttribute('aria-expanded', 'true');
+        };
+        const close = () => {
+          chart.classList.remove('open');
+          head.setAttribute('aria-expanded', 'false');
+        };
+        head.addEventListener('click', () => {
+          chart.classList.contains('open') ? close() : open();
+        });
+        head.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            chart.classList.contains('open') ? close() : open();
+          }
+        });
+        chart._open = open;
+      });
+
+      // ── PART FILTER ──
+      const chips = document.querySelectorAll('.part-chip');
+      const partsLists = document.querySelectorAll('.parts');
+      // Parts that benefit from the chord chart (harmonic parts)
+      const HARMONIC_PARTS = new Set(['keys', 'guitar', 'bass']);
+
+      function applyFilter(part) {
+        partsLists.forEach(list => {
+          list.setAttribute('data-filter', part);
+          list.querySelectorAll('.part-row').forEach(row => {
+            const match = part === 'all' || row.dataset.part === part;
+            row.classList.toggle('active-part', match);
+          });
+        });
+
+        // If a specific part is selected, auto-expand all songs so the
+        // user can scroll their part across the set.
+        if (part !== 'all') {
+          document.querySelectorAll('.song.collapsible').forEach(s => s._open && s._open());
+          // Open chord chart if a harmonic part is selected
+          if (HARMONIC_PARTS.has(part)) {
+            document.querySelectorAll('.chart.collapsible').forEach(c => c._open && c._open());
+          }
+        }
+      }
+
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+          chip.setAttribute('aria-pressed', 'true');
+          applyFilter(chip.dataset.part);
+        });
+      });
+
+      // ── HASH JUMP: expand the target song when arriving via #song-N ──
+      function expandFromHash() {
+        const hash = location.hash;
+        if (!hash) return;
+        const target = document.querySelector(hash);
+        if (!target) return;
+        if (target.classList.contains('collapsible') && target._open) {
+          target._open();
+        } else {
+          // Maybe a nested element inside a song
+          const song = target.closest('.song.collapsible');
+          if (song && song._open) song._open();
+        }
+      }
+      expandFromHash();
+      window.addEventListener('hashchange', expandFromHash);
+
+      // Apply default filter (all) on load to set initial state
+      applyFilter('all');
     })();
   </script>
 
