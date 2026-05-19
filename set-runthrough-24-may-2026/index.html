@@ -393,6 +393,123 @@
       .practise-cta .arrow { font-size: 11px; }
     }
 
+    /* ── CHORD CHART ── */
+    .chart {
+      margin-bottom: 22px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+    }
+    .chart-head {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .chart-title {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+    }
+    .chart-key {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--fg-3);
+    }
+    .chart-key b {
+      font-family: var(--font-display);
+      font-style: normal;
+      letter-spacing: 0.04em;
+      color: var(--bone);
+      font-size: 13px;
+    }
+    .chart-section {
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .chart-section:last-child { border-bottom: none; }
+    .chart-section.build {
+      background: rgba(208, 68, 28, 0.06);
+    }
+    .chart-section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .chart-section-label {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+    .chart-section-note {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-3);
+    }
+    .chord-line {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--fg-1);
+      letter-spacing: 0.04em;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 2px;
+    }
+    .chord-line + .chord-line { margin-top: 2px; }
+    .chord-line .c { color: var(--fg-1); margin-right: 14px; display: inline-block; }
+    .chord-line .c.i  { color: var(--bone); font-weight: 600; }  /* I (Gb) — home */
+    .chord-line .c.iv { color: var(--fg-1); }                    /* IV (Cb) */
+    .chord-line .c.v  { color: var(--red-bright); }              /* V (Db) — tension */
+    .chord-line .c.vi { color: var(--gold-bright); }             /* vi (Ebm) — soft turn */
+    .chord-line .c.x  { color: var(--gold); font-style: italic; }/* extensions / passing */
+    .chart-roman {
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      margin-top: 8px;
+    }
+    .chart-roman b { color: var(--red); font-weight: 600; }
+    .chart-legend {
+      padding: 14px 22px;
+      background: rgba(11, 11, 14, 0.4);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .chart-legend .swatch {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chart-legend .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+    }
+    .chart-legend .dot.i  { background: var(--bone); }
+    .chart-legend .dot.iv { background: var(--fg-1); }
+    .chart-legend .dot.v  { background: var(--red-bright); }
+    .chart-legend .dot.vi { background: var(--gold-bright); }
+    .chart-legend .dot.x  { background: var(--gold); }
+
     /* Parts table */
     .parts {
       display: flex;
@@ -732,6 +849,100 @@
           </div>
           <div class="arrow">Open →</div>
         </a>
+
+        <div class="chart">
+          <div class="chart-head">
+            <div class="chart-title">Chord Chart · Be Lifted High</div>
+            <div class="chart-key">Key <b>Gb major</b> · 6 flats · transcribed from Moises</div>
+          </div>
+
+          <div class="chart-section">
+            <div class="chart-section-head">
+              <span class="chart-section-label">Intro · Vamp</span>
+              <span class="chart-section-note">Drop in off the Days of Elijah vamp — band almost out</span>
+            </div>
+            <div class="chord-line">
+              <span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
+            </div>
+            <div class="chart-roman">Roman: <b>IV · I · V</b> looping</div>
+          </div>
+
+          <div class="chart-section">
+            <div class="chart-section-head">
+              <span class="chart-section-label">Verse</span>
+              <span class="chart-section-note">Dynamics low, band drops out. "Lord I lift your name on high"</span>
+            </div>
+            <div class="chord-line">
+              <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c i">Gb</span>
+            </div>
+            <div class="chord-line">
+              <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span>
+            </div>
+            <div class="chart-roman">Roman: <b>I · IV · V · I · IV · vi · V · I</b> — same shape both passes, second ends on IV (lift)</div>
+          </div>
+
+          <div class="chart-section">
+            <div class="chart-section-head">
+              <span class="chart-section-label">Chorus</span>
+              <span class="chart-section-note">"You came from heaven to earth" — full band, synth brass enters</span>
+            </div>
+            <div class="chord-line">
+              <span class="c i">Gb</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
+            </div>
+            <div class="chord-line">
+              <span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span>
+            </div>
+            <div class="chart-roman">Roman: <b>I · V · I · IV</b> on line 1; line 2 ends on the <b>vi → V</b> turnaround that sets up the verse repeat</div>
+          </div>
+
+          <div class="chart-section build">
+            <div class="chart-section-head">
+              <span class="chart-section-label">Bridge · Build</span>
+              <span class="chart-section-note">"Don't know what you came to do" — Anthem Nights treatment, jazz chords arrive</span>
+            </div>
+            <div class="chord-line">
+              <span class="c vi x">Ebm7</span><span class="c i">Gb</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c vi">Ebm</span><span class="c vi x">Ebm7</span><span class="c x">Ab7</span>
+            </div>
+            <div class="chord-line">
+              <span class="c vi">Ebm</span><span class="c vi x">Ebm7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c v">Db</span><span class="c vi">Ebm</span>
+            </div>
+            <div class="chord-line">
+              <span class="c v">Db</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c iv">Cb</span><span class="c v">Db</span><span class="c vi x">Ebm7</span><span class="c x">Abm7</span>
+            </div>
+            <div class="chord-line">
+              <span class="c i">Gb</span><span class="c iv">Cb</span><span class="c x">Abm7</span><span class="c v">Db</span><span class="c iv x">Cbmaj7</span><span class="c x">Abm7</span><span class="c x">Bb</span><span class="c x">Abm7</span>
+            </div>
+            <div class="chord-line">
+              <span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Bbm7</span><span class="c iv x">Cbmaj7</span><span class="c x">Ddim</span><span class="c vi x">Ebm7</span><span class="c x">D</span><span class="c vi x">Ebm7</span>
+            </div>
+            <div class="chart-roman">The 7ths (Ebm7, Bbm7, Cbmaj7, Abm7) thicken the same diatonic chords. <b>Ab7</b>, <b>Ddim</b>, <b>D</b> and <b>Bb</b> are chromatic passing chords — single-beat lifts, not new tonal centres.</div>
+          </div>
+
+          <div class="chart-section">
+            <div class="chart-section-head">
+              <span class="chart-section-label">Final Chorus + Outro</span>
+              <span class="chart-section-note">Triads thicken into 7ths — chorus shape stays, harmonic colour grows</span>
+            </div>
+            <div class="chord-line">
+              <span class="c iv">Cb</span><span class="c vi x">Ebm7</span><span class="c x">Abm7</span><span class="c v">Db</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span>
+            </div>
+            <div class="chord-line">
+              <span class="c iv">Cb</span><span class="c i">Gb</span><span class="c iv x">Cbmaj7</span><span class="c x">Abm7</span><span class="c vi x">Ebm7</span><span class="c v">Db</span><span class="c i">Gb</span><span class="c iv">Cb</span>
+            </div>
+            <div class="chord-line">
+              <span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span><span class="c iv">Cb</span><span class="c i">Gb</span><span class="c iv">Cb</span><span class="c vi">Ebm</span><span class="c v">Db</span>
+            </div>
+            <div class="chart-roman">Roman shape mostly: <b>IV · vi · V</b> turnarounds resolving back to <b>I</b>. Hand off to Ancient of Days on a sustained Gb.</div>
+          </div>
+
+          <div class="chart-legend">
+            <span class="swatch"><span class="dot i"></span>I · Gb (home)</span>
+            <span class="swatch"><span class="dot iv"></span>IV · Cb (lift)</span>
+            <span class="swatch"><span class="dot v"></span>V · Db (tension)</span>
+            <span class="swatch"><span class="dot vi"></span>vi · Ebm (turn)</span>
+            <span class="swatch"><span class="dot x"></span>Extensions / passing</span>
+          </div>
+        </div>
 
         <div class="direction">
           <div class="direction-label">Shape</div>
