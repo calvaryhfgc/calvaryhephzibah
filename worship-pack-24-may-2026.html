@@ -225,6 +225,32 @@
       align-items: baseline;
     }
     .song:last-child { border-bottom: none; }
+
+    /* Always-visible song direction block (for songs without inline player).
+       Sits in the third grid column or wraps to full width on mobile. */
+    .song-direction {
+      grid-column: 1 / -1;
+      margin-top: 14px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(208, 68, 28, 0.10), rgba(208, 68, 28, 0.02));
+      border-left: 3px solid var(--red);
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--fg-1);
+      white-space: pre-wrap;
+    }
+    .song-direction-label {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-style: normal;
+    }
     .song-num {
       font-family: var(--font-display);
       font-size: 40px;
@@ -798,9 +824,31 @@
       </div>
     </section>
 
+    <!-- BAND PRINCIPLES -->
+    <section>
+      <div class="section-eyebrow">02 · Band Discipline</div>
+      <h2 class="section-title">How We Play</h2>
+
+      <div class="team-grid" style="grid-template-columns: 1fr;">
+        <div class="team-block">
+          <h3>The Principles</h3>
+          <ul class="team-list">
+            <li><span class="name">Structure over spontaneity</span><span class="role">Praise medley is set · Worship breathes</span></li>
+            <li><span class="name">Heavy intros, then drop out</span><span class="role">Instant dynamics, space for vocals</span></li>
+            <li><span class="name">Drop dynamics in verses</span><span class="role">Build into the chorus, every time</span></li>
+            <li><span class="name">Definitive endings</span><span class="role">Run up to the crash · don't just stop</span></li>
+            <li><span class="name">Seamless transitions</span><span class="role">No count-ins between medley songs</span></li>
+            <li><span class="name">Same chord progression, varied baseline</span><span class="role">Variation lives in dynamics and accents</span></li>
+            <li><span class="name">No man left behind</span><span class="role">Group pace = lowest common denominator</span></li>
+            <li><span class="name">Greatest hits energy</span><span class="role">Stewards into worship · 20 minutes is enough</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
     <!-- SET LIST -->
     <section>
-      <div class="section-eyebrow">02 · Set List</div>
+      <div class="section-eyebrow">03 · Set List</div>
       <h2 class="section-title">The Songs</h2>
 
       <!-- PRAISE MEDLEY -->
@@ -810,22 +858,109 @@
           <div class="set-block-meta">105 BPM · Seamless transitions</div>
         </div>
 
-        <div class="song" data-title="These Are the Days of Elijah" data-direction="Opener for the medley. Heavy-handed intro on the chorus (band drop-out after the intro to set instant dynamics). Then Verse 1 → Chorus → Verse 2 (Ezekiel) → Chorus ×2 (on the second pass). Skip the &quot;No God Like Jehovah&quot; section — go straight into the vamp (2 cycles) which transitions us into Lord I Lift Your Name on High. Donnie McClurkin-style groove at 105 BPM.">
+        <div class="song" data-title="These Are the Days of Elijah" data-direction="Opener for the medley. Donnie McClurkin-style groove at 105 BPM (slower than we normally play it).
+
+STRUCTURE
+• Intro: Chorus (heavy-handed, then drop out for instant dynamics)
+• Verse 1 (&quot;These are the days of Elijah&quot;)
+• Chorus (&quot;Behold He comes&quot;) ×1
+• Verse 2 (&quot;These are the days of Ezekiel&quot;)
+• Chorus ×2 on the second pass
+• Vamp (2 cycles) → transitions into Lord I Lift Your Name on High
+
+KEY NOTES
+• SKIP &quot;There's no God like Jehovah&quot; — we're time-conscious
+• Heavy intros, then drop out: that's our standard for instant dynamics
+• Drop dynamics in the verses, build into the chorus
+• Tempo: 105 BPM is the middle ground that works across all three medley songs">
           <div class="song-num">01</div>
           <div class="song-title">These Are the Days of Elijah</div>
           <div class="song-tag loading">Checking…</div>
+          <div class="song-direction"><span class="song-direction-label">Structure · Donnie McClurkin groove · 105 BPM</span>Opener for the medley. Slower than we normally play it.
+
+STRUCTURE
+• Intro: Chorus — heavy-handed, then drop out for instant dynamics
+• Verse 1 ("These are the days of Elijah")
+• Chorus ("Behold He comes") ×1
+• Verse 2 ("These are the days of Ezekiel")
+• Chorus ×2 on the second pass
+• Vamp (2 cycles) → transitions into Lord I Lift Your Name on High
+
+KEY NOTES
+• SKIP "There's no God like Jehovah" — we're time-conscious
+• Heavy intros, then drop out: our standard for instant dynamics
+• Drop dynamics in the verses, build into the chorus
+• 105 BPM is the middle ground that works across all three medley songs</div>
         </div>
 
-        <div class="song" data-title="Lord I Lift Your Name on High" data-direction="New Anthem Nights-style arrangement — &quot;Be Lifted High&quot; chord progression, same chords throughout. Enter from the Days of Elijah vamp: &quot;You came from heaven&quot; intro phrase ×1, then drop dynamics into the Verse, then &quot;You came from heaven&quot; chorus ×1, back to Verse, then Chorus ×2. Always drop dynamics in the verse and build into the chorus. Lead straight into Ancient of Days / Blessing and Honour — no break.">
+        <div class="song" data-title="Lord I Lift Your Name on High" data-direction="New Anthem Nights &quot;Be Lifted High&quot;-inspired arrangement. Same chord progression throughout the entire song (verse and chorus) — variation comes from dynamics and baseline, not chords. Synth brass texture defines the feel.
+
+STRUCTURE (entering from Days of Elijah vamp)
+• Vamp continues (2 cycles)
+• &quot;You came from heaven to earth&quot; intro phrase ×1
+• Drop into Verse 1 (&quot;Lord I lift your name on high&quot;) — dynamics low, band drops out
+• &quot;You came from heaven&quot; chorus ×1
+• Back to Verse (low dynamics again)
+• &quot;You came from heaven&quot; chorus ×2
+• Straight into Blessing and Honour — no break
+
+KEY NOTES
+• ALWAYS drop dynamics in verse, build into chorus
+• Same numbers, same progression — verse just gets the &quot;Don't know what you came to do&quot; treatment (Anthem Nights style: build it up, let the vocal breathe)
+• Adlib bar after &quot;I'm so glad you came to save us&quot; → &quot;Lord, I lift your name on high&quot; — this is where the verse repeats
+• Seamless transition into Ancient of Days — no count-in">
           <div class="song-num">02</div>
           <div class="song-title">Lord I Lift Your Name on High</div>
           <div class="song-tag loading">Checking…</div>
+          <div class="song-direction"><span class="song-direction-label">Structure · New Anthem Nights "Be Lifted High" arrangement</span>Same chord progression throughout the entire song. Variation comes from dynamics and baseline, not chords. Synth brass texture defines the feel.
+
+STRUCTURE (entering from Days of Elijah vamp)
+• Vamp continues (2 cycles)
+• "You came from heaven to earth" intro phrase ×1
+• Drop into Verse 1 ("Lord I lift your name on high") — dynamics low, band drops out
+• "You came from heaven" chorus ×1
+• Back to Verse (low dynamics again)
+• "You came from heaven" chorus ×2
+• Straight into Blessing and Honour — no break
+
+KEY NOTES
+• ALWAYS drop dynamics in verse, build into chorus
+• Same numbers, same progression — verse just gets the "Don't know what you came to do" treatment (Anthem Nights style: build it up, let the vocal breathe)
+• Adlib bar after "I'm so glad you came to save us" → "Lord, I lift your name on high" — this is where the verse repeats
+• Seamless transition into Ancient of Days — no count-in</div>
         </div>
 
-        <div class="song" data-title="Ancient of Days / Blessing and Honour" data-direction="Closes the praise medley. Structure: Blessing and Honour ×1 → &quot;Every tongue&quot; ×1 → Blessing and Honour ×1 → Chorus → &quot;Every tongue&quot; ×2 → &quot;Oh Ancient of Days&quot; ×4. Definitive ending — 1-6-7-1 crash. Sets the wall the praise lands against before worship.">
+        <div class="song" data-title="Ancient of Days / Blessing and Honour" data-direction="Closes the praise medley. Regular Blessing and Honour chord progression — not the &quot;Be Lifted High&quot; arrangement. Slowest of the three medley songs, locks at 105 BPM.
+
+STRUCTURE
+• Blessing and Honour (full verse: &quot;Glory and power be unto the Ancient of Days, from every nation, all of creation, bow before the Ancient of Days&quot;) ×1
+• &quot;Every tongue in heaven and earth shall declare your glory&quot; ×1
+• Blessing and Honour ×1
+• Chorus
+• &quot;Every tongue&quot; ×2
+• &quot;Oh Ancient of Days&quot; ×4 → definitive ending
+
+ENDING
+• 1-6-7-1 chord progression — crash on the one
+• This is the wall the praise lands against before worship
+• Heavy-handed, definitive — no abrupt drop, set it up properly so we don't crash without a runway">
           <div class="song-num">03</div>
           <div class="song-title">Ancient of Days / Blessing and Honour</div>
           <div class="song-tag loading">Checking…</div>
+          <div class="song-direction"><span class="song-direction-label">Structure · Standard chord progression · Definitive ending</span>Closes the praise medley. Regular Blessing and Honour chord progression — not the "Be Lifted High" arrangement. Slowest of the three medley songs.
+
+STRUCTURE
+• Blessing and Honour (full verse: "Glory and power be unto the Ancient of Days, from every nation, all of creation, bow before the Ancient of Days") ×1
+• "Every tongue in heaven and earth shall declare your glory" ×1
+• Blessing and Honour ×1
+• Chorus
+• "Every tongue" ×2
+• "Oh Ancient of Days" ×4 → definitive ending
+
+ENDING
+• 1-6-7-1 chord progression — crash on the one
+• This is the wall the praise lands against before worship
+• Heavy-handed, definitive — no abrupt drop, set it up properly so we don't crash without a runway</div>
         </div>
       </div>
 
@@ -836,27 +971,74 @@
           <div class="set-block-meta">Flexible · Room to breathe</div>
         </div>
 
-        <div class="song" data-title="Holy Spirit You Are Welcome Here" data-direction="Opens the worship set. Simple song — lets Uncle Caster lead freely. Pentecost Sunday: leave space for the Holy Spirit to move. Band sits underneath, vocals lead.">
+        <div class="song" data-title="Holy Spirit You Are Welcome Here" data-direction="Opens the worship set. Simple song, few lines — that's the point. Lets Uncle Caster lead freely.
+
+APPROACH
+• Pentecost Sunday: leave space for the Holy Spirit to move
+• No tight structure imposed — Uncle Caster leads, band supports
+• Band sits underneath, vocals carry it
+• Use this to lift the room from praise-energy into worship-posture">
           <div class="song-num">04</div>
           <div class="song-title">Holy Spirit You Are Welcome Here</div>
           <div class="song-tag loading">Checking…</div>
+          <div class="song-direction"><span class="song-direction-label">Opens worship · No fixed structure · Caster-led</span>Simple song, few lines — that's the point. Lets Uncle Caster lead freely.
+
+APPROACH
+• Pentecost Sunday: leave space for the Holy Spirit to move
+• No tight structure imposed — Uncle Caster leads, band supports
+• Band sits underneath, vocals carry it
+• Use this to lift the room from praise-energy into worship-posture</div>
         </div>
 
-        <div class="song" data-title="Atmosphere Shift" data-direction="Phil Thompson. Chorus: &quot;There is only one name… a God He's champion, He reigns forever more.&quot; Bridge: &quot;Atmosphere shift now, change me, broken break now, Holy Spirit come down, Heaven open over us.&quot; Simple song, few lines — sit in it and let it build.">
+        <div class="song" data-title="Atmosphere Shift" data-direction="Phil Thompson. Simple song with few lines — we've sung it for a while, the team knows it.
+
+LYRIC SHAPE
+• Verse / opening: &quot;There is only one name&quot;
+• Chorus: &quot;A God He's champion, He reigns forever more, forever more&quot;
+• Bridge: &quot;Atmosphere shift now, change me, broken break now, Holy Spirit come down, Heaven open over us&quot;
+
+APPROACH
+• Sit in it, let it build naturally
+• The bridge is the moment — give it room
+• Mariah knows it well — lean on her for the bridge">
           <div class="song-num">05</div>
           <div class="song-title">Atmosphere Shift</div>
           <div class="song-tag loading">Checking…</div>
+          <div class="song-direction"><span class="song-direction-label">Phil Thompson · Familiar song · Bridge is the moment</span>Simple song with few lines — we've sung it for a while, the team knows it.
+
+LYRIC SHAPE
+• Verse / opening: "There is only one name"
+• Chorus: "A God He's champion, He reigns forever more, forever more"
+• Bridge: "Atmosphere shift now, change me, broken break now, Holy Spirit come down, Heaven open over us"
+
+APPROACH
+• Sit in it, let it build naturally
+• The bridge is the moment — give it room
+• Mariah knows it well — lean on her for the bridge</div>
         </div>
 
-        <div class="song" data-title="Spirit Break Out" data-direction="William McDowell. Closes the worship set. We've done this for years — let it stretch and breathe on Pentecost. Follow Uncle Caster's lead on length and spontaneous moments.">
+        <div class="song" data-title="Spirit Break Out" data-direction="William McDowell. Closes the worship set. We've been doing this song for years — the team knows it cold.
+
+APPROACH
+• Let it stretch and breathe — this is Pentecost
+• Follow Uncle Caster's lead on length and spontaneous moments
+• Worship section is intentionally flexible — no rigid structure imposed
+• If the atmosphere is heavy, sit in it. Don't rush to the next thing.">
           <div class="song-num">06</div>
           <div class="song-title">Spirit Break Out</div>
           <div class="song-tag loading">Checking…</div>
+          <div class="song-direction"><span class="song-direction-label">William McDowell · Long-form · Closes worship</span>We've been doing this song for years — the team knows it cold.
+
+APPROACH
+• Let it stretch and breathe — this is Pentecost
+• Follow Uncle Caster's lead on length and spontaneous moments
+• Worship section is intentionally flexible — no rigid structure imposed
+• If the atmosphere is heavy, sit in it. Don't rush to the next thing.</div>
         </div>
       </div>
 
       <div class="ref-hint">
-        <strong>Practise structure on this page.</strong> Each song row carries the arrangement direction from Monday night's prep call — tap a song to expand. Inline practise audio will be wired once arrangements land in the Rehearsal Studio. Virtual rehearsal scheduled for Thursday.
+        <strong>Practise structure on this page.</strong> Each song row carries the arrangement direction from Monday night's prep call (18 May) — tap a song to expand the full structure and dynamic notes. Inline practise audio will be wired once arrangements land in the Rehearsal Studio. Virtual rehearsal scheduled for Thursday.
       </div>
 
     </section>
@@ -1720,7 +1902,14 @@
               tag.classList.add('no-ref');
             }
             row.classList.add('has-ref');
-            row.addEventListener('click', () => window.open(studioUrl, '_blank'));
+            // Click on the tag (not the whole row) opens the Rehearsal Studio.
+            // The row itself stays static so users can read the structure
+            // notes printed inline below without accidentally launching a tab.
+            tag.style.cursor = 'pointer';
+            tag.addEventListener('click', (e) => {
+              e.stopPropagation();
+              window.open(studioUrl, '_blank');
+            });
           });
         } catch (err) {
           console.warn('Library lookup failed:', err);
