@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>Set Runthrough — Pentecost Sunday 24 May 2026 | Calvary</title>
+
+    <meta name="description" content="Band-facing set runthrough for Pentecost Sunday 24 May 2026. Per-musician notes on each of the 6 songs in the Pentecost set, with the band discipline principles from the worship pack.">
+    <meta name="theme-color" content="#1e1b4b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pentecost Set">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Calvary Hephzibah">
+    <meta property="og:title" content="Set Runthrough — Pentecost Sunday 24 May 2026">
+    <meta property="og:description" content="Pentecost Sunday. Six songs. What each part is carrying — drums, bass, keys, guitar, lead, BVs. Companion to the Worship Pack.">
+    <meta property="og:url" content="https://calvaryhfgc.github.io/calvaryhephzibah/set-runthrough-24-may-2026/">
+    <meta property="og:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/set-runthrough-24-may-2026/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/set-runthrough-24-may-2026/og-card.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --purple: #6B46C1;
+            --purple-deep: #4C1D95;
+            --indigo: #1e1b4b;
+            --blue: #3B82F6;
+            --gold: #D4A017;
+            --gold-soft: #FCD34D;
+            --rose: #E11D48;
+            --green: #22C55E;
+            --bg: #FAFAFA;
+            --card: #FFFFFF;
+            --ink: #0F172A;
+            --ink-2: #334155;
+            --ink-3: #64748B;
+            --ink-4: #94A3B8;
+            --line: #E2E8F0;
+            --line-soft: #F1F5F9;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --topbar: 56px;
+            --bottombar: 72px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior: none;
+        }
+
+        body {
+            font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.5;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            position: fixed;
+            inset: 0;
+        }
+
+        /* ───── Top bar ───── */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: calc(var(--topbar) + var(--safe-top));
+            padding-top: var(--safe-top);
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: saturate(180%) blur(14px);
+            -webkit-backdrop-filter: saturate(180%) blur(14px);
+            border-bottom: 1px solid var(--line);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+        .topbar .title {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--ink-2);
+        }
+        .topbar .menu-btn {
+            background: transparent;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-2);
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .topbar .menu-btn:hover { background: var(--line-soft); }
+        .topbar .menu-btn svg { width: 22px; height: 22px; }
+
+        .topbar .progress {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple-deep), var(--blue));
+            width: 0;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ───── Slide deck ───── */
+        .deck {
+            position: fixed;
+            top: calc(var(--topbar) + var(--safe-top));
+            bottom: calc(var(--bottombar) + var(--safe-bottom));
+            left: 0; right: 0;
+            display: flex;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+        .deck::-webkit-scrollbar { display: none; }
+
+        .slide {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 20px 18px;
+            position: relative;
+        }
+        .slide::-webkit-scrollbar { width: 4px; }
+        .slide::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+
+        @media (min-width: 720px) {
+            .slide { padding: 32px 32px; }
+            .slide-inner { max-width: 600px; margin: 0 auto; }
+        }
+
+        .slide-eyebrow {
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+        .slide h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .slide h2.slide-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+        .slide .slide-sub {
+            color: var(--ink-3);
+            font-size: 0.92rem;
+            margin-bottom: 18px;
+        }
+
+        /* ───── Slide 1: Cover ───── */
+        .slide.cover {
+            background: linear-gradient(160deg, var(--indigo) 0%, var(--purple-deep) 50%, var(--blue) 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            padding: 30px 28px;
+        }
+        .slide.cover::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+        .slide.cover > * { position: relative; z-index: 1; }
+        .cover-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.13);
+            border: 1px solid rgba(255,255,255,0.22);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin: 0 auto 22px;
+        }
+        .slide.cover h1 {
+            font-size: clamp(2.2rem, 9vw, 3rem);
+            margin-bottom: 10px;
+            color: white;
+        }
+        .slide.cover h1 em {
+            color: var(--gold-soft);
+            font-style: italic;
+        }
+        .cover-date {
+            font-size: 1.02rem;
+            opacity: 0.88;
+            margin-bottom: 26px;
+        }
+        .cover-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0;
+            max-width: 360px;
+            margin: 0 auto 28px;
+            padding: 16px 0;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+        .cover-stats > div { text-align: center; }
+        .cover-stats .num {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--gold-soft);
+            line-height: 1;
+        }
+        .cover-stats .lbl {
+            font-size: 0.66rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.65);
+            margin-top: 4px;
+        }
+        .cover-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: white;
+            color: var(--purple-deep);
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            margin: 0 auto;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+            border: none;
+            cursor: pointer;
+        }
+        .cover-cta:active { transform: scale(0.97); }
+        .cover-hint {
+            font-size: 0.74rem;
+            color: rgba(255,255,255,0.55);
+            margin-top: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        /* ───── Slide 2: Top notes ───── */
+        .top-notes-list {
+            display: grid;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .top-note {
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid #FCD34D;
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+        }
+        .top-note .nm {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--gold);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.84rem;
+            flex-shrink: 0;
+            padding-top: 4px;
+        }
+        .top-note p {
+            font-size: 0.92rem;
+            color: #4a3a10;
+            line-height: 1.45;
+            flex: 1;
+        }
+        .top-note p strong { color: #78350F; font-weight: 700; }
+
+        /* ───── Slide 3: Setlist ───── */
+        .setlist-compact {
+            background: var(--card);
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            overflow: hidden;
+        }
+        .sl-divider {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px 4px;
+            background: var(--line-soft);
+        }
+        .sl-divider .lbl {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--purple-deep);
+        }
+        .sl-divider .ln { flex: 1; height: 1px; background: var(--line); }
+        .sl-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line-soft);
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .sl-row:last-child { border-bottom: none; }
+        .sl-row:active { background: var(--line-soft); }
+        .sl-row .num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            background: var(--purple);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.78rem;
+            flex-shrink: 0;
+        }
+        .sl-row.muted .num { background: var(--ink-4); }
+        .sl-row .nm { flex: 1; min-width: 0; }
+        .sl-row .nm-name {
+            font-weight: 600;
+            font-size: 0.94rem;
+            line-height: 1.25;
+        }
+        .sl-row .nm-sub {
+            font-size: 0.78rem;
+            color: var(--ink-3);
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        .sl-row .nm-flag {
+            display: inline-flex;
+            font-size: 0.7rem;
+            color: var(--rose);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+            text-transform: uppercase;
+        }
+        .sl-row .key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 38px;
+            height: 28px;
+            padding: 0 10px;
+            background: var(--line-soft);
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.86rem;
+            color: var(--purple-deep);
+            font-family: 'Playfair Display', serif;
+            flex-shrink: 0;
+        }
+        .sl-row .key.tbc {
+            background: transparent;
+            border: 1px dashed var(--line);
+            color: var(--ink-4);
+            font-style: italic;
+            font-weight: 500;
+            font-size: 0.7rem;
+            font-family: 'Source Sans 3', sans-serif;
+        }
+
+        /* ───── Song detail slides ───── */
+        .song-hero {
+            background: linear-gradient(135deg, var(--purple-deep) 0%, var(--blue) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .song-hero.gold { background: linear-gradient(135deg, #92400E 0%, var(--gold) 100%); }
+        .song-hero.rose { background: linear-gradient(135deg, #9F1239 0%, var(--rose) 100%); }
+
+        .song-hero .pos {
+            font-size: 0.66rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 6px;
+        }
+        .song-hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 12px;
+        }
+        .song-hero .meta-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .song-hero .key-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.18);
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .song-hero .key-pill .k {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 0.92rem;
+        }
+
+        /* Filter chips */
+        .filter-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding: 10px 0 14px;
+            margin-bottom: 0;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+        }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .filter-bar .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 7px 14px;
+            border-radius: 100px;
+            background: var(--line-soft);
+            color: var(--ink-2);
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        .filter-bar .chip[aria-pressed="true"] {
+            background: var(--purple-deep);
+            color: white;
+            border-color: var(--purple-deep);
+        }
+
+        /* Quick block: "the move" */
+        .move-block {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .move-block .lbl {
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--purple);
+            margin-bottom: 6px;
+        }
+        .move-block p {
+            font-size: 0.92rem;
+            color: var(--ink-2);
+            line-height: 1.5;
+        }
+
+        /* Per-part list */
+        .parts-list {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .part-item {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 12px 14px;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .part-item.flag { border-left: 3px solid var(--rose); }
+        .part-item .role {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .part-item .role-name {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--purple);
+        }
+        .part-item.flag .role-name { color: var(--rose); }
+        .part-item .musician {
+            font-size: 0.78rem;
+            color: var(--ink-3);
+            font-weight: 500;
+        }
+        .part-item p {
+            font-size: 0.88rem;
+            color: var(--ink-2);
+            line-height: 1.5;
+        }
+        .part-item.dim {
+            display: none;
+        }
+
+        /* Audio block — minimised by default */
+        .listen-toggle {
+            background: var(--line-soft);
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            cursor: pointer;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--ink-2);
+            width: 100%;
+        }
+        .listen-toggle:active { background: #E2E8F0; }
+        .listen-toggle .ico {
+            font-size: 1rem;
+        }
+        .listen-toggle .arrow {
+            margin-left: auto;
+            color: var(--ink-4);
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+        .listen-toggle.open .arrow { transform: rotate(180deg); }
+
+        .listen-content {
+            display: none;
+            background: var(--line-soft);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 6px;
+        }
+        .listen-content.open { display: block; }
+        .listen-content .audio-row {
+            margin-bottom: 8px;
+        }
+        .listen-content .audio-row:last-child { margin-bottom: 0; }
+        .listen-content .clip-label {
+            font-size: 0.74rem;
+            color: var(--ink-3);
+            font-weight: 600;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .listen-content audio {
+            width: 100%;
+            height: 36px;
+        }
+        .listen-content .note {
+            font-size: 0.74rem;
+            color: var(--ink-3);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        /* Watch-for block */
+        .watch-block {
+            background: #FEF2F2;
+            border-left: 3px solid var(--rose);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-top: 12px;
+        }
+        .watch-block .lbl {
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #991B1B;
+            margin-bottom: 4px;
+        }
+        .watch-block p {
+            font-size: 0.86rem;
+            color: #7F1D1D;
+            line-height: 1.45;
+        }
+
+        /* ───── Actions slide ───── */
+        .actions-list {
+            display: grid;
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .action-item {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+        }
+        .action-item .check {
+            width: 22px; height: 22px;
+            border: 2px solid var(--ink-4);
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .action-item .body { flex: 1; }
+        .action-item .body p {
+            font-size: 0.92rem;
+            color: var(--ink);
+            line-height: 1.4;
+        }
+        .action-item .body p strong { font-weight: 700; }
+        .action-item .body .who {
+            display: inline-block;
+            font-size: 0.66rem;
+            font-weight: 700;
+            background: #EDE9FE;
+            color: var(--purple-deep);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-top: 6px;
+            letter-spacing: 0.4px;
+        }
+
+        /* ───── Audio slide ───── */
+        .recording-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .recording-card .r-label {
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .recording-card .r-num {
+            background: var(--purple);
+            color: white;
+            font-size: 0.66rem;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-weight: 700;
+        }
+        .recording-card .r-context {
+            font-size: 0.78rem;
+            color: var(--ink-3);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .recording-card audio {
+            width: 100%;
+            height: 36px;
+        }
+
+        /* ───── Anniversary slide ───── */
+        .anniversary-card {
+            background: linear-gradient(135deg, var(--indigo) 0%, var(--purple-deep) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 22px;
+        }
+        .anniversary-card .label {
+            display: inline-block;
+            background: rgba(252,211,77,0.2);
+            color: var(--gold-soft);
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 100px;
+            margin-bottom: 12px;
+        }
+        .anniversary-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        .anniversary-card p {
+            font-size: 0.88rem;
+            opacity: 0.88;
+            line-height: 1.55;
+            margin-bottom: 10px;
+        }
+        .anniversary-card p:last-child { margin-bottom: 0; }
+        .anniversary-card strong { color: var(--gold-soft); font-weight: 600; }
+        .anniversary-card .todo {
+            font-size: 0.78rem;
+            opacity: 0.7;
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        /* ───── Bottom navigation ───── */
+        .bottombar {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            height: calc(var(--bottombar) + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: saturate(180%) blur(14px);
+            -webkit-backdrop-filter: saturate(180%) blur(14px);
+            border-top: 1px solid var(--line);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            background: var(--line-soft);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--ink-2);
+            flex-shrink: 0;
+        }
+        .nav-btn:active { background: var(--line); }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .nav-btn svg { width: 22px; height: 22px; }
+        .nav-btn.next {
+            background: var(--purple-deep);
+            color: white;
+        }
+        .nav-btn.next:active { background: var(--indigo); }
+
+        /* Dot indicator */
+        .dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 0 8px;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--line);
+            transition: all 0.2s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .dot.active {
+            background: var(--purple-deep);
+            width: 22px;
+            border-radius: 100px;
+        }
+
+        .slide-counter {
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--ink-3);
+            min-width: 40px;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ───── Menu (overlay) ───── */
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+        .menu-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .menu-panel {
+            position: fixed;
+            top: 0; right: 0; bottom: 0;
+            width: min(320px, 85vw);
+            background: var(--card);
+            z-index: 201;
+            transform: translateX(100%);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+        }
+        .menu-panel.open { transform: translateX(0); }
+        .menu-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-header .h {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+        .menu-close {
+            background: var(--line-soft);
+            border: none;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--ink-2);
+        }
+        .menu-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            font-size: 0.94rem;
+            color: var(--ink);
+            font-family: inherit;
+        }
+        .menu-item:active { background: var(--line-soft); }
+        .menu-item.active {
+            background: #EDE9FE;
+            color: var(--purple-deep);
+            font-weight: 600;
+        }
+        .menu-item .menu-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--line-soft);
+            color: var(--ink-3);
+            border-radius: 50%;
+            font-size: 0.74rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .menu-item.active .menu-num {
+            background: var(--purple-deep);
+            color: white;
+        }
+        .menu-item .menu-name { flex: 1; }
+        .menu-item .menu-key {
+            font-size: 0.72rem;
+            color: var(--ink-3);
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+        }
+        .menu-divider {
+            height: 1px;
+            background: var(--line);
+            margin: 8px 0;
+        }
+        .menu-section-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 1.6px;
+            text-transform: uppercase;
+            color: var(--ink-4);
+            padding: 12px 20px 6px;
+        }
+
+        .keyboard-hint {
+            display: none;
+        }
+        @media (min-width: 720px) and (hover: hover) {
+            .keyboard-hint {
+                display: block;
+                position: fixed;
+                bottom: calc(var(--bottombar) + var(--safe-bottom) + 12px);
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.72rem;
+                color: var(--ink-4);
+                background: rgba(255,255,255,0.9);
+                padding: 4px 10px;
+                border-radius: 100px;
+                pointer-events: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top bar -->
+    <div class="topbar">
+        <div class="title">Pentecost Set · 24 May</div>
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- Slide deck -->
+    <div class="deck" id="deck">
+
+        <!-- ──────── 1: Cover ──────── -->
+        <section class="slide cover" data-title="Cover">
+            <div class="cover-badge">Worship · Set Runthrough</div>
+            <h1>Pentecost <em>Sunday</em></h1>
+            <div class="cover-date">Sunday 24 May 2026 · band-facing notes</div>
+            <div class="cover-stats">
+                <div><div class="num">6</div><div class="lbl">Songs</div></div>
+                <div><div class="num">105</div><div class="lbl">Medley BPM</div></div>
+                <div><div class="num">9am</div><div class="lbl">Call</div></div>
+            </div>
+            <button class="cover-cta" onclick="goSlide(1)">
+                Start
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </button>
+            <div class="cover-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 5l7 7-7 7M3 12h18"/></svg>
+                Companion to the <a href="../worship-pack-24-may-2026.html" style="color: inherit; text-decoration: underline;">Worship Pack</a>
+            </div>
+        </section>
+
+        <!-- ──────── 2: Top notes ──────── -->
+        <section class="slide" data-title="Top notes">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">⚡ Read this first</div>
+                <h2 class="slide-title">The four things that matter most</h2>
+                <p class="slide-sub">Lock these in before Sunday. Everything else is detail.</p>
+                <div class="top-notes-list">
+                    <div class="top-note">
+                        <div class="nm">1</div>
+                        <p><strong>Praise medley locks at 105 BPM.</strong> All three medley songs — Days of Elijah, Lord I Lift Your Name, Ancient of Days / Blessing and Honour — sit at 105. That's slower than we'd normally do Days of Elijah and slightly faster than we'd normally do Blessing and Honour. 105 is the middle ground that makes the medley seamless.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">2</div>
+                        <p><strong>Seamless transitions in the medley — no count-ins between songs.</strong> Days of Elijah vamps into Lord I Lift Your Name. Lord I Lift Your Name flows straight into Ancient of Days. The whole medley is one ride. Drummer especially: don't count in the next song.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">3</div>
+                        <p><strong>Heavy intros, then drop out. Build into the chorus, every time.</strong> This is the band discipline for the whole set. Verses are quiet, choruses are full. Don't pre-build. The dynamic gap between verse and chorus is what makes the set feel alive.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">4</div>
+                        <p><strong>Worship is flexible.</strong> Praise is locked, worship breathes. Holy Spirit You Are Welcome Here · Atmosphere Shift · Spirit Break Out are Pentecost songs — Caster leads, band follows. If the room sits in something, sit with it. Don't rush to the next thing.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 3: Setlist ──────── -->
+        <section class="slide" data-title="Set list">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">Set list · Pentecost Sunday</div>
+                <h2 class="slide-title">The order</h2>
+                <p class="slide-sub">Tap a row to jump to its detail.</p>
+                <div class="setlist-compact">
+                    <div class="sl-divider"><div class="lbl">Praise Medley · 105 BPM · seamless</div><div class="ln"></div></div>
+                    <a class="sl-row" onclick="goSlide(3)">
+                        <span class="num">1</span>
+                        <div class="nm"><div class="nm-name">These Are the Days of Elijah</div><div class="nm-sub">Donnie McClurkin groove</div></div>
+                        <span class="key">105</span>
+                    </a>
+                    <a class="sl-row" onclick="goSlide(4)">
+                        <span class="num">2</span>
+                        <div class="nm"><div class="nm-name">Lord I Lift Your Name on High</div><div class="nm-sub">Anthem Nights arrangement</div></div>
+                        <span class="key">105</span>
+                    </a>
+                    <a class="sl-row" onclick="goSlide(5)">
+                        <span class="num">3</span>
+                        <div class="nm"><div class="nm-name">Ancient of Days / Blessing and Honour</div><div class="nm-sub">Definitive ending</div></div>
+                        <span class="key">105</span>
+                    </a>
+                    <div class="sl-divider"><div class="lbl">Worship · flexible · Caster-led</div><div class="ln"></div></div>
+                    <a class="sl-row" onclick="goSlide(6)">
+                        <span class="num">4</span>
+                        <div class="nm"><div class="nm-name">Holy Spirit You Are Welcome Here</div><div class="nm-sub">Opens worship</div></div>
+                        <span class="key tbc">flex</span>
+                    </a>
+                    <a class="sl-row" onclick="goSlide(7)">
+                        <span class="num">5</span>
+                        <div class="nm"><div class="nm-name">Atmosphere Shift</div><div class="nm-sub">Phil Thompson · bridge is the moment</div></div>
+                        <span class="key tbc">flex</span>
+                    </a>
+                    <a class="sl-row" onclick="goSlide(8)">
+                        <span class="num">6</span>
+                        <div class="nm"><div class="nm-name">Spirit Break Out</div><div class="nm-sub">William McDowell · let it stretch</div></div>
+                        <span class="key tbc">flex</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 4: Days of Elijah ──────── -->
+        <section class="slide" data-title="Days of Elijah">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Praise medley · 1 of 3</div>
+                    <h2>These Are the Days of Elijah</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">BPM <span class="k">105</span></span>
+                        <span class="key-pill">⚠ Slower than usual</span>
+                    </div>
+                </div>
+
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                    <button class="chip" data-filter="guitar">Guitar</button>
+                    <button class="chip" data-filter="keys">Keys</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>Intro: full chorus heavy-handed, then drop out. Verse 1 ("Days of Elijah") low dynamics. Chorus ("Behold He comes") ×1. Verse 2 ("Days of Ezekiel"). Chorus ×2 on the second pass. Vamp (2 cycles) → straight into Lord I Lift Your Name.</p>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The principle</div>
+                    <p>105 BPM is the Donnie McClurkin pocket — slower than we'd normally play this. Don't drift up. <strong>Skip "There's no God like Jehovah"</strong> — we're time-conscious. Heavy intro, drop out, dynamic build is the template for the whole medley.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item flag" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">TBC</span></div>
+                        <p>Intro: full hits. Drop right out for verse 1 — kick only, hi-hat closed. Build through chorus. <strong>Hold 105 — don't push.</strong> Vamp at the end stays steady; no count-in into the next song.</p>
+                    </div>
+                    <div class="part-item flag" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">BJ (if drummer found) / TBC</span></div>
+                        <p>Drop out with drums on verse 1. Come back in on the chorus. The vamp is yours and the drummer's — keep it locked while keys and guitar fade Days of Elijah out and Lord I Lift Your Name fades in.</p>
+                    </div>
+                    <div class="part-item" data-part="keys">
+                        <div class="role"><span class="role-name">Keys</span><span class="musician">Eddie (confirming)</span></div>
+                        <p>Heavy on the intro chorus. Pad through verse — quiet. Lift on choruses. On the vamp, start to introduce the Lord I Lift Your Name texture.</p>
+                    </div>
+                    <div class="part-item" data-part="guitar">
+                        <div class="role"><span class="role-name">Guitar</span><span class="musician">Morayo</span></div>
+                        <p>Rhythm chords. Match the dynamic — back on verse, full on chorus. If Eddie isn't there, you carry more of the harmonic weight on the verses.</p>
+                    </div>
+                    <div class="part-item" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Uncle Caster</span></div>
+                        <p>You set the pocket. Skip "There's no God like Jehovah" — it's a time call, not a vocal call. Land the second chorus full, then ride the vamp into Lord I Lift Your Name.</p>
+                    </div>
+                    <div class="part-item" data-part="vocals">
+                        <div class="role"><span class="role-name">BVs</span><span class="musician">Esther + (TBC × 2)</span></div>
+                        <p>Out on verses, full on choruses. Match Caster's dynamic — when he pulls back, you pull back.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 5: Lord I Lift Your Name ──────── -->
+        <section class="slide" data-title="Lord I Lift Your Name">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Praise medley · 2 of 3</div>
+                    <h2>Lord I Lift Your Name on High</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">BPM <span class="k">105</span></span>
+                        <span class="key-pill">Anthem Nights "Be Lifted High"</span>
+                    </div>
+                </div>
+
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                    <button class="chip" data-filter="guitar">Guitar</button>
+                    <button class="chip" data-filter="keys">Keys</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>Coming in off the Days of Elijah vamp (no count-in). Vamp continues 2 cycles. "You came from heaven to earth" intro phrase ×1. Drop into verse 1 ("Lord I lift your name") — dynamics low, band almost out. Chorus ×1. Verse again (low). Chorus ×2. Straight into Ancient of Days — no break.</p>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The principle</div>
+                    <p>Same chord progression all the way through — verse and chorus. Variation lives in <em>dynamics and baseline</em>, not chords. Synth brass texture defines the feel. Drop dynamics in verse, build into chorus, every time. Adlib bar after "I'm so glad you came to save us" → back to "Lord, I lift your name on high".</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item flag" data-part="keys">
+                        <div class="role"><span class="role-name">Keys</span><span class="musician">Eddie (confirming)</span></div>
+                        <p><strong>You define this arrangement.</strong> Synth brass on the chorus is the signature. Pad under the verse, switch texture on the chorus. If you're not there, this song loses a lot of its identity — Morayo and Caster will need to fill that space.</p>
+                    </div>
+                    <div class="part-item flag" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">BJ / TBC</span></div>
+                        <p>The variation is in your baseline. Same progression, different feel between verse and chorus. Pull back on verses (long notes, root only), drive on choruses (eighths, walking).</p>
+                    </div>
+                    <div class="part-item" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">TBC</span></div>
+                        <p>Pull right back on the verse — kick + hi-hat. Build into chorus. Hold 105 with bass. Final chorus ×2 builds to a hand-off into Ancient of Days — no fill, just a sustained crash that resolves into the next song.</p>
+                    </div>
+                    <div class="part-item" data-part="guitar">
+                        <div class="role"><span class="role-name">Guitar</span><span class="musician">Morayo</span></div>
+                        <p>Sustained chords. Match keys on the texture shift — verse quiet, chorus full. If Eddie isn't there, lean into chord voicing to fill the brass space.</p>
+                    </div>
+                    <div class="part-item" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Uncle Caster</span></div>
+                        <p>The verse is intimate — let it breathe, don't push. Anthem Nights treatment on "Don't know what you came to do". Adlib bar after "I'm so glad you came to save us" sets up the verse repeat.</p>
+                    </div>
+                    <div class="part-item" data-part="vocals">
+                        <div class="role"><span class="role-name">BVs</span><span class="musician">Esther + (TBC × 2)</span></div>
+                        <p>Out on the verses. Join Caster on the chorus. Big on the final chorus ×2 — this is the lift before we land into Ancient of Days.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 6: Ancient of Days ──────── -->
+        <section class="slide" data-title="Ancient of Days">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Praise medley · 3 of 3</div>
+                    <h2>Ancient of Days / Blessing and Honour</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">BPM <span class="k">105</span></span>
+                        <span class="key-pill">⚠ Definitive ending</span>
+                    </div>
+                </div>
+
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                    <button class="chip" data-filter="guitar">Guitar</button>
+                    <button class="chip" data-filter="keys">Keys</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>Standard Blessing and Honour chord progression — <em>not</em> the Anthem Nights arrangement. Blessing and Honour verse ×1. "Every tongue in heaven and earth" ×1. Blessing and Honour ×1. Chorus. "Every tongue" ×2. "Oh Ancient of Days" ×4 → definitive ending: 1-6-7-1 progression, crash on the one.</p>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The principle</div>
+                    <p>This is the wall the praise medley lands against. <strong>Set the ending up properly</strong> — don't crash without a runway. Heavy-handed, definitive. Slowest of the three medley songs but still locked at 105. This is the bridge moment before the room shifts into worship.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item flag" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">TBC</span></div>
+                        <p><strong>The ending is yours.</strong> Set up the 1-6-7-1 — give us a fill that signals the crash is coming. Don't surprise the band with the ending. Land the crash on the one — definitive, not abrupt.</p>
+                    </div>
+                    <div class="part-item flag" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">BJ / TBC</span></div>
+                        <p>Walk the 1-6-7-1 with drums on the ending. Heavy notes, full sustain. End the praise medley on the one alongside the crash.</p>
+                    </div>
+                    <div class="part-item" data-part="keys">
+                        <div class="role"><span class="role-name">Keys</span><span class="musician">Eddie (confirming)</span></div>
+                        <p>Switch off the Anthem Nights texture — this is the Blessing and Honour arrangement. Full chords through. Hold the final 1 — sustain it as the room shifts.</p>
+                    </div>
+                    <div class="part-item" data-part="guitar">
+                        <div class="role"><span class="role-name">Guitar</span><span class="musician">Morayo</span></div>
+                        <p>Big strums, heavy-handed for "Oh Ancient of Days" ×4. Crash on the one with the band.</p>
+                    </div>
+                    <div class="part-item" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Uncle Caster</span></div>
+                        <p>"Oh Ancient of Days" ×4 is yours to drive — make sure the band hears the lift on each repeat. After the crash, let the room sit before you start Holy Spirit. <strong>Don't rush into worship</strong> — the gap is sacred.</p>
+                    </div>
+                    <div class="part-item" data-part="vocals">
+                        <div class="role"><span class="role-name">BVs</span><span class="musician">Esther + (TBC × 2)</span></div>
+                        <p>Full voice through. Big on the "Oh Ancient of Days" ×4. Hold the final note with Caster.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 7: Holy Spirit ──────── -->
+        <section class="slide" data-title="Holy Spirit Welcome">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Worship · 1 of 3</div>
+                    <h2>Holy Spirit You Are Welcome Here</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">Flexible</span>
+                        <span class="key-pill">Caster-led · no fixed structure</span>
+                    </div>
+                </div>
+
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                    <button class="chip" data-filter="guitar">Guitar</button>
+                    <button class="chip" data-filter="keys">Keys</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>Simple song, few lines — that's the point. No fixed structure: Caster leads, band supports. Use it to lift the room from praise-energy into worship-posture. It's Pentecost — leave space for the Holy Spirit to move.</p>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The principle</div>
+                    <p>Band sits underneath. Vocals carry it. If the room sits in a line, sit with the room. Don't push forward to fill silence. Silence is part of the worship.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item flag" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Uncle Caster</span></div>
+                        <p>You set the pace and shape. Stay in a line as long as the room is in it. Repeat a phrase if the moment calls for it. The band reads you.</p>
+                    </div>
+                    <div class="part-item" data-part="keys">
+                        <div class="role"><span class="role-name">Keys</span><span class="musician">Eddie (confirming)</span></div>
+                        <p>Sustained pad underneath. No movement. You're holding atmosphere, not adding texture.</p>
+                    </div>
+                    <div class="part-item" data-part="guitar">
+                        <div class="role"><span class="role-name">Guitar</span><span class="musician">Morayo</span></div>
+                        <p>Long, sustained chords or out entirely. If keys are absent, you take the pad role.</p>
+                    </div>
+                    <div class="part-item" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">TBC</span></div>
+                        <p>Out, or hi-hat only on the very softest touch. Don't groove this. Hold the room.</p>
+                    </div>
+                    <div class="part-item" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">BJ / TBC</span></div>
+                        <p>Out, or sustained root only. No movement.</p>
+                    </div>
+                    <div class="part-item" data-part="vocals">
+                        <div class="role"><span class="role-name">BVs</span><span class="musician">Esther + (TBC × 2)</span></div>
+                        <p>Soft harmony following Caster. Don't lead — follow. If Caster holds a line, hold with him.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 8: Atmosphere Shift ──────── -->
+        <section class="slide" data-title="Atmosphere Shift">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Worship · 2 of 3</div>
+                    <h2>Atmosphere Shift</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">Phil Thompson</span>
+                        <span class="key-pill">⚠ Bridge is the moment</span>
+                    </div>
+                </div>
+
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                    <button class="chip" data-filter="guitar">Guitar</button>
+                    <button class="chip" data-filter="keys">Keys</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>Verse: "There is only one name". Chorus: "A God He's champion, He reigns forever more, forever more". Bridge: "Atmosphere shift now, change me, broken break now, Holy Spirit come down, Heaven open over us". Let it build naturally — don't rush.</p>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The principle</div>
+                    <p>The bridge is the song. Everything before it is set-up. Sit in the bridge — repeat lines if the room is in it. <strong>Morayo knows it well — lean on her on the bridge.</strong></p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item flag" data-part="guitar">
+                        <div class="role"><span class="role-name">Guitar</span><span class="musician">Morayo</span></div>
+                        <p>You know this song. Drive the bridge — your part lifts the band when "Atmosphere shift now" comes around. Don't hold back.</p>
+                    </div>
+                    <div class="part-item flag" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Uncle Caster</span></div>
+                        <p>Build through verse and chorus. Open up on the bridge. If the room is in "Heaven open over us", repeat it. Don't rush to land it.</p>
+                    </div>
+                    <div class="part-item" data-part="keys">
+                        <div class="role"><span class="role-name">Keys</span><span class="musician">Eddie (confirming)</span></div>
+                        <p>Pad through verse and chorus. Open up texturally on the bridge — pad swells, big chords. This is where keys shine.</p>
+                    </div>
+                    <div class="part-item" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">TBC</span></div>
+                        <p>Quiet groove on verse. Lift on chorus. Open up properly on the bridge — toms, crashes, full kit. Settle back if Caster pulls it down for a repeat.</p>
+                    </div>
+                    <div class="part-item" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">BJ / TBC</span></div>
+                        <p>Walk the verse. Lock the chorus. Drive the bridge — eighths or quarters, full sustain.</p>
+                    </div>
+                    <div class="part-item" data-part="vocals">
+                        <div class="role"><span class="role-name">BVs</span><span class="musician">Esther + (TBC × 2)</span></div>
+                        <p>Big on the chorus. Full voice on the bridge — "Holy Spirit come down" is everyone's line.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 9: Spirit Break Out ──────── -->
+        <section class="slide" data-title="Spirit Break Out">
+            <div class="slide-inner">
+                <div class="song-hero">
+                    <div class="pos">Worship · 3 of 3 · Closer</div>
+                    <h2>Spirit Break Out</h2>
+                    <div class="meta-row">
+                        <span class="key-pill">William McDowell</span>
+                        <span class="key-pill">Long-form · let it stretch</span>
+                    </div>
+                </div>
+
+                <div class="filter-bar" data-filter-bar>
+                    <button class="chip" aria-pressed="true" data-filter="all">All</button>
+                    <button class="chip" data-filter="drums">Drums</button>
+                    <button class="chip" data-filter="bass">Bass</button>
+                    <button class="chip" data-filter="vocals">Vocals</button>
+                    <button class="chip" data-filter="lead">Lead</button>
+                    <button class="chip" data-filter="guitar">Guitar</button>
+                    <button class="chip" data-filter="keys">Keys</button>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The shape</div>
+                    <p>We've been doing this for years — the team knows it cold. No imposed structure. Caster leads, band follows. Build, stretch, hold, repeat. Land it when Caster lands it.</p>
+                </div>
+
+                <div class="move-block">
+                    <div class="lbl">The principle</div>
+                    <p>It's Pentecost. Let it stretch and breathe. <strong>If the atmosphere is heavy, sit in it.</strong> Don't rush to the next thing. There is no next thing — this is the end of worship.</p>
+                </div>
+
+                <div class="parts-list">
+                    <div class="part-item flag" data-part="lead">
+                        <div class="role"><span class="role-name">Lead</span><span class="musician">Uncle Caster</span></div>
+                        <p>You decide how long this song lives for. If you want to stretch it, the band is with you. If you want to repeat "Spirit break out", repeat. Land it when you're ready.</p>
+                    </div>
+                    <div class="part-item" data-part="keys">
+                        <div class="role"><span class="role-name">Keys</span><span class="musician">Eddie (confirming)</span></div>
+                        <p>Pad through. Open up on the chorus. Hold the texture if Caster sits in a line.</p>
+                    </div>
+                    <div class="part-item" data-part="drums">
+                        <div class="role"><span class="role-name">Drums</span><span class="musician">TBC</span></div>
+                        <p>Watch Caster. If he lifts, you lift. If he holds, you hold. Builds and drops can repeat as many times as the room needs.</p>
+                    </div>
+                    <div class="part-item" data-part="bass">
+                        <div class="role"><span class="role-name">Bass</span><span class="musician">BJ / TBC</span></div>
+                        <p>Solid pocket. Build with drums on the lifts. Stay underneath when Caster takes it down.</p>
+                    </div>
+                    <div class="part-item" data-part="guitar">
+                        <div class="role"><span class="role-name">Guitar</span><span class="musician">Morayo</span></div>
+                        <p>Sustained chords through. Open up texturally on the chorus. You and keys together hold the atmosphere when Caster repeats a line.</p>
+                    </div>
+                    <div class="part-item" data-part="vocals">
+                        <div class="role"><span class="role-name">BVs</span><span class="musician">Esther + (TBC × 2)</span></div>
+                        <p>Follow Caster's call. Full voice on the chorus. If he sits in "Spirit break out", you sit with him.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ──────── 10: For Sunday ──────── -->
+        <section class="slide" data-title="For Sunday">
+            <div class="slide-inner">
+                <div class="slide-eyebrow">🌅 For Sunday morning</div>
+                <h2 class="slide-title">What to bring, what to remember</h2>
+                <p class="slide-sub">The small things that make Sunday smooth.</p>
+
+                <div class="top-notes-list">
+                    <div class="top-note">
+                        <div class="nm">⏰</div>
+                        <p><strong>9am call.</strong> Setup, soundcheck, walk through the medley transitions and the bridge of Atmosphere Shift. Drummer especially needs the walk-through if confirmed late.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">🎚</div>
+                        <p><strong>Mix priorities:</strong> Caster's voice always on top. Bass and drums locked underneath the medley. Keys (if Eddie is there) defines Lord I Lift Your Name — make sure his brass texture lands.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">🤝</div>
+                        <p><strong>Praise is locked, worship breathes.</strong> In the medley, everyone is on the same map. In worship, everyone is reading Caster. If you're not sure what's next — look at Caster.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">🕊</div>
+                        <p><strong>It's Pentecost.</strong> The worship section is built to leave space for the Holy Spirit to move. We're not running a programme — we're stewarding a room. If the room sits in something, sit with it.</p>
+                    </div>
+                    <div class="top-note">
+                        <div class="nm">🙏</div>
+                        <p><strong>Pray before the set.</strong> Five minutes as a band before doors open. We come off a big anniversary. The Spirit doesn't need our hype — He needs our availability.</p>
+                    </div>
+                </div>
+
+                <div class="move-block" style="margin-top: 24px;">
+                    <div class="lbl">Where this comes from</div>
+                    <p>This page is the band-facing companion to the <a href="../worship-pack-24-may-2026.html" style="color: var(--purple); font-weight: 600;">Worship Pack v13</a>. The pack is the directional document — principles, theology, full arrangement direction. This page is the per-musician operational view for Sunday morning. Read both.</p>
+                </div>
+            </div>
+        </section>
+
+
+    </div>
+
+    <!-- Bottom navigation -->
+    <div class="bottombar">
+        <button class="nav-btn" id="prevBtn" aria-label="Previous slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="dots" id="dots" role="navigation" aria-label="Slide indicator"></div>
+        <div class="slide-counter" id="counter">1 / 10</div>
+        <button class="nav-btn next" id="nextBtn" aria-label="Next slide">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+    </div>
+
+    <div class="keyboard-hint">← → to navigate · m for menu</div>
+
+    <!-- Menu overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <aside class="menu-panel" id="menuPanel" aria-label="Slide menu">
+        <div class="menu-header">
+            <div class="h">Jump to</div>
+            <button class="menu-close" id="menuClose" aria-label="Close menu">×</button>
+        </div>
+        <div class="menu-list" id="menuList"></div>
+    </aside>
+
+    <script>
+        const deck = document.getElementById('deck');
+        const slides = Array.from(deck.querySelectorAll('.slide'));
+        const total = slides.length;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsBox = document.getElementById('dots');
+        const counter = document.getElementById('counter');
+        const progress = document.getElementById('progress');
+        const menuBtn = document.getElementById('menuBtn');
+        const menuPanel = document.getElementById('menuPanel');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuClose = document.getElementById('menuClose');
+        const menuList = document.getElementById('menuList');
+
+        let currentSlide = 0;
+
+        // Build dots
+        slides.forEach((s, i) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot';
+            dot.setAttribute('role', 'button');
+            dot.setAttribute('aria-label', `Go to slide ${i + 1}: ${s.dataset.title}`);
+            dot.addEventListener('click', () => goSlide(i));
+            dotsBox.appendChild(dot);
+        });
+
+        // Build menu
+        const menuStructure = [
+            { label: 'Overview', items: [0, 1, 2] },
+            { label: 'Praise medley', items: [3, 4, 5] },
+            { label: 'Worship', items: [6, 7, 8] },
+            { label: 'For Sunday', items: [9] }
+        ];
+
+        menuStructure.forEach(section => {
+            const lbl = document.createElement('div');
+            lbl.className = 'menu-section-label';
+            lbl.textContent = section.label;
+            menuList.appendChild(lbl);
+            section.items.forEach(idx => {
+                const slide = slides[idx];
+                if (!slide) return;
+                const btn = document.createElement('button');
+                btn.className = 'menu-item';
+                btn.dataset.slideIdx = idx;
+                const num = document.createElement('span');
+                num.className = 'menu-num';
+                num.textContent = idx + 1;
+                const name = document.createElement('span');
+                name.className = 'menu-name';
+                name.textContent = slide.dataset.title;
+                btn.appendChild(num);
+                btn.appendChild(name);
+                // Praise medley songs all lock at 105 BPM
+                if (idx >= 3 && idx <= 5) {
+                    const key = document.createElement('span');
+                    key.className = 'menu-key';
+                    key.textContent = '105';
+                    btn.appendChild(key);
+                }
+                btn.addEventListener('click', () => {
+                    goSlide(idx);
+                    closeMenu();
+                });
+                menuList.appendChild(btn);
+            });
+        });
+
+        function goSlide(i) {
+            i = Math.max(0, Math.min(total - 1, i));
+            deck.scrollTo({ left: i * deck.clientWidth, behavior: 'smooth' });
+        }
+        window.goSlide = goSlide;
+
+        function updateUI() {
+            const i = Math.round(deck.scrollLeft / deck.clientWidth);
+            if (i === currentSlide) return;
+            currentSlide = i;
+            // Dots
+            Array.from(dotsBox.children).forEach((d, idx) => {
+                d.classList.toggle('active', idx === i);
+            });
+            // Menu items
+            Array.from(menuList.querySelectorAll('.menu-item')).forEach(item => {
+                item.classList.toggle('active', parseInt(item.dataset.slideIdx) === i);
+            });
+            // Counter & progress
+            counter.textContent = `${i + 1} / ${total}`;
+            progress.style.width = ((i + 1) / total * 100) + '%';
+            // Buttons
+            prevBtn.disabled = i === 0;
+            nextBtn.disabled = i === total - 1;
+            // Pause all audio when leaving a slide
+            document.querySelectorAll('audio').forEach(a => {
+                if (!slides[i].contains(a)) a.pause();
+            });
+        }
+
+        let scrollTimer;
+        deck.addEventListener('scroll', () => {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(updateUI, 50);
+        });
+
+        prevBtn.addEventListener('click', () => goSlide(currentSlide - 1));
+        nextBtn.addEventListener('click', () => goSlide(currentSlide + 1));
+
+        // Keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'AUDIO' || e.target.tagName === 'INPUT') return;
+            if (e.key === 'ArrowRight' || e.key === ' ') { goSlide(currentSlide + 1); e.preventDefault(); }
+            if (e.key === 'ArrowLeft') { goSlide(currentSlide - 1); e.preventDefault(); }
+            if (e.key === 'Home') { goSlide(0); e.preventDefault(); }
+            if (e.key === 'End') { goSlide(total - 1); e.preventDefault(); }
+            if (e.key === 'm' || e.key === 'M') { openMenu(); }
+            if (e.key === 'Escape') { closeMenu(); }
+        });
+
+        // Menu
+        function openMenu() {
+            menuPanel.classList.add('open');
+            menuOverlay.classList.add('open');
+        }
+        function closeMenu() {
+            menuPanel.classList.remove('open');
+            menuOverlay.classList.remove('open');
+        }
+        menuBtn.addEventListener('click', openMenu);
+        menuClose.addEventListener('click', closeMenu);
+        menuOverlay.addEventListener('click', closeMenu);
+
+        // Filter chips
+        document.querySelectorAll('[data-filter-bar]').forEach(bar => {
+            const chips = bar.querySelectorAll('.chip');
+            const slide = bar.closest('.slide');
+            chips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    chips.forEach(c => c.setAttribute('aria-pressed', 'false'));
+                    chip.setAttribute('aria-pressed', 'true');
+                    const filter = chip.dataset.filter;
+                    slide.querySelectorAll('.part-item').forEach(item => {
+                        item.classList.toggle('dim', filter !== 'all' && item.dataset.part !== filter);
+                    });
+                });
+            });
+        });
+
+        // Listen toggle
+        document.querySelectorAll('[data-listen-toggle]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const content = btn.nextElementSibling;
+                content.classList.toggle('open');
+                btn.classList.toggle('open');
+            });
+        });
+
+        // Resize: recalculate scroll position
+        window.addEventListener('resize', () => {
+            deck.scrollTo({ left: currentSlide * deck.clientWidth });
+        });
+
+        // Init
+        updateUI();
+        document.querySelector('.dot').classList.add('active');
+        prevBtn.disabled = true;
+    </script>
+
+</body>
+</html>
