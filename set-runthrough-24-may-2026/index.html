@@ -349,50 +349,6 @@
     }
     .direction p + p { margin-top: 12px; }
 
-    /* Practise CTA — links to the Rehearsal Studio practice view for this arrangement */
-    .practise-cta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 16px 20px;
-      margin-bottom: 22px;
-      background: var(--red);
-      color: var(--bone);
-      text-decoration: none;
-      transition: background var(--t-micro) var(--ease-out-quint);
-    }
-    .practise-cta:hover { background: var(--red-bright); }
-    .practise-cta .label-stack { display: flex; flex-direction: column; gap: 2px; }
-    .practise-cta .label {
-      font-family: var(--font-body);
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      font-weight: 700;
-      opacity: 0.85;
-    }
-    .practise-cta .arrangement {
-      font-family: var(--font-display);
-      font-size: 18px;
-      letter-spacing: -0.01em;
-      text-transform: uppercase;
-      color: var(--bone);
-    }
-    .practise-cta .arrow {
-      font-family: var(--font-body);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    @media (max-width: 640px) {
-      .practise-cta { padding: 14px 16px; }
-      .practise-cta .arrangement { font-size: 15px; }
-      .practise-cta .arrow { font-size: 11px; }
-    }
-
     /* ── CHORD CHART ── */
     .chart {
       margin-bottom: 22px;
@@ -612,6 +568,500 @@
     }
     .pack-footer .signoff strong { color: var(--fg-1); font-style: normal; font-family: var(--font-body); font-weight: 600; }
     .pack-footer .signoff a { color: var(--red-bright); text-decoration: none; border-bottom: 1px dotted var(--red); }
+
+    /* ── INLINE PLAYER HOST ── */
+    .player-host {
+      display: block;
+      margin-bottom: 22px;
+      background: var(--red);
+      color: var(--bone);
+      cursor: pointer;
+      transition: background var(--t-micro) var(--ease-out-quint);
+    }
+    .player-host:hover:not(.iplayer-open) { background: var(--red-bright); }
+    .player-host.iplayer-open { background: var(--slate); border-top: 2px solid var(--red); }
+    .player-tag {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      user-select: none;
+    }
+    .player-host.iplayer-open .player-tag {
+      border-bottom: 1px solid var(--line-soft);
+      color: var(--bone);
+    }
+    .player-tag .label-stack { display: flex; flex-direction: column; gap: 2px; }
+    .player-tag .label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+    .player-tag .arrangement {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+    .player-tag .arrow {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    @media (max-width: 640px) {
+      .player-tag { padding: 14px 16px; }
+      .player-tag .arrangement { font-size: 15px; }
+      .player-tag .arrow { font-size: 11px; }
+    }
+
+    /* ── INLINE PLAYER ─────────────────────────────────────────── */
+    /* The player slides down below the song row when expanded. */
+    .iplayer {
+      grid-column: 1 / -1;
+      margin-top: 16px;
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.25s ease, padding 0.25s ease, margin-top 0.25s ease;
+    }
+    .player-host.iplayer-open .iplayer {
+      max-height: 1200px; /* generous cap; content height varies */
+      opacity: 1;
+      padding: 20px 0 4px;
+    }
+    .iplayer-loading {
+      padding: 20px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .iplayer-loading-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+    .iplayer-progress {
+      height: 4px;
+      background: var(--line-soft);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .iplayer-progress-bar {
+      height: 100%;
+      background: var(--red);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .iplayer-error {
+      padding: 16px 20px;
+      background: rgba(208, 68, 28, 0.1);
+      border-left: 2px solid var(--red);
+      color: var(--fg-1);
+      font-size: 14px;
+    }
+
+    /* The full player UI */
+    .iplayer-body {
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Transport bar (play / time / scrub) */
+    .iplayer-transport {
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+    .iplayer-play {
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 50%;
+      background: var(--red);
+      color: white;
+      font-size: 22px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, background 0.15s;
+      padding: 0;
+      line-height: 1;
+    }
+    .iplayer-play:hover { background: #e55a2e; }
+    .iplayer-play:active { transform: scale(0.96); }
+    .iplayer-play[disabled] { opacity: 0.4; cursor: not-allowed; }
+    .iplayer-scrubwrap {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .iplayer-scrub {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--line-soft);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    .iplayer-scrub::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--red);
+      cursor: grab;
+      border: none;
+    }
+    .iplayer-scrub::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--red);
+      cursor: grab;
+      border: none;
+    }
+    .iplayer-times {
+      font-size: 11px;
+      color: var(--fg-3);
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 0.05em;
+    }
+    .iplayer-speed {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .iplayer-speed-btn {
+      background: transparent;
+      border: 1px solid var(--line-mid);
+      color: var(--fg-2);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .iplayer-speed-btn.active {
+      background: var(--bone);
+      color: var(--obsidian);
+      border-color: var(--bone);
+    }
+    .iplayer-speed-btn:hover:not(.active) {
+      border-color: var(--red);
+      color: var(--bone);
+    }
+
+    /* Part picker */
+    .iplayer-partsrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .iplayer-parts {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      flex: 1;
+      min-width: 0;
+    }
+    .iplayer-part {
+      background: transparent;
+      border: 1px solid var(--line-mid);
+      color: var(--fg-2);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .iplayer-part.active {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+    }
+    .iplayer-part:hover:not(.active) {
+      border-color: var(--red);
+      color: var(--bone);
+    }
+    .iplayer-solo {
+      background: transparent;
+      border: 1px solid var(--bone);
+      color: var(--bone);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+    .iplayer-solo:hover:not(.active) {
+      background: rgba(245, 240, 232, 0.1);
+    }
+    .iplayer-solo.active {
+      background: var(--bone);
+      color: var(--obsidian);
+      box-shadow: 0 0 0 2px rgba(245, 240, 232, 0.25);
+    }
+
+    /* Section ribbon */
+    .iplayer-ribbon {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding: 2px 0 6px;
+      scrollbar-width: thin;
+    }
+    .iplayer-section {
+      flex-shrink: 0;
+      background: var(--obsidian);
+      border: 1px solid var(--line-soft);
+      color: var(--fg-2);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.15s;
+      position: relative;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .iplayer-section .iplayer-section-dur {
+      display: block;
+      font-size: 9px;
+      color: var(--fg-3);
+      letter-spacing: 0.04em;
+      text-transform: none;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+    .iplayer-section.current {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+    .iplayer-section.current .iplayer-section-dur { color: rgba(255,255,255,0.7); }
+    .iplayer-section.looping {
+      background: var(--bone);
+      border-color: var(--bone);
+      color: var(--obsidian);
+    }
+    .iplayer-section.looping::after {
+      content: '↻';
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 11px;
+    }
+    .iplayer-section.looping .iplayer-section-dur { color: rgba(0,0,0,0.5); }
+    .iplayer-section.has-note .iplayer-section-note-dot {
+      position: absolute;
+      top: 3px;
+      left: 4px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.7;
+    }
+
+    /* Now-playing strip — shows the current section's label + direction note */
+    .iplayer-nowplaying {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(245, 240, 232, 0.04);
+      border-left: 2px solid var(--red);
+      min-height: 48px;
+    }
+
+    /* Whole-song direction card — sits at the top of the expanded player.
+       Visually heavier than the now-playing strip because it applies to
+       the entire song, not just one section. */
+    .iplayer-direction {
+      padding: 16px 18px;
+      background: linear-gradient(135deg, rgba(208, 68, 28, 0.14), rgba(208, 68, 28, 0.04));
+      border-left: 3px solid var(--red);
+      border-radius: 0;
+    }
+    .iplayer-direction-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .iplayer-direction-body {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--fg-1);
+      white-space: pre-wrap;
+    }
+
+    /* Simple fallback player — uses native <audio> element so it works on
+       every device. Sits at the top of the expanded panel, above the
+       multi-stem widget. */
+    .iplayer-simple {
+      padding: 16px 18px;
+      background: var(--slate);
+      border: 1px solid var(--line-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .iplayer-simple-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .iplayer-simple-label::before {
+      content: '▶';
+      color: var(--red);
+      font-size: 11px;
+    }
+    .iplayer-simple-frame {
+      width: 100%;
+      height: 60px;
+      border: none;
+      background: #1d1d1f;
+      border-radius: 4px;
+    }
+    .iplayer-simple-hint {
+      font-size: 11px;
+      color: var(--fg-3);
+      line-height: 1.4;
+    }
+
+    /* Divider + label for the advanced widget below */
+    .iplayer-advanced-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+    .iplayer-advanced-divider::before,
+    .iplayer-advanced-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line-soft);
+    }
+    .iplayer-advanced-divider-text {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+    .iplayer-np-label {
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      flex-shrink: 0;
+      padding-top: 2px;
+    }
+    .iplayer-np-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .iplayer-np-section {
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      line-height: 1.2;
+    }
+    .iplayer-np-note {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--fg-1);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+    .iplayer-np-note:empty { display: none; }
+    .iplayer-np-empty {
+      font-size: 12px;
+      color: var(--fg-3);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    /* Footer hint inside player */
+    .iplayer-hint {
+      font-size: 11px;
+      color: var(--fg-3);
+      line-height: 1.5;
+      padding-top: 4px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .iplayer-hint strong { color: var(--fg-2); font-weight: 600; }
+
+    @media (max-width: 640px) {
+      .iplayer-transport {
+        grid-template-columns: 48px 1fr;
+        gap: 12px;
+      }
+      .iplayer-speed { grid-column: 1 / -1; justify-content: flex-end; }
+      .iplayer-play { width: 48px; height: 48px; font-size: 18px; }
+    }
+
+    /* FOOTER */
+    .pack-footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--line-soft);
+    }
+    .pack-footer .signoff {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+
   </style>
 </head>
 <body>
@@ -842,13 +1292,33 @@
           <span class="pill">Synth brass signature</span>
         </div>
 
-        <a class="practise-cta" href="https://calvaryhfgc.github.io/calvaryhephzibah/calvary-os/rehearsal/practice.html?arrangement_id=428a055c-501f-4c4c-b554-cf5c860c6bfd" target="_blank" rel="noopener">
-          <div class="label-stack">
-            <div class="label">Rehearsal Studio</div>
-            <div class="arrangement">Practise this arrangement</div>
+        <div class="player-host"
+             data-title="Lord I Lift Your Name on High"
+             data-arrangement-id="428a055c-501f-4c4c-b554-cf5c860c6bfd"
+             data-direction="New Anthem Nights &quot;Be Lifted High&quot;-inspired arrangement. Same chord progression throughout the entire song (verse and chorus) — variation comes from dynamics and baseline, not chords. Synth brass texture defines the feel.
+
+STRUCTURE (entering from Days of Elijah vamp)
+• Vamp continues (2 cycles)
+• &quot;You came from heaven to earth&quot; intro phrase ×1
+• Drop into Verse 1 (&quot;Lord I lift your name on high&quot;) — dynamics low, band drops out
+• &quot;You came from heaven&quot; chorus ×1
+• Back to Verse (low dynamics again)
+• &quot;You came from heaven&quot; chorus ×2
+• Straight into Blessing and Honour — no break
+
+KEY NOTES
+• ALWAYS drop dynamics in verse, build into chorus
+• Same numbers, same progression — verse just gets the &quot;Don't know what you came to do&quot; treatment
+• Adlib bar after &quot;I'm so glad you came to save us&quot; → &quot;Lord, I lift your name on high&quot; — verse repeats here
+• Seamless transition into Ancient of Days — no count-in">
+          <div class="player-tag">
+            <div class="label-stack">
+              <div class="label">Rehearsal Studio</div>
+              <div class="arrangement">Practise this arrangement</div>
+            </div>
+            <div class="arrow">Open ↓</div>
           </div>
-          <div class="arrow">Open →</div>
-        </a>
+        </div>
 
         <div class="chart">
           <div class="chart-head">
@@ -1309,6 +1779,881 @@
     </section>
 
   </main>
+
+  <script>
+    // ════════════════════════════════════════════════════════════════════
+    //  WORSHIP PACK — INLINE PLAYER
+    //  Wires song rows to either:
+    //   (a) Expand an embedded multi-stem player (rows with data-arrangement-id)
+    //   (b) Resolve to a Rehearsal Studio link (rows without)
+    // ════════════════════════════════════════════════════════════════════
+    (function () {
+      const SUPA_URL = 'https://pfycvgbrsbecznkcikwt.supabase.co';
+      const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBmeWN2Z2Jyc2JlY3pua2Npa3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzNzY1NDgsImV4cCI6MjA5MDk1MjU0OH0.xw_DSmC0brKC7K9H-rxNG0HKKDi4I-dNSEoZKERvHcQ';
+      const HEADERS = { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` };
+      const STORAGE_BUCKET = 'rehearsal-studio';
+      const STUDIO_BASE = 'https://calvaryhfgc.github.io/calvaryhephzibah/calvary-os/rehearsal/';
+
+      // Stems we use in the inline player. Order is deliberate — picker UI uses
+      // it as display order. We deliberately drop 'strings' (rarely used; cuts
+      // download size by ~15%).
+      const STEMS = ['vocals', 'drums', 'bass', 'keys', 'guitar', 'other'];
+
+      // Auto-mix: when user picks a part, this is how stems default. The
+      // selected part sits at full volume; supporting stems drop low enough
+      // to clearly be background. Values are deliberately punchier than the
+      // full studio's defaults — this view is for "show me my part" rather
+      // than balanced reference listening.
+      const AUTO_MIX = {
+        vocals: { vocals: 1.0, drums: 0.30, bass: 0.25, keys: 0.20, guitar: 0.20, other: 0.15 },
+        drums:  { drums: 1.0, bass: 0.40, vocals: 0.20, keys: 0.20, guitar: 0.20, other: 0.15 },
+        bass:   { bass: 1.0, drums: 0.45, vocals: 0.20, keys: 0.20, guitar: 0.20, other: 0.15 },
+        keys:   { keys: 1.0, drums: 0.35, bass: 0.30, vocals: 0.25, guitar: 0.20, other: 0.15 },
+        guitar: { guitar: 1.0, drums: 0.35, bass: 0.30, vocals: 0.25, keys: 0.20, other: 0.15 },
+        other:  { other: 1.0, drums: 0.35, bass: 0.30, vocals: 0.25, keys: 0.25, guitar: 0.25 },
+      };
+
+      // One AudioContext shared across the page (browsers cap per-tab contexts;
+      // we never have more than one active player anyway).
+      let sharedCtx = null;
+      function getCtx() {
+        if (!sharedCtx) sharedCtx = new (window.AudioContext || window.webkitAudioContext)();
+        return sharedCtx;
+      }
+
+      // Track the currently-active player so we can collapse it when another opens.
+      let activePlayer = null;
+
+      function fmtTime(s) {
+        if (s == null || isNaN(s)) return '0:00';
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return `${m}:${sec.toString().padStart(2, '0')}`;
+      }
+
+      function publicUrl(path) {
+        return `${SUPA_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+      }
+
+      // Extract a Drive file ID from any of the URL shapes we accept on
+      // data-reference-mp3 attributes. Returns null if none recognised.
+      function extractDriveFileId(url) {
+        if (!url) return null;
+        // Pattern 1: /file/d/{ID}/...
+        let m = url.match(/\/file\/d\/([a-zA-Z0-9_-]{20,})/);
+        if (m) return m[1];
+        // Pattern 2: ?id={ID} or &id={ID}
+        m = url.match(/[?&]id=([a-zA-Z0-9_-]{20,})/);
+        if (m) return m[1];
+        return null;
+      }
+
+      async function sbFetch(path) {
+        const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, { headers: HEADERS });
+        if (!res.ok) throw new Error(`Supabase fetch failed: ${path} (${res.status})`);
+        return res.json();
+      }
+
+      // ── Per-song inline player ────────────────────────────────────────
+      // Each player instance owns its data + audio graph + UI. Lifecycle:
+      //   create → load (one-shot) → play/pause/seek → destroy on collapse
+      //
+      // Why we destroy stems on collapse: 7 buffers per song × N songs would
+      // quickly chew through memory on mobile. Cheaper to re-fetch (browser
+      // cache makes the reload near-instant after first load).
+      class InlinePlayer {
+        constructor(row) {
+          this.row = row;
+          this.arrangementId = row.getAttribute('data-arrangement-id');
+          this.panel = null;
+          this.loaded = false;
+          this.loading = false;
+
+          // Data
+          this.arrangement = null;
+          this.slots = [];          // [{ chop: {start_seconds,end_seconds,label}, notes, position }]
+          this.totalDuration = 0;
+          this.stemUrls = {};       // { vocals: url, ... }
+          this.stemBuffers = {};    // { vocals: AudioBuffer, ... }
+          this.stemGains = {};      // { vocals: GainNode, ... }
+          this.stemSources = {};    // { vocals: BufferSource | null, ... }
+
+          // Playback state
+          this.playing = false;
+          this.arrTime = 0;
+          this.startedAt = 0;
+          this.startOffset = 0;
+          this.playbackRate = 1.0;
+          this.currentPart = 'vocals';
+          this.soloMode = false;     // true = play ONLY the selected part stem
+          this.currentSlotIdx = 0;
+          this.loopSlotIdx = -1;
+          this.rafId = null;
+        }
+
+        // ── DATA FETCH ──────────────────────────────────────────────────
+        async loadData(onProgress) {
+          onProgress(0.05, 'Fetching arrangement…');
+          const arrs = await sbFetch(`rs_arrangements?id=eq.${this.arrangementId}`);
+          if (!arrs[0]) throw new Error('Arrangement not found');
+          this.arrangement = arrs[0];
+
+          onProgress(0.15, 'Fetching reference…');
+          if (!this.arrangement.reference_id) throw new Error('No reference linked to this arrangement');
+          const refs = await sbFetch(`rs_references?id=eq.${this.arrangement.reference_id}`);
+          if (!refs[0]) throw new Error('Reference not found');
+          const reference = refs[0];
+
+          onProgress(0.25, 'Fetching sections + stems…');
+          const [slots, chops, stems] = await Promise.all([
+            sbFetch(`rs_arrangement_sections?arrangement_id=eq.${this.arrangementId}&order=position.asc`),
+            sbFetch(`rs_sections?reference_id=eq.${reference.id}&order=position.asc`),
+            sbFetch(`rs_stems?reference_id=eq.${reference.id}`),
+          ]);
+
+          // Join slots → chops by section_id
+          const chopsById = {};
+          (chops || []).forEach(c => { chopsById[c.id] = c; });
+          this.slots = (slots || [])
+            .map(s => ({
+              chop: chopsById[s.section_id],
+              notes: s.notes || '',
+              position: s.position,
+            }))
+            .filter(s => s.chop);
+
+          if (!this.slots.length) throw new Error('Arrangement has no sections');
+
+          this.totalDuration = this.slots.reduce(
+            (sum, s) => sum + (s.chop.end_seconds - s.chop.start_seconds),
+            0
+          );
+
+          // Pick out the stem URLs we care about
+          STEMS.forEach(name => {
+            const row = (stems || []).find(x => x.stem_type === name);
+            if (row && row.audio_path) this.stemUrls[name] = publicUrl(row.audio_path);
+          });
+
+          if (!Object.keys(this.stemUrls).length) {
+            throw new Error('No stems available for this reference');
+          }
+        }
+
+        // ── STEM DOWNLOAD + DECODE ──────────────────────────────────────
+        // Download all stems in parallel; report aggregate progress. Decoding
+        // is the slow part on mobile — we run them sequentially after fetch
+        // so we don't blow the heap.
+        async loadStems(onProgress) {
+          const ctx = getCtx();
+          const names = Object.keys(this.stemUrls);
+          const total = names.length;
+          let done = 0;
+
+          // Fetch all in parallel
+          const arrayBuffers = await Promise.all(
+            names.map(async (name) => {
+              const res = await fetch(this.stemUrls[name]);
+              if (!res.ok) throw new Error(`Failed to fetch ${name}`);
+              const buf = await res.arrayBuffer();
+              done++;
+              onProgress(0.3 + (done / total) * 0.4, `Loading stems… ${done}/${total}`);
+              return { name, buf };
+            })
+          );
+
+          // Decode sequentially
+          done = 0;
+          for (const { name, buf } of arrayBuffers) {
+            try {
+              this.stemBuffers[name] = await ctx.decodeAudioData(buf);
+            } catch (e) {
+              console.warn(`Failed to decode ${name}:`, e);
+            }
+            done++;
+            onProgress(0.7 + (done / total) * 0.3, `Decoding… ${done}/${total}`);
+          }
+
+          // Build gain nodes; connect to destination. Initial gains will be
+          // set by applyAutoMix() once the part picker is initialised.
+          STEMS.forEach(name => {
+            if (this.stemBuffers[name]) {
+              const g = ctx.createGain();
+              g.gain.value = 0;
+              g.connect(ctx.destination);
+              this.stemGains[name] = g;
+            }
+          });
+
+          this.applyAutoMix();
+        }
+
+        applyAutoMix() {
+          if (this.soloMode) {
+            // Solo: only the selected part plays. Everything else fully silent.
+            STEMS.forEach(name => {
+              const g = this.stemGains[name];
+              if (g) g.gain.value = (name === this.currentPart) ? 1.0 : 0;
+            });
+            return;
+          }
+          const mix = AUTO_MIX[this.currentPart] || AUTO_MIX.vocals;
+          STEMS.forEach(name => {
+            const g = this.stemGains[name];
+            if (g) g.gain.value = mix[name] || 0;
+          });
+        }
+
+        setSolo(on) {
+          this.soloMode = on;
+          this.applyAutoMix();
+          this.updatePartsUI();
+        }
+
+        // ── PLAYBACK ────────────────────────────────────────────────────
+        // arrangementToReferenceTime: arrangement-time (0..totalDuration) maps
+        // into reference-time (the actual MP3 timeline) via the slot ordering.
+        arrToRef(arrT) {
+          let remaining = arrT;
+          for (const slot of this.slots) {
+            const dur = slot.chop.end_seconds - slot.chop.start_seconds;
+            if (remaining <= dur) {
+              return { refTime: slot.chop.start_seconds + remaining, slotIdx: this.slots.indexOf(slot) };
+            }
+            remaining -= dur;
+          }
+          const last = this.slots[this.slots.length - 1];
+          return { refTime: last.chop.end_seconds, slotIdx: this.slots.length - 1 };
+        }
+
+        slotIndexAt(arrT) {
+          let cum = 0;
+          for (let i = 0; i < this.slots.length; i++) {
+            const dur = this.slots[i].chop.end_seconds - this.slots[i].chop.start_seconds;
+            if (arrT < cum + dur) return i;
+            cum += dur;
+          }
+          return this.slots.length - 1;
+        }
+
+        slotStartArrTime(idx) {
+          let cum = 0;
+          for (let i = 0; i < idx; i++) {
+            cum += this.slots[i].chop.end_seconds - this.slots[i].chop.start_seconds;
+          }
+          return cum;
+        }
+
+        async play() {
+          // Collapse any other playing player on the page
+          if (activePlayer && activePlayer !== this) {
+            activePlayer.collapse();
+          }
+          activePlayer = this;
+
+          const ctx = getCtx();
+          if (ctx.state === 'suspended') await ctx.resume();
+
+          this.startAllSources(this.arrTime);
+          this.playing = true;
+          this.updatePlayButton();
+          this.tick();
+        }
+
+        pause() {
+          this.stopAllSources();
+          this.playing = false;
+          this.updatePlayButton();
+          if (this.rafId) {
+            cancelAnimationFrame(this.rafId);
+            this.rafId = null;
+          }
+        }
+
+        startAllSources(arrT) {
+          const ctx = getCtx();
+          const { refTime } = this.arrToRef(arrT);
+          const startAt = ctx.currentTime + 0.02; // small lead so stems align
+          this.startedAt = startAt;
+          this.startOffset = arrT;
+
+          STEMS.forEach(name => {
+            const buf = this.stemBuffers[name];
+            if (!buf) return;
+            const src = ctx.createBufferSource();
+            src.buffer = buf;
+            src.playbackRate.value = this.playbackRate;
+            src.connect(this.stemGains[name]);
+            const offset = Math.min(refTime, buf.duration - 0.01);
+            src.start(startAt, Math.max(0, offset));
+            this.stemSources[name] = src;
+          });
+        }
+
+        stopAllSources() {
+          STEMS.forEach(name => {
+            const src = this.stemSources[name];
+            if (src) {
+              try { src.stop(); } catch (e) {}
+              this.stemSources[name] = null;
+            }
+          });
+        }
+
+        tick() {
+          if (!this.playing) return;
+          const ctx = getCtx();
+          const elapsed = Math.max(0, ctx.currentTime - this.startedAt);
+          this.arrTime = this.startOffset + elapsed * this.playbackRate;
+
+          // End of arrangement
+          if (this.arrTime >= this.totalDuration) {
+            if (this.loopSlotIdx >= 0) {
+              this.seek(this.slotStartArrTime(this.loopSlotIdx));
+              this.rafId = requestAnimationFrame(() => this.tick());
+              return;
+            }
+            this.arrTime = this.totalDuration;
+            this.pause();
+            this.updateTimeUI();
+            return;
+          }
+
+          // Slot-hop: did we cross from slot N to slot N+1, and are the
+          // adjacent reference times non-contiguous? If so, we need to seek
+          // the audio sources to the new slot's start.
+          const slotIdx = this.slotIndexAt(this.arrTime);
+          if (slotIdx !== this.currentSlotIdx) {
+            this.currentSlotIdx = slotIdx;
+            this.updateRibbonUI();
+            if (slotIdx > 0) {
+              const prevRefEnd = this.slots[slotIdx - 1].chop.end_seconds;
+              const thisRefStart = this.slots[slotIdx].chop.start_seconds;
+              if (Math.abs(thisRefStart - prevRefEnd) > 0.05) {
+                this.seek(this.arrTime);
+              }
+            }
+          }
+
+          // Loop mode: bounce back if we cross the loop slot's end
+          if (this.loopSlotIdx >= 0 && slotIdx > this.loopSlotIdx) {
+            this.seek(this.slotStartArrTime(this.loopSlotIdx));
+            this.rafId = requestAnimationFrame(() => this.tick());
+            return;
+          }
+
+          this.updateTimeUI();
+          this.rafId = requestAnimationFrame(() => this.tick());
+        }
+
+        seek(arrT) {
+          this.arrTime = Math.max(0, Math.min(this.totalDuration, arrT));
+          if (this.playing) {
+            this.stopAllSources();
+            this.startAllSources(this.arrTime);
+          }
+          this.currentSlotIdx = this.slotIndexAt(this.arrTime);
+          this.updateRibbonUI();
+          this.updateTimeUI();
+        }
+
+        setSpeed(rate) {
+          this.playbackRate = rate;
+          // Update active sources in-place
+          STEMS.forEach(name => {
+            const src = this.stemSources[name];
+            if (src) src.playbackRate.value = rate;
+          });
+          // Reset the time baseline so tick() math stays correct
+          if (this.playing) {
+            const ctx = getCtx();
+            this.startedAt = ctx.currentTime;
+            this.startOffset = this.arrTime;
+          }
+          this.updateSpeedUI();
+        }
+
+        setPart(part) {
+          this.currentPart = part;
+          this.applyAutoMix();
+          this.updatePartsUI();
+        }
+
+        toggleLoop(slotIdx) {
+          if (this.loopSlotIdx === slotIdx) {
+            this.loopSlotIdx = -1;
+          } else {
+            this.loopSlotIdx = slotIdx;
+            // Snap to the start of the slot when looping is engaged
+            this.seek(this.slotStartArrTime(slotIdx));
+          }
+          this.updateRibbonUI();
+        }
+
+        // ── UI ─────────────────────────────────────────────────────────
+        async expand() {
+          if (this.panel) return; // already expanded
+
+          // Build the panel with the simple player ALREADY rendered — no
+          // waiting for stems. If the advanced widget never loads (or the
+          // device can't handle Web Audio), the simple player still works.
+          this.panel = document.createElement('div');
+          this.panel.className = 'iplayer';
+          this.panel.innerHTML = `
+            <div class="iplayer-body">
+              ${this.buildDirectionHtml()}
+              ${this.buildSimplePlayerHtml()}
+              <div class="iplayer-advanced-mount"></div>
+            </div>
+          `;
+          this.row.appendChild(this.panel);
+          requestAnimationFrame(() => this.row.classList.add('iplayer-open'));
+
+          // Collapse any other active player so we're the sole audio source.
+          // (Drive iframes can't be paused from outside the iframe — the
+          // best we can do is collapse the previous panel, which destroys
+          // its iframe entirely and stops its audio.)
+          if (activePlayer && activePlayer !== this) activePlayer.collapse();
+          activePlayer = this;
+
+          // Now kick off advanced widget load in the background.
+          // Skip entirely if no arrangement is pinned (some rows might have
+          // only a reference MP3 with no Supabase arrangement).
+          if (!this.arrangementId) return;
+
+          const mount = this.panel.querySelector('.iplayer-advanced-mount');
+          if (this.loaded) {
+            this.renderAdvancedWidget(mount);
+            return;
+          }
+          if (this.loading) return;
+          this.loading = true;
+
+          // Render an unobtrusive loading note in the advanced mount
+          mount.innerHTML = `
+            <div class="iplayer-advanced-divider">
+              <span class="iplayer-advanced-divider-text">Loading parts widget…</span>
+            </div>
+            <div class="iplayer-loading" style="margin-top:8px;">
+              <div class="iplayer-progress"><div class="iplayer-progress-bar"></div></div>
+            </div>
+          `;
+          const bar = mount.querySelector('.iplayer-progress-bar');
+          const onProgress = (p) => { if (bar) bar.style.width = `${Math.round(p * 100)}%`; };
+
+          try {
+            await this.loadData(onProgress);
+            await this.loadStems(onProgress);
+            this.loaded = true;
+            this.loading = false;
+            this.renderAdvancedWidget(mount);
+          } catch (err) {
+            console.warn('Advanced widget failed (simple player still works):', err);
+            this.loading = false;
+            mount.innerHTML = `
+              <div class="iplayer-advanced-divider">
+                <span class="iplayer-advanced-divider-text">Parts widget unavailable on this device</span>
+              </div>
+            `;
+          }
+        }
+
+        // Direction card HTML — rendered immediately, no data load needed
+        buildDirectionHtml() {
+          const inlineDirection = this.row.getAttribute('data-direction');
+          const songDirection = (inlineDirection && inlineDirection.trim()) || '';
+          if (!songDirection) return '';
+          return `
+            <div class="iplayer-direction">
+              <div class="iplayer-direction-label">Direction</div>
+              <div class="iplayer-direction-body">${escapeHtml(songDirection)}</div>
+            </div>
+          `;
+        }
+
+        // Simple <audio> player — uses the Drive URL. Works on any device.
+        buildSimplePlayerHtml() {
+          const url = this.row.getAttribute('data-reference-mp3');
+          if (!url) return '';
+          // Extract the Drive file ID from any of the URL patterns we might
+          // have on the row, then build the official embed URL Drive
+          // designs for streaming. Drive's iframe player handles all the
+          // browser quirks for us.
+          const fileId = extractDriveFileId(url);
+          if (!fileId) {
+            // Unknown URL format — fall back to a plain link
+            return `
+              <div class="iplayer-simple">
+                <div class="iplayer-simple-label">Reference track</div>
+                <a href="${escapeHtml(url)}" target="_blank" style="color:var(--bone);text-decoration:underline;">Open in a new tab</a>
+              </div>
+            `;
+          }
+          const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+          const openUrl = `https://drive.google.com/file/d/${fileId}/view`;
+          return `
+            <div class="iplayer-simple">
+              <div class="iplayer-simple-label">Reference track</div>
+              <iframe class="iplayer-simple-frame" src="${embedUrl}" allow="autoplay" allowfullscreen></iframe>
+              <div class="iplayer-simple-hint">If it doesn't load, <a href="${openUrl}" target="_blank" style="color:var(--bone);">open it in Drive</a>.</div>
+            </div>
+          `;
+        }
+
+        renderAdvancedWidget(mount) {
+          // Pull the supplemental Direction note from inline; the advanced
+          // widget itself adds the parts + ribbon + section notes.
+          this.renderPlayerIntoMount(mount);
+        }
+
+        renderPlayerIntoMount(mount) {
+          const sectionHtml = this.slots
+            .map((s, i) => {
+              const dur = s.chop.end_seconds - s.chop.start_seconds;
+              const hasNote = !!(s.notes && s.notes.trim());
+              return `
+                <button class="iplayer-section${i === 0 ? ' current' : ''}${hasNote ? ' has-note' : ''}" data-slot="${i}" title="${hasNote ? escapeHtml(s.notes) : ''}">
+                  ${hasNote ? '<span class="iplayer-section-note-dot"></span>' : ''}
+                  ${escapeHtml(s.chop.label || 'Section')}
+                  <span class="iplayer-section-dur">${fmtTime(dur)}</span>
+                </button>
+              `;
+            })
+            .join('');
+
+          const partsHtml = STEMS
+            .filter(name => this.stemBuffers[name])
+            .map(name => `
+              <button class="iplayer-part${name === this.currentPart ? ' active' : ''}" data-part="${name}">
+                ${name}
+              </button>
+            `)
+            .join('');
+
+          const speedsHtml = [0.75, 1.0, 1.25]
+            .map(r => `
+              <button class="iplayer-speed-btn${r === this.playbackRate ? ' active' : ''}" data-speed="${r}">
+                ${r}×
+              </button>
+            `)
+            .join('');
+
+          // Determine which section to show in the now-playing strip
+          // (defaults to slot 0; updates dynamically as playback progresses)
+          const initialSlot = this.slots[0];
+          const initialNote = initialSlot && initialSlot.notes && initialSlot.notes.trim();
+          const initialLabel = initialSlot && initialSlot.chop ? initialSlot.chop.label : 'Section';
+
+          mount.innerHTML = `
+            <div class="iplayer-advanced-divider">
+              <span class="iplayer-advanced-divider-text">Parts widget · isolate your part</span>
+            </div>
+            <div class="iplayer-partsrow">
+              <div class="iplayer-parts" role="group" aria-label="Part picker">
+                ${partsHtml}
+              </div>
+              <button class="iplayer-solo${this.soloMode ? ' active' : ''}" aria-pressed="${this.soloMode}" title="Solo: play only the selected part">
+                Solo
+              </button>
+            </div>
+            <div class="iplayer-ribbon" role="group" aria-label="Sections">
+              ${sectionHtml}
+            </div>
+            <div class="iplayer-nowplaying" aria-live="polite">
+              <div class="iplayer-np-label">Now</div>
+              <div class="iplayer-np-body">
+                <div class="iplayer-np-section">${escapeHtml(initialLabel)}</div>
+                ${initialNote
+                  ? `<div class="iplayer-np-note">${escapeHtml(initialNote)}</div>`
+                  : `<div class="iplayer-np-empty">No direction note for this section</div>`}
+              </div>
+            </div>
+            <div class="iplayer-transport">
+              <button class="iplayer-play" aria-label="Play">▶</button>
+              <div class="iplayer-scrubwrap">
+                <input type="range" class="iplayer-scrub" min="0" max="${this.totalDuration}" step="0.01" value="0">
+                <div class="iplayer-times">
+                  <span class="iplayer-cur">0:00</span>
+                  <span class="iplayer-dur">${fmtTime(this.totalDuration)}</span>
+                </div>
+              </div>
+              <div class="iplayer-speed" role="group" aria-label="Speed">
+                ${speedsHtml}
+              </div>
+            </div>
+            <div class="iplayer-hint">
+              <strong>Pick your part</strong> to bring it forward · tap <strong>Solo</strong> to hear it on its own · <strong>tap a section</strong> to jump, tap again to loop.
+            </div>
+          `;
+
+          this.wireEvents();
+          this.updateTimeUI();
+          this.updateRibbonUI();
+        }
+
+        wireEvents() {
+          const $ = (sel) => this.panel.querySelector(sel);
+          const $$ = (sel) => Array.from(this.panel.querySelectorAll(sel));
+
+          // Play / pause
+          $('.iplayer-play').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (this.playing) this.pause();
+            else this.play();
+          });
+
+          // Scrub
+          const scrub = $('.iplayer-scrub');
+          let wasPlaying = false;
+          scrub.addEventListener('input', (e) => {
+            e.stopPropagation();
+            this.arrTime = parseFloat(scrub.value);
+            $('.iplayer-cur').textContent = fmtTime(this.arrTime);
+          });
+          scrub.addEventListener('mousedown', () => { wasPlaying = this.playing; if (this.playing) this.pause(); });
+          scrub.addEventListener('touchstart', () => { wasPlaying = this.playing; if (this.playing) this.pause(); });
+          const onScrubEnd = () => {
+            this.seek(parseFloat(scrub.value));
+            if (wasPlaying) this.play();
+          };
+          scrub.addEventListener('change', onScrubEnd);
+
+          // Sections — single tap = jump, second tap on same = loop toggle
+          $$('.iplayer-section').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const idx = parseInt(btn.getAttribute('data-slot'), 10);
+              if (this.currentSlotIdx === idx && !this.playing) {
+                // Already on this slot and stopped → toggle loop
+                this.toggleLoop(idx);
+              } else if (this.loopSlotIdx === idx) {
+                // Tapping current loop section again → drop loop
+                this.toggleLoop(idx);
+              } else if (this.currentSlotIdx === idx) {
+                // Tapping current section while playing → toggle loop
+                this.toggleLoop(idx);
+              } else {
+                // Different section → jump there
+                this.seek(this.slotStartArrTime(idx));
+              }
+            });
+          });
+
+          // Parts
+          $$('.iplayer-part').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.setPart(btn.getAttribute('data-part'));
+            });
+          });
+
+          // Solo toggle
+          const soloBtn = $('.iplayer-solo');
+          if (soloBtn) {
+            soloBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.setSolo(!this.soloMode);
+            });
+          }
+
+          // Speed
+          $$('.iplayer-speed-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.setSpeed(parseFloat(btn.getAttribute('data-speed')));
+            });
+          });
+        }
+
+        updatePlayButton() {
+          const btn = this.panel && this.panel.querySelector('.iplayer-play');
+          if (btn) btn.textContent = this.playing ? '❚❚' : '▶';
+        }
+
+        updateTimeUI() {
+          if (!this.panel) return;
+          const cur = this.panel.querySelector('.iplayer-cur');
+          const scrub = this.panel.querySelector('.iplayer-scrub');
+          if (cur) cur.textContent = fmtTime(this.arrTime);
+          if (scrub && document.activeElement !== scrub) scrub.value = this.arrTime;
+        }
+
+        updateRibbonUI() {
+          if (!this.panel) return;
+          this.panel.querySelectorAll('.iplayer-section').forEach((el, i) => {
+            el.classList.toggle('current', i === this.currentSlotIdx && this.loopSlotIdx !== i);
+            el.classList.toggle('looping', i === this.loopSlotIdx);
+          });
+          // Scroll the active section into view
+          const active = this.panel.querySelector('.iplayer-section.current, .iplayer-section.looping');
+          if (active && active.scrollIntoView) {
+            active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+          // Update the now-playing strip
+          this.updateNowPlaying();
+        }
+
+        updateNowPlaying() {
+          if (!this.panel) return;
+          const np = this.panel.querySelector('.iplayer-nowplaying');
+          if (!np) return;
+          // Show whichever section is most relevant — looping wins over current
+          const idx = this.loopSlotIdx >= 0 ? this.loopSlotIdx : this.currentSlotIdx;
+          const slot = this.slots[idx];
+          if (!slot) return;
+          const label = slot.chop && slot.chop.label ? slot.chop.label : 'Section';
+          const note = slot.notes && slot.notes.trim();
+          const labelEl = np.querySelector('.iplayer-np-section');
+          const body = np.querySelector('.iplayer-np-body');
+          if (labelEl) labelEl.textContent = label;
+          // Rebuild the note/empty line (we don't keep both in the DOM simultaneously)
+          const existingNote = np.querySelector('.iplayer-np-note');
+          const existingEmpty = np.querySelector('.iplayer-np-empty');
+          if (existingNote) existingNote.remove();
+          if (existingEmpty) existingEmpty.remove();
+          if (note) {
+            const noteEl = document.createElement('div');
+            noteEl.className = 'iplayer-np-note';
+            noteEl.textContent = note;
+            body.appendChild(noteEl);
+          } else {
+            const empty = document.createElement('div');
+            empty.className = 'iplayer-np-empty';
+            empty.textContent = 'No direction note for this section';
+            body.appendChild(empty);
+          }
+        }
+
+        updatePartsUI() {
+          if (!this.panel) return;
+          this.panel.querySelectorAll('.iplayer-part').forEach(el => {
+            el.classList.toggle('active', el.getAttribute('data-part') === this.currentPart);
+          });
+          const soloBtn = this.panel.querySelector('.iplayer-solo');
+          if (soloBtn) {
+            soloBtn.classList.toggle('active', this.soloMode);
+            soloBtn.setAttribute('aria-pressed', this.soloMode ? 'true' : 'false');
+          }
+        }
+
+        updateSpeedUI() {
+          if (!this.panel) return;
+          this.panel.querySelectorAll('.iplayer-speed-btn').forEach(el => {
+            el.classList.toggle('active', parseFloat(el.getAttribute('data-speed')) === this.playbackRate);
+          });
+        }
+
+        collapse() {
+          if (this.playing) this.pause();
+          this.row.classList.remove('iplayer-open');
+          // Wait for transition then remove panel
+          setTimeout(() => {
+            if (this.panel) {
+              this.panel.remove();
+              this.panel = null;
+            }
+          }, 350);
+          if (activePlayer === this) activePlayer = null;
+        }
+
+        toggleExpand() {
+          if (this.panel) this.collapse();
+          else this.expand();
+        }
+      }
+
+      function escapeHtml(s) {
+        if (s == null) return '';
+        return String(s).replace(/[&<>"']/g, c => (
+          { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+        ));
+      }
+
+      // ── Initialisation ────────────────────────────────────────────────
+      async function init() {
+        const songRows = Array.from(document.querySelectorAll('.player-host[data-title]'));
+        if (!songRows.length) return;
+
+        // Step 1: wire any data-arrangement-id row to an inline player immediately.
+        // These don't need to wait on the Supabase lookup — the arrangement ID
+        // is hard-coded and the data is fetched lazily on first expand.
+        const inlineRows = songRows.filter(r => r.getAttribute('data-arrangement-id'));
+        inlineRows.forEach(row => {
+          const player = new InlinePlayer(row);
+          const tag = row.querySelector('.player-tag');
+          const arrow = tag.querySelector('.arrow') || tag;
+          tag.classList.remove('loading');
+          arrow.textContent = 'Open ↓';
+          tag.classList.add('has-ref', 'practise');
+          row.classList.add('has-ref');
+
+          // Click anywhere on the row toggles, EXCEPT clicks inside the player panel.
+          row.addEventListener('click', (e) => {
+            if (e.target.closest('.iplayer')) return;
+            player.toggleExpand();
+            // Once expanded, update tag direction
+            arrow.textContent = row.classList.contains('iplayer-open') ? 'Hide ↑' : 'Open ↓';
+          });
+        });
+
+        // Step 2: resolve the remaining rows against the library (same as v6).
+        const remaining = songRows.filter(r => !r.getAttribute('data-arrangement-id'));
+        if (!remaining.length) return;
+
+        try {
+          const [songs, refs] = await Promise.all([
+            sbFetch('rs_songs?select=id,title&status=eq.active'),
+            sbFetch('rs_references?select=song_id,status'),
+          ]);
+          const norm = (s) => (s || '').toLowerCase().replace(/[^a-z0-9 ]+/g, '').replace(/\s+/g, ' ').trim();
+          const titleToId = new Map();
+          songs.forEach(s => titleToId.set(norm(s.title), s.id));
+          const songsWithRefs = new Set(refs.filter(r => r.status === 'ready').map(r => r.song_id));
+
+          remaining.forEach(row => {
+            const title = row.getAttribute('data-title');
+            const songId = titleToId.get(norm(title));
+            const tag = row.querySelector('.player-tag');
+            tag.classList.remove('loading');
+
+            if (!songId) {
+              tag.textContent = 'Not in library';
+              tag.classList.add('no-ref');
+              return;
+            }
+
+            const studioUrl = `${STUDIO_BASE}song.html?id=${songId}`;
+            if (songsWithRefs.has(songId)) {
+              tag.textContent = 'Open ↗';
+              tag.classList.add('has-ref');
+            } else {
+              tag.textContent = 'In library';
+              tag.classList.add('no-ref');
+            }
+            row.classList.add('has-ref');
+            // Click on the tag (not the whole row) opens the Rehearsal Studio.
+            // The row itself stays static so users can read the structure
+            // notes printed inline below without accidentally launching a tab.
+            tag.style.cursor = 'pointer';
+            tag.addEventListener('click', (e) => {
+              e.stopPropagation();
+              window.open(studioUrl, '_blank');
+            });
+          });
+        } catch (err) {
+          console.warn('Library lookup failed:', err);
+          remaining.forEach(row => {
+            const tag = row.querySelector('.player-tag');
+            if (tag) tag.remove();
+          });
+        }
+      }
+
+      // iOS needs a user gesture to unlock the AudioContext. The first row
+      // click will unlock it via getCtx().resume() inside play().
+      init();
+    })();
+  </script>
 
 </body>
 </html>
