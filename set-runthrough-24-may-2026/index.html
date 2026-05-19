@@ -1433,6 +1433,90 @@
     .slim-footer-grid p strong { color: var(--fg-1); font-style: normal; font-family: var(--font-body); font-weight: 600; }
     .slim-footer-grid p a { color: var(--red-bright); text-decoration: none; border-bottom: 1px dotted var(--red); }
 
+    /* ── LYRICS BLOCK ── */
+    .lyrics {
+      margin-bottom: 22px;
+      background: var(--slate);
+      border-top: 2px solid var(--gold);
+    }
+    .lyrics.collapsible .lyrics-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s var(--ease-out-quint);
+    }
+    .lyrics.collapsible.open .lyrics-body {
+      max-height: 6000px;
+    }
+    .lyrics-head {
+      padding: 14px 22px;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.15s;
+    }
+    .lyrics-head:hover { background: rgba(200, 162, 75, 0.05); }
+    .lyrics-title {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+    }
+    .lyrics-meta {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-3);
+      margin-left: auto;
+    }
+    .lyrics-meta.tbc { color: var(--fg-3); }
+    .lyrics-meta.done { color: var(--gold); }
+    .lyrics-chev {
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--fg-3);
+      transition: transform 0.25s var(--ease-out-quint);
+    }
+    .lyrics.collapsible.open .lyrics-chev { transform: rotate(180deg); color: var(--gold); }
+
+    .lyrics-section {
+      padding: 14px 22px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .lyrics-section:first-child { border-top: 1px solid var(--line-soft); }
+    .lyrics-section-label {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .lyrics-section-cue {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 12px;
+      color: var(--fg-3);
+      margin-bottom: 8px;
+    }
+    .lyrics-lines {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--fg-1);
+      white-space: pre-wrap;
+    }
+    .lyrics-lines.placeholder {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--fg-3);
+      opacity: 0.7;
+    }
+
   </style>
 </head>
 <body>
@@ -1543,6 +1627,39 @@
           <div class="song-body-inner">
             <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Robin Mark · Donnie McClurkin groove</div>
             
+            <div class="lyrics collapsible" id="lyrics-1">
+              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="lyrics-title">Lyrics</div>
+                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
+                <div class="lyrics-chev">▾</div>
+              </div>
+              <div class="lyrics-body">
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Intro Chorus</div><div class="lyrics-section-cue">Full chorus, heavy-handed — then band drops out</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse 1</div><div class="lyrics-section-cue">"Days of Elijah" — low dynamics, band almost out</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Chorus</div><div class="lyrics-section-cue">"Behold He comes" — build up</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse 2</div><div class="lyrics-section-cue">"Days of Ezekiel"</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Chorus ×2</div><div class="lyrics-section-cue">Second pass through, fuller</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Vamp</div><div class="lyrics-section-cue">2 cycles → transitions seamlessly into Lord I Lift Your Name. Skip "There's no God like Jehovah"</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+              </div>
+            </div>
             <div class="parts" data-filter="all">
               <div class="part-row flag" data-part="drums">
                 <div class="part-role">
@@ -1734,6 +1851,47 @@ KEY NOTES
               </div>
             </div>
 
+            <div class="lyrics collapsible" id="lyrics-2">
+              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="lyrics-title">Lyrics</div>
+                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
+                <div class="lyrics-chev">▾</div>
+              </div>
+              <div class="lyrics-body">
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Intro</div><div class="lyrics-section-cue">Coming off the Days of Elijah vamp · vamp continues 2 cycles</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Intro Phrase</div><div class="lyrics-section-cue">"You came from heaven to earth" ×1</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse 1</div><div class="lyrics-section-cue">"Lord I lift your name on high" — dynamics drop, band almost out</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Chorus</div><div class="lyrics-section-cue">"You came from heaven to earth" ×1 — synth brass enters</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse 2</div><div class="lyrics-section-cue">Back to low dynamics. Same words as verse 1</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Adlib</div><div class="lyrics-section-cue">Bar after "I'm so glad you came to save us" → leads back into verse repeat</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Final Chorus ×2</div><div class="lyrics-section-cue">Full band, biggest lift of the medley</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Hand-off</div><div class="lyrics-section-cue">Sustained crash resolves into Ancient of Days — no break</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+              </div>
+            </div>
             <div class="parts" data-filter="all">
               <div class="part-row flag" data-part="keys">
                 <div class="part-role">
@@ -1804,6 +1962,43 @@ KEY NOTES
           <div class="song-body-inner">
             <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Standard progression · definitive ending</div>
             
+            <div class="lyrics collapsible" id="lyrics-3">
+              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="lyrics-title">Lyrics</div>
+                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
+                <div class="lyrics-chev">▾</div>
+              </div>
+              <div class="lyrics-body">
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Blessing and Honour · Verse 1</div><div class="lyrics-section-cue">Standard progression — not Anthem Nights treatment</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">"Every tongue in heaven and earth"</div><div class="lyrics-section-cue">×1</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Blessing and Honour · Verse repeat</div><div class="lyrics-section-cue">×1</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Chorus</div><div class="lyrics-section-cue">Full band</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">"Every tongue in heaven and earth"</div><div class="lyrics-section-cue">×2 this time</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">"Oh Ancient of Days"</div><div class="lyrics-section-cue">×4 — Caster drives the lifts</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Ending</div><div class="lyrics-section-cue">1-6-7-1 progression → definitive crash on the one. Let the room sit before Holy Spirit</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+              </div>
+            </div>
             <div class="parts" data-filter="all">
               <div class="part-row flag" data-part="drums">
                 <div class="part-role">
@@ -1874,6 +2069,23 @@ KEY NOTES
           <div class="song-body-inner">
             <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Simple · vocal-carried · Caster-led</div>
             
+            <div class="lyrics collapsible" id="lyrics-4">
+              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="lyrics-title">Lyrics</div>
+                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
+                <div class="lyrics-chev">▾</div>
+              </div>
+              <div class="lyrics-body">
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Song body</div><div class="lyrics-section-cue">No fixed structure · simple, vocal-carried · Caster leads each line</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Repeat lines as needed</div><div class="lyrics-section-cue">If the room sits in a phrase, sit with the room. Silence is part of the worship</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+              </div>
+            </div>
             <div class="parts" data-filter="all">
               <div class="part-row flag" data-part="lead">
                 <div class="part-role">
@@ -1944,6 +2156,31 @@ KEY NOTES
           <div class="song-body-inner">
             <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">Phil Thompson · the bridge is the song</div>
             
+            <div class="lyrics collapsible" id="lyrics-5">
+              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="lyrics-title">Lyrics</div>
+                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
+                <div class="lyrics-chev">▾</div>
+              </div>
+              <div class="lyrics-body">
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse</div><div class="lyrics-section-cue">"There is only one name"</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Chorus</div><div class="lyrics-section-cue">"A God He's champion, He reigns forever more, forever more"</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Bridge</div><div class="lyrics-section-cue">"Atmosphere shift now, change me, broken break now, Holy Spirit come down, Heaven open over us" — THE moment of the song</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Bridge repeats</div><div class="lyrics-section-cue">Hold "Heaven open over us" — repeat if the room is in it</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+              </div>
+            </div>
             <div class="parts" data-filter="all">
               <div class="part-row flag" data-part="guitar">
                 <div class="part-role">
@@ -2014,6 +2251,27 @@ KEY NOTES
           <div class="song-body-inner">
             <div class="song-credit" style="font-family: var(--font-serif); font-style: italic; font-size: 14px; color: var(--fg-3); margin-bottom: 16px; padding: 0 4px;">William McDowell · let it stretch</div>
             
+            <div class="lyrics collapsible" id="lyrics-6">
+              <div class="lyrics-head" role="button" tabindex="0" aria-expanded="false">
+                <div class="lyrics-title">Lyrics</div>
+                <div class="lyrics-meta tbc">Placeholder · to fill in</div>
+                <div class="lyrics-chev">▾</div>
+              </div>
+              <div class="lyrics-body">
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Verse / Build</div><div class="lyrics-section-cue">No fixed structure · the team knows it cold</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Chorus</div><div class="lyrics-section-cue">"Spirit break out" — full band, lift</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+                <div class="lyrics-section">
+                  <div class="lyrics-section-label">Spontaneous</div><div class="lyrics-section-cue">Caster decides length. If atmosphere is heavy, sit in it. This is the end of worship — no rush</div>
+                  <div class="lyrics-lines placeholder">— lyrics to be added —</div>
+                </div>
+              </div>
+            </div>
             <div class="parts" data-filter="all">
               <div class="part-row flag" data-part="lead">
                 <div class="part-role">
@@ -3015,11 +3273,37 @@ KEY NOTES
         chart._open = open;
       });
 
+      // ── COLLAPSE: lyrics ──
+      document.querySelectorAll('.lyrics.collapsible').forEach(lyrics => {
+        const head = lyrics.querySelector('.lyrics-head');
+        if (!head) return;
+        const open = () => {
+          lyrics.classList.add('open');
+          head.setAttribute('aria-expanded', 'true');
+        };
+        const close = () => {
+          lyrics.classList.remove('open');
+          head.setAttribute('aria-expanded', 'false');
+        };
+        head.addEventListener('click', () => {
+          lyrics.classList.contains('open') ? close() : open();
+        });
+        head.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            lyrics.classList.contains('open') ? close() : open();
+          }
+        });
+        lyrics._open = open;
+      });
+
       // ── PART FILTER ──
       const chips = document.querySelectorAll('.part-chip');
       const partsLists = document.querySelectorAll('.parts');
       // Parts that benefit from the chord chart (harmonic parts)
       const HARMONIC_PARTS = new Set(['keys', 'guitar', 'bass']);
+      // Parts that benefit from lyrics (singer parts)
+      const SINGER_PARTS = new Set(['lead', 'bvs']);
 
       function applyFilter(part) {
         partsLists.forEach(list => {
@@ -3037,6 +3321,10 @@ KEY NOTES
           // Open chord chart if a harmonic part is selected
           if (HARMONIC_PARTS.has(part)) {
             document.querySelectorAll('.chart.collapsible').forEach(c => c._open && c._open());
+          }
+          // Open lyrics if a singer part is selected
+          if (SINGER_PARTS.has(part)) {
+            document.querySelectorAll('.lyrics.collapsible').forEach(l => l._open && l._open());
           }
         }
       }
