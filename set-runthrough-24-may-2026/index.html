@@ -349,6 +349,50 @@
     }
     .direction p + p { margin-top: 12px; }
 
+    /* Practise CTA — links to the Rehearsal Studio practice view for this arrangement */
+    .practise-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      margin-bottom: 22px;
+      background: var(--red);
+      color: var(--bone);
+      text-decoration: none;
+      transition: background var(--t-micro) var(--ease-out-quint);
+    }
+    .practise-cta:hover { background: var(--red-bright); }
+    .practise-cta .label-stack { display: flex; flex-direction: column; gap: 2px; }
+    .practise-cta .label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+    .practise-cta .arrangement {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: -0.01em;
+      text-transform: uppercase;
+      color: var(--bone);
+    }
+    .practise-cta .arrow {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    @media (max-width: 640px) {
+      .practise-cta { padding: 14px 16px; }
+      .practise-cta .arrangement { font-size: 15px; }
+      .practise-cta .arrow { font-size: 11px; }
+    }
+
     /* Parts table */
     .parts {
       display: flex;
@@ -680,6 +724,14 @@
           <span class="pill">Same progression throughout</span>
           <span class="pill">Synth brass signature</span>
         </div>
+
+        <a class="practise-cta" href="https://calvaryhfgc.github.io/calvaryhephzibah/calvary-os/rehearsal/practice.html?arrangement_id=428a055c-501f-4c4c-b554-cf5c860c6bfd" target="_blank" rel="noopener">
+          <div class="label-stack">
+            <div class="label">Rehearsal Studio</div>
+            <div class="arrangement">Practise this arrangement</div>
+          </div>
+          <div class="arrow">Open →</div>
+        </a>
 
         <div class="direction">
           <div class="direction-label">Shape</div>
