@@ -380,6 +380,116 @@
       line-height: 1.5;
     }
 
+    /* HERO SESSION BADGE */
+    .session-badge {
+      display: inline-block;
+      margin-top: 36px;
+      padding: 14px 22px;
+      background: var(--red);
+      color: var(--bone);
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .session-badge:hover {
+      background: var(--red-bright);
+      transform: translateX(2px);
+    }
+    .session-badge .arrow {
+      margin-left: 10px;
+      display: inline-block;
+    }
+
+    /* BIG JOIN BLOCK */
+    .join-block {
+      padding: 48px 36px;
+      background: var(--red);
+      color: var(--bone);
+      margin-top: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .join-block::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 100% 0%, rgba(255,255,255,0.12), transparent 60%),
+        radial-gradient(ellipse 60% 50% at 0% 100%, rgba(110, 26, 15, 0.3), transparent 60%);
+      pointer-events: none;
+    }
+    .join-block-inner { position: relative; z-index: 1; }
+    .join-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: rgba(244, 239, 230, 0.7);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+    .join-title {
+      font-family: var(--font-display);
+      font-size: clamp(40px, 6vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .join-meta {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.5;
+      color: rgba(244, 239, 230, 0.92);
+      margin-bottom: 28px;
+      max-width: 540px;
+    }
+    .join-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 28px;
+      background: var(--obsidian);
+      color: var(--bone);
+      font-family: var(--font-body);
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-decoration: none;
+      border: 2px solid var(--obsidian);
+      transition: background 0.2s, color 0.2s;
+    }
+    .join-btn:hover {
+      background: var(--bone);
+      color: var(--obsidian);
+    }
+    .join-btn .arrow {
+      font-size: 18px;
+      transition: transform 0.2s;
+    }
+    .join-btn:hover .arrow { transform: translateX(4px); }
+    .join-fallback {
+      margin-top: 22px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      color: rgba(244, 239, 230, 0.65);
+      word-break: break-all;
+    }
+    .join-fallback a {
+      color: rgba(244, 239, 230, 0.85);
+      text-decoration: underline;
+    }
+    @media (max-width: 640px) {
+      .join-block { padding: 36px 24px; }
+    }
+
     /* SCREENSHOT */
     .shot {
       margin-top: 16px;
@@ -528,6 +638,10 @@
           <div class="value">Wed 20 May</div>
         </div>
       </div>
+
+      <a class="session-badge" href="https://www.jamkazam.com:444/sessions/04828b03-f6e9-4e87-a7a0-fb6f94c36934/details" target="_blank">
+        Open This Week's Session<span class="arrow">→</span>
+      </a>
     </section>
 
     <!-- WHY -->
@@ -849,6 +963,27 @@
         <li>You have run the setup wizard once and tested mic and headphones</li>
         <li>You have told the worship team chat you are ready</li>
       </ul>
+    </section>
+
+    <!-- JOIN -->
+    <section style="border-bottom: none; padding-bottom: 0;">
+      <div class="section-eyebrow">08 · Join</div>
+      <h2 class="section-title">This Week's<br>Session.</h2>
+
+      <div class="join-block">
+        <div class="join-block-inner">
+          <div class="join-eyebrow">Thursday 21 May · 7:30pm UK</div>
+          <div class="join-title">Open in<br>JamKazam.</div>
+          <p class="join-meta">Click the button below from the laptop or desktop you have JamKazam installed on. It opens the session details page — when you're ready, click into the session itself.</p>
+          <a class="join-btn" href="https://www.jamkazam.com:444/sessions/04828b03-f6e9-4e87-a7a0-fb6f94c36934/details" target="_blank">
+            Go to Session<span class="arrow">→</span>
+          </a>
+          <div class="join-fallback">
+            Or copy/paste this link into your browser:<br>
+            <a href="https://www.jamkazam.com:444/sessions/04828b03-f6e9-4e87-a7a0-fb6f94c36934/details" target="_blank">https://www.jamkazam.com:444/sessions/04828b03-f6e9-4e87-a7a0-fb6f94c36934/details</a>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- FOOTER -->
