@@ -490,6 +490,123 @@
       .join-block { padding: 36px 24px; }
     }
 
+    /* VIDEO BLOCK + POP-OUT */
+    .video-section {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .video-frame {
+      position: relative;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      padding: 0;
+      transition: opacity 0.3s;
+    }
+    .video-frame.is-floating {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .video-aspect {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+      background: var(--obsidian);
+    }
+    .video-aspect iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-caption {
+      padding: 14px 16px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+      border-top: 1px solid var(--line-soft);
+    }
+    .video-caption .arrow { color: var(--red); margin-right: 8px; }
+
+    /* Floating mini player */
+    .video-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 320px;
+      max-width: calc(100vw - 32px);
+      z-index: 100;
+      background: var(--slate);
+      border: 1px solid var(--red);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6),
+                  0 0 0 1px rgba(208, 68, 28, 0.3);
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+      pointer-events: none;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .video-float.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+    .video-float .video-aspect {
+      background: black;
+    }
+    .video-float-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px 8px 14px;
+      background: var(--obsidian);
+      border-bottom: 1px solid var(--red);
+    }
+    .video-float-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+    }
+    .video-float-actions {
+      display: flex;
+      gap: 4px;
+    }
+    .video-float-btn {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: 1px solid var(--line-mid);
+      color: var(--fg-2);
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1;
+      padding: 0;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .video-float-btn:hover {
+      background: var(--red);
+      color: var(--bone);
+      border-color: var(--red);
+    }
+    @media (max-width: 640px) {
+      .video-float {
+        width: 240px;
+        bottom: 16px;
+        right: 16px;
+      }
+      .video-float-header { padding: 6px 8px 6px 12px; }
+      .video-float-label { font-size: 9px; letter-spacing: 0.14em; }
+      .video-float-btn { width: 26px; height: 26px; }
+    }
+
     /* SCREENSHOT */
     .shot {
       margin-top: 16px;
@@ -643,6 +760,37 @@
         Open This Week's Session<span class="arrow">→</span>
       </a>
     </section>
+
+    <!-- VIDEO -->
+    <section class="video-section">
+      <div class="section-eyebrow">▸ Watch First</div>
+      <h2 class="section-title">A Quick<br>Walkthrough.</h2>
+      <p class="section-lede">Short explainer from Uncle B — what JamKazam is, why we're using it, and how to get ready. Watch this before you start the steps below.</p>
+
+      <div class="video-frame" id="videoFrame">
+        <div class="video-aspect">
+          <iframe id="videoIframe"
+                  src="https://drive.google.com/file/d/1JteOVHeyFAVf7OF1psOCokDRXPqROKOu/preview"
+                  allow="autoplay; encrypted-media"
+                  allowfullscreen></iframe>
+        </div>
+        <div class="video-caption"><span class="arrow">▸</span>Worship Team Briefing · ~5 min watch</div>
+      </div>
+    </section>
+
+    <!-- FLOATING MINI PLAYER -->
+    <div class="video-float" id="videoFloat" aria-hidden="true">
+      <div class="video-float-header">
+        <span class="video-float-label">▸ Walkthrough</span>
+        <div class="video-float-actions">
+          <button class="video-float-btn" id="videoFloatScrollUp" title="Scroll to video" aria-label="Scroll to video">↑</button>
+          <button class="video-float-btn" id="videoFloatClose" title="Close mini player" aria-label="Close mini player">×</button>
+        </div>
+      </div>
+      <div class="video-aspect">
+        <iframe id="videoFloatIframe" src="about:blank" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    </div>
 
     <!-- WHY -->
     <section>
@@ -993,6 +1141,84 @@
     </div>
 
   </main>
+
+  <script>
+    (function () {
+      var videoFrame = document.getElementById('videoFrame');
+      var videoFloat = document.getElementById('videoFloat');
+      var iframe = document.getElementById('videoIframe');
+      var floatHost = videoFloat.querySelector('.video-aspect');
+      var mainHost = videoFrame.querySelector('.video-aspect');
+      var closeBtn = document.getElementById('videoFloatClose');
+      var scrollUpBtn = document.getElementById('videoFloatScrollUp');
+
+      // Remove the placeholder iframe inside the floater
+      var floatPlaceholder = document.getElementById('videoFloatIframe');
+      if (floatPlaceholder) floatPlaceholder.remove();
+
+      var dismissed = false;
+      var floating = false;
+
+      function dock() {
+        if (!floating) return;
+        floating = false;
+        // Move iframe back to main host (preserves playback state)
+        if (iframe.parentNode !== mainHost) {
+          mainHost.appendChild(iframe);
+        }
+        videoFloat.classList.remove('is-visible');
+        videoFloat.setAttribute('aria-hidden', 'true');
+        videoFrame.classList.remove('is-floating');
+      }
+
+      function popOut() {
+        if (floating || dismissed) return;
+        floating = true;
+        if (iframe.parentNode !== floatHost) {
+          floatHost.appendChild(iframe);
+        }
+        videoFloat.classList.add('is-visible');
+        videoFloat.setAttribute('aria-hidden', 'false');
+        videoFrame.classList.add('is-floating');
+      }
+
+      // Observe the video frame — when it's mostly out of view, pop out
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            // Use intersectionRatio so we only float once it's nearly gone
+            if (entry.intersectionRatio < 0.15) {
+              popOut();
+            } else if (entry.intersectionRatio > 0.5) {
+              dock();
+            }
+          });
+        }, {
+          threshold: [0, 0.15, 0.5, 1]
+        });
+        io.observe(videoFrame);
+      }
+
+      // Close = dismiss for the rest of this page view
+      closeBtn.addEventListener('click', function () {
+        dismissed = true;
+        dock();
+        // Also pause-by-reload: clear src and restore to stop audio
+        var src = iframe.src;
+        iframe.src = 'about:blank';
+        // Keep iframe parked in main host so when they scroll back it lives there
+        if (iframe.parentNode !== mainHost) {
+          mainHost.appendChild(iframe);
+        }
+        setTimeout(function () { iframe.src = src; }, 50);
+      });
+
+      // Scroll-up = return to the video in its natural place
+      scrollUpBtn.addEventListener('click', function () {
+        videoFrame.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    })();
+  </script>
 
 </body>
 </html>
