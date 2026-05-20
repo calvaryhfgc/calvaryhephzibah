@@ -1,612 +1,842 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Rehearsal Setup — JamKazam | Calvary Worship</title>
-    <meta property="og:title" content="Virtual Rehearsal Setup — JamKazam">
-    <meta property="og:description" content="Worship team guide: get JamKazam set up before our next virtual rehearsal — Thursday 21st May, 7:30pm UK.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-orange: #D95A2B;
-            --deep-charcoal: #1A1A1A;
-            --warm-gray: #2D2D2D;
-            --cream: #FAF9F7;
-            --warm-white: #FFFFFE;
-            --worship-purple: #6B46C1;
-            --worship-blue: #3B82F6;
-            --shadow-soft: 0 4px 20px rgba(13, 13, 13, 0.08);
-            --shadow-medium: 0 8px 40px rgba(13, 13, 13, 0.12);
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Rehearsal Setup · JamKazam · Calvary Worship</title>
+  <meta name="description" content="Worship team — JamKazam setup before our virtual rehearsal on Thursday 21 May 2026, 7:30pm UK.">
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Virtual Rehearsal Setup · JamKazam">
+  <meta property="og:description" content="Worship team guide — get set up before Thursday 21 May, 7:30pm UK.">
+  <meta property="og:url" content="https://calvaryhfgc.github.io/calvaryhephzibah/the-bridge/worship-virtual-rehearsal-setup.html">
 
-        body {
-            font-family: 'Source Sans 3', sans-serif;
-            background: var(--cream);
-            color: var(--deep-charcoal);
-            line-height: 1.7;
-            font-size: 16px;
-        }
+  <link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
+  <link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png">
 
-        .hero {
-            background: linear-gradient(135deg, var(--worship-purple) 0%, var(--worship-blue) 100%);
-            padding: 70px 24px;
-            text-align: center;
-            position: relative;
-        }
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FFFFFF' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.6;
-        }
+    body {
+      background: var(--obsidian);
+      color: var(--fg-1);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.55;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-        .hero-content { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 0%, rgba(208, 68, 28, 0.22), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(110, 26, 15, 0.18), transparent 60%);
+    }
+    body::after {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      opacity: 0.05; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
 
-        .logo { width: 180px; height: auto; margin-bottom: 24px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
-        .hero-badge { display: inline-block; background: rgba(255,255,255,0.2); color: white; font-size: 0.75rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 8px 20px; border-radius: 100px; margin-bottom: 20px; }
-        .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 700; color: white; margin-bottom: 12px; line-height: 1.2; }
-        .hero-date { font-size: 1.25rem; color: rgba(255,255,255,0.95); font-weight: 500; margin-top: 8px; }
-        .hero-sub { font-size: 1rem; color: rgba(255,255,255,0.85); font-weight: 400; margin-top: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .container { max-width: 820px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
 
-        .container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    /* TICKER */
+    .ticker {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--obsidian);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 14px 28px;
+      font-size: var(--fs-micro);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-2);
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      flex-wrap: wrap;
+    }
+    .ticker-left { display: flex; align-items: center; gap: 12px; }
+    .ticker-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); box-shadow: 0 0 12px var(--red);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .ticker-right { color: var(--fg-3); font-size: 11px; }
 
-        h2.section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            color: var(--deep-charcoal);
-        }
+    /* HERO */
+    .hero {
+      padding: 80px 0 56px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .hero-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 12vw, 160px);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero h1 .accent { color: var(--red); }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 24px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line-soft);
+    }
+    .hero-meta-item .label {
+      font-size: 11px;
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-3);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .hero-meta-item .value {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      color: var(--fg-1);
+      line-height: 1.3;
+    }
 
-        .section-desc { color: #666; margin-bottom: 20px; }
+    /* SECTIONS */
+    section { padding: 56px 0; border-bottom: 1px solid var(--line-soft); }
+    section:last-of-type { border-bottom: none; }
 
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: var(--shadow-medium);
-            margin-bottom: 32px;
-        }
+    .section-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 60px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+    .section-lede {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.5;
+      color: var(--fg-2);
+      max-width: 640px;
+      margin-bottom: 32px;
+    }
 
-        /* Why this matters block */
-        .why-card {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
-            color: white;
-        }
-        .why-card h2 { color: white; }
-        .why-card p { opacity: 0.95; margin-bottom: 14px; }
-        .why-card p:last-child { margin-bottom: 0; }
-        .pullquote {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.15rem;
-            padding: 16px 20px;
-            background: rgba(255,255,255,0.1);
-            border-left: 3px solid rgba(255,255,255,0.6);
-            border-radius: 0 12px 12px 0;
-            margin: 16px 0;
-        }
+    /* Body prose inside sections */
+    .prose p {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--fg-1);
+      margin-bottom: 14px;
+      max-width: 640px;
+    }
+    .prose p:last-child { margin-bottom: 0; }
 
-        /* Date callout */
-        .date-callout {
-            background: linear-gradient(135deg, #D95A2B 0%, #F57C00 100%);
-            color: white;
-            border-radius: 16px;
-            padding: 28px 32px;
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-        .date-callout .icon { font-size: 2.5rem; }
-        .date-callout h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-        }
-        .date-callout p { opacity: 0.95; margin: 0; }
+    /* PULL QUOTE */
+    .pullquote {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--bone);
+      padding: 24px 0 24px 24px;
+      margin: 28px 0;
+      border-left: 3px solid var(--red);
+      max-width: 640px;
+    }
 
-        /* What you need list */
-        .need-list { display: grid; gap: 14px; }
-        .need-row {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            padding: 16px;
-            background: #f8f7f5;
-            border-radius: 10px;
-        }
-        .need-row .icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-            line-height: 1.3;
-        }
-        .need-row .label {
-            font-weight: 700;
-            margin-bottom: 2px;
-            font-size: 1.02rem;
-        }
-        .need-row .desc {
-            font-size: 0.95rem;
-            color: #555;
-        }
-        .need-row.critical {
-            background: #fff3cd;
-            border: 1px solid #ffc107;
-        }
-        .need-row.optional {
-            background: #f0f0f0;
-        }
+    /* GEAR / NEED LIST — uses the team-block visual language */
+    .need-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .need-block {
+      padding: 22px 24px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+    .need-block .num {
+      font-family: var(--font-display);
+      font-size: 40px;
+      line-height: 0.85;
+      color: var(--red);
+    }
+    .need-block .text .label {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 6px;
+    }
+    .need-block .text .desc {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--fg-2);
+      line-height: 1.5;
+    }
+    .need-block .tag {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--bone);
+      padding: 4px 10px;
+      border: 1px solid var(--red);
+      background: var(--red);
+      white-space: nowrap;
+      align-self: start;
+    }
+    .need-block .tag.soft {
+      color: var(--fg-3);
+      border-color: var(--line-mid);
+      background: transparent;
+    }
+    @media (max-width: 640px) {
+      .need-block {
+        grid-template-columns: 44px 1fr;
+        gap: 14px;
+      }
+      .need-block .num { font-size: 32px; }
+      .need-block .tag { grid-column: 2; justify-self: start; margin-top: 4px; }
+    }
 
-        /* Steps */
-        .step {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            align-items: flex-start;
-        }
-        .step-num {
-            flex-shrink: 0;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--worship-purple), var(--worship-blue));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 12px rgba(107,70,193,0.3);
-        }
-        .step-content { flex: 1; padding-top: 4px; }
-        .step-content .step-title {
-            font-weight: 700;
-            font-size: 1.08rem;
-            margin-bottom: 6px;
-            color: var(--deep-charcoal);
-        }
-        .step-content p { margin-bottom: 8px; color: #444; }
-        .step-content a {
-            color: var(--worship-purple);
-            font-weight: 600;
-            text-decoration: none;
-            border-bottom: 1px solid rgba(107,70,193,0.3);
-        }
-        .step-content a:hover { border-bottom-color: var(--worship-purple); }
-        .step-content .tip {
-            background: #f8f7f5;
-            border-left: 3px solid var(--primary-orange);
-            padding: 10px 14px;
-            border-radius: 0 8px 8px 0;
-            font-size: 0.93rem;
-            color: #555;
-            margin-top: 10px;
-        }
-        .step-content .tip strong { color: var(--primary-orange); }
+    /* STEPS */
+    .step {
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line-soft);
+      display: grid;
+      grid-template-columns: 60px 1fr;
+      gap: 24px;
+      align-items: baseline;
+    }
+    .step:last-child { border-bottom: none; }
+    .step .step-num {
+      font-family: var(--font-display);
+      font-size: 44px;
+      line-height: 0.85;
+      color: var(--red);
+    }
+    .step-body .step-title {
+      font-family: var(--font-display);
+      font-size: clamp(20px, 2.4vw, 26px);
+      line-height: 1.1;
+      letter-spacing: -0.005em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .step-body p {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--fg-1);
+      margin-bottom: 10px;
+    }
+    .step-body p:last-child { margin-bottom: 0; }
+    .step-body a {
+      color: var(--red-bright);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(208, 68, 28, 0.4);
+      transition: border-color 0.2s;
+    }
+    .step-body a:hover { border-bottom-color: var(--red-bright); }
+    .step-body .note {
+      margin-top: 12px;
+      padding: 14px 16px;
+      background: rgba(208, 68, 28, 0.06);
+      border-left: 2px solid var(--red);
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--fg-2);
+      line-height: 1.5;
+    }
+    .step-body .note strong { color: var(--red); font-weight: 700; }
+    @media (max-width: 640px) {
+      .step { grid-template-columns: 44px 1fr; gap: 16px; }
+      .step .step-num { font-size: 34px; }
+    }
 
-        /* Hardware section */
-        .hardware-intro {
-            background: #f8f7f5;
-            padding: 18px 20px;
-            border-radius: 10px;
-            margin-bottom: 24px;
-            font-size: 0.96rem;
-            color: #444;
-        }
-        .gear-grid { display: grid; gap: 16px; }
-        .gear-card {
-            border: 1px solid #eee;
-            border-radius: 12px;
-            padding: 20px;
-            background: white;
-        }
-        .gear-card .gear-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            margin-bottom: 4px;
-            color: var(--worship-purple);
-        }
-        .gear-card .gear-who {
-            font-size: 0.85rem;
-            color: var(--primary-orange);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-        .gear-card p { font-size: 0.95rem; color: #444; margin-bottom: 8px; }
-        .gear-card ul { margin: 10px 0 0 20px; font-size: 0.95rem; color: #444; }
-        .gear-card ul li { margin-bottom: 6px; }
+    /* GEAR BLOCKS (deeper hardware section) */
+    .gear-list { display: grid; gap: 18px; }
+    .gear-card {
+      padding: 24px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+    }
+    .gear-card h3 {
+      font-family: var(--font-display);
+      font-size: 24px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 6px;
+    }
+    .gear-card .gear-who {
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .gear-card p {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      line-height: 1.55;
+      color: var(--fg-1);
+      margin-bottom: 10px;
+    }
+    .gear-card ul {
+      list-style: none;
+      margin: 12px 0 0;
+      padding: 0;
+    }
+    .gear-card ul li {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--fg-1);
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line-soft);
+      line-height: 1.45;
+    }
+    .gear-card ul li:last-child { border-bottom: none; }
+    .gear-card ul li strong {
+      font-family: var(--font-body);
+      font-weight: 600;
+      color: var(--bone);
+    }
+    .gear-card .footnote {
+      margin-top: 14px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
 
-        /* Warning box */
-        .warn-box {
-            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
-            color: white;
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 32px;
-        }
-        .warn-box h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            color: white;
-        }
-        .warn-box ul {
-            margin: 0 0 0 20px;
-            line-height: 1.9;
-        }
-        .warn-box li { margin-bottom: 4px; }
+    /* WARN — three gotchas */
+    .gotcha-list {
+      display: grid;
+      gap: 14px;
+    }
+    .gotcha {
+      padding: 22px 24px;
+      background: rgba(208, 68, 28, 0.08);
+      border-left: 3px solid var(--red);
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 18px;
+      align-items: baseline;
+    }
+    .gotcha .gotcha-num {
+      font-family: var(--font-display);
+      font-size: 32px;
+      line-height: 0.85;
+      color: var(--red);
+    }
+    .gotcha .gotcha-text strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 6px;
+      font-weight: 400;
+    }
+    .gotcha .gotcha-text p {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      color: var(--fg-2);
+      line-height: 1.5;
+    }
 
-        /* Final checklist */
-        .checklist {
-            list-style: none;
-        }
-        .checklist li {
-            padding: 14px 0 14px 40px;
-            position: relative;
-            border-bottom: 1px solid #eee;
-            font-size: 1rem;
-        }
-        .checklist li:last-child { border-bottom: none; }
-        .checklist li::before {
-            content: '☐';
-            position: absolute;
-            left: 0;
-            font-size: 1.3rem;
-            color: var(--worship-purple);
-            top: 12px;
-        }
+    /* CHECKLIST */
+    .checklist {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .checklist li {
+      padding: 14px 0 14px 42px;
+      position: relative;
+      border-bottom: 1px solid var(--line-soft);
+      font-family: var(--font-serif);
+      font-size: 17px;
+      color: var(--fg-1);
+      line-height: 1.5;
+    }
+    .checklist li:last-child { border-bottom: none; }
+    .checklist li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 17px;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid var(--red);
+    }
 
-        /* Help line */
-        .help-line {
-            text-align: center;
-            margin-top: 40px;
-            padding: 28px;
-            background: white;
-            border-radius: 16px;
-            border: 2px dashed #ddd;
-        }
-        .help-line p {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: #555;
-            font-size: 1.05rem;
-        }
+    /* TIMELINE on Thursday */
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+    .tl-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 24px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line-soft);
+      align-items: baseline;
+    }
+    .tl-row:last-child { border-bottom: none; }
+    .tl-time {
+      font-family: var(--font-display);
+      font-size: clamp(24px, 3vw, 32px);
+      color: var(--red);
+      letter-spacing: 0.02em;
+    }
+    .tl-body .tl-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 6px;
+    }
+    .tl-body p {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--fg-2);
+      line-height: 1.5;
+    }
+    @media (max-width: 640px) {
+      .tl-row { grid-template-columns: 90px 1fr; gap: 16px; }
+    }
 
-        @media screen and (max-width: 600px) {
-            .hero { padding: 50px 20px; }
-            .container { padding: 24px 16px 60px; }
-            .card { padding: 22px; }
-            .step { gap: 14px; }
-            .step-num { width: 38px; height: 38px; font-size: 1.05rem; }
-            .date-callout { padding: 20px; }
-            .date-callout .icon { font-size: 2rem; }
-        }
-    </style>
+    /* FOOTER NOTE */
+    .footer-note {
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+    .footer-note p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 19px;
+      color: var(--fg-2);
+      line-height: 1.55;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .footer-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--red);
+      margin: 32px auto 0;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="hero">
-        <div class="hero-content">
-            <img src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/ufTeOHywYxLPaG9TDWPG/media/68319627522e13a702426868.png" alt="Calvary Logo" class="logo">
-            <div class="hero-badge">🎶 Worship Team</div>
-            <h1>Virtual Rehearsal Setup</h1>
-            <div class="hero-date">Getting ready for JamKazam</div>
-            <p class="hero-sub">A simple step-by-step guide so we can rehearse together from home — without leaving the house.</p>
+  <div class="ticker">
+    <div class="ticker-left">
+      <span class="ticker-dot"></span>
+      <span>Virtual Rehearsal · JamKazam Setup</span>
+    </div>
+    <div class="ticker-right">Worship Team · Internal</div>
+  </div>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">Worship Team · Internal</div>
+      <h1>Rehearse<br><span class="accent">From Home.</span></h1>
+
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="label">Next Session</div>
+          <div class="value">Thu 21 May 2026</div>
         </div>
+        <div class="hero-meta-item">
+          <div class="label">Time</div>
+          <div class="value">7:30 PM UK</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Platform</div>
+          <div class="value">JamKazam</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="label">Setup By</div>
+          <div class="value">Wed 20 May</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHY -->
+    <section>
+      <div class="section-eyebrow">00 · Why This</div>
+      <h2 class="section-title">Together,<br>Even When Apart.</h2>
+
+      <div class="prose">
+        <p>Getting everyone in the same room for rehearsal is hard. People work shifts. People live far away. Some weeks we just can't make it work.</p>
+        <p>So we're going to start rehearsing virtually — from our own homes, in real time, as one team.</p>
+      </div>
+
+      <div class="pullquote">
+        "Zoom is great for talking. It is not built for music. The sound lag makes it impossible to play and sing in time together."
+      </div>
+
+      <div class="prose">
+        <p>JamKazam is built specifically for musicians playing together online. It cuts the lag right down, so we can actually worship and rehearse as a band — even when we're not in the same place.</p>
+      </div>
+    </section>
+
+    <!-- WHAT YOU NEED -->
+    <section>
+      <div class="section-eyebrow">01 · Before You Start</div>
+      <h2 class="section-title">What You Need.</h2>
+      <p class="section-lede">Read this list first. If you are missing something, message the team chat — we will sort it out together.</p>
+
+      <div class="need-grid">
+
+        <div class="need-block">
+          <div class="num">01</div>
+          <div class="text">
+            <div class="label">A Laptop or Desktop</div>
+            <div class="desc">Windows 10 or 11, or a Mac (macOS 10.15 or newer). This is the big one — JamKazam does not run on phones or tablets. No iPhone, no iPad, no Android.</div>
+          </div>
+          <div class="tag">Critical</div>
+        </div>
+
+        <div class="need-block">
+          <div class="num">02</div>
+          <div class="text">
+            <div class="label">A Wired Internet Connection</div>
+            <div class="desc">WiFi is too slow for live music. You need to plug your computer directly into your home router using an Ethernet cable. If your laptop has no Ethernet port, a small USB adapter does the job — about £8 on Amazon.</div>
+          </div>
+          <div class="tag">Critical</div>
+        </div>
+
+        <div class="need-block">
+          <div class="num">03</div>
+          <div class="text">
+            <div class="label">Wired Headphones</div>
+            <div class="desc">Any wired headphones will do. Bluetooth and AirPods add lag — leave them off the table.</div>
+          </div>
+          <div class="tag soft">Required</div>
+        </div>
+
+        <div class="need-block">
+          <div class="num">04</div>
+          <div class="text">
+            <div class="label">A Microphone</div>
+            <div class="desc">Your laptop's built-in mic is enough to start. We can upgrade later.</div>
+          </div>
+          <div class="tag soft">Required</div>
+        </div>
+
+        <div class="need-block">
+          <div class="num">05</div>
+          <div class="text">
+            <div class="label">Audio Interface</div>
+            <div class="desc">Only if you play an instrument. Vocalists can skip this. Full details further down.</div>
+          </div>
+          <div class="tag soft">Instrument</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STEP 1 — ACCOUNT -->
+    <section>
+      <div class="section-eyebrow">02 · Step One</div>
+      <h2 class="section-title">Create Your<br>Free Account.</h2>
+      <p class="section-lede">About two minutes. Do it on the same computer you will rehearse on.</p>
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Go to the JamKazam Website</div>
+          <p>Open your web browser and go to <a href="https://www.jamkazam.com" target="_blank">www.jamkazam.com</a></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Click the Orange Button</div>
+          <p>The button says "Join Today, Play Free!" — front and centre on the homepage.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Fill In Your Details</div>
+          <p>Name, email, password. Tick the box to agree to their terms. Tick the "I'm not a robot" box. Then click Create Account.</p>
+          <div class="note"><strong>Tip:</strong> use an email you actually check — they send you a confirmation link.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">Confirm Your Email</div>
+          <p>Open the email JamKazam sent. Click the link. Account ready.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2 — DOWNLOAD APP -->
+    <section>
+      <div class="section-eyebrow">03 · Step Two</div>
+      <h2 class="section-title">Download<br>The App.</h2>
+      <p class="section-lede">JamKazam runs as a proper desktop app — not in a browser tab.</p>
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Open the Downloads Page</div>
+          <p>After sign-up you usually see the download button straight away. If not, go to <a href="https://www.jamkazam.com/downloads" target="_blank">www.jamkazam.com/downloads</a></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Pick Windows or Mac</div>
+          <p>Click the right button for your computer. The installer file will download.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Run the Installer</div>
+          <p><strong>Windows:</strong> double-click the file. Click Next, then Install. If Windows asks for permission to make changes — click Yes.</p>
+          <p><strong>Mac:</strong> double-click the file. Drag the JamKazam icon onto the Applications folder icon. Then open it from your Applications folder.</p>
+          <div class="note"><strong>Mac warning:</strong> if it says "Can't be opened — unidentified developer," right-click the app and choose Open. Then click Open again on the pop-up. You only do this once.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">Sign In</div>
+          <p>Open the app. Sign in with the email and password you just created. Look top-right — you should see your name. That means you are in.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3 — SETUP WIZARD -->
+    <section>
+      <div class="section-eyebrow">04 · Step Three</div>
+      <h2 class="section-title">Run the<br>Setup Wizard.</h2>
+      <p class="section-lede">First time you open the app, it walks you through the checks. Just follow along.</p>
+
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <div class="step-title">Plug In the Ethernet Cable First</div>
+          <p>Connect your computer to your router with the cable <strong>before</strong> running the wizard. Turn WiFi off on your computer so it cannot fall back to it.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <div class="step-title">Let It Test Your Internet</div>
+          <p>The wizard checks your connection speed. This takes a couple of minutes. Don't run Netflix or YouTube while it tests — it needs all your bandwidth.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <div class="step-title">Choose Your Mic and Headphones</div>
+          <p>Pick them from the drop-downs. If you are using your laptop's built-in mic, pick that. If your audio interface is plugged in, pick that instead.</p>
+          <div class="note"><strong>Tip:</strong> plug headphones in <em>before</em> opening the app, so JamKazam sees them straight away.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <div class="step-title">Test You Can Hear and Be Heard</div>
+          <p>The wizard plays a sound to check your headphones, then records you to check your mic. Sing or speak a few words. If you hear yourself back — you are good.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HARDWARE -->
+    <section>
+      <div class="section-eyebrow">05 · Instrumentalists</div>
+      <h2 class="section-title">The Gear.</h2>
+      <p class="section-lede">If you play an instrument, this section is for you. Vocalists can skip ahead.</p>
+
+      <div class="prose" style="margin-bottom: 28px;">
+        <p>The short version: to plug an instrument into your computer properly, you need a small box called an <strong>audio interface</strong>. It sits between your instrument and your laptop. It makes the sound clean and fast. Without one, your sound will be laggy and noisy.</p>
+      </div>
+
+      <div class="gear-list">
+
+        <div class="gear-card">
+          <h3>Audio Interface</h3>
+          <div class="gear-who">All instrumentalists</div>
+          <p>A small USB box with inputs for your instrument and outputs for your headphones. Budget options that work:</p>
+          <ul>
+            <li><strong>Behringer UMC22</strong> — around £45. Cheapest option that still works properly.</li>
+            <li><strong>PreSonus AudioBox USB 96</strong> — around £80. Solid middle ground.</li>
+            <li><strong>Focusrite Scarlett Solo (4th Gen)</strong> — around £110. Industry standard, great sound.</li>
+          </ul>
+          <div class="footnote">Speak to Bolaji before buying — we may be able to source through the church.</div>
+        </div>
+
+        <div class="gear-card">
+          <h3>Instrument Cable</h3>
+          <div class="gear-who">Guitar · Bass · Electric Keys</div>
+          <p>A standard ¼-inch guitar lead. One end into your instrument, the other into the audio interface. Most of us already have one.</p>
+        </div>
+
+        <div class="gear-card">
+          <h3>Headphones with ¼-inch Jack</h3>
+          <div class="gear-who">Anyone using an interface</div>
+          <p>This catches people out. Most audio interfaces use the <strong>large</strong> headphone plug, not the small one your phone uses. If your headphones have the small plug, a £3 adapter converts it to the large size.</p>
+        </div>
+
+        <div class="gear-card">
+          <h3>XLR Microphone</h3>
+          <div class="gear-who">Vocalists upgrading later</div>
+          <p>You do not need this for our first session. Start with your laptop mic. When you upgrade, a <strong>Shure SM58</strong> (around £100) is the church standard — plugs into the audio interface using an XLR cable.</p>
+        </div>
+
+        <div class="gear-card">
+          <h3>Drummers — A Note</h3>
+          <div class="gear-who">Drums</div>
+          <p>Acoustic drums are tricky for virtual rehearsal because they are loud and hard to mic at home. If you have an electronic kit, it plugs straight into an audio interface. If you only have acoustic — message BJ and we will work out a plan together.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GOTCHAS -->
+    <section>
+      <div class="section-eyebrow">06 · Watch Out For</div>
+      <h2 class="section-title">Three Things<br>That Trip People Up.</h2>
+      <p class="section-lede">Almost everyone hits at least one of these. Save yourself the headache.</p>
+
+      <div class="gotcha-list">
+        <div class="gotcha">
+          <div class="gotcha-num">01</div>
+          <div class="gotcha-text">
+            <strong>WiFi Will Not Work</strong>
+            <p>You must use an Ethernet cable. WiFi adds enough lag that nothing will be in time. There is no workaround.</p>
+          </div>
+        </div>
+        <div class="gotcha">
+          <div class="gotcha-num">02</div>
+          <div class="gotcha-text">
+            <strong>Phones and Tablets Do Not Work</strong>
+            <p>JamKazam only runs on Windows or Mac computers. No iPad. No iPhone. No Android. You need an actual laptop or desktop.</p>
+          </div>
+        </div>
+        <div class="gotcha">
+          <div class="gotcha-num">03</div>
+          <div class="gotcha-text">
+            <strong>Bluetooth Headphones Add Lag</strong>
+            <p>AirPods, wireless headphones — they throw your timing off. Wired only. Always.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section>
+      <div class="section-eyebrow">07 · Before Thursday</div>
+      <h2 class="section-title">Your Checklist.</h2>
+      <p class="section-lede">Tick these off in your own time before 7:30pm Thursday. Don't leave it to the day.</p>
+
+      <ul class="checklist">
+        <li>JamKazam account created and email confirmed</li>
+        <li>Desktop app downloaded and installed on your computer</li>
+        <li>You can sign in and see your name top-right of the app</li>
+        <li>You have an Ethernet cable that reaches from router to computer</li>
+        <li>You have tested the Ethernet cable and confirmed it works</li>
+        <li>You have wired headphones ready</li>
+        <li>(Instrumentalists) Audio interface ordered or sorted</li>
+        <li>You have run the setup wizard once and tested mic and headphones</li>
+        <li>You have told the worship team chat you are ready</li>
+      </ul>
+    </section>
+
+    <!-- THURSDAY TIMELINE -->
+    <section>
+      <div class="section-eyebrow">08 · On the Night</div>
+      <h2 class="section-title">How Thursday<br>Will Run.</h2>
+
+      <div class="timeline">
+        <div class="tl-row">
+          <div class="tl-time">7:15</div>
+          <div class="tl-body">
+            <div class="tl-title">Get Yourself Ready</div>
+            <p>Plug in the Ethernet cable. Put headphones on. Open JamKazam. Sign in.</p>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">7:25</div>
+          <div class="tl-body">
+            <div class="tl-title">Join the Session</div>
+            <p>We will drop a JamKazam session link into the worship team WhatsApp group ten minutes before. Click it and you are in our rehearsal room.</p>
+          </div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-time">7:30</div>
+          <div class="tl-body">
+            <div class="tl-title">We Start</div>
+            <p>Brief prayer. Sound check around the team. Then we work through Sunday's set. Expect around ninety minutes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div class="footer-note">
+      <p>"Stuck on any of this? Don't sit alone with it. Message the worship team chat or call Bolaji directly. We would rather sort it out on Monday than have you missing on Thursday."</p>
+      <div class="footer-rule"></div>
     </div>
 
-    <div class="container">
-
-        <!-- Date callout -->
-        <div class="date-callout">
-            <div class="icon">📅</div>
-            <div>
-                <h2>Our next virtual rehearsal</h2>
-                <p><strong>Thursday 21st May 2026 · 7:30pm UK time</strong></p>
-                <p style="font-size: 0.95rem; margin-top: 6px;">Please be fully set up <strong>before</strong> we start — see the steps below.</p>
-            </div>
-        </div>
-
-        <!-- Why -->
-        <div class="card why-card">
-            <h2 class="section-title">Why we're doing this</h2>
-            <p>Getting everyone in the same room for rehearsal is hard. People work shifts. People live far away. Some weeks we just can't make it work.</p>
-            <p>So we're going to rehearse together <strong>virtually</strong> — from our own homes, in real time.</p>
-            <div class="pullquote">"Zoom is great for talking. It's not built for music. The sound lag makes it impossible to play and sing in time together."</div>
-            <p>JamKazam is a tool built specifically for musicians playing together online. It cuts the lag right down, so we can actually worship and rehearse as one team — even when we're not in the same place.</p>
-        </div>
-
-        <!-- What you need first -->
-        <div class="card">
-            <h2 class="section-title">📋 What you need before you start</h2>
-            <p class="section-desc">Read this list before doing anything else. If you're missing something, message the group chat and we'll help.</p>
-
-            <div class="need-list">
-                <div class="need-row critical">
-                    <span class="icon">💻</span>
-                    <div>
-                        <div class="label">A laptop or desktop computer</div>
-                        <div class="desc">Windows 10 or 11, or a Mac (macOS 10.15 or newer). <strong>It will NOT work on a phone or tablet.</strong> No iPhones, no iPads, no Android. This is the main thing.</div>
-                    </div>
-                </div>
-
-                <div class="need-row critical">
-                    <span class="icon">🌐</span>
-                    <div>
-                        <div class="label">A wired internet connection (Ethernet cable)</div>
-                        <div class="desc">WiFi is too slow for live music. You need to plug your computer directly into your home router using an Ethernet cable. If your laptop doesn't have an Ethernet port, you'll need a small USB adapter — they're about £8 on Amazon.</div>
-                    </div>
-                </div>
-
-                <div class="need-row">
-                    <span class="icon">🎧</span>
-                    <div>
-                        <div class="label">Wired headphones</div>
-                        <div class="desc">Any wired headphones will do to start. Bluetooth/wireless headphones add lag — don't use them.</div>
-                    </div>
-                </div>
-
-                <div class="need-row">
-                    <span class="icon">🎤</span>
-                    <div>
-                        <div class="label">A microphone</div>
-                        <div class="desc">Your laptop's built-in mic is enough to get started. We can upgrade later.</div>
-                    </div>
-                </div>
-
-                <div class="need-row optional">
-                    <span class="icon">🎸</span>
-                    <div>
-                        <div class="label">Audio interface <em>(only if you play an instrument)</em></div>
-                        <div class="desc">If you play keys, guitar, bass or drums, you'll eventually need a small box called an audio interface to plug in properly. See the hardware section below — don't worry, vocalists can skip this.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 1: Create account -->
-        <div class="card">
-            <h2 class="section-title">Step 1 — Create your free JamKazam account</h2>
-            <p class="section-desc">This takes about 2 minutes. Do it on the same computer you'll rehearse on.</p>
-
-            <div class="step">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                    <div class="step-title">Go to the JamKazam website</div>
-                    <p>Open your web browser and go to <a href="https://www.jamkazam.com" target="_blank">www.jamkazam.com</a></p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                    <div class="step-title">Click the orange "Join Today, Play Free!" button</div>
-                    <p>It's on the front page. You can't miss it.</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                    <div class="step-title">Fill in your details</div>
-                    <p>Name, email, password. Tick the box to agree to their terms. Tick the "I'm not a robot" box. Then click <strong>Create Account</strong>.</p>
-                    <div class="tip"><strong>Tip:</strong> Use an email you actually check — they'll send you a confirmation link.</div>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">4</div>
-                <div class="step-content">
-                    <div class="step-title">Check your email</div>
-                    <p>Click the confirmation link they send you. That's your account ready.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 2: Download app -->
-        <div class="card">
-            <h2 class="section-title">Step 2 — Download the desktop app</h2>
-            <p class="section-desc">JamKazam runs as a proper app on your computer, not in a browser tab.</p>
-
-            <div class="step">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                    <div class="step-title">Go to the downloads page</div>
-                    <p>After you sign up, you should see a download button straight away. If not, go to <a href="https://www.jamkazam.com/downloads" target="_blank">www.jamkazam.com/downloads</a></p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                    <div class="step-title">Pick Windows or Mac</div>
-                    <p>Click the right button for your computer. The installer file will download.</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                    <div class="step-title">Open the installer and follow the prompts</div>
-                    <p><strong>On Windows:</strong> Double-click the file. Click <em>Next</em>, then <em>Install</em>. If Windows asks "Do you want this app to make changes?" — click <strong>Yes</strong>.</p>
-                    <p><strong>On Mac:</strong> Double-click the file. Drag the JamKazam icon onto the Applications folder icon. Then open it from your Applications folder.</p>
-                    <div class="tip"><strong>If your Mac says "Can't be opened because it's from an unidentified developer":</strong> Right-click the app and choose <em>Open</em>. Then click <em>Open</em> again in the pop-up. You only have to do this once.</div>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">4</div>
-                <div class="step-content">
-                    <div class="step-title">Sign in</div>
-                    <p>Open the app and sign in with the email and password you just created. You should see your name in the top right corner — that means you're in.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 3: Setup wizard -->
-        <div class="card">
-            <h2 class="section-title">Step 3 — Run the setup wizard</h2>
-            <p class="section-desc">The first time you open the app, it walks you through some checks. Just follow along.</p>
-
-            <div class="step">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                    <div class="step-title">Plug in your Ethernet cable first</div>
-                    <p>Connect your computer to your home router with the cable <strong>before</strong> running the wizard. Turn WiFi off on your computer so it doesn't accidentally use it.</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                    <div class="step-title">Let it test your internet</div>
-                    <p>The wizard will check your connection speed. This takes a couple of minutes. Don't open Netflix or YouTube while it runs — it needs your full bandwidth to test properly.</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                    <div class="step-title">Set up your audio</div>
-                    <p>Choose your microphone and your headphones from the drop-down menus. If you're using your laptop's built-in mic, pick that. If you've got an audio interface plugged in, pick that instead.</p>
-                    <div class="tip"><strong>Tip:</strong> Plug your headphones in <em>before</em> opening the app, so JamKazam sees them straight away.</div>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">4</div>
-                <div class="step-content">
-                    <div class="step-title">Test you can hear and be heard</div>
-                    <p>The wizard plays a sound to check your headphones, then records you to check your mic. Speak or sing a few words. If you hear yourself back, you're good.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Hardware deep dive -->
-        <div class="card">
-            <h2 class="section-title">🎸 Hardware for instrumentalists</h2>
-            <p class="section-desc">If you play an instrument, this section is for you. Vocalists — you can skip to the next part.</p>
-
-            <div class="hardware-intro">
-                <strong>The short version:</strong> to plug an instrument into your computer properly, you need a small box called an <em>audio interface</em>. It sits between your instrument and your laptop, and it makes the sound clean and fast. Without one, your sound will be laggy and noisy.
-            </div>
-
-            <div class="gear-grid">
-
-                <div class="gear-card">
-                    <div class="gear-title">Audio Interface</div>
-                    <div class="gear-who">Everyone playing an instrument</div>
-                    <p>A small USB box with inputs for your instrument and outputs for your headphones. Budget options that work well:</p>
-                    <ul>
-                        <li><strong>Behringer UMC22</strong> — around £45. Cheapest option that still works properly.</li>
-                        <li><strong>Focusrite Scarlett Solo (4th Gen)</strong> — around £110. Industry standard, great sound.</li>
-                        <li><strong>PreSonus AudioBox USB 96</strong> — around £80. Good middle ground.</li>
-                    </ul>
-                    <p style="margin-top: 12px; font-style: italic; color: #666;">Let Bolaji know before you buy — we may be able to source them through the church.</p>
-                </div>
-
-                <div class="gear-card">
-                    <div class="gear-title">Instrument Cable (¼ inch)</div>
-                    <div class="gear-who">Guitar, bass, electric keys</div>
-                    <p>A standard guitar lead. One end goes into your instrument, the other goes into the audio interface. Most of us already have one.</p>
-                </div>
-
-                <div class="gear-card">
-                    <div class="gear-title">Headphones with ¼ inch (6.3mm) jack</div>
-                    <div class="gear-who">Anyone using an audio interface</div>
-                    <p>This catches people out. Most audio interfaces use the <strong>big</strong> headphone plug, not the small one your phone uses. If your headphones have the small plug, you can buy a £3 adapter that converts it to the big size.</p>
-                </div>
-
-                <div class="gear-card">
-                    <div class="gear-title">Microphone (XLR type)</div>
-                    <div class="gear-who">Vocalists who want better sound later</div>
-                    <p>You don't need this for our first session. Start with your laptop mic. When you're ready to upgrade, a <strong>Shure SM58</strong> (~£100) is the church standard — plugs into the audio interface using an XLR cable.</p>
-                </div>
-
-                <div class="gear-card">
-                    <div class="gear-title">Drummers — a note</div>
-                    <div class="gear-who">Drums</div>
-                    <p>Acoustic drums are tricky for virtual rehearsal because they're loud and hard to mic at home. For now, if you have an electronic kit, you can plug it straight into an audio interface. If you only have an acoustic kit, message BJ and we'll work out a plan together.</p>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- The big gotchas -->
-        <div class="warn-box">
-            <h2>⚠️ Three things that will trip you up</h2>
-            <p style="margin-bottom: 12px; opacity: 0.95;">Almost everyone hits these. Save yourself the headache:</p>
-            <ul>
-                <li><strong>WiFi will not work properly.</strong> You MUST use an Ethernet cable. WiFi adds enough lag that nothing will be in time.</li>
-                <li><strong>Phones and tablets don't work.</strong> JamKazam only runs on Windows or Mac computers. iPad won't work. iPhone won't work. Android won't work.</li>
-                <li><strong>Bluetooth headphones add lag.</strong> AirPods, wireless headphones — they'll throw your timing off. Use wired headphones only.</li>
-            </ul>
-        </div>
-
-        <!-- Before Thursday checklist -->
-        <div class="card">
-            <h2 class="section-title">✅ Your checklist before Thursday 21st May</h2>
-            <p class="section-desc">Tick these off in your own time before 7:30pm Thursday. Don't leave it to the day.</p>
-            <ul class="checklist">
-                <li>JamKazam account created and email confirmed</li>
-                <li>Desktop app downloaded and installed on your computer</li>
-                <li>You can sign in and see your name in the top right of the app</li>
-                <li>You have an Ethernet cable that reaches from your router to your computer</li>
-                <li>You've tested plugging the Ethernet cable in and confirmed it works</li>
-                <li>You have wired headphones ready</li>
-                <li>(If playing an instrument) Audio interface ordered or sorted</li>
-                <li>You've run the setup wizard at least once and tested your mic and headphones</li>
-                <li>You've messaged the group to say you're ready 🎉</li>
-            </ul>
-        </div>
-
-        <!-- How Thursday will work -->
-        <div class="card">
-            <h2 class="section-title">🎶 How Thursday will actually work</h2>
-            <p>Once everyone is set up, here's the plan:</p>
-
-            <div class="step" style="margin-top: 16px;">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                    <div class="step-title">7:15pm — Get yourself ready</div>
-                    <p>Plug your Ethernet cable in. Put your headphones on. Open JamKazam. Sign in.</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                    <div class="step-title">7:25pm — Join the session</div>
-                    <p>We'll send a JamKazam session link in the worship team WhatsApp group 10 minutes before. Click it and you'll be brought straight into our rehearsal room.</p>
-                </div>
-            </div>
-
-            <div class="step">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                    <div class="step-title">7:30pm — We start</div>
-                    <p>Brief prayer, sound check around the team, then we'll work through Sunday's set. Expect about 90 minutes.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Help line -->
-        <div class="help-line">
-            <p>"Stuck on any of this? Don't sit alone with it. Message the worship team chat or call Bolaji directly. We'd rather sort it out on Monday than have you missing on Thursday."</p>
-        </div>
-
-    </div>
+  </main>
 
 </body>
 </html>
