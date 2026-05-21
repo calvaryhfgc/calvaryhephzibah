@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worship Lessons · Vol 01 · Brotherhood &amp; Structure | Calvary Worship</title>
+  <meta name="description" content="A teaching for the worship team — brotherhood, Aaron and Hur, Lone Survivor, and the new default structure for praise.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Worship Lessons · Vol 01 — Brotherhood &amp; Structure">
+  <meta property="og:description" content="Aaron and Hur, the Lone Survivor opening, and our new default praise structure.">
+  <meta property="og:url" content="https://calvaryhfgc.github.io/calvaryhephzibah/the-bridge/worship-lessons-vol-01.html">
+
+  <link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
+  <link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--obsidian);
+      color: var(--fg-1);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.55;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 0%, rgba(208, 68, 28, 0.22), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(110, 26, 15, 0.18), transparent 60%);
+    }
+    body::after {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      opacity: 0.05; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+
+    .container { max-width: 780px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+
+    /* TICKER */
+    .ticker {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--obsidian);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 14px 28px;
+      font-size: var(--fs-micro);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-2);
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      flex-wrap: wrap;
+    }
+    .ticker-left { display: flex; align-items: center; gap: 12px; }
+    .ticker-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); box-shadow: 0 0 12px var(--red);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .ticker-right { color: var(--fg-3); font-size: 11px; }
+
+    /* HERO */
+    .hero {
+      padding: 80px 0 56px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .hero-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(58px, 11vw, 140px);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero h1 .accent { color: var(--red); }
+    .hero-deck {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--fg-2);
+      max-width: 560px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    /* SECTIONS */
+    section { padding: 56px 0; border-bottom: 1px solid var(--line-soft); }
+    section:last-of-type { border-bottom: none; }
+
+    .section-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 56px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+    .section-lede {
+      font-family: var(--font-serif);
+      font-size: 19px;
+      line-height: 1.5;
+      color: var(--fg-2);
+      max-width: 640px;
+      margin-bottom: 28px;
+    }
+
+    /* PROSE — pastoral teaching */
+    .prose p {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.65;
+      color: var(--fg-1);
+      margin-bottom: 18px;
+      max-width: 640px;
+    }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose em { color: var(--bone); font-style: italic; }
+    .prose strong { color: var(--bone); font-weight: 600; }
+
+    /* SCRIPTURE BLOCK */
+    .scripture {
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      padding: 28px 32px;
+      margin: 32px 0;
+    }
+    .scripture-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .scripture-text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--bone);
+      margin-bottom: 10px;
+    }
+    .scripture-ref {
+      font-family: var(--font-body);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+
+    /* PULL QUOTE — big, framed */
+    .pullquote {
+      margin: 36px 0;
+      padding: 32px 0;
+      border-top: 2px solid var(--red);
+      border-bottom: 2px solid var(--red);
+    }
+    .pullquote-text {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .pullquote-attr {
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+
+    /* FILM EMBED */
+    .film-card {
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      margin: 32px 0;
+    }
+    .film-aspect {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%;
+      background: var(--obsidian);
+    }
+    .film-aspect iframe {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      border: 0;
+    }
+    .film-caption {
+      padding: 16px 20px;
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .film-caption .arrow { color: var(--red); margin-right: 8px; }
+    .film-caption .time { color: var(--red); }
+
+    /* STRUCTURE — the three movements */
+    .move-grid { display: grid; gap: 18px; }
+    .move {
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      padding: 28px 30px;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 24px;
+      align-items: baseline;
+    }
+    .move .move-num {
+      font-family: var(--font-display);
+      font-size: 56px;
+      line-height: 0.85;
+      color: var(--red);
+    }
+    .move .move-label {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 10px;
+    }
+    .move .move-body {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--fg-1);
+    }
+    .move .move-body strong { color: var(--bone); }
+    @media (max-width: 640px) {
+      .move { grid-template-columns: 60px 1fr; gap: 16px; padding: 22px 22px; }
+      .move .move-num { font-size: 42px; }
+    }
+
+    /* THE BLUNT BLOCK — closing admonishment, red wash */
+    .admonish {
+      padding: 40px 36px;
+      background: rgba(208, 68, 28, 0.08);
+      border-left: 3px solid var(--red);
+      margin-top: 32px;
+    }
+    .admonish-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 14px;
+      line-height: 1.05;
+    }
+    .admonish-body {
+      font-family: var(--font-serif);
+      font-size: 17px;
+      line-height: 1.55;
+      color: var(--fg-1);
+    }
+    .admonish-body p { margin-bottom: 14px; }
+    .admonish-body p:last-child { margin-bottom: 0; }
+    .admonish-body strong { color: var(--bone); }
+
+    /* FOOTER */
+    .footer-note {
+      padding: 48px 0 32px;
+      text-align: center;
+    }
+    .footer-note p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 19px;
+      color: var(--fg-2);
+      line-height: 1.55;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .footer-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--red);
+      margin: 32px auto 0;
+    }
+    .footer-meta {
+      margin-top: 24px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+    }
+
+    @media (max-width: 640px) {
+      .hero { padding: 60px 0 40px; }
+      .scripture, .admonish { padding: 22px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ticker">
+    <div class="ticker-left">
+      <span class="ticker-dot"></span>
+      <span>Worship · Lessons · Vol 01</span>
+    </div>
+    <div class="ticker-right">Worship Team · Internal</div>
+  </div>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">Lessons · Vol 01 · 20 May 2026</div>
+      <h1>Brotherhood<br><span class="accent">&amp; Structure.</span></h1>
+      <p class="hero-deck">A short teaching to carry us into Thursday — what holds a worship team together, and what tears it apart.</p>
+    </section>
+
+    <!-- WHERE WE LEFT OFF -->
+    <section>
+      <div class="section-eyebrow">00 · Where We Left Off</div>
+      <h2 class="section-title">Building<br>On the Last One.</h2>
+
+      <div class="prose">
+        <p>In our last session we talked about how a team needs to be a team — not five people standing on the same stage at the same time, but five people <em>moving as one</em>. The set goes well or badly depending on whether we can do that.</p>
+        <p>This week, before we step into rehearsal, I want us to sit with one image and one phrase. And then I want to give you a clear shape for how our praise should default to running.</p>
+      </div>
+    </section>
+
+    <!-- THE STORY: AARON AND HUR -->
+    <section>
+      <div class="section-eyebrow">01 · The Story</div>
+      <h2 class="section-title">A Brother<br>Holds Your Arms Up.</h2>
+
+      <div class="prose">
+        <p>You'll know the question <em>"Am I my brother's keeper?"</em> — that's Cain in Genesis, after he had killed Abel. He asked it like he was hoping the answer was no. The whole rest of the Bible answers him: <strong>yes, you are.</strong></p>
+        <p>But there's a quieter, more beautiful picture of brotherhood that I want us to look at today. It's in Exodus 17.</p>
+      </div>
+
+      <div class="scripture">
+        <div class="scripture-eyebrow">Exodus 17 · 11–12</div>
+        <p class="scripture-text">"When Moses held up his hand, Israel prevailed. When he let down his hand, Amalek prevailed. But Moses' hands were heavy; so they took a stone, and put it under him, and he sat on it. Aaron and Hur held up his hands, the one on the one side, and the other on the other side. His hands were steady until sunset."</p>
+        <div class="scripture-ref">Israel vs Amalek · Rephidim · WEB translation</div>
+      </div>
+
+      <div class="prose">
+        <p>Picture the scene. Israel is in a real battle. Real swords, real blood, real fear. And the outcome of the whole thing depends on one man's arms staying lifted.</p>
+        <p>Now imagine being Moses. <strong>You're tired.</strong> Your arms are heavy. You can feel them shaking. You know what's at stake — but your body is failing.</p>
+        <p>And then Aaron and Hur do something simple. They don't lecture him. They don't ask if he's okay. They just walk over, find a stone, sit him down, and hold his arms up — one on each side — <em>until the sun goes down.</em></p>
+        <p>That is what a band of brothers looks like. Not heroics. Not solos. Just — when my brother's arms start to drop, I hold them up. Because if his arms drop, we all lose the battle.</p>
+        <p>That is what we are to each other in this team.</p>
+      </div>
+    </section>
+
+    <!-- THE FILM -->
+    <section>
+      <div class="section-eyebrow">02 · The Picture</div>
+      <h2 class="section-title">Lone Survivor.<br>The Opening Three Minutes.</h2>
+      <p class="section-lede">If you've never seen it, take three minutes and watch. It's the opening of Peter Berg's film about SEAL Team 10 — real footage of men in Navy SEAL training, pushed to the absolute edge.</p>
+
+      <div class="film-card">
+        <div class="film-aspect">
+          <iframe src="https://www.youtube.com/embed/MUCcdQ9X5JQ"
+                  title="Lone Survivor — opening montage (Navy SEAL training)"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+        </div>
+        <div class="film-caption">
+          <span><span class="arrow">▸</span>Lone Survivor (2013) · Opening Montage</span>
+          <span class="time">~3 MIN</span>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>Watch the men. Watch what they do to each other and for each other. Watch how nobody is left to drown alone, even when every man is being broken. They are being made into something. They are being made into <strong>brothers who can be trusted with each other's life.</strong></p>
+        <p>Over the top of it, Marcus Luttrell — the lone survivor of his team — says something that has stayed with me. He talks about wanting <strong>"buddies that I can depend on,"</strong> and wanting to be that for them too. Then he says, simply: <em>"These guys are our band of brothers."</em></p>
+      </div>
+
+      <div class="pullquote">
+        <p class="pullquote-text">"I love having brothers I can depend on. And I want my brothers to be able to depend on me."</p>
+        <p class="pullquote-attr">▸ The heart of it · for Calvary Worship</p>
+      </div>
+
+      <div class="prose">
+        <p>Read that again. Slowly. That's the temperature I want for this team.</p>
+        <p>Not "everyone please show up on time." Not "let's get our parts right." Something deeper — <strong>I want to be a brother my brothers can rely on. And I want brothers I can rely on too.</strong> That's the foundation. Everything else — the parts, the structure, the dynamics — sits on top of that.</p>
+      </div>
+    </section>
+
+    <!-- THE STRUCTURE -->
+    <section>
+      <div class="section-eyebrow">03 · The Shape</div>
+      <h2 class="section-title">Our New Default<br>For Praise.</h2>
+      <p class="section-lede">BJ and I have been talking. Here's the shape we want our praise sets to default to from here on. This isn't a rigid rule — but it's where we start, every time, unless we've explicitly agreed otherwise.</p>
+
+      <div class="move-grid">
+
+        <div class="move">
+          <div class="move-num">01</div>
+          <div>
+            <div class="move-label">Heavy-Handed Intros</div>
+            <div class="move-body">
+              Come <strong>in strong.</strong> The intro should land. Full band, full conviction. We don't tip-toe in. The first eight bars decide whether the room is with us or not, so we play like we mean it.
+            </div>
+          </div>
+        </div>
+
+        <div class="move">
+          <div class="move-num">02</div>
+          <div>
+            <div class="move-label">Drop on the Verses</div>
+            <div class="move-body">
+              When the verse comes — <strong>pull back.</strong> The lead voice and the lyric should carry. Keys soft, drums minimal, bass holding the floor. Give the words room. This is where a praise song breathes.
+            </div>
+          </div>
+        </div>
+
+        <div class="move">
+          <div class="move-num">03</div>
+          <div>
+            <div class="move-label">Build Back for the Chorus</div>
+            <div class="move-body">
+              Then <strong>build it back up</strong> for the chorus — full, lifted, all in. The pattern is intro → drop → lift → drop → lift. That contrast is what makes praise feel like praise. Without the drop, the lift means nothing.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="prose" style="margin-top: 28px;">
+        <p>So that's the default for praise from now on: <strong>strong intros, room on the verses, all-in on the choruses.</strong> If we change it for a particular song, we'll say so in rehearsal. Otherwise, this is what we run.</p>
+      </div>
+    </section>
+
+    <!-- WHY STRUCTURE -->
+    <section>
+      <div class="section-eyebrow">04 · The Reason</div>
+      <h2 class="section-title">Why Structure<br>Is Brotherhood.</h2>
+
+      <div class="prose">
+        <p>Here's the thing that ties this whole lesson together — and please hear me on this one.</p>
+        <p><strong>When we agree a structure and one of us breaks it, we leave our team behind.</strong></p>
+        <p>If the verse is supposed to drop and the drummer keeps hitting full kit, the singer can't be heard and they're left exposed. If the chorus is supposed to lift and the keys don't come back in, the lead voice is up there alone, trying to fill a hole that wasn't theirs to fill. <em>That's what leaving someone behind sounds like.</em></p>
+        <p>Aaron and Hur held up Moses' arms. They didn't get distracted. They didn't get bored after twenty minutes and wander off. They <em>stayed in their position until the battle was won.</em></p>
+        <p>That's what holding structure is. It's not a musical preference. It's <strong>covenant.</strong> It's saying to the brother next to you: <em>I won't drop my part. I'm not going to leave you up there alone. You can depend on me.</em></p>
+      </div>
+
+      <div class="admonish">
+        <div class="admonish-title">So Hear This.</div>
+        <div class="admonish-body">
+          <p>From this week on, when we agree a structure — <strong>we hold it.</strong> All the way to sunset.</p>
+          <p>If you're unsure what your part is at any moment in the set, ask in rehearsal. Don't guess on Sunday. Guessing is how brothers get left behind.</p>
+          <p>And if someone in the team is struggling — if their arms are dropping — be Aaron or Hur. Get under their arm and help carry it. <strong>We don't lose battles because we let our brother get tired alone.</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLOSING -->
+    <div class="footer-note">
+      <p>"I love having brothers I can depend on. And I want my brothers to be able to depend on me."<br><br>That's the heartbeat of this team. See you Thursday.</p>
+      <div class="footer-rule"></div>
+      <div class="footer-meta">Uncle B · Worship · Lessons · Vol 01</div>
+    </div>
+
+  </main>
+
+</body>
+</html>
