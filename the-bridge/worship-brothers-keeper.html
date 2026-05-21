@@ -342,6 +342,52 @@
     }
     .clip-link:hover .arrow { transform: translateX(4px); }
 
+    /* EMBEDDED VIDEO CLIP */
+    .clip-embed {
+      margin-top: 28px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+    }
+    .clip-embed-aspect {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 */
+      background: var(--obsidian);
+    }
+    .clip-embed-aspect iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .clip-embed-caption {
+      padding: 14px 16px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .clip-embed-caption .arrow { color: var(--red); margin-right: 8px; }
+    .clip-embed-caption a {
+      color: var(--fg-2);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line-mid);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .clip-embed-caption a:hover {
+      color: var(--red);
+      border-bottom-color: var(--red);
+    }
+
     /* CLOSING */
     .closing {
       padding: 56px 0 32px;
@@ -416,9 +462,18 @@
         <p>That's what we're building.</p>
       </div>
 
-      <a class="clip-link" href="https://youtu.be/MUCcdQ9X5JQ" target="_blank" rel="noopener">
-        Watch the Opening Sequence<span class="arrow">→</span>
-      </a>
+      <div class="clip-embed">
+        <div class="clip-embed-aspect">
+          <iframe src="https://www.youtube.com/embed/MUCcdQ9X5JQ?rel=0"
+                  title="Lone Survivor — Opening Sequence"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen></iframe>
+        </div>
+        <div class="clip-embed-caption">
+          <span><span class="arrow">▸</span>Lone Survivor (2013) · Opening sequence · ~3 min</span>
+          <a href="https://youtu.be/MUCcdQ9X5JQ" target="_blank" rel="noopener">Open on YouTube ↗</a>
+        </div>
+      </div>
     </section>
 
     <!-- 04 — THE STRUCTURE -->
