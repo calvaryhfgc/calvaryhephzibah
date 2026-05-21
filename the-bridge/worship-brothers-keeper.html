@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brother's Keeper · Worship Team · Calvary Hephzibah</title>
+  <meta name="description" content="A short teaching for the worship team — on brotherhood, structure, and never leaving each other behind.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Brother's Keeper · Worship Team">
+  <meta property="og:description" content="Brotherhood, structure, and never leaving each other behind — a short teaching for the worship team.">
+  <meta property="og:url" content="https://calvaryhfgc.github.io/calvaryhephzibah/the-bridge/worship-brothers-keeper.html">
+  <meta property="og:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/the-bridge/brothers-keeper-og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Brother's Keeper — a word for the Calvary Hephzibah worship team, 21 May 2026">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Brother's Keeper · Worship Team">
+  <meta name="twitter:description" content="Brotherhood, structure, and never leaving each other behind.">
+  <meta name="twitter:image" content="https://calvaryhfgc.github.io/calvaryhephzibah/the-bridge/brothers-keeper-og.png">
+
+  <link rel="stylesheet" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/colors_and_type.css">
+  <link rel="icon" type="image/png" href="https://calvaryhfgc.github.io/calvaryhephzibah/anniversary-design-system/assets/logo-eagle.png">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--obsidian);
+      color: var(--fg-1);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.55;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 20% 0%, rgba(208, 68, 28, 0.22), transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(110, 26, 15, 0.18), transparent 60%);
+    }
+    body::after {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      opacity: 0.05; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 2; }
+
+    /* TICKER */
+    .ticker {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--obsidian);
+      border-bottom: 1px solid var(--line-soft);
+      padding: 14px 28px;
+      font-size: var(--fs-micro);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--fg-2);
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      flex-wrap: wrap;
+    }
+    .ticker-left { display: flex; align-items: center; gap: 12px; }
+    .ticker-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--red); box-shadow: 0 0 12px var(--red);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+    .ticker-right { color: var(--fg-3); font-size: 11px; }
+
+    /* HERO */
+    .hero {
+      padding: 80px 0 56px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .hero-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(64px, 12vw, 160px);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero h1 .accent { color: var(--red); }
+    .hero-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 22px;
+      line-height: 1.4;
+      color: var(--fg-2);
+      max-width: 580px;
+      padding-top: 28px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    /* SECTIONS */
+    section { padding: 56px 0; border-bottom: 1px solid var(--line-soft); }
+    section:last-of-type { border-bottom: none; }
+
+    .section-eyebrow {
+      font-size: var(--fs-eyebrow);
+      letter-spacing: var(--track-eyebrow);
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5vw, 60px);
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .prose p {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--fg-1);
+      margin-bottom: 16px;
+      max-width: 640px;
+    }
+    .prose p.lede {
+      font-size: 21px;
+      color: var(--bone);
+      margin-bottom: 24px;
+    }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose strong { color: var(--bone); font-weight: 600; }
+
+    /* SCRIPTURE BLOCK */
+    .scripture {
+      margin: 28px 0;
+      padding: 28px 32px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+    }
+    .scripture .ref {
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--red);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .scripture .verse {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--bone);
+    }
+    .scripture .verse + .verse { margin-top: 14px; }
+    @media (max-width: 640px) {
+      .scripture { padding: 22px 24px; }
+      .scripture .verse { font-size: 18px; }
+    }
+
+    /* PULL QUOTE */
+    .pullquote {
+      margin: 36px 0;
+      padding: 32px 0 32px 28px;
+      border-left: 3px solid var(--red);
+      max-width: 680px;
+    }
+    .pullquote-text {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 4vw, 38px);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .pullquote-attr {
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--fg-3);
+      font-weight: 600;
+    }
+
+    /* DYNAMICS DIAGRAM */
+    .dynamics {
+      margin: 32px 0;
+      padding: 32px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+    }
+    .dynamics-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 28px;
+    }
+    .dynamics-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .dyn-row {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 20px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .dyn-row:last-child { border-bottom: none; }
+    .dyn-label {
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .dyn-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .dyn-bar-track {
+      flex: 1;
+      height: 16px;
+      background: var(--obsidian);
+      position: relative;
+      border: 1px solid var(--line-soft);
+    }
+    .dyn-bar-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, var(--red), var(--red-bright));
+    }
+    .dyn-bar-text {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--fg-2);
+      min-width: 110px;
+      letter-spacing: 0.04em;
+    }
+    @media (max-width: 640px) {
+      .dynamics { padding: 24px 20px; }
+      .dyn-row { grid-template-columns: 80px 1fr; gap: 14px; }
+      .dyn-bar-text { display: none; }
+    }
+
+    /* CALL CARDS — for the practical implications */
+    .call-grid {
+      display: grid;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .call-card {
+      padding: 22px 26px;
+      background: var(--slate);
+      border-top: 2px solid var(--red);
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 22px;
+      align-items: baseline;
+    }
+    .call-card .call-num {
+      font-family: var(--font-display);
+      font-size: 40px;
+      line-height: 0.85;
+      color: var(--red);
+    }
+    .call-card .call-body .call-title {
+      font-family: var(--font-display);
+      font-size: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 8px;
+    }
+    .call-card .call-body p {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      color: var(--fg-1);
+      line-height: 1.55;
+    }
+    @media (max-width: 640px) {
+      .call-card {
+        grid-template-columns: 44px 1fr;
+        gap: 16px;
+        padding: 20px 22px;
+      }
+      .call-card .call-num { font-size: 32px; }
+    }
+
+    /* CLIP LINK */
+    .clip-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 22px;
+      background: var(--obsidian);
+      color: var(--bone);
+      font-family: var(--font-body);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-decoration: none;
+      border: 2px solid var(--red);
+      transition: background 0.2s, color 0.2s;
+      margin-top: 20px;
+    }
+    .clip-link:hover {
+      background: var(--red);
+      color: var(--bone);
+    }
+    .clip-link .arrow {
+      font-size: 16px;
+      transition: transform 0.2s;
+    }
+    .clip-link:hover .arrow { transform: translateX(4px); }
+
+    /* CLOSING */
+    .closing {
+      padding: 56px 0 32px;
+      text-align: center;
+    }
+    .closing p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 22px;
+      color: var(--bone);
+      line-height: 1.5;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .closing-rule {
+      width: 60px;
+      height: 2px;
+      background: var(--red);
+      margin: 32px auto 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ticker">
+    <div class="ticker-left">
+      <span class="ticker-dot"></span>
+      <span>Worship Team · A Word</span>
+    </div>
+    <div class="ticker-right">Internal · For the Band</div>
+  </div>
+
+  <main class="container">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-eyebrow">A Word for the Team · 21 May 2026</div>
+      <h1>Brother's<br><span class="accent">Keeper.</span></h1>
+      <p class="hero-sub">"We carry each other. On stage, in the room, in the song. Nobody gets left behind."</p>
+    </section>
+
+    <!-- 01 — THE QUESTION -->
+    <section>
+      <div class="section-eyebrow">01 · The Question</div>
+      <h2 class="section-title">A Question<br>God Already<br>Answered.</h2>
+
+      <div class="prose">
+        <p class="lede">In Genesis 4, after Cain kills Abel, the Lord asks him where his brother is. Cain replies with a question of his own — one of the most chilling lines in scripture.</p>
+      </div>
+
+      <div class="scripture">
+        <div class="ref">Genesis 4 : 9</div>
+        <p class="verse">"Then the Lord said to Cain, 'Where is your brother Abel?'"</p>
+        <p class="verse">"'I don't know,' he replied. 'Am I my brother's keeper?'"</p>
+      </div>
+
+      <div class="prose">
+        <p>Cain's question was meant to dodge responsibility. He was hoping the answer was <em>no</em>. But across the whole of scripture, God's answer to that question — over and over and over — is <strong>yes. You are.</strong></p>
+        <p>You are your brother's keeper. You are your sister's keeper. The person to your left and your right in the room is not your competition, not your audience, not your accessory. They are your charge.</p>
+      </div>
+    </section>
+
+    <!-- 02 — THE COVENANT -->
+    <section>
+      <div class="section-eyebrow">02 · The Answer</div>
+      <h2 class="section-title">David and<br>Jonathan.</h2>
+
+      <div class="prose">
+        <p class="lede">If Cain shows us the wrong answer, David and Jonathan show us the right one. Two men who could have been rivals — Jonathan was the king's son, in line for the throne David would one day take — chose covenant instead.</p>
+      </div>
+
+      <div class="scripture">
+        <div class="ref">1 Samuel 18 : 1, 3</div>
+        <p class="verse">"Jonathan became one in spirit with David, and he loved him as himself."</p>
+        <p class="verse">"And Jonathan made a covenant with David because he loved him as himself."</p>
+      </div>
+
+      <div class="prose">
+        <p>This is the picture. Not just tolerating each other. Not just turning up next to each other on a Sunday. <strong>One in spirit.</strong> Loving the person beside you as you love yourself. Making a covenant — a binding commitment — that says: <em>I've got you. You've got me. That's the rule between us.</em></p>
+        <p>When we step onto the platform together, that's the covenant. Before we sing a single note, we've already agreed that nobody up there is on their own.</p>
+      </div>
+    </section>
+
+    <!-- 03 — THE MARINES -->
+    <section>
+      <div class="section-eyebrow">03 · A Glimpse</div>
+      <h2 class="section-title">"I Like Having<br>Buddies I Can<br>Depend On."</h2>
+
+      <div class="prose">
+        <p class="lede">There's a film called Lone Survivor. The opening three minutes are real footage of US Navy SEAL trainees in BUD/S — one of the hardest military training programmes in the world.</p>
+        <p>What you see is brutal. Men carrying logs together in the sea at 4am. Men holding each other up when their legs give out. Men ringing a bell to quit — and the camera lingers on the ones who don't ring it, because their team is still going. One of the trainees, on camera, says this:</p>
+      </div>
+
+      <div class="pullquote">
+        <div class="pullquote-text">"I like having my buddies that I can depend on. And I would like for them to be able to depend on me."</div>
+        <div class="pullquote-attr">▸ BUD/S Trainee · Lone Survivor (2013), opening sequence</div>
+      </div>
+
+      <div class="prose">
+        <p>Read it again. The first half is the easy bit — <em>I like having people I can depend on.</em> Of course we do. We all want a band that holds us up when we miss a note, a vocalist who covers us when our voice cracks, a drummer who carries the tempo when our hands tire.</p>
+        <p>It's the second half that costs something. <strong>I would like for them to be able to depend on me.</strong> That means showing up prepared. Knowing the song. Holding the structure even when nobody's watching me. Being the brother my brother can lean on — not just the brother who needs leaning on.</p>
+        <p>That's what we're building.</p>
+      </div>
+
+      <a class="clip-link" href="https://www.youtube.com/watch?v=8c6jSnKGKMo" target="_blank" rel="noopener">
+        Watch the Opening Sequence<span class="arrow">→</span>
+      </a>
+    </section>
+
+    <!-- 04 — THE STRUCTURE -->
+    <section>
+      <div class="section-eyebrow">04 · The Sound of Brotherhood</div>
+      <h2 class="section-title">Our New<br>Default<br>Structure.</h2>
+
+      <div class="prose">
+        <p class="lede">Brotherhood isn't only spiritual. On a worship team, it shows up in how you play. BJ and I have been talking about the default dynamic shape for our songs — particularly for our praise sets — and here's where we've landed.</p>
+        <p>The principle is simple: <strong>nobody plays a flat song.</strong> A song without dynamics is nine musicians soloing in parallel. A song with dynamics is one team breathing together. This is the default — adjust for the song, but start here.</p>
+      </div>
+
+      <div class="dynamics">
+        <div class="dynamics-title">The Praise Dynamic Arc</div>
+        <div class="dynamics-grid">
+          <div class="dyn-row">
+            <div class="dyn-label">Intro</div>
+            <div class="dyn-bar">
+              <div class="dyn-bar-track"><div class="dyn-bar-fill" style="width: 100%;"></div></div>
+              <div class="dyn-bar-text">Full · Heavy · Declarative</div>
+            </div>
+          </div>
+          <div class="dyn-row">
+            <div class="dyn-label">Verse</div>
+            <div class="dyn-bar">
+              <div class="dyn-bar-track"><div class="dyn-bar-fill" style="width: 35%;"></div></div>
+              <div class="dyn-bar-text">Strip Back · Let It Breathe</div>
+            </div>
+          </div>
+          <div class="dyn-row">
+            <div class="dyn-label">Build</div>
+            <div class="dyn-bar">
+              <div class="dyn-bar-track"><div class="dyn-bar-fill" style="width: 65%;"></div></div>
+              <div class="dyn-bar-text">Layers Returning</div>
+            </div>
+          </div>
+          <div class="dyn-row">
+            <div class="dyn-label">Chorus</div>
+            <div class="dyn-bar">
+              <div class="dyn-bar-track"><div class="dyn-bar-fill" style="width: 100%;"></div></div>
+              <div class="dyn-bar-text">Full · Lifted · Resolved</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p><strong>Heavy-handed intros.</strong> The intro sets the temperature of the room. Don't tip-toe in. Drums, bass, keys, electric — all in, with intention. The congregation should know within four bars what we've called them to do.</p>
+        <p><strong>Drop out on verses.</strong> The verse is where the lyric does its work. The instinct is to keep playing — fight it. Drums pull back to kick and hat, or even sticks-on-rim. Bass holds roots, no runs. Keys to soft pads. Electric to long, quiet swells or out entirely. The vocal must have room to be heard.</p>
+        <p><strong>Build back up for choruses.</strong> The chorus is the destination. The layers re-enter — bass walks back in, drums open up, electric finds its part, BVs add weight. By the second line of the chorus, we should feel like the song just took off.</p>
+      </div>
+    </section>
+
+    <!-- 05 — THE DISCIPLINE -->
+    <section>
+      <div class="section-eyebrow">05 · The Discipline</div>
+      <h2 class="section-title">Hold the<br>Structure.</h2>
+
+      <div class="prose">
+        <p class="lede">Here's where the brotherhood and the music meet.</p>
+        <p>When we agree on a structure, that structure becomes the covenant. It's not a suggestion. It's not a vibe to drift in and out of. It's the thing the rest of the team is leaning on.</p>
+      </div>
+
+      <div class="call-grid">
+        <div class="call-card">
+          <div class="call-num">01</div>
+          <div class="call-body">
+            <div class="call-title">If the Drums Don't Drop</div>
+            <p>The vocalist trying to sing the verse softly is now competing instead of leading. The lyric gets lost. We've left her behind.</p>
+          </div>
+        </div>
+        <div class="call-card">
+          <div class="call-num">02</div>
+          <div class="call-body">
+            <div class="call-title">If the Keys Don't Build</div>
+            <p>The chorus lands flat. The drummer is hitting harder to lift the moment alone, and now he's the one playing too loud while everyone else stayed safe. We've left him behind.</p>
+          </div>
+        </div>
+        <div class="call-card">
+          <div class="call-num">03</div>
+          <div class="call-body">
+            <div class="call-title">If the Electric Plays Over the Vocal</div>
+            <p>The congregation can't catch the lyric. They stop singing. The worship leader is now leading a room that isn't responding. We've left her behind.</p>
+          </div>
+        </div>
+        <div class="call-card">
+          <div class="call-num">04</div>
+          <div class="call-body">
+            <div class="call-title">If One of Us Plays Our Own Song</div>
+            <p>The team is no longer one body. We're nine soloists. The Spirit doesn't move through that. We've left everyone behind — including ourselves.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>Breaking the structure feels like freedom to the person breaking it. To the rest of the team, it feels like being abandoned mid-mission. <strong>That's not what we do.</strong></p>
+        <p>So when the structure says drop, you drop — even if your fingers are itching to keep playing. When it says build, you build — even if you're tired. When it says hold, you hold — even if nobody would know. <strong>God knows. Your team knows. And that's the point.</strong></p>
+      </div>
+    </section>
+
+    <!-- 06 — THE CHARGE -->
+    <section>
+      <div class="section-eyebrow">06 · The Charge</div>
+      <h2 class="section-title">What We're<br>Building.</h2>
+
+      <div class="prose">
+        <p class="lede">A worship team that operates like a band of brothers and sisters. Not a stage. Not a showcase. A unit.</p>
+        <p>When we walk in for rehearsal — virtual or in-person — we walk in as people who have each other's backs. When we step up on a Sunday, we step up knowing the people next to us would catch us if we fell. When we play, we play the structure not because Bolaji or BJ said so, but because we've decided that <strong>nobody on this team plays alone.</strong></p>
+        <p>That's the standard. That's the covenant. That's the sound of brotherhood.</p>
+        <p>See you Thursday.</p>
+      </div>
+    </section>
+
+    <div class="closing">
+      <p>"A new command I give you: Love one another. As I have loved you, so you must love one another."</p>
+      <p style="font-family: var(--font-body); font-style: normal; font-size: 11px; letter-spacing: 0.18em; color: var(--red); margin-top: 16px; font-weight: 700;">JOHN 13 : 34</p>
+      <div class="closing-rule"></div>
+    </div>
+
+  </main>
+
+</body>
+</html>
